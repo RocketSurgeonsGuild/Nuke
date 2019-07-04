@@ -25,7 +25,9 @@ namespace Rocket.Surgery.Nuke
         [GitRepository] public readonly GitRepository GitRepository;
         [ComputedGitVersion] public readonly GitVersion GitVersion;
 
+        public AbsolutePath SampleDirectory => RootDirectory / "sample";
         public AbsolutePath SourceDirectory => RootDirectory / "src";
+        public AbsolutePath TemplatesDirectory => RootDirectory / "templates";
         public AbsolutePath TestDirectory => RootDirectory / "test";
         public AbsolutePath ArtifactsDirectory => Variable("Artifacts") != null ? (AbsolutePath)Variable("Artifacts") : RootDirectory / "artifacts";
         public AbsolutePath LogsDirectory => ArtifactsDirectory / "logs";
@@ -33,25 +35,23 @@ namespace Rocket.Surgery.Nuke
         public AbsolutePath NuGetPackageDirectory => ArtifactsDirectory / "nuget";
         public AbsolutePath CoverageDirectory => Variable("Coverage") != null ? (AbsolutePath)Variable("Coverage") : RootDirectory / "coverage";
 
-
-        /// <summary>
-        /// Gets or sets a value indicating whether [include symbols].
-        /// </summary>
-        /// <value><c>true</c> if [include symbols]; otherwise, <c>false</c>.</value>
-        public bool IncludeSymbols { get; set; } = true;
-        /// <summary>
-        /// Gets or sets a value indicating whether [include source].
-        /// </summary>
-        /// <value><c>true</c> if [include source]; otherwise, <c>false</c>.</value>
-        public bool IncludeSource { get; set; } = true;
-
         public Target Clean => _ => _
             .Executes(() =>
             {
-                SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
-                TestDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
                 EnsureCleanDirectory(ArtifactsDirectory);
                 EnsureCleanDirectory(CoverageDirectory);
+
+                EnsureExistingDirectory(SampleDirectory);
+                SampleDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+
+                EnsureExistingDirectory(SourceDirectory);
+                SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+
+                EnsureExistingDirectory(TemplatesDirectory);
+                TemplatesDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+
+                EnsureExistingDirectory(TestDirectory);
+                TestDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
             });
 
         public Target Generate_Code_Coverage_Reports => _ => _

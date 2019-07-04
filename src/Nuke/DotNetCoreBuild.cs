@@ -52,7 +52,7 @@ namespace Rocket.Surgery.Nuke
             .DependentFor(Core)
             .DependentFor(Pack)
             .Triggers(Generate_Code_Coverage_Reports)
-            .OnlyWhenStatic(() => TestDirectory.GlobFiles("**/*.csproj").Count > 0)
+            .OnlyWhenDynamic(() => TestDirectory.GlobFiles("test/**/*.csproj").Count > 0)
             .WhenSkipped(DependencyBehavior.Execute)
             .Executes(() =>
             {
@@ -94,9 +94,6 @@ namespace Rocket.Surgery.Nuke
             {
                 DotNetPack(s => s
                     .SetProject(Solution)
-                    .SetVersion(GitVersion.FullSemVer)
-                    .SetIncludeSource(IncludeSource)
-                    .SetIncludeSymbols(IncludeSymbols)
                     .SetBinaryLogger(LogsDirectory / "pack.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
                     .SetFileLogger(LogsDirectory / "pack.log", Verbosity)
                     .SetGitVersionEnvironment(GitVersion)

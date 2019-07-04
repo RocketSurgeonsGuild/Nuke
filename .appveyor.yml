@@ -11,7 +11,5 @@ after_build:
   - codecov -f "./coverage/solution.cobertura"
 artifacts:
   - path: ./artifacts/nuget/*.nupkg
-cache:
-  - tools -> build.cake, tools/packages.config
 nuget:
   project_feed: true
