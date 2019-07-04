@@ -1,0 +1,6 @@
+{
+    "coverage-gutters.lcovname": "*.info",
+    "dotnet-test-explorer.addProblems": true,
+    "coverage-gutters.customizable.status-bar-toggler-watchCoverageAndVisibleEditors-enabled": true,
+    "dotnet-test-explorer.autoExpandTree": false
+}

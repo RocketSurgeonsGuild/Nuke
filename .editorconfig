@@ -1,0 +1,18 @@
+root = true
+
+[*]
+insert_final_newline = true
+
+[*.{cs,js,ts,cshtml,shade}]
+charset = "utf-8"
+indent_style = space
+indent_size = 4
+
+[*.{json,xml}]
+indent_style = space
+indent_size = 4
+
+[*.yml]
+indent_style = space
+indent_size = 2
+tab_width = 2

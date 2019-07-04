@@ -1,0 +1,9 @@
+<Project>
+    <PropertyGroup>
+        <Company>Rocket Surgeons Guild</Company>
+        <Copyright>Copyright David Driscoll © 2017</Copyright>
+        <Authors>David Driscoll</Authors>
+        <LangVersion>latest</LangVersion>
+        <PackageIconUrl>https://raw.githubusercontent.com/RocketSurgeonsGuild/graphics/master/png/rsg-patch-circle-color.png</PackageIconUrl>
+    </PropertyGroup>
+</Project>
