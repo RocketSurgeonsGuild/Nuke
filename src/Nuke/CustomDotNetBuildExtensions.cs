@@ -25,7 +25,9 @@ namespace Rocket.Surgery.Nuke
         {
             foreach (var item in JObject.FromObject(gitVersion))
             {
-                settings = settings.AddEnvironmentVariable($"gitversion_{item.Key}".ToUpperInvariant(), item.Value.ToString());
+                var key = $"gitversion_{item.Key}".ToUpperInvariant();
+                if (settings.EnvironmentVariables.TryGetValue(key, out _)) continue;
+                settings = settings.AddEnvironmentVariable(key, item.Value.ToString());
             }
             return settings;
         }
