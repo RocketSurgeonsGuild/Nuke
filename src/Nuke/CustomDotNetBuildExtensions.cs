@@ -6,7 +6,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Rocket.Surgery.Nuke
 {
-    static class CustomDotNetBuildExtensions
+    public static class CustomDotNetBuildExtensions
     {
         public static T SetBinaryLogger<T>(this T settings, AbsolutePath path, MSBuildBinaryLogImports imports) where T : ToolSettings
         {
@@ -14,6 +14,7 @@ namespace Rocket.Surgery.Nuke
             return settings.SetArgumentConfigurator(args =>
                 existingArgs(args).Add($"/bl:{path};ProjectImports={imports}"));
         }
+
         public static T SetFileLogger<T>(this T settings, AbsolutePath path, Verbosity verbosity) where T : ToolSettings
         {
             var existingArgs = settings.ArgumentConfigurator;
