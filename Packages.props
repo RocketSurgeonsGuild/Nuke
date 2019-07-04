@@ -8,8 +8,8 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Nuke.Common" Version="0.20.1" />
-    <PackageReference Update="Rocket.Surgery.Nuke" Version="0.1.0-beta.8" />
-    <PackageReference Update="GitVersion.CommandLine.DotNetCore" Version="5.0.0-beta4-9" />
+    <PackageReference Update="Rocket.Surgery.Nuke" Version="0.1.0-beta.9" />
+    <PackageReference Update="GitVersion.CommandLine.DotNetCore" Version="5.0.0-beta5.1" />
     <PackageReference Update="ReportGenerator" Version="4.2.5" />
   </ItemGroup>
   <ItemGroup>

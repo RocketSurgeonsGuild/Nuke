@@ -1,0 +1,34 @@
+<Project>
+    <PropertyGroup>
+        <_NukeRoot>$([MSBuild]::GetDirectoryNameOfFileAbove('$(MSBuildProjectFullPath)', '.nuke'))</_NukeRoot>
+        <_CiFiles Condition="'$(_CiFiles)' == ''"></_CiFiles>
+        <_CiFiles Condition="Exists('$(_NukeRoot)\.azure-pipelines.yml')">$(_CiFiles);$(_NukeRoot)\.azure-pipelines.yml</_CiFiles>
+        <_CiFiles Condition="Exists('$(_NukeRoot)\azure-pipelines.yml')">$(_CiFiles);$(_NukeRoot)\azure-pipelines.yml</_CiFiles>
+        <_CiFiles Condition="Exists('$(_NukeRoot)\.appveyor.yml')">$(_CiFiles);$(_NukeRoot)\.appveyor.yml</_CiFiles>
+        <_CiFiles Condition="Exists('$(_NukeRoot)\appveyor.yml')">$(_CiFiles);$(_NukeRoot)\appveyor.yml</_CiFiles>
+        <_CiFiles Condition="Exists('$(_NukeRoot)\.travis.yml')">$(_CiFiles);$(_NukeRoot)\.travis.yml</_CiFiles>
+        <_CiFiles Condition="Exists('$(_NukeRoot)\travis.yml')">$(_CiFiles);$(_NukeRoot)\travis.yml</_CiFiles>
+        <_CiFiles Condition="Exists('$(_NukeRoot)\gitlab-ci.yml')">$(_CiFiles);$(_NukeRoot)\gitlab-ci.yml</_CiFiles>
+        <_CiFiles Condition="Exists('$(_NukeRoot)\codeship.yml')">$(_CiFiles);$(_NukeRoot)\codeship.yml</_CiFiles>
+        <_CiFiles Condition="Exists('$(_NukeRoot)\bitrise.yml')">$(_CiFiles);$(_NukeRoot)\bitrise.yml</_CiFiles>
+        <_CiFiles Condition="Exists('$(_NukeRoot)\.circleci\config.yml')">$(_CiFiles);$(_NukeRoot)\.circleci\config.yml</_CiFiles>
+
+        <_ConfigFiles Condition="'$(_ConfigFiles)' == ''"></_ConfigFiles>
+        <_ConfigFiles Condition="Exists('$(_NukeRoot)\global.json')">$(_ConfigFiles);$(_NukeRoot)\global.json</_ConfigFiles>
+        <_ConfigFiles Condition="Exists('$(_NukeRoot)\.editorconfig')">$(_ConfigFiles);$(_NukeRoot)\.editorconfig</_ConfigFiles>
+        <_ConfigFiles Condition="Exists('$(_NukeRoot)\nuget.config')">$(_ConfigFiles);$(_NukeRoot)\nuget.config</_ConfigFiles>
+        <_ConfigFiles Condition="Exists('$(_NukeRoot)\omnisharp.json')">$(_ConfigFiles);$(_NukeRoot)\omnisharp.json</_ConfigFiles>
+        <_ConfigFiles Condition="Exists('$(_NukeRoot)\.dependabot\config.yml')">$(_ConfigFiles);$(_NukeRoot)\.dependabot\config.yml</_ConfigFiles>
+        <_ConfigFiles Condition="Exists('$(_NukeRoot)\.config\dotnet-tools.json')">$(_ConfigFiles);$(_NukeRoot)\.config\dotnet-tools.json</_ConfigFiles>
+        <!--<_ConfigFiles Condition="Exists('$(_NukeRoot)\')">$(_ConfigFiles);$(_NukeRoot)\</_ConfigFiles>-->
+
+        <_GitFiles Condition="'$(_GitFiles)' == ''"></_GitFiles>
+        <_GitFiles Condition="Exists('$(_NukeRoot)\.gitattributes')">$(_GitFiles);$(_NukeRoot)\.gitattributes</_GitFiles>
+        <_GitFiles Condition="Exists('$(_NukeRoot)\.gitignore')">$(_GitFiles);$(_NukeRoot)\.gitignore</_GitFiles>
+        <_GitFiles Condition="Exists('$(_NukeRoot)\.gitmodules')">$(_GitFiles);$(_NukeRoot)\.gitmodules</_GitFiles>
+        <!--<_GitFiles Condition="Exists('$(_NukeRoot)\')">$(_GitFiles);$(_NukeRoot)\</_GitFiles>-->
+
+        <_NukeFiles Condition="'$(_NukeFiles)' == ''"></_NukeFiles>
+        <_NukeFiles>$(_NukeFiles);$(_NukeRoot)\build.ps1;$(_NukeRoot)\build.sh;$(_NukeRoot)\.nuke</_NukeFiles>
+    </PropertyGroup>
+</Project>

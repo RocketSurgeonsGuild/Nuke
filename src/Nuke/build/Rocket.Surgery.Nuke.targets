@@ -1,0 +1,16 @@
+<Project>
+    <ItemGroup>
+        <NukeSpecificationFiles Include="**\*.json" Exclude="bin\**;obj\**" />
+        <NukeExternalFiles Include="**\*.*.ext" Exclude="bin\**;obj\**" />
+        <None Remove="*.csproj.DotSettings;*.ref.*.txt" />
+
+        <!-- Common build related files -->
+        <None Include="$(_NukeFiles)" Link=".nuke\$([MSBuild]::MakeRelative($(_NukeRoot), %(FullPath)))" />
+        <None Include="$(_CiFiles)" Link=".ci\$([MSBuild]::MakeRelative($(_NukeRoot), %(FullPath)))" />
+        <None Include="$(_GitFiles)" Link=".git\$([MSBuild]::MakeRelative($(_NukeRoot), %(FullPath)))" />
+        <None Include="$(_ConfigFiles)" Link=".config\$([MSBuild]::MakeRelative($(_NukeRoot), %(FullPath)))" />
+        <None Include="$(_NukeRoot)\*.md" Link="docs\$([MSBuild]::MakeRelative($(_NukeRoot), %(FullPath)))" />
+        <None Include="$(_NukeRoot)\LICENSE" Condition="Exists('$(_NukeRoot)\LICENSE')" Link="docs\$([MSBuild]::MakeRelative($(_NukeRoot), %(FullPath)))" />
+        <None Include="$(_NukeRoot)\*.props;$(_NukeRoot)\*.targets" />
+    </ItemGroup>
+</Project>

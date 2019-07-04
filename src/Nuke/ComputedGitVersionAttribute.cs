@@ -19,13 +19,17 @@ namespace Rocket.Surgery.Nuke
     /// </summary>
     [PublicAPI]
     [UsedImplicitly(ImplicitUseKindFlags.Default)]
-    public class ComputedGitVersionAttribute : InjectionAttributeBase
+    internal class ComputedGitVersionAttribute : InjectionAttributeBase
     {
+        /// <inheritdoc />
         public override object GetValue(MemberInfo member, object instance)
         {
             return ControlFlow.SuppressErrors(GitVer, includeStackTrace: true);
         }
 
+        /// <summary>
+        /// Returns if GitVersion data is available
+        /// </summary>
         public static bool HasGitVer()
         {
             return Variables.Keys.Any(z => z.StartsWith("GITVERSION_", StringComparison.OrdinalIgnoreCase));
