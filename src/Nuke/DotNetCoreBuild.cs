@@ -9,19 +9,31 @@ using Nuke.Common.Tools.VSWhere;
 
 namespace Rocket.Surgery.Nuke
 {
+    /// <summary>
+    /// Base build plan for .NET Core based applications
+    /// </summary>
     public abstract class DotNetCoreBuild : RocketBoosterBuild
     {
+        /// <summary>
+        /// Core target that can be used to trigger all targets for this build
+        /// </summary>
         public Target Core => _ => _;
 
-        public Target InstallTools => _ => _
+        /// <summary>
+        /// This will ensure that all local dotnet tools are installed
+        /// </summary>
+        public Target DotnetToolRestore => _ => _
             .DependsOn(Clean)
             .DependentFor(Core)
             .Unlisted()
             .Executes(() => DotNet("tool restore"));
 
+        /// <summary>
+        /// dotnet restore
+        /// </summary>
         public Target Restore => _ => _
             .DependentFor(Core)
-            .DependsOn(InstallTools)
+            .DependsOn(DotnetToolRestore)
             .Executes(() =>
             {
                 DotNetRestore(s => s
@@ -33,6 +45,9 @@ namespace Rocket.Surgery.Nuke
                 );
             });
 
+        /// <summary>
+        /// dotnet build
+        /// </summary>
         public Target Build => _ => _
             .DependsOn(Restore)
             .DependentFor(Core)
@@ -47,6 +62,9 @@ namespace Rocket.Surgery.Nuke
                     .EnableNoRestore());
             });
 
+        /// <summary>
+        /// dotnet test
+        /// </summary>
         public Target Test => _ => _
             .DependsOn(Build)
             .DependentFor(Core)
@@ -87,6 +105,9 @@ namespace Rocket.Surgery.Nuke
                     .SetProperty("VSTestResultsDirectory", TestResultsDirectory));
             });
 
+        /// <summary>
+        /// dotnet pack
+        /// </summary>
         public Target Pack => _ => _
             .DependsOn(Build)
             .DependentFor(Core)

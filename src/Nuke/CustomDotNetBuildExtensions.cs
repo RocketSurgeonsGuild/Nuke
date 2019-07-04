@@ -6,6 +6,9 @@ using Newtonsoft.Json.Linq;
 
 namespace Rocket.Surgery.Nuke
 {
+    /// <summary>
+    /// Custom msbuild helper extensions
+    /// </summary>
     public static class CustomDotNetBuildExtensions
     {
         /// <summary>

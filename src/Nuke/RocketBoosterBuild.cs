@@ -13,28 +13,87 @@ using static Nuke.Common.Tools.ReportGenerator.ReportGeneratorTasks;
 using static Nuke.Common.Tools.VSWhere.VSWhereTasks;
 using System.IO;
 using System.Linq;
+using System.ComponentModel;
 
 namespace Rocket.Surgery.Nuke
 {
+    /// <summary>
+    /// Base build plan and tasks
+    /// </summary>
     public abstract class RocketBoosterBuild : NukeBuild
     {
+        /// <summary>
+        /// Configuration to build - Default is 'Debug' (local) or 'Release' (server)
+        /// </summary>
         [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
         public readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
+        /// <summary>
+        /// The solution currently being build
+        /// </summary>
         [Solution] public readonly Solution Solution;
+
+        /// <summary>
+        /// The Git Repository currently being built
+        /// </summary>
         [GitRepository] public readonly GitRepository GitRepository;
+
+        /// <summary>
+        /// The Git Version information either computed by GitVersion itself, or as defined by environment variables of the format `GITVERSION_*`
+        /// </summary>
         [ComputedGitVersion] public readonly GitVersion GitVersion;
 
+        /// <summary>
+        /// The directory where samples will be placed
+        /// </summary>
         public AbsolutePath SampleDirectory => RootDirectory / "sample";
-        public AbsolutePath SourceDirectory => RootDirectory / "src";
-        public AbsolutePath TemplatesDirectory => RootDirectory / "templates";
-        public AbsolutePath TestDirectory => RootDirectory / "test";
-        public AbsolutePath ArtifactsDirectory => Variable("Artifacts") != null ? (AbsolutePath)Variable("Artifacts") : RootDirectory / "artifacts";
-        public AbsolutePath LogsDirectory => ArtifactsDirectory / "logs";
-        public AbsolutePath TestResultsDirectory => ArtifactsDirectory / "test";
-        public AbsolutePath NuGetPackageDirectory => ArtifactsDirectory / "nuget";
-        public AbsolutePath CoverageDirectory => Variable("Coverage") != null ? (AbsolutePath)Variable("Coverage") : RootDirectory / "coverage";
 
+        /// <summary>
+        /// The directory where sources will be placed
+        /// </summary>
+        public AbsolutePath SourceDirectory => RootDirectory / "src";
+
+        /// <summary>
+        /// The directory where templates will be placed
+        /// </summary>
+        public AbsolutePath TemplatesDirectory => RootDirectory / "templates";
+
+        /// <summary>
+        /// The directory where tests will be placed
+        /// </summary>
+        public AbsolutePath TestDirectory => RootDirectory / "test";
+
+
+        /// <summary>
+        /// The directory where artifacts are to be dropped
+        /// </summary>
+        [Parameter("The directory where artifacts are to be dropped", Name = "Artifacts")]
+        public readonly AbsolutePath ArtifactsDirectory = Variable("Artifacts") != null ? (AbsolutePath)Variable("Artifacts") : RootDirectory / "artifacts";
+
+        /// <summary>
+        /// The directory where logs will be placed
+        /// </summary>
+        public AbsolutePath LogsDirectory => ArtifactsDirectory / "logs";
+
+        /// <summary>
+        /// The directory where test results will be placed
+        /// </summary>
+        public AbsolutePath TestResultsDirectory => ArtifactsDirectory / "test";
+
+        /// <summary>
+        /// The directory where nuget packages will be placed
+        /// </summary>
+        public AbsolutePath NuGetPackageDirectory => ArtifactsDirectory / "nuget";
+
+        /// <summary>
+        /// The directory where coverage artifacts are to be dropped
+        /// </summary>
+        [Parameter("The directory where coverage artifacts are to be dropped", Name = "Coverage")]
+        public readonly AbsolutePath CoverageDirectory = Variable("Coverage") != null ? (AbsolutePath)Variable("Coverage") : RootDirectory / "coverage";
+
+        /// <summary>
+        /// clean all artifact directories
+        /// </summary>
         public Target Clean => _ => _
             .Executes(() =>
             {
@@ -54,6 +113,10 @@ namespace Rocket.Surgery.Nuke
                 TestDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
             });
 
+
+        /// <summary>
+        /// This will generate code coverage reports from emitted coverage data
+        /// </summary>
         public Target Generate_Code_Coverage_Reports => _ => _
             .Description("Generates code coverage reports")
             .Unlisted()
