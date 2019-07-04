@@ -14,7 +14,7 @@ resources:
     - repository: rsg
       type: github
       name: RocketSurgeonsGuild/AzureDevopsTemplates
-      ref: refs/tags/v0.5.11
+      # ref: refs/tags/v0.5.11
       endpoint: github
 
 variables:
@@ -28,78 +28,13 @@ variables:
   Artifacts: $(Build.ArtifactStagingDirectory)
   VstsArtifacts: "$(Artifacts)"
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "true"
-  CodeCovToken: 'e79b91ca-8b9d-4490-b679-a7583193a6d0'
+  CodeCovToken: '7dfeb756-b27e-47ec-8906-a349cf7e0688'
 
 jobs:
-  - job: GitVersion
-    pool:
-      vmImage: "VS2017-Win2016"
-    steps:
-      - template: gitversion/store.yml@rsg
-        parameters:
-          NuGetVersion: $(NuGetVersion)
-
-  - template: pipeline/cake-job.yml@rsg
+  - template: pipeline/cake.yml@rsg
     parameters:
-      name: "macOS"
-      dependsOn: GitVersion
-      vmImage: "macOS-10.14"
-      pushNuget: false
       Configuration: $(Configuration)
       Verbosity: $(Verbosity)
       DotNetVersion: $(DotNetVersion)
       DotNet3Version: $(DotNet3Version)
       NuGetVersion: $(NuGetVersion)
-
-  - template: pipeline/cake-job.yml@rsg
-    parameters:
-      name: "Linux"
-      dependsOn: GitVersion
-      vmImage: "Ubuntu-16.04"
-      pushNuget: false
-      Configuration: $(Configuration)
-      Verbosity: $(Verbosity)
-      DotNetVersion: $(DotNetVersion)
-      DotNet3Version: $(DotNet3Version)
-      NuGetVersion: $(NuGetVersion)
-
-  - job: Windows
-    dependsOn: GitVersion
-    pool:
-      vmImage: "windows-2019"
-    steps:
-      - template: gitversion/restore.yml@rsg
-      - template: cake/install.yml@rsg
-        parameters:
-          DotNetVersion: $(DotNetVersion)
-          DotNet3Version: $(DotNet3Version)
-      # Nuget is required for test scripts below
-      - task: NuGetToolInstaller@1
-        displayName: "Get NuGet"
-        inputs:
-          versionSpec: $(NuGetVersion)
-      - template: cake/run.yml@rsg
-        parameters:
-          Configuration: $(Configuration)
-          Verbosity: $(Verbosity)
-      - template: publish-artifacts.yml@rsg
-        parameters:
-          Configuration: $(Configuration)
-
-  - job: Publish
-    dependsOn:
-      - macOS
-      - Linux
-      - Windows
-    steps:
-      - task: DownloadBuildArtifacts@0
-        displayName: "Download NuGet Packages"
-        inputs:
-          specificBuildWithTriggering: true
-          downloadType: single
-          artifactName: 'Nupkg - Windows'
-          downloadPath: $(Build.ArtifactStagingDirectory)/nuget/
-      - template: standard/nuget-push.yml@rsg
-        parameters:
-          NuGetVersion: $(NuGetVersion)
-

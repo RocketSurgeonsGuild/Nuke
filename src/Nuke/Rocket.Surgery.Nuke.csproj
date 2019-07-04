@@ -4,5 +4,7 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Nuke.Common" />
+        <PackageReference Include="GitVersion.CommandLine.DotNetCore" />
+        <PackageReference Include="ReportGenerator" />
     </ItemGroup>
 </Project>
