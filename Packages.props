@@ -8,12 +8,12 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Nuke.Common" Version="0.20.1" />
-    <PackageReference Update="Rocket.Surgery.Nuke" Version="0.2.1-beta.1" />
+    <PackageReference Update="Rocket.Surgery.Nuke" Version="0.2.6" />
     <PackageReference Update="GitVersion.CommandLine.DotNetCore" Version="5.0.0-beta5.11" />
     <PackageReference Update="ReportGenerator" Version="4.2.9" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="Rocket.Surgery.Extensions.Testing" Version="1.1.10" />
+    <PackageReference Update="Rocket.Surgery.Extensions.Testing" Version="1.1.11" />
     <PackageReference Update="Autofac.Extras.FakeItEasy" Version="5.0.1" />
     <PackageReference Update="Bogus" Version="28.0.2" />
     <PackageReference Update="coverlet.collector" Version="1.0.1" />
