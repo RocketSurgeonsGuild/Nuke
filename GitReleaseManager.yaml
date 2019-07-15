@@ -1,0 +1,22 @@
+# create:
+#   include-footer: false
+#   footer-heading: ''
+#   footer-content: ''
+#   footer-includes-milestone: true
+export:
+  include-created-date-in-title: true
+issue-labels-include:
+  - ":boom: breaking change"
+  - ":rocket: feature"
+  - ":fire: enhancement"
+  - ":blue_book: documentation"
+  - ":beetle: bug"
+  - ":squirrel: chore"
+  - ":raised_hand: good first issue"
+  - ":raised_hand: help wanted"
+  - ":sparkles: mysterious"
+issue-labels-exclude:
+  - ":x: invalid"
+  - ":grey_question: question"
+  - ":lock: wontfix"
+  - ":family: duplicate"

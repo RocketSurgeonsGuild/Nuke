@@ -202,3 +202,5 @@ project.lock.json
 !tools/packages.config
 /scripts/
 src/Cake.Scripts/tools/tools/
+
+codealike.json

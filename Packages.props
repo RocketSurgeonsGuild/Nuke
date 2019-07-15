@@ -1,21 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project>
   <ItemGroup>
-    <GlobalPackageReference Include="Rocket.Surgery.Build.Metadata" Version="3.3.3" Condition="'$(MSBuildProjectName)'!='.build'" />
+    <GlobalPackageReference Include="Rocket.Surgery.Build.Metadata" Version="3.3.4" Condition="'$(MSBuildProjectName)'!='.build'" />
     <!-- <GlobalPackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.3" /> -->
-    <GlobalPackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19270-01" />
-    <GlobalPackageReference Include="Roslynator.Analyzers" Version="2.1.0-rc" />
+    <GlobalPackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19351-01" />
+    <GlobalPackageReference Include="Roslynator.Analyzers" Version="2.1.0" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Nuke.Common" Version="0.20.1" />
-    <PackageReference Update="Rocket.Surgery.Nuke" Version="0.1.0-beta.11" />
-    <PackageReference Update="GitVersion.CommandLine.DotNetCore" Version="5.0.0-beta5.2" />
-    <PackageReference Update="ReportGenerator" Version="4.2.5" />
+    <PackageReference Update="Rocket.Surgery.Nuke" Version="0.2.1-beta.1" />
+    <PackageReference Update="GitVersion.CommandLine.DotNetCore" Version="5.0.0-beta5.11" />
+    <PackageReference Update="ReportGenerator" Version="4.2.9" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Rocket.Surgery.Extensions.Testing" Version="1.1.10" />
     <PackageReference Update="Autofac.Extras.FakeItEasy" Version="5.0.1" />
-    <PackageReference Update="Bogus" Version="28.0.1" />
+    <PackageReference Update="Bogus" Version="28.0.2" />
     <PackageReference Update="coverlet.collector" Version="1.0.1" />
     <PackageReference Update="coverlet.msbuild" Version="2.6.3" />
     <PackageReference Update="FakeItEasy" Version="5.1.1" />
