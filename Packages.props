@@ -8,7 +8,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Nuke.Common" Version="0.20.1" />
-    <PackageReference Update="Rocket.Surgery.Nuke" Version="0.2.6" />
+    <PackageReference Update="Rocket.Surgery.Nuke" Version="0.2.7" />
     <PackageReference Update="GitVersion.CommandLine.DotNetCore" Version="5.0.0-beta5.11" />
     <PackageReference Update="ReportGenerator" Version="4.2.9" />
     <PackageReference Update="YamlDotNet" Version="6.1.1" />
