@@ -22,7 +22,6 @@ Every good Rocket Surgeon needs multiple choices of build systems to pick from t
 | Rocket.Surgery.Nuke | [![nuget-version-6plqb7nwtdoa-badge]![nuget-downloads-6plqb7nwtdoa-badge]][nuget-6plqb7nwtdoa] | [![myget-version-6plqb7nwtdoa-badge]![myget-downloads-6plqb7nwtdoa-badge]][myget-6plqb7nwtdoa] |
 <!-- nuget packages -->
 
-
 <!-- generated references -->
 [github-release]: https://github.com/RocketSurgeonsGuild/Nuke/releases/latest
 [github-release-badge]: https://img.shields.io/github/release/RocketSurgeonsGuild/Nuke.svg?logo=github&style=flat "Latest Release"

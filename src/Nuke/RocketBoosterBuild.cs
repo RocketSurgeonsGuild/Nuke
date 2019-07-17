@@ -14,6 +14,7 @@ using static Nuke.Common.Tools.VSWhere.VSWhereTasks;
 using System.IO;
 using System.Linq;
 using System.ComponentModel;
+using JetBrains.Annotations;
 using Rocket.Surgery.Nuke.Readme;
 
 namespace Rocket.Surgery.Nuke
@@ -21,6 +22,7 @@ namespace Rocket.Surgery.Nuke
     /// <summary>
     /// Base build plan and tasks
     /// </summary>
+    [PublicAPI]
     public abstract class RocketBoosterBuild : NukeBuild
     {
         /// <summary>

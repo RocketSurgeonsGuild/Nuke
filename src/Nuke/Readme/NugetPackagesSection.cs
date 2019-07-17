@@ -41,7 +41,10 @@ namespace Rocket.Surgery.Nuke.Readme
             }
 
             foreach (var package in packageNames)
+            {
                 sb.AppendLine(GetResult(config, references, package));
+            }
+
             return sb.ToString();
         }
         public string GetResult(IDictionary<string, object> config, IMarkdownReferences references, string packageName)
