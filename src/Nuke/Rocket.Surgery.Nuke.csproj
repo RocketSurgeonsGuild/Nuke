@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>netstandard2.0</TargetFrameworks>
         <NoWarn>$(NoWarn);CS0436</NoWarn>
@@ -7,6 +7,8 @@
         <PackageReference Include="Nuke.Common" />
         <PackageReference Include="GitVersion.CommandLine.DotNetCore" />
         <PackageReference Include="ReportGenerator" />
+        <PackageReference Include="YamlDotNet" />
+        <PackageReference Include="Buildalyzer" />
     </ItemGroup>
     <ItemGroup>
         <None Include="build/*.*" Pack="true" PackagePath="build" />
