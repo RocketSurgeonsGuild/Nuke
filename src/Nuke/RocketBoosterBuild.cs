@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Nuke.Common;
 using Nuke.Common.Execution;
 using Nuke.Common.Git;
@@ -14,6 +14,7 @@ using static Nuke.Common.Tools.VSWhere.VSWhereTasks;
 using System.IO;
 using System.Linq;
 using System.ComponentModel;
+using Rocket.Surgery.Nuke.Readme;
 
 namespace Rocket.Surgery.Nuke
 {
@@ -29,6 +30,12 @@ namespace Rocket.Surgery.Nuke
         public readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
         /// <summary>
+        /// Force a clean build, otherwise leave some incremental build pieces
+        /// </summary>
+        [Parameter("Force a clean build")]
+        public readonly bool Force;
+
+        /// <summary>
         /// The solution currently being build
         /// </summary>
         [Solution] public readonly Solution Solution;
@@ -42,6 +49,12 @@ namespace Rocket.Surgery.Nuke
         /// The Git Version information either computed by GitVersion itself, or as defined by environment variables of the format `GITVERSION_*`
         /// </summary>
         [ComputedGitVersion] public readonly GitVersion GitVersion;
+
+        /// <summary>
+        /// The readme updater that ensures that all the badges are in sync.
+        /// </summary>
+
+        [Readme] public readonly ReadmeUpdater Readme;
 
         /// <summary>
         /// The directory where samples will be placed
@@ -100,17 +113,20 @@ namespace Rocket.Surgery.Nuke
                 EnsureCleanDirectory(ArtifactsDirectory);
                 EnsureCleanDirectory(CoverageDirectory);
 
-                EnsureExistingDirectory(SampleDirectory);
-                SampleDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+                if (Force)
+                {
+                    EnsureExistingDirectory(SampleDirectory);
+                    SampleDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
 
-                EnsureExistingDirectory(SourceDirectory);
-                SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+                    EnsureExistingDirectory(SourceDirectory);
+                    SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
 
-                EnsureExistingDirectory(TemplatesDirectory);
-                TemplatesDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+                    EnsureExistingDirectory(TemplatesDirectory);
+                    TemplatesDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
 
-                EnsureExistingDirectory(TestDirectory);
-                TestDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+                    EnsureExistingDirectory(TestDirectory);
+                    TestDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+                }
             });
 
 
@@ -152,6 +168,20 @@ namespace Rocket.Surgery.Nuke
                     .SetTag(GitVersion.InformationalVersion)
                 );
                 RenameFile(CoverageDirectory / "Cobertura.xml", "solution.xml");
+            });
+
+        /// <summary>
+        /// Loops through the Readme to update sections that are automated to give nuget packages, build histories and more, while keeping the rest of the readme correct.
+        /// </summary>
+        public Target GenerateReadme => _ => _
+            .Unlisted()
+            .TriggeredBy(Clean)
+            .OnlyWhenDynamic(() => IsLocalBuild)
+            .Executes(() =>
+            {
+                var readmeContent = File.ReadAllText(RootDirectory / "Readme.md");
+                readmeContent = Readme.Process(readmeContent, this);
+                File.WriteAllText(RootDirectory / "Readme.md", readmeContent);
             });
     }
 }

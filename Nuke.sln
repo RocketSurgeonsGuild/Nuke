@@ -19,9 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = ".build", ".build\.build.csp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{E3DCB78E-EE06-4EA3-88AC-762D8910387C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rocket.Surgery.Nuke", "src\Nuke\Rocket.Surgery.Nuke.csproj", "{C33C63CF-8760-4305-B9AC-14456930C867}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rocket.Surgery.Nuke", "src\Nuke\Rocket.Surgery.Nuke.csproj", "{C33C63CF-8760-4305-B9AC-14456930C867}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rocket.Surgery.Nuke.Tests", "test\Nuke.Tests\Rocket.Surgery.Nuke.Tests.csproj", "{29950FB4-8A41-4C83-9FE0-FEA9C8D0BF67}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rocket.Surgery.Nuke.Tests", "test\Nuke.Tests\Rocket.Surgery.Nuke.Tests.csproj", "{29950FB4-8A41-4C83-9FE0-FEA9C8D0BF67}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
