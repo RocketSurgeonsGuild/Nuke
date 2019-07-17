@@ -42,7 +42,10 @@ namespace Rocket.Surgery.Nuke.Readme
                     continue;
                 }
                 var result = section.Process(subConfig, references, build);
-                if (string.IsNullOrWhiteSpace(result)) continue;
+                if (string.IsNullOrWhiteSpace(result))
+                {
+                    continue;
+                }
                 sb.AppendLine(result);
             }
 
