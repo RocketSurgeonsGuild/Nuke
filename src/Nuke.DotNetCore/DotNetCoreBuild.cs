@@ -19,12 +19,12 @@ namespace Rocket.Surgery.Nuke.DotNetCore
         /// </summary>
         public Target DotNetCore => _ => _;
 
-        /// <summary>
-        /// This will ensure that all local dotnet tools are installed
-        /// </summary>
-        //public Target DotnetToolRestore => _ => _
+        // /// <summary>
+        // /// This will ensure that all local dotnet tools are installed
+        // /// </summary>
+        // public Target DotnetToolRestore => _ => _
         //    .DependsOn(Clean)
-        //    .DependentFor(Core)
+        //    .DependentFor(DotNetCore)
         //    .Unlisted()
         //    .Executes(() => DotNet("tool restore"));
 
@@ -34,6 +34,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
         public Target Restore => _ => _
             .DependentFor(DotNetCore)
             // .DependsOn(DotnetToolRestore)
+            .DependsOn(Clean)
             .Executes(() =>
             {
                 DotNetRestore(s => s
@@ -70,7 +71,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
             .DependentFor(DotNetCore)
             .DependentFor(Pack)
             .DependentFor(Generate_Code_Coverage_Reports)
-            .OnlyWhenDynamic(() => TestDirectory.GlobFiles("test/**/*.csproj").Count > 0)
+            .OnlyWhenDynamic(() => TestDirectory.GlobFiles("**/*.csproj").Count > 0)
             .WhenSkipped(DependencyBehavior.Execute)
             .Executes(() =>
             {
