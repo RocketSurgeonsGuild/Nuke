@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rocket.Surgery.Nuke", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rocket.Surgery.Nuke.Tests", "test\Nuke.Tests\Rocket.Surgery.Nuke.Tests.csproj", "{29950FB4-8A41-4C83-9FE0-FEA9C8D0BF67}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rocket.Surgery.Nuke.DotNetCore", "src\Nuke.Core\Rocket.Surgery.Nuke.DotNetCore.csproj", "{2D88A441-0EF9-40EF-8A1A-CE5E12F62660}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rocket.Surgery.Nuke.DotNetCore", "src\Nuke.DotNetCore\Rocket.Surgery.Nuke.DotNetCore.csproj", "{2D88A441-0EF9-40EF-8A1A-CE5E12F62660}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
