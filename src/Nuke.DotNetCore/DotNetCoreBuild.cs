@@ -69,7 +69,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
             .DependsOn(Build)
             .DependentFor(DotNetCore)
             .DependentFor(Pack)
-            .Triggers(Generate_Code_Coverage_Reports)
+            .DependentFor(Generate_Code_Coverage_Reports)
             .OnlyWhenDynamic(() => TestDirectory.GlobFiles("test/**/*.csproj").Count > 0)
             .WhenSkipped(DependencyBehavior.Execute)
             .Executes(() =>
