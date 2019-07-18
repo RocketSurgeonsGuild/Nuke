@@ -15,6 +15,7 @@
     <PackageReference Include="GitVersion.CommandLine.DotNetCore" />
     <PackageReference Include="ReportGenerator" />
     <ProjectReference Include="../src/Nuke/Rocket.Surgery.Nuke.csproj" />
+    <ProjectReference Include="..\src\Nuke.Core\Rocket.Surgery.Nuke.DotNetCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>

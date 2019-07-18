@@ -4,12 +4,12 @@ using static Nuke.Common.IO.PathConstruction;
 using Nuke.Common.Tooling;
 using Newtonsoft.Json.Linq;
 
-namespace Rocket.Surgery.Nuke
+namespace Rocket.Surgery.Nuke.DotNetCore
 {
     /// <summary>
     /// Custom msbuild helper extensions
     /// </summary>
-    public static class CustomDotNetBuildExtensions
+    public static class ToolSettingsExtensions
     {
         /// <summary>
         /// Configures binary logging for MSBuild

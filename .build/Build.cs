@@ -1,6 +1,7 @@
 using Nuke.Common;
 using Nuke.Common.Execution;
 using Rocket.Surgery.Nuke;
+using Rocket.Surgery.Nuke.DotNetCore;
 
 [CheckBuildProjectConfigurations]
 [UnsetVisualStudioEnvironmentVariables]
@@ -16,5 +17,5 @@ class Program : DotNetCoreBuild
 
     public static int Main() => Execute<Program>(x => x.Default);
 
-    Target Default => _ => _.DependsOn(Core);
+    Target Default => _ => _.DependsOn(DotNetCore);
 }

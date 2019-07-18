@@ -7,7 +7,7 @@ using Nuke.Common.Tools.MSBuild;
 using Nuke.Common.Tools.VSTest;
 using Nuke.Common.Tools.VSWhere;
 
-namespace Rocket.Surgery.Nuke
+namespace Rocket.Surgery.Nuke.DotNetCore
 {
     /// <summary>
     /// Base build plan for .NET Core based applications
@@ -17,23 +17,23 @@ namespace Rocket.Surgery.Nuke
         /// <summary>
         /// Core target that can be used to trigger all targets for this build
         /// </summary>
-        public Target Core => _ => _;
+        public Target DotNetCore => _ => _;
 
         /// <summary>
         /// This will ensure that all local dotnet tools are installed
         /// </summary>
-        public Target DotnetToolRestore => _ => _
-            .DependsOn(Clean)
-            .DependentFor(Core)
-            .Unlisted()
-            .Executes(() => DotNet("tool restore"));
+        //public Target DotnetToolRestore => _ => _
+        //    .DependsOn(Clean)
+        //    .DependentFor(Core)
+        //    .Unlisted()
+        //    .Executes(() => DotNet("tool restore"));
 
         /// <summary>
         /// dotnet restore
         /// </summary>
         public Target Restore => _ => _
-            .DependentFor(Core)
-            .DependsOn(DotnetToolRestore)
+            .DependentFor(DotNetCore)
+            // .DependsOn(DotnetToolRestore)
             .Executes(() =>
             {
                 DotNetRestore(s => s
@@ -50,7 +50,7 @@ namespace Rocket.Surgery.Nuke
         /// </summary>
         public Target Build => _ => _
             .DependsOn(Restore)
-            .DependentFor(Core)
+            .DependentFor(DotNetCore)
             .Executes(() =>
             {
                 DotNetBuild(s => s
@@ -67,7 +67,7 @@ namespace Rocket.Surgery.Nuke
         /// </summary>
         public Target Test => _ => _
             .DependsOn(Build)
-            .DependentFor(Core)
+            .DependentFor(DotNetCore)
             .DependentFor(Pack)
             .Triggers(Generate_Code_Coverage_Reports)
             .OnlyWhenDynamic(() => TestDirectory.GlobFiles("test/**/*.csproj").Count > 0)
@@ -92,17 +92,17 @@ namespace Rocket.Surgery.Nuke
             //             .SetProperty("VSTestResultsDirectory", TestResultsDirectory));
             //     });
 
-            DotNetTest(s => s
-                    .SetProjectFile(Solution)
-                    .SetBinaryLogger(LogsDirectory / "test.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
-                    .SetFileLogger(LogsDirectory / "test.log", Verbosity)
-                    .SetGitVersionEnvironment(GitVersion)
-                    .SetConfiguration(Configuration)
-                    .EnableNoRestore()
-                    .SetLogger($"trx")
-                    .SetProperty("CollectCoverage", true)
-                    .SetProperty("CoverageDirectory", CoverageDirectory)
-                    .SetProperty("VSTestResultsDirectory", TestResultsDirectory));
+                DotNetTest(s => s
+                        .SetProjectFile(Solution)
+                        .SetBinaryLogger(LogsDirectory / "test.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
+                        .SetFileLogger(LogsDirectory / "test.log", Verbosity)
+                        .SetGitVersionEnvironment(GitVersion)
+                        .SetConfiguration(Configuration)
+                        .EnableNoRestore()
+                        .SetLogger($"trx")
+                        .SetProperty("CollectCoverage", true)
+                        .SetProperty("CoverageDirectory", CoverageDirectory)
+                        .SetProperty("VSTestResultsDirectory", TestResultsDirectory));
             });
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace Rocket.Surgery.Nuke
         /// </summary>
         public Target Pack => _ => _
             .DependsOn(Build)
-            .DependentFor(Core)
+            .DependentFor(DotNetCore)
             .Executes(() =>
             {
                 DotNetPack(s => s
