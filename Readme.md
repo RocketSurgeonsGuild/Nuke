@@ -21,6 +21,7 @@ Every good Rocket Surgeon needs multiple choices of build systems to pick from t
 | Package | NuGet | MyGet |
 | ------- | ----- | ----- |
 | Rocket.Surgery.Nuke | [![nuget-version-6plqb7nwtdoa-badge]![nuget-downloads-6plqb7nwtdoa-badge]][nuget-6plqb7nwtdoa] | [![myget-version-6plqb7nwtdoa-badge]![myget-downloads-6plqb7nwtdoa-badge]][myget-6plqb7nwtdoa] |
+| Rocket.Surgery.Nuke.DotNetCore | [![nuget-version-75gp65y/nhyw-badge]![nuget-downloads-75gp65y/nhyw-badge]][nuget-75gp65y/nhyw] | [![myget-version-75gp65y/nhyw-badge]![myget-downloads-75gp65y/nhyw-badge]][myget-75gp65y/nhyw] |
 <!-- nuget packages -->
 
 <!-- generated references -->
@@ -46,6 +47,12 @@ Every good Rocket Surgeon needs multiple choices of build systems to pick from t
 [myget-6plqb7nwtdoa]: https://www.myget.org/feed/rocket-surgeons-guild/package/nuget/Rocket.Surgery.Nuke
 [myget-version-6plqb7nwtdoa-badge]: https://img.shields.io/myget/rocket-surgeons-guild/vpre/Rocket.Surgery.Nuke.svg?label=myget&color=004880&logo=nuget&style=flat-square "MyGet Pre-Release Version"
 [myget-downloads-6plqb7nwtdoa-badge]: https://img.shields.io/myget/rocket-surgeons-guild/dt/Rocket.Surgery.Nuke.svg?color=004880&logo=nuget&style=flat-square "MyGet Downloads"
+[nuget-75gp65y/nhyw]: https://www.nuget.org/packages/Rocket.Surgery.Nuke.DotNetCore/
+[nuget-version-75gp65y/nhyw-badge]: https://img.shields.io/nuget/v/Rocket.Surgery.Nuke.DotNetCore.svg?color=004880&logo=nuget&style=flat-square "NuGet Version"
+[nuget-downloads-75gp65y/nhyw-badge]: https://img.shields.io/nuget/dt/Rocket.Surgery.Nuke.DotNetCore.svg?color=004880&logo=nuget&style=flat-square "NuGet Downloads"
+[myget-75gp65y/nhyw]: https://www.myget.org/feed/rocket-surgeons-guild/package/nuget/Rocket.Surgery.Nuke.DotNetCore
+[myget-version-75gp65y/nhyw-badge]: https://img.shields.io/myget/rocket-surgeons-guild/vpre/Rocket.Surgery.Nuke.DotNetCore.svg?label=myget&color=004880&logo=nuget&style=flat-square "MyGet Pre-Release Version"
+[myget-downloads-75gp65y/nhyw-badge]: https://img.shields.io/myget/rocket-surgeons-guild/dt/Rocket.Surgery.Nuke.DotNetCore.svg?color=004880&logo=nuget&style=flat-square "MyGet Downloads"
 <!-- generated references -->
 
 <!-- nuke-data

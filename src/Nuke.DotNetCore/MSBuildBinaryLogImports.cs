@@ -1,4 +1,4 @@
-namespace Rocket.Surgery.Nuke
+namespace Rocket.Surgery.Nuke.DotNetCore
 {
     /// <summary>
     /// What files to include in the binary log

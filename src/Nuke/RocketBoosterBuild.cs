@@ -178,7 +178,7 @@ namespace Rocket.Surgery.Nuke
         public Target GenerateReadme => _ => _
             .Unlisted()
             .TriggeredBy(Clean)
-            .OnlyWhenDynamic(() => IsLocalBuild)
+            .OnlyWhenDynamic(() => IsLocalBuild && Force)
             .Executes(() =>
             {
                 var readmeContent = File.ReadAllText(RootDirectory / "Readme.md");
