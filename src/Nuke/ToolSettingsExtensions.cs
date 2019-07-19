@@ -4,7 +4,7 @@ using static Nuke.Common.IO.PathConstruction;
 using Nuke.Common.Tooling;
 using Newtonsoft.Json.Linq;
 
-namespace Rocket.Surgery.Nuke.DotNetCore
+namespace Rocket.Surgery.Nuke
 {
     /// <summary>
     /// Custom msbuild helper extensions

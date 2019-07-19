@@ -16,17 +16,7 @@ namespace Rocket.Surgery.Nuke.Readme
 
         public string Process(IDictionary<string, object> config, IMarkdownReferences references, RocketBoosterBuild build)
         {
-            var am = new AnalyzerManager(build.Solution.Path.ToString(), new AnalyzerManagerOptions());
-
-            var packageNames = build.Solution.AllProjects
-                .Where(x => x.Directory.Parent.ToString() == build.SourceDirectory.ToString())
-                .Where(x =>
-                {
-                    var projectResults = am.GetProject(x.Path.ToString()).Build().First();
-                    return bool.TryParse(projectResults.GetProperty("IsPackable") ?? "false", out var b) ? b : false;
-                })
-                .Select(x => x.Name)
-                .ToArray();
+            var packageNames = build.Solution.WherePackable().Select(x => x.Name);
 
             var sb = new StringBuilder();
             if (config.ContainsKey("myget"))
