@@ -7,7 +7,6 @@ Every good Rocket Surgeon needs multiple choices of build systems to pick from t
 [![github-release-badge]][github-release]
 [![github-license-badge]][github-license]
 [![codecov-badge]][codecov]
-[![codacy-badge]][codacy]
 <!-- badges -->
 
 <!-- history badges -->
@@ -31,8 +30,6 @@ Every good Rocket Surgeon needs multiple choices of build systems to pick from t
 [github-license-badge]: https://img.shields.io/github/license/RocketSurgeonsGuild/Nuke.svg?style=flat "License"
 [codecov]: https://codecov.io/gh/RocketSurgeonsGuild/Nuke
 [codecov-badge]: https://img.shields.io/codecov/c/github/RocketSurgeonsGuild/Nuke.svg?color=E03997&label=codecov&logo=codecov&logoColor=E03997&style=flat "Code Coverage"
-[codacy]: https://www.codacy.com/app/RocketSurgeonsGuild/Nuke
-[codacy-badge]: https://api.codacy.com/project/badge/Grade/d31c561959b34f35ae2d99979bfb239a "Codacy"
 [azurepipelines]: https://rocketsurgeonsguild.visualstudio.com/Libraries/_build/latest?definitionId=31&branchName=master
 [azurepipelines-badge]: https://img.shields.io/azure-devops/build/rocketsurgeonsguild/Libraries/31.svg?color=98C6FF&label=azure%20pipelines&logo=azuredevops&logoColor=98C6FF&style=flat "Azure Pipelines Status"
 [azurepipelines-history]: https://rocketsurgeonsguild.visualstudio.com/Libraries/_build?definitionId=31&branchName=master
@@ -68,6 +65,4 @@ appveyor:
   build: Nuke
 myget:
   account: rocket-surgeons-guild
-codacy:
-  project: d31c561959b34f35ae2d99979bfb239a
 -->

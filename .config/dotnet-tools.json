@@ -15,13 +15,13 @@
       ]
     },
     "cake.tool": {
-      "version": "0.33.0",
+      "version": "0.34.1",
       "commands": [
         "dotnet-cake"
       ]
     },
     "gitversion.tool": {
-      "version": "5.0.0-beta4-9",
+      "version": "5.0.0-beta5.40",
       "commands": [
         "dotnet-gitversion"
       ]
@@ -33,7 +33,7 @@
       ]
     },
     "nuke.globaltool": {
-      "version": "0.20.1",
+      "version": "0.21.1",
       "commands": [
         "nuke"
       ]
