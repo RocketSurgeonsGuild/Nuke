@@ -78,7 +78,6 @@ namespace Rocket.Surgery.Nuke
         /// </summary>
         public AbsolutePath TestDirectory => RootDirectory / "test";
 
-
         /// <summary>
         /// The directory where artifacts are to be dropped
         /// </summary>
