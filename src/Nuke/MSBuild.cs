@@ -10,6 +10,7 @@ using System.Linq;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.ProjectModel;
 using Buildalyzer;
+using static Rocket.Surgery.Nuke.VerbosityDictionaries;
 
 namespace Rocket.Surgery.Nuke
 {
@@ -34,6 +35,7 @@ namespace Rocket.Surgery.Nuke
                     .NuGetRestore(settings =>
                         settings
                             .SetSolutionDirectory(Solution)
+                            .SetVerbosity(NuGetVerbosityDictionary[Verbosity])
                             .EnableNoCache());
             });
 
@@ -49,7 +51,7 @@ namespace Rocket.Surgery.Nuke
                         settings
                             .SetSolutionFile(Solution)
                             .SetConfiguration(Configuration)
-                            .SetVerbosity(MSBuildVerbosity.Quiet)
+                            .SetVerbosity(MSBuildVerbosityDictionary[Verbosity])
                             .SetAssemblyVersion(GitVersion.AssemblySemVer));
             });
 
@@ -64,13 +66,13 @@ namespace Rocket.Surgery.Nuke
             {
                 foreach (var project in Solution.GetTestProjects())
                 {
-
                     DotNetTasks
                         .DotNetTest(settings =>
                             settings
                                 .SetProjectFile(project)
                                 .SetGitVersionEnvironment(GitVersion)
                                 .SetConfiguration(Configuration)
+                                .SetVerbosity(DotNetVerbosityDictionary[Verbosity])
                                 .EnableNoRestore());
                 }
             });
@@ -92,6 +94,7 @@ namespace Rocket.Surgery.Nuke
                                 .SetConfiguration(Configuration)
                                 .SetVersion(GitVersion.NuGetVersionV2)
                                 .SetOutputDirectory(NuGetPackageDirectory)
+                                .SetVerbosity(NuGetVerbosityDictionary[Verbosity])
                                 .SetBuild(true));
                 }
             });
