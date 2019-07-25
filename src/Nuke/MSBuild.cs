@@ -51,8 +51,9 @@ namespace Rocket.Surgery.Nuke
                         settings
                             .SetSolutionFile(Solution)
                             .SetConfiguration(Configuration)
-                            .SetBinaryLogger(LogsDirectory / "restore.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
+                            .SetBinaryLogger(LogsDirectory / "build.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
                             .SetVerbosity(MSBuildVerbosityDictionary[Verbosity])
+                            .SetGitVersionEnvironment(GitVersion)
                             .SetAssemblyVersion(GitVersion.AssemblySemVer));
             });
 
@@ -71,10 +72,13 @@ namespace Rocket.Surgery.Nuke
                         .DotNetTest(settings =>
                             settings
                                 .SetProjectFile(project)
-                                .SetGitVersionEnvironment(GitVersion)
                                 .SetConfiguration(Configuration)
+                                .SetGitVersionEnvironment(GitVersion)
+                                .SetBinaryLogger(LogsDirectory / "test.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
+                                .EnableNoRestore()
+                                .SetLogger($"trx")
                                 .SetVerbosity(DotNetVerbosityDictionary[Verbosity])
-                                .EnableNoRestore());
+                                .SetProperty("VSTestResultsDirectory", TestResultsDirectory));
                 }
             });
 
