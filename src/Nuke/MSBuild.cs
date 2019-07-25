@@ -51,6 +51,7 @@ namespace Rocket.Surgery.Nuke
                         settings
                             .SetSolutionFile(Solution)
                             .SetConfiguration(Configuration)
+                            .SetBinaryLogger(LogsDirectory / "restore.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
                             .SetVerbosity(MSBuildVerbosityDictionary[Verbosity])
                             .SetAssemblyVersion(GitVersion.AssemblySemVer));
             });
