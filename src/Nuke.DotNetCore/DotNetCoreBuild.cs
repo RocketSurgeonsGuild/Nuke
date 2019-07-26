@@ -76,17 +76,17 @@ namespace Rocket.Surgery.Nuke.DotNetCore
             .Executes(() =>
             {
                 DotNetTest(s => s
-                        .SetProjectFile(Solution)
-                        .SetBinaryLogger(LogsDirectory / "test.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
-                        .SetFileLogger(LogsDirectory / "test.log", Verbosity)
-                        .SetGitVersionEnvironment(GitVersion)
-                        .SetConfiguration(Configuration)
-                        .EnableNoRestore()
-                        .SetLogger($"trx")
-                        .SetProperty("CollectCoverage", true)
-                        .SetProperty("CoverageDirectory", CoverageDirectory)
-                        .SetProperty("VSTestResultsDirectory", TestResultsDirectory)
-                        .SetProperty("VSTestCollect", "\"XPlat Code Coverage\"")
+                    .SetProjectFile(Solution)
+                    .SetBinaryLogger(LogsDirectory / "test.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
+                    .SetFileLogger(LogsDirectory / "test.log", Verbosity)
+                    .SetGitVersionEnvironment(GitVersion)
+                    .SetConfiguration("Debug")
+                    .EnableNoRestore()
+                    .SetLogger($"trx")
+                    .SetProperty("CollectCoverage", true)
+                    .SetProperty("CoverageDirectory", CoverageDirectory)
+                    .SetProperty("VSTestResultsDirectory", TestResultsDirectory)
+                    .SetProperty("VSTestCollect", "\"XPlat Code Coverage\"")
                 );
             });
 
