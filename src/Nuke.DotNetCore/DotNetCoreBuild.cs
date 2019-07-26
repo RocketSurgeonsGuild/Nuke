@@ -75,24 +75,6 @@ namespace Rocket.Surgery.Nuke.DotNetCore
             .WhenSkipped(DependencyBehavior.Execute)
             .Executes(() =>
             {
-            // TestDirectory.GlobFiles("**/*.csproj")
-            //     .ForEach((Project) =>
-            //     {
-            //         var name = Path.GetFileNameWithoutExtension(Project).ToLowerInvariant();
-            //         // var name = Project.
-            //         DotNetTest(s => s
-            //             .SetProjectFile(Project)
-            //             .SetBinaryLogger(LogsDirectory / $"{name}.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
-            //             .SetFileLogger(LogsDirectory / $"{name}.log", Verbosity)
-            //             .SetGitVersionEnvironment(GitVersion)
-            //             .SetConfiguration(Configuration)
-            //             .EnableNoRestore()
-            //             .SetLogger($"trx;LogFileName={TestResultsDirectory / $"{name}.trx"}")
-            //             .SetProperty("CollectCoverage", true)
-            //             .SetProperty("CoverageDirectory", CoverageDirectory)
-            //             .SetProperty("VSTestResultsDirectory", TestResultsDirectory));
-            //     });
-
                 DotNetTest(s => s
                         .SetProjectFile(Solution)
                         .SetBinaryLogger(LogsDirectory / "test.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
@@ -103,7 +85,9 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                         .SetLogger($"trx")
                         .SetProperty("CollectCoverage", true)
                         .SetProperty("CoverageDirectory", CoverageDirectory)
-                        .SetProperty("VSTestResultsDirectory", TestResultsDirectory));
+                        .SetProperty("VSTestResultsDirectory", TestResultsDirectory)
+                        .SetProperty("VSTestCollect", "\"XPlat Code Coverage\"")
+                );
             });
 
         /// <summary>
