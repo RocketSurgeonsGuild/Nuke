@@ -4,7 +4,7 @@
     <DataCollectors>
       <DataCollector friendlyName="XPlat code coverage">
         <Configuration>
-          <Exclude>[Bogus*]*,[Autofac*]*,[FakeItEasy*]*,[xunit*]*,[Microsoft.*]*,[XunitXml*]*,[coverlet.*]*,[System.*]*,[*]JetBrains.Annotations*</Exclude>
+          <!-- <Exclude>[Bogus*]*,[Autofac*]*,[FakeItEasy*]*,[xunit*]*,[Microsoft.*]*,[XunitXml*]*,[coverlet.*]*,[System.*]*,[*]JetBrains.Annotations*</Exclude> -->
           <Include>[Rocket.Surgery.*]*</Include>
           <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute</ExcludeByAttribute>
           <!-- <ExcludeByFile></ExcludeByFile> -->
