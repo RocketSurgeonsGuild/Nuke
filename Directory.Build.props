@@ -8,6 +8,6 @@
 
         <!-- <DebugType>portable</DebugType> -->
         <!-- <DebugType>pdbonly</DebugType> -->
-        <DebugType>full</DebugType>
+        <!-- <DebugType>full</DebugType> -->
     </PropertyGroup>
 </Project>
