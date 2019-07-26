@@ -85,7 +85,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                         .SetBinaryLogger(LogsDirectory / "test.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
                         .SetFileLogger(LogsDirectory / "test.log", Verbosity)
                         .SetGitVersionEnvironment(GitVersion)
-                        .SetConfiguration(Configuration)
+                        .SetConfiguration("Debug")
                         .EnableNoRestore()
                         .SetLogger($"trx")
                         .SetProperty("CollectCoverage", (IsLocalBuild && !Force))
