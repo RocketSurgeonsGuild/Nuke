@@ -5,7 +5,7 @@
         <PackageReference Include="Autofac.Extras.FakeItEasy" />
         <PackageReference Include="Bogus" />
         <PackageReference Include="coverlet.collector" />
-        <PackageReference Include="coverlet.msbuild" />
+        <!-- <PackageReference Include="coverlet.msbuild" /> -->
         <PackageReference Include="FakeItEasy" />
         <PackageReference Include="FakeItEasy.Analyzer.CSharp" />
         <PackageReference Include="FluentAssertions" />

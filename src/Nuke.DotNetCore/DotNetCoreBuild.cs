@@ -3,9 +3,11 @@ using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
 using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
+using static Nuke.Common.IO.FileSystemTasks;
 using Nuke.Common.Tools.MSBuild;
 using Nuke.Common.Tools.VSTest;
 using Nuke.Common.Tools.VSWhere;
+using Nuke.Common.IO;
 
 namespace Rocket.Surgery.Nuke.DotNetCore
 {
@@ -71,6 +73,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
             .DependentFor(DotNetCore)
             .DependentFor(Pack)
             .DependentFor(Generate_Code_Coverage_Reports)
+            .Triggers(Generate_Code_Coverage_Reports)
             .OnlyWhenDynamic(() => TestDirectory.GlobFiles("**/*.csproj").Count > 0)
             .WhenSkipped(DependencyBehavior.Execute)
             .Executes(() =>
@@ -83,11 +86,16 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                     .SetConfiguration("Debug")
                     .EnableNoRestore()
                     .SetLogger($"trx")
-                    .SetProperty("CollectCoverage", true)
+                    .SetProperty("CollectCoverage", false)
                     .SetProperty("CoverageDirectory", CoverageDirectory)
-                    .SetProperty("VSTestResultsDirectory", TestResultsDirectory)
-                    .SetProperty("VSTestCollect", "\"XPlat Code Coverage\"")
+                    .SetResultsDirectory(TestResultsDirectory)
+                    .SetDataCollector("XPlat Code Coverage")
+                    // .SetProperty("VSTestResultsDirectory", TestResultsDirectory)
+                    // .SetProperty("VSTestCollect", "\"XPlat Code Coverage\"")
                 );
+                foreach (var coverage in TestResultsDirectory.GlobFiles("**/*.cobertura.xml")) {
+                    CopyFileToDirectory(coverage, CoverageDirectory, FileExistsPolicy.OverwriteIfNewer);
+                }
             });
 
         /// <summary>
