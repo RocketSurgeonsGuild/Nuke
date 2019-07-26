@@ -19,7 +19,7 @@
     <PackageReference Update="Autofac.Extras.FakeItEasy" Version="5.0.1" />
     <PackageReference Update="Bogus" Version="28.0.2" />
     <PackageReference Update="coverlet.collector" Version="1.0.1" />
-    <PackageReference Update="coverlet.msbuild" Version="2.6.3" />
+    <PackageReference Update="coverlet.msbuild" Version="2.6.3" IncludeAssets="all" PrivateAssets="runtime;build;native;contentfiles;analyzers" />
     <PackageReference Update="FakeItEasy" Version="5.1.1" />
     <PackageReference Update="FakeItEasy.Analyzer.CSharp" Version="5.1.1" />
     <PackageReference Update="FluentAssertions" Version="5.7.0" />
