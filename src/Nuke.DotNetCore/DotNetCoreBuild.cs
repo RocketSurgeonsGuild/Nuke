@@ -78,22 +78,26 @@ namespace Rocket.Surgery.Nuke.DotNetCore
             .WhenSkipped(DependencyBehavior.Execute)
             .Executes(() =>
             {
-                DotNetTest(s => s
-                    .SetProjectFile(Solution)
-                    .SetBinaryLogger(LogsDirectory / "test.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
-                    .SetFileLogger(LogsDirectory / "test.log", Verbosity)
-                    .SetGitVersionEnvironment(GitVersion)
-                    .SetConfiguration("Debug")
-                    .EnableNoRestore()
-                    .SetLogger($"trx")
-                    .SetProperty("CollectCoverage", false)
-                    .SetProperty("CoverageDirectory", CoverageDirectory)
-                    .SetResultsDirectory(TestResultsDirectory)
-                    .SetDataCollector("XPlat Code Coverage")
-                    // .SetProperty("VSTestResultsDirectory", TestResultsDirectory)
-                    // .SetProperty("VSTestCollect", "\"XPlat Code Coverage\"")
-                );
-                foreach (var coverage in TestResultsDirectory.GlobFiles("**/*.cobertura.xml")) {
+                DotNetTest(s =>
+                {
+                    var a = s
+                        .SetProjectFile(Solution)
+                        .SetBinaryLogger(LogsDirectory / "test.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
+                        .SetFileLogger(LogsDirectory / "test.log", Verbosity)
+                        .SetGitVersionEnvironment(GitVersion)
+                        .SetConfiguration(Configuration)
+                        .EnableNoRestore()
+                        .SetLogger($"trx")
+                        .SetProperty("CoverageDirectory", CoverageDirectory)
+                        .SetResultsDirectory(TestResultsDirectory);
+                    var b = (FileExists(TestDirectory / "coverlet.runsettings") ? a.SetSettingsFile(TestDirectory / "coverlet.runsettings") : a);
+                    return
+                        IsLocalBuild || Force ? b
+                        .SetProperty("CollectCoverage", true) : b
+                        .SetDataCollector("XPlat Code Coverage");
+                });
+                foreach (var coverage in TestResultsDirectory.GlobFiles("**/*.cobertura.xml"))
+                {
                     CopyFileToDirectory(coverage, CoverageDirectory, FileExistsPolicy.OverwriteIfNewer);
                 }
             });

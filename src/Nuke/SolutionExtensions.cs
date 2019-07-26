@@ -7,6 +7,9 @@ using System.Text;
 
 namespace Rocket.Surgery.Nuke
 {
+    /// <summary>
+    /// Extensions for finding projects in solutions
+    /// </summary>
     public static class SolutionExtensions
     {
         /// <summary>

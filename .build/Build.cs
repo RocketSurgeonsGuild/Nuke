@@ -1,7 +1,6 @@
 using Nuke.Common;
 using Nuke.Common.Execution;
 using Rocket.Surgery.Nuke.DotNetCore;
-using Rocket.Surgery.Nuke.DotNetCore;
 
 [CheckBuildProjectConfigurations]
 [UnsetVisualStudioEnvironmentVariables]
