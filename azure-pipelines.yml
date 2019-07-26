@@ -14,7 +14,7 @@ resources:
     - repository: rsg
       type: github
       name: RocketSurgeonsGuild/AzureDevopsTemplates
-      ref: refs/tags/v0.8.0
+      # ref: refs/tags/v0.8.0
       endpoint: github
 
 variables:
@@ -27,8 +27,8 @@ variables:
     value: "$(Agent.BuildDirectory)/c"
   - name: ARTIFACTS
     value: $(Build.ArtifactStagingDirectory)
-  # - name: DOTNET_SKIP_FIRST_TIME_EXPERIENCE
-  #   value: "true"
+  - name: DOTNET_SKIP_FIRST_TIME_EXPERIENCE
+    value: "true"
   - name: CodeCovToken
     value: 'c93f6719-da50-4d00-ba2b-b73fd95239e0'
 
