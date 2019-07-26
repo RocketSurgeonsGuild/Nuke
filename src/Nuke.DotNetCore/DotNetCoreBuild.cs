@@ -88,11 +88,13 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                         .SetConfiguration("Debug")
                         .EnableNoRestore()
                         .SetLogger($"trx")
-                        .SetProperty("CollectCoverage", (IsLocalBuild && !Force))
+                        // .SetProperty("CollectCoverage", (IsLocalBuild && !Force))
+                        .SetProperty("CollectCoverage", true)
                         .SetProperty("CoverageDirectory", CoverageDirectory)
                         .SetResultsDirectory(TestResultsDirectory);
-                    var b = (FileExists(TestDirectory / "coverlet.runsettings") ? a.SetSettingsFile(TestDirectory / "coverlet.runsettings") : a);
-                    return !IsLocalBuild || Force ? b.SetDataCollector("XPlat Code Coverage") : b;
+                    // var b = (FileExists(TestDirectory / "coverlet.runsettings") ? a.SetSettingsFile(TestDirectory / "coverlet.runsettings") : a);
+                    // return !IsLocalBuild || Force ? b.SetDataCollector("XPlat Code Coverage") : b;
+                    return a;
                 });
                 foreach (var coverage in TestResultsDirectory.GlobFiles("**/*.cobertura.xml"))
                 {
