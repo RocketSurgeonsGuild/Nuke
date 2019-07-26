@@ -5,5 +5,9 @@
         <Authors>David Driscoll</Authors>
         <LangVersion>latest</LangVersion>
         <PackageIconUrl>https://raw.githubusercontent.com/RocketSurgeonsGuild/graphics/master/png/rsg-patch-circle-color.png</PackageIconUrl>
+
+        <DebugType>portable</DebugType>
+        <!-- <DebugType>pdbonly</DebugType> -->
+        <!-- <DebugType>full</DebugType> -->
     </PropertyGroup>
 </Project>
