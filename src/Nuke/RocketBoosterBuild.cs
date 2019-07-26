@@ -168,7 +168,7 @@ namespace Rocket.Surgery.Nuke
                     .SetReportTypes(ReportTypes.HtmlSummary, ReportTypes.TextSummary)
                     .SetTag(GitVersion.InformationalVersion)
                 );
-                CopyFile(CoverageDirectory / "Cobertura.xml", "solution.cobertura");
+                CopyFile(CoverageDirectory / "Cobertura.xml", CoverageDirectory / "solution.cobertura");
                 RenameFile(CoverageDirectory / "Cobertura.xml", "solution.xml");
             });
 
