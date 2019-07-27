@@ -4,7 +4,7 @@ trigger:
       - master
       - refs/tags/*
 pr:
-  autoCancel: true
+  autoCancel: 'true'
   branches:
     include:
       - master
