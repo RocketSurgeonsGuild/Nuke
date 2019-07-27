@@ -8,6 +8,8 @@ using Nuke.Common.Tools.MSBuild;
 using Nuke.Common.Tools.VSTest;
 using Nuke.Common.Tools.VSWhere;
 using Nuke.Common.IO;
+using Nuke.Common.Utilities.Collections;
+using System.IO;
 
 namespace Rocket.Surgery.Nuke.DotNetCore
 {
@@ -78,24 +80,39 @@ namespace Rocket.Surgery.Nuke.DotNetCore
             .WhenSkipped(DependencyBehavior.Execute)
             .Executes(() =>
             {
-                DotNetTest(s =>
-                {
-                    var a = s
+                // TestDirectory.GlobFiles("**/*.csproj")
+                //     .ForEach((Project) =>
+                //     {
+                //         var name = Path.GetFileNameWithoutExtension(Project).ToLowerInvariant();
+                //         // var name = Project.
+                //         DotNetTest(s => s
+                //             .SetProjectFile(Project)
+                //             .SetBinaryLogger(LogsDirectory / $"{name}.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
+                //             .SetFileLogger(LogsDirectory / $"{name}.log", Verbosity)
+                //             .SetGitVersionEnvironment(GitVersion)
+                //             .SetConfiguration(Configuration)
+                //             .EnableNoRestore()
+                //             .SetLogger("trx")
+                //             .SetProperty("CollectCoverage", true)
+                //             .SetProperty("CoverageDirectory", CoverageDirectory)
+                //             .SetResultsDirectory(TestResultsDirectory)
+                //         );
+                //     });
+                DotNetTest(s => s
                         .SetProjectFile(Solution)
                         .SetBinaryLogger(LogsDirectory / "test.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
                         .SetFileLogger(LogsDirectory / "test.log", Verbosity)
                         .SetGitVersionEnvironment(GitVersion)
-                        .SetConfiguration("Debug")
+                        .SetConfiguration(Configuration)
                         .EnableNoRestore()
                         .SetLogger($"trx")
                         // .SetProperty("CollectCoverage", (IsLocalBuild && !Force))
                         .SetProperty("CollectCoverage", true)
                         .SetProperty("CoverageDirectory", CoverageDirectory)
-                        .SetResultsDirectory(TestResultsDirectory);
+                        .SetResultsDirectory(TestResultsDirectory)
                     // var b = (FileExists(TestDirectory / "coverlet.runsettings") ? a.SetSettingsFile(TestDirectory / "coverlet.runsettings") : a);
                     // return !IsLocalBuild || Force ? b.SetDataCollector("XPlat Code Coverage") : b;
-                    return a;
-                });
+                );
                 foreach (var coverage in TestResultsDirectory.GlobFiles("**/*.cobertura.xml"))
                 {
                     CopyFileToDirectory(coverage, CoverageDirectory, FileExistsPolicy.OverwriteIfNewer);
