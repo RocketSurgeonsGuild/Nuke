@@ -90,8 +90,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                 DotNetTest(s => {
                     var a = s
                         .SetProjectFile(Solution)
-                        // .SetBinaryLogger(LogsDirectory / "test.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
-                        .SetBinaryLogger(LogsDirectory / "test.binlog", MSBuildBinaryLogImports.None)
+                        .SetBinaryLogger(LogsDirectory / "test.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
                         .SetFileLogger(LogsDirectory / "test.log", Verbosity)
                         .SetGitVersionEnvironment(GitVersion)
                         .SetConfiguration(Configuration)
