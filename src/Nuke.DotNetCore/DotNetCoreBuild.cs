@@ -92,6 +92,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                             .SetGitVersionEnvironment(GitVersion)
                             .SetConfiguration(Configuration)
                             .EnableNoRestore()
+                            .EnableNoBuild()
                             .SetLogger("trx")
                             .SetProperty("CollectCoverage", true)
                             .SetProperty("CoverageDirectory", CoverageDirectory)
