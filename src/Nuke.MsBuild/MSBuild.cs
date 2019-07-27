@@ -12,7 +12,7 @@ using Nuke.Common.ProjectModel;
 using Buildalyzer;
 using static Rocket.Surgery.Nuke.VerbosityDictionaries;
 
-namespace Rocket.Surgery.Nuke
+namespace Rocket.Surgery.Nuke.MsBuild
 {
     /// <summary>
     /// Base build plan for .NET Framework based applications
@@ -35,6 +35,8 @@ namespace Rocket.Surgery.Nuke
                     .NuGetRestore(settings =>
                         settings
                             .SetSolutionDirectory(Solution)
+                            // .SetBinaryLogger(LogsDirectory / "restore.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
+                            // .SetFileLogger(LogsDirectory / "restore.log", Verbosity)
                             .SetVerbosity(NuGetVerbosityDictionary[Verbosity])
                             .EnableNoCache());
             });
@@ -52,6 +54,7 @@ namespace Rocket.Surgery.Nuke
                             .SetSolutionFile(Solution)
                             .SetConfiguration(Configuration)
                             .SetBinaryLogger(LogsDirectory / "build.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
+                            .SetFileLogger(LogsDirectory / "build.log", Verbosity)
                             .SetVerbosity(MSBuildVerbosityDictionary[Verbosity])
                             .SetGitVersionEnvironment(GitVersion)
                             .SetAssemblyVersion(GitVersion.AssemblySemVer));
@@ -75,6 +78,7 @@ namespace Rocket.Surgery.Nuke
                                 .SetConfiguration(Configuration)
                                 .SetGitVersionEnvironment(GitVersion)
                                 .SetBinaryLogger(LogsDirectory / "test.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
+                                .SetFileLogger(LogsDirectory / "test.log", Verbosity)
                                 .EnableNoRestore()
                                 .SetLogger($"trx")
                                 .SetVerbosity(DotNetVerbosityDictionary[Verbosity])

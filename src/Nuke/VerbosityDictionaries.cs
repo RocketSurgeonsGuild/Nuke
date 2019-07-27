@@ -8,8 +8,14 @@ using Nuke.Common.Tools.NuGet;
 
 namespace Rocket.Surgery.Nuke
 {
+    /// <summary>
+    /// Dictionaries for linking different verbosity enums together.
+    /// </summary>
     public static class VerbosityDictionaries
     {
+        /// <summary>
+        /// NuGetVerbosityDictionary
+        /// </summary>
         public static Dictionary<Verbosity, NuGetVerbosity> NuGetVerbosityDictionary =
             new Dictionary<Verbosity, NuGetVerbosity>
             {
@@ -19,6 +25,9 @@ namespace Rocket.Surgery.Nuke
                 {Verbosity.Verbose, NuGetVerbosity.Detailed}
             };
 
+        /// <summary>
+        /// MSBuildVerbosityDictionary
+        /// </summary>
         public static Dictionary<Verbosity, MSBuildVerbosity> MSBuildVerbosityDictionary =
             new Dictionary<Verbosity, MSBuildVerbosity>
             {
@@ -28,6 +37,9 @@ namespace Rocket.Surgery.Nuke
                 {Verbosity.Verbose, MSBuildVerbosity.Diagnostic}
             };
 
+        /// <summary>
+        /// DotNetVerbosityDictionary
+        /// </summary>
         public static Dictionary<Verbosity, DotNetVerbosity> DotNetVerbosityDictionary =
             new Dictionary<Verbosity, DotNetVerbosity>
             {

@@ -4,6 +4,7 @@
         <NoWarn>$(NoWarn);CS0436</NoWarn>
     </PropertyGroup>
     <ItemGroup>
+        <InternalsVisibleTo Include="Rocket.Surgery.Nuke.Tests" />
         <PackageReference Include="Nuke.Common" />
         <PackageReference Include="GitVersion.CommandLine.DotNetCore" />
         <PackageReference Include="ReportGenerator" />

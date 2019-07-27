@@ -3,9 +3,14 @@ using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
 using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
+using static Nuke.Common.IO.FileSystemTasks;
 using Nuke.Common.Tools.MSBuild;
 using Nuke.Common.Tools.VSTest;
 using Nuke.Common.Tools.VSWhere;
+using Nuke.Common.IO;
+using Nuke.Common.Utilities.Collections;
+using System.IO;
+using System.Linq;
 
 namespace Rocket.Surgery.Nuke.DotNetCore
 {
@@ -18,6 +23,12 @@ namespace Rocket.Surgery.Nuke.DotNetCore
         /// Core target that can be used to trigger all targets for this build
         /// </summary>
         public Target DotNetCore => _ => _;
+
+        /// <summary>
+        /// Use Coverage Collector instead of msbuild collector for code coverage
+        /// </summary>
+        [Parameter("Use Coverage Collector instead of msbuild collector for code coverage")]
+        public readonly bool CoverageCollector = false;
 
         // /// <summary>
         // /// This will ensure that all local dotnet tools are installed
@@ -71,39 +82,33 @@ namespace Rocket.Surgery.Nuke.DotNetCore
             .DependentFor(DotNetCore)
             .DependentFor(Pack)
             .DependentFor(Generate_Code_Coverage_Reports)
+            .Triggers(Generate_Code_Coverage_Reports)
             .OnlyWhenDynamic(() => TestDirectory.GlobFiles("**/*.csproj").Count > 0)
             .WhenSkipped(DependencyBehavior.Execute)
             .Executes(() =>
             {
-            // TestDirectory.GlobFiles("**/*.csproj")
-            //     .ForEach((Project) =>
-            //     {
-            //         var name = Path.GetFileNameWithoutExtension(Project).ToLowerInvariant();
-            //         // var name = Project.
-            //         DotNetTest(s => s
-            //             .SetProjectFile(Project)
-            //             .SetBinaryLogger(LogsDirectory / $"{name}.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
-            //             .SetFileLogger(LogsDirectory / $"{name}.log", Verbosity)
-            //             .SetGitVersionEnvironment(GitVersion)
-            //             .SetConfiguration(Configuration)
-            //             .EnableNoRestore()
-            //             .SetLogger($"trx;LogFileName={TestResultsDirectory / $"{name}.trx"}")
-            //             .SetProperty("CollectCoverage", true)
-            //             .SetProperty("CoverageDirectory", CoverageDirectory)
-            //             .SetProperty("VSTestResultsDirectory", TestResultsDirectory));
-            //     });
-
-                DotNetTest(s => s
+                DotNetTest(s => {
+                    var a = s
                         .SetProjectFile(Solution)
                         .SetBinaryLogger(LogsDirectory / "test.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
                         .SetFileLogger(LogsDirectory / "test.log", Verbosity)
                         .SetGitVersionEnvironment(GitVersion)
                         .SetConfiguration(Configuration)
                         .EnableNoRestore()
+                        .EnableNoBuild()
                         .SetLogger($"trx")
+                        .SetProperty("CollectCoverage", !CoverageCollector)
                         .SetProperty("CollectCoverage", true)
                         .SetProperty("CoverageDirectory", CoverageDirectory)
-                        .SetProperty("VSTestResultsDirectory", TestResultsDirectory));
+                        .SetProperty("IncludeDirectory", string.Join(", ", TestDirectory.GlobDirectories("**/bin").Select(x => (string)x)))
+                        .SetResultsDirectory(TestResultsDirectory);
+                    var b = (FileExists(TestDirectory / "coverlet.runsettings") ? a.SetSettingsFile(TestDirectory / "coverlet.runsettings") : a);
+                    return CoverageCollector ? b.SetDataCollector("XPlat Code Coverage") : b;
+                });
+                foreach (var coverage in TestResultsDirectory.GlobFiles("**/*.cobertura.xml"))
+                {
+                    CopyFileToDirectory(coverage, CoverageDirectory, FileExistsPolicy.OverwriteIfNewer);
+                }
             });
 
         /// <summary>
