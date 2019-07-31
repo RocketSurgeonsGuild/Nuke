@@ -14,7 +14,9 @@ using static Nuke.Common.Tools.VSWhere.VSWhereTasks;
 using System.IO;
 using System.Linq;
 using System.ComponentModel;
+using System.Reflection;
 using JetBrains.Annotations;
+using Nuke.Common.Utilities;
 using Rocket.Surgery.Nuke.Readme;
 
 namespace Rocket.Surgery.Nuke
@@ -106,9 +108,23 @@ namespace Rocket.Surgery.Nuke
         public readonly AbsolutePath CoverageDirectory = Variable("Coverage") != null ? (AbsolutePath)Variable("Coverage") : RootDirectory / "coverage";
 
         /// <summary>
+        /// prints the build information.
+        /// </summary>
+        public Target BuildVersion => _ => _
+            .Executes(() =>
+            {
+                Logger.Info("Building version {0} of {1} ({2}) using version {3} of Nuke.",
+                    GitVersion.NuGetVersionV2 ?? GitVersion.NuGetVersion,
+                    Solution.Name,
+                    Configuration,
+                    typeof(NukeBuild).Assembly.GetVersionText());
+            });
+
+        /// <summary>
         /// clean all artifact directories
         /// </summary>
         public Target Clean => _ => _
+            .DependsOn(BuildVersion)
             .Executes(() =>
             {
                 EnsureCleanDirectory(ArtifactsDirectory);
