@@ -101,9 +101,12 @@ namespace Rocket.Surgery.Nuke.MsBuild
                             settings
                                 .SetTargetPath(project.Path)
                                 .SetConfiguration(Configuration)
-                                .SetVersion(GitVersion.NuGetVersionV2)
+                                .SetGitVersionEnvironment(GitVersion)
+                                .SetBinaryLogger(LogsDirectory / "pack.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
+                                .SetFileLogger(LogsDirectory / "pack.log", Verbosity)
                                 .SetOutputDirectory(NuGetPackageDirectory)
                                 .SetVerbosity(NuGetVerbosityDictionary[Verbosity])
+                                .SetSymbols(true)
                                 .SetBuild(true));
                 }
             });
