@@ -102,8 +102,6 @@ namespace Rocket.Surgery.Nuke.MsBuild
                                 .SetTargetPath(project.Path)
                                 .SetConfiguration(Configuration)
                                 .SetGitVersionEnvironment(GitVersion)
-                                .SetBinaryLogger(LogsDirectory / "pack.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
-                                .SetFileLogger(LogsDirectory / "pack.log", Verbosity)
                                 .SetOutputDirectory(NuGetPackageDirectory)
                                 .SetVerbosity(NuGetVerbosityDictionary[Verbosity])
                                 .SetSymbols(true)
