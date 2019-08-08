@@ -85,7 +85,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
             .Triggers(Generate_Code_Coverage_Reports)
             .OnlyWhenDynamic(() => TestDirectory.GlobFiles("**/*.csproj").Count > 0)
             .WhenSkipped(DependencyBehavior.Execute)
-            .Executes(() =>
+            .Executes( async () =>
             {
                 DotNetTest(s => {
                     var a = s
@@ -100,11 +100,24 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                         .SetProperty("CollectCoverage", !CoverageCollector)
                         .SetProperty("CollectCoverage", true)
                         .SetProperty("CoverageDirectory", CoverageDirectory)
-                        .SetProperty("IncludeDirectory", string.Join(", ", TestDirectory.GlobDirectories("**/bin").Select(x => (string)x)))
+                        .SetProperty("IncludeDirectory", string.Join(";", TestDirectory.GlobDirectories("**/bin/*/*").Select(x => (string)x).Take(1)))
                         .SetResultsDirectory(TestResultsDirectory);
                     var b = (FileExists(TestDirectory / "coverlet.runsettings") ? a.SetSettingsFile(TestDirectory / "coverlet.runsettings") : a);
                     return CoverageCollector ? b.SetDataCollector("XPlat Code Coverage") : b;
                 });
+
+                /// TEMP
+                foreach (var item in TestDirectory.GlobDirectories("**/bin/*/*"))
+                {
+                    using (var outFile = File.OpenWrite(CoverageDirectory / (((string)item).Replace("\\", "-").Replace("/", "-").Replace(":", "-") + ".dir")))
+                    using (var writer = new StreamWriter(outFile))
+                    {
+                        foreach (var file in Directory.EnumerateFiles(item))
+                        {
+                           await writer.WriteLineAsync(file);
+                        }
+                    }
+                }
                 foreach (var coverage in TestResultsDirectory.GlobFiles("**/*.cobertura.xml"))
                 {
                     CopyFileToDirectory(coverage, CoverageDirectory, FileExistsPolicy.OverwriteIfNewer);
