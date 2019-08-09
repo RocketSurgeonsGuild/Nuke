@@ -52,7 +52,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                     .SetProjectFile(Solution)
                     .SetDisableParallel(true)
                     .SetBinaryLogger(LogsDirectory / "restore.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
-                    .SetFileLogger(LogsDirectory / "restore.log", Verbosity)
+                    .SetFileLogger(LogsDirectory / "restore.log")
                     .SetGitVersionEnvironment(GitVersion)
                 );
             });
@@ -68,7 +68,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                 DotNetBuild(s => s
                     .SetProjectFile(Solution)
                     .SetBinaryLogger(LogsDirectory / "build.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
-                    .SetFileLogger(LogsDirectory / "build.log", Verbosity)
+                    .SetFileLogger(LogsDirectory / "build.log")
                     .SetGitVersionEnvironment(GitVersion)
                     .SetConfiguration(Configuration)
                     .EnableNoRestore());
@@ -91,7 +91,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                     var a = s
                         .SetProjectFile(Solution)
                         .SetBinaryLogger(LogsDirectory / "test.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
-                        .SetFileLogger(LogsDirectory / "test.log", Verbosity)
+                        .SetFileLogger(LogsDirectory / "test.log")
                         .SetGitVersionEnvironment(GitVersion)
                         .SetConfiguration(Configuration)
                         .EnableNoRestore()
@@ -135,7 +135,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                 DotNetPack(s => s
                     .SetProject(Solution)
                     .SetBinaryLogger(LogsDirectory / "pack.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
-                    .SetFileLogger(LogsDirectory / "pack.log", Verbosity)
+                    .SetFileLogger(LogsDirectory / "pack.log")
                     .SetGitVersionEnvironment(GitVersion)
                     .SetConfiguration(Configuration)
                     .EnableNoRestore()

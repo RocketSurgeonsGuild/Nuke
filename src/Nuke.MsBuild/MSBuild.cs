@@ -10,7 +10,6 @@ using System.Linq;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.ProjectModel;
 using Buildalyzer;
-using static Rocket.Surgery.Nuke.VerbosityDictionaries;
 
 namespace Rocket.Surgery.Nuke.MsBuild
 {
@@ -35,7 +34,6 @@ namespace Rocket.Surgery.Nuke.MsBuild
                     .NuGetRestore(settings =>
                         settings
                             .SetSolutionDirectory(Solution)
-                            .SetVerbosity(NuGetVerbosityDictionary[Verbosity])
                             .EnableNoCache());
             });
 
@@ -52,8 +50,7 @@ namespace Rocket.Surgery.Nuke.MsBuild
                             .SetSolutionFile(Solution)
                             .SetConfiguration(Configuration)
                             .SetBinaryLogger(LogsDirectory / "build.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
-                            .SetFileLogger(LogsDirectory / "build.log", Verbosity)
-                            .SetVerbosity(MSBuildVerbosityDictionary[Verbosity])
+                            .SetFileLogger(LogsDirectory / "build.log")
                             .SetGitVersionEnvironment(GitVersion)
                             .SetAssemblyVersion(GitVersion.AssemblySemVer));
             });
@@ -76,10 +73,9 @@ namespace Rocket.Surgery.Nuke.MsBuild
                                 .SetConfiguration(Configuration)
                                 .SetGitVersionEnvironment(GitVersion)
                                 .SetBinaryLogger(LogsDirectory / "test.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
-                                .SetFileLogger(LogsDirectory / "test.log", Verbosity)
+                                .SetFileLogger(LogsDirectory / "test.log")
                                 .EnableNoRestore()
                                 .SetLogger($"trx")
-                                .SetVerbosity(DotNetVerbosityDictionary[Verbosity])
                                 .SetProperty("VSTestResultsDirectory", TestResultsDirectory));
                 }
             });
@@ -102,7 +98,6 @@ namespace Rocket.Surgery.Nuke.MsBuild
                                 .SetGitVersionEnvironment(GitVersion)
                                 .SetVersion(GitVersion.NuGetVersionV2)
                                 .SetOutputDirectory(NuGetPackageDirectory)
-                                .SetVerbosity(NuGetVerbosityDictionary[Verbosity])
                                 .SetSymbols(true)
                                 .SetBuild(true));
                 }

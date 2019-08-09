@@ -30,11 +30,11 @@ namespace Rocket.Surgery.Nuke
         /// <param name="settings"></param>
         /// <param name="path"></param>
         /// <param name="verbosity"></param>
-        public static T SetFileLogger<T>(this T settings, AbsolutePath path, Verbosity verbosity) where T : ToolSettings
+        public static T SetFileLogger<T>(this T settings, AbsolutePath path) where T : ToolSettings
         {
             var existingArgs = settings.ArgumentConfigurator;
             return settings.SetArgumentConfigurator(args =>
-                existingArgs(args).Add($"/fileLogger /fileloggerparameters:ShowTimestamp;Verbosity={verbosity};LogFile=\"{path}\""));
+                existingArgs(args).Add($"/fileLogger /fileloggerparameters:ShowTimestamp;LogFile=\"{path}\""));
         }
 
         /// <summary>

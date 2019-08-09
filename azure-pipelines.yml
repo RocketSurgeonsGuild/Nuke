@@ -22,7 +22,7 @@ variables:
   - name: CONFIGURATION
     value: Release
   - name: VERBOSITY
-    value: Normal
+    value: Verbose
   - name: COVERAGE
     value: "$(Agent.BuildDirectory)/c"
   - name: ARTIFACTS
