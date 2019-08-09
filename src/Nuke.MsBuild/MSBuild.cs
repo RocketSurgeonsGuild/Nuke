@@ -35,8 +35,6 @@ namespace Rocket.Surgery.Nuke.MsBuild
                     .NuGetRestore(settings =>
                         settings
                             .SetSolutionDirectory(Solution)
-                            // .SetBinaryLogger(LogsDirectory / "restore.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
-                            // .SetFileLogger(LogsDirectory / "restore.log", Verbosity)
                             .SetVerbosity(NuGetVerbosityDictionary[Verbosity])
                             .EnableNoCache());
             });
@@ -102,6 +100,7 @@ namespace Rocket.Surgery.Nuke.MsBuild
                                 .SetTargetPath(project.Path)
                                 .SetConfiguration(Configuration)
                                 .SetGitVersionEnvironment(GitVersion)
+                                .SetVersion(GitVersion.NuGetVersionV2)
                                 .SetOutputDirectory(NuGetPackageDirectory)
                                 .SetVerbosity(NuGetVerbosityDictionary[Verbosity])
                                 .SetSymbols(true)
