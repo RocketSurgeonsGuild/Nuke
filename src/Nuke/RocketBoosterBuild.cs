@@ -27,7 +27,7 @@ namespace Rocket.Surgery.Nuke
     /// Base build plan and tasks
     /// </summary>
     [PublicAPI]
-    [DotNetCoreVerbosityMapping, MSBuildVerbosityMapping, NuGetVerbosityMapping]
+    [DotNetVerbosityMapping, MSBuildVerbosityMapping, NuGetVerbosityMapping]
     public abstract class RocketBoosterBuild : NukeBuild
     {
         /// <summary>
