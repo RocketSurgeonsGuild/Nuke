@@ -93,12 +93,14 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                         .SetBinaryLogger(LogsDirectory / "test.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
                         .SetFileLogger(LogsDirectory / "test.log")
                         .SetGitVersionEnvironment(GitVersion)
-                        .SetConfiguration(Configuration)
+                        .SetConfiguration("Debug")
                         .EnableNoRestore()
-                        .EnableNoBuild()
+                        // .EnableNoBuild()
                         .SetLogger($"trx")
                         .SetProperty("CollectCoverage", !CoverageCollector)
-                        .SetProperty("CollectCoverage", true)
+                        .SetProperty("CollectCoverage", "true")
+                        // DeterministicSourcePaths being true breaks coverlet!
+                        .SetProperty("DeterministicSourcePaths", "false")
                         .SetProperty("CoverageDirectory", CoverageDirectory)
                         .SetProperty("IncludeDirectory", string.Join(";", TestDirectory.GlobDirectories("**/bin/*/*").Select(x => (string)x).Take(1)))
                         .SetResultsDirectory(TestResultsDirectory);
@@ -139,6 +141,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                     .SetGitVersionEnvironment(GitVersion)
                     .SetConfiguration(Configuration)
                     .EnableNoRestore()
+                    .EnableNoBuild()
                     .SetOutputDirectory(NuGetPackageDirectory));
             });
     }
