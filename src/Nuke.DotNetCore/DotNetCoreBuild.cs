@@ -52,7 +52,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                     .SetProjectFile(Solution)
                     .SetDisableParallel(true)
                     .SetBinaryLogger(LogsDirectory / "restore.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
-                    .SetFileLogger(LogsDirectory / "restore.log", Verbosity)
+                    .SetFileLogger(LogsDirectory / "restore.log")
                     .SetGitVersionEnvironment(GitVersion)
                 );
             });
@@ -68,7 +68,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                 DotNetBuild(s => s
                     .SetProjectFile(Solution)
                     .SetBinaryLogger(LogsDirectory / "build.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
-                    .SetFileLogger(LogsDirectory / "build.log", Verbosity)
+                    .SetFileLogger(LogsDirectory / "build.log")
                     .SetGitVersionEnvironment(GitVersion)
                     .SetConfiguration(Configuration)
                     .EnableNoRestore());
@@ -85,26 +85,40 @@ namespace Rocket.Surgery.Nuke.DotNetCore
             .Triggers(Generate_Code_Coverage_Reports)
             .OnlyWhenDynamic(() => TestDirectory.GlobFiles("**/*.csproj").Count > 0)
             .WhenSkipped(DependencyBehavior.Execute)
-            .Executes(() =>
+            .Executes( async () =>
             {
                 DotNetTest(s => {
                     var a = s
                         .SetProjectFile(Solution)
                         .SetBinaryLogger(LogsDirectory / "test.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
-                        .SetFileLogger(LogsDirectory / "test.log", Verbosity)
+                        .SetFileLogger(LogsDirectory / "test.log")
                         .SetGitVersionEnvironment(GitVersion)
-                        .SetConfiguration(Configuration)
+                        .SetConfiguration("Debug")
                         .EnableNoRestore()
-                        .EnableNoBuild()
                         .SetLogger($"trx")
                         .SetProperty("CollectCoverage", !CoverageCollector)
-                        .SetProperty("CollectCoverage", true)
+                        .SetProperty("CollectCoverage", "true")
+                        // DeterministicSourcePaths being true breaks coverlet!
+                        .SetProperty("DeterministicSourcePaths", "false")
                         .SetProperty("CoverageDirectory", CoverageDirectory)
-                        .SetProperty("IncludeDirectory", string.Join(", ", TestDirectory.GlobDirectories("**/bin").Select(x => (string)x)))
+                        .SetProperty("IncludeDirectory", string.Join(";", TestDirectory.GlobDirectories("**/bin/*/*").Select(x => (string)x).Take(1)))
                         .SetResultsDirectory(TestResultsDirectory);
                     var b = (FileExists(TestDirectory / "coverlet.runsettings") ? a.SetSettingsFile(TestDirectory / "coverlet.runsettings") : a);
                     return CoverageCollector ? b.SetDataCollector("XPlat Code Coverage") : b;
                 });
+
+                /// TEMP
+                foreach (var item in TestDirectory.GlobDirectories("**/bin/*/*"))
+                {
+                    using (var outFile = File.OpenWrite(CoverageDirectory / (((string)item).Replace("\\", "-").Replace("/", "-").Replace(":", "-") + ".dir")))
+                    using (var writer = new StreamWriter(outFile))
+                    {
+                        foreach (var file in Directory.EnumerateFiles(item))
+                        {
+                           await writer.WriteLineAsync(file);
+                        }
+                    }
+                }
                 foreach (var coverage in TestResultsDirectory.GlobFiles("**/*.cobertura.xml"))
                 {
                     CopyFileToDirectory(coverage, CoverageDirectory, FileExistsPolicy.OverwriteIfNewer);
@@ -122,10 +136,11 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                 DotNetPack(s => s
                     .SetProject(Solution)
                     .SetBinaryLogger(LogsDirectory / "pack.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
-                    .SetFileLogger(LogsDirectory / "pack.log", Verbosity)
+                    .SetFileLogger(LogsDirectory / "pack.log")
                     .SetGitVersionEnvironment(GitVersion)
                     .SetConfiguration(Configuration)
                     .EnableNoRestore()
+                    .EnableNoBuild()
                     .SetOutputDirectory(NuGetPackageDirectory));
             });
     }

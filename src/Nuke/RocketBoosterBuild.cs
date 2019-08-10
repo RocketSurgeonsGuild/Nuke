@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nuke.Common;
 using Nuke.Common.Execution;
 using Nuke.Common.Git;
@@ -18,6 +18,8 @@ using System.Reflection;
 using JetBrains.Annotations;
 using Nuke.Common.Utilities;
 using Rocket.Surgery.Nuke.Readme;
+using Nuke.Common.Tools.DotNet;
+using Nuke.Common.Tools.MSBuild;
 
 namespace Rocket.Surgery.Nuke
 {
@@ -25,6 +27,7 @@ namespace Rocket.Surgery.Nuke
     /// Base build plan and tasks
     /// </summary>
     [PublicAPI]
+    [DotNetVerbosityMapping, MSBuildVerbosityMapping, NuGetVerbosityMapping]
     public abstract class RocketBoosterBuild : NukeBuild
     {
         /// <summary>
