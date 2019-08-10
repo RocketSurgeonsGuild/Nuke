@@ -26,21 +26,4 @@ namespace Rocket.Surgery.Nuke
             Verbose = nameof(NuGetVerbosity.Detailed);
         }
     }
-    /// <summary>
-    /// Mapping for nuget Verbosities
-    /// </summary>
-    public class DotNetCoreVerbosityMappingAttribute : VerbosityMappingAttribute
-    {
-        /// <summary>
-        /// Mapping for nuget Verbosities
-        /// </summary>
-        public DotNetCoreVerbosityMappingAttribute()
-                       : base(typeof(DotNetVerbosity))
-        {
-            Quiet = nameof(DotNetVerbosity.Quiet);
-            Minimal = nameof(DotNetVerbosity.Minimal);
-            Normal = nameof(DotNetVerbosity.Minimal);
-            Verbose = nameof(DotNetVerbosity.Detailed);
-        }
-    }
 }
