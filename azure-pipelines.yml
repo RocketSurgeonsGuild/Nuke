@@ -41,5 +41,5 @@ jobs:
       GitHubPackages: false
       DotNet21Version: "2.1.801"
       DotNetVersion: "2.2.401"
-      DotNet3Version: "3.0.100-preview7-012821"
+      DotNet3Version: "3.0.100-preview8-013656"
       NuGetVersion: "5.2.0"
