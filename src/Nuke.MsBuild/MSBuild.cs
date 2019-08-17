@@ -16,7 +16,7 @@ namespace Rocket.Surgery.Nuke.MsBuild
     /// <summary>
     /// Base build plan for .NET Framework based applications
     /// </summary>
-    public abstract class MSBuild : RocketBoosterBuild
+    public abstract class MsBuild : RocketBoosterBuild
     {
         /// <summary>
         /// Core target that can be used to trigger all targets for this build
@@ -52,7 +52,8 @@ namespace Rocket.Surgery.Nuke.MsBuild
                             .SetBinaryLogger(LogsDirectory / "build.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
                             .SetFileLogger(LogsDirectory / "build.log")
                             .SetGitVersionEnvironment(GitVersion)
-                            .SetAssemblyVersion(GitVersion.AssemblySemVer));
+                            .SetAssemblyVersion(GitVersion.AssemblySemVer)
+                            .SetPackageVersion(GitVersion.NuGetVersionV2));
             });
 
         /// <summary>
@@ -98,8 +99,7 @@ namespace Rocket.Surgery.Nuke.MsBuild
                                 .SetGitVersionEnvironment(GitVersion)
                                 .SetVersion(GitVersion.NuGetVersionV2)
                                 .SetOutputDirectory(NuGetPackageDirectory)
-                                .SetSymbols(true)
-                                .SetBuild(true));
+                                .SetSymbols(true));
                 }
             });
     }
