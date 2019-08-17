@@ -3,6 +3,7 @@ using Nuke.Common.Tools.GitVersion;
 using static Nuke.Common.IO.PathConstruction;
 using Nuke.Common.Tooling;
 using Newtonsoft.Json.Linq;
+using Nuke.Common.Tools.MSBuild;
 
 namespace Rocket.Surgery.Nuke
 {
@@ -29,12 +30,22 @@ namespace Rocket.Surgery.Nuke
         /// </summary>
         /// <param name="settings"></param>
         /// <param name="path"></param>
-        /// <param name="verbosity"></param>
         public static T SetFileLogger<T>(this T settings, AbsolutePath path) where T : ToolSettings
         {
             var existingArgs = settings.ArgumentConfigurator;
+            MSBuildVerbosity verbosity = MSBuildVerbosity.Normal;
+            if (VerbosityMapping.Mappings.Contains(typeof(MSBuildVerbosity)))
+            {
+                foreach (var mapping in VerbosityMapping.Mappings[typeof(MSBuildVerbosity)])
+                {
+                    if (mapping.Verbosity == NukeBuild.Verbosity)
+                    {
+                        verbosity = (MSBuildVerbosity)mapping.MappedVerbosity;
+                    }
+                }
+            }
             return settings.SetArgumentConfigurator(args =>
-                existingArgs(args).Add($"/fileLogger /fileloggerparameters:ShowTimestamp;LogFile=\"{path}\""));
+                existingArgs(args).Add($"/fileLogger /fileloggerparameters:ShowTimestamp;Verbosity={verbosity};LogFile=\"{path}\""));
         }
 
         /// <summary>
