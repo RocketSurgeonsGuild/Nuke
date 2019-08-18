@@ -10,6 +10,7 @@ using System.Linq;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.ProjectModel;
 using Buildalyzer;
+using static Nuke.Common.IO.PathConstruction;
 
 namespace Rocket.Surgery.Nuke.MsBuild
 {
@@ -18,6 +19,11 @@ namespace Rocket.Surgery.Nuke.MsBuild
     /// </summary>
     public abstract class MsBuild : RocketBoosterBuild
     {
+        /// <summary>
+        /// The directory where templates will be placed
+        /// </summary>
+        public AbsolutePath NuspecDirectory => RootDirectory / ".nuspec";
+
         /// <summary>
         /// Core target that can be used to trigger all targets for this build
         /// </summary>
@@ -82,26 +88,24 @@ namespace Rocket.Surgery.Nuke.MsBuild
             });
 
         /// <summary>
-        /// dotnet pack
+        /// nuget pack
         /// </summary>
         public Target Pack => _ => _
             .DependsOn(Build)
             .DependentFor(NetFramework)
             .Executes(() =>
             {
-                foreach (var project in Solution.WherePackable())
+                foreach (var project in NuspecDirectory.GlobFiles("*.nuspec"))
                 {
-                    DotNetTasks
-                        .DotNetPack(settings =>
+                    NuGetTasks
+                        .NuGetPack(settings =>
                             settings
-                                .SetProject(project)
-                                .SetBinaryLogger(LogsDirectory / "pack.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
-                                .SetFileLogger(LogsDirectory / "pack.log")
-                                .SetGitVersionEnvironment(GitVersion)
+                                .SetTargetPath(project)
                                 .SetConfiguration(Configuration)
-                                .EnableNoRestore()
-                                .EnableNoBuild()
-                                .SetOutputDirectory(NuGetPackageDirectory));
+                                .SetGitVersionEnvironment(GitVersion)
+                                .SetVersion(GitVersion.NuGetVersionV2)
+                                .SetOutputDirectory(NuGetPackageDirectory)
+                                .SetSymbols(true));
                 }
             });
     }
