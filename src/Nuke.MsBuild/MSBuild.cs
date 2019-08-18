@@ -82,7 +82,7 @@ namespace Rocket.Surgery.Nuke.MsBuild
             });
 
         /// <summary>
-        /// nuget pack
+        /// dotnet pack
         /// </summary>
         public Target Pack => _ => _
             .DependsOn(Build)
@@ -91,15 +91,17 @@ namespace Rocket.Surgery.Nuke.MsBuild
             {
                 foreach (var project in Solution.WherePackable())
                 {
-                    NuGetTasks
-                        .NuGetPack(settings =>
+                    DotNetTasks
+                        .DotNetPack(settings =>
                             settings
-                                .SetTargetPath(project.Path)
-                                .SetConfiguration(Configuration)
+                                .SetProject(project)
+                                .SetBinaryLogger(LogsDirectory / "pack.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
+                                .SetFileLogger(LogsDirectory / "pack.log")
                                 .SetGitVersionEnvironment(GitVersion)
-                                .SetVersion(GitVersion.NuGetVersionV2)
-                                .SetOutputDirectory(NuGetPackageDirectory)
-                                .SetSymbols(true));
+                                .SetConfiguration(Configuration)
+                                .EnableNoRestore()
+                                .EnableNoBuild()
+                                .SetOutputDirectory(NuGetPackageDirectory));
                 }
             });
     }
