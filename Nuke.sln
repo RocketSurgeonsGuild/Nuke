@@ -25,7 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rocket.Surgery.Nuke.Tests",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rocket.Surgery.Nuke.DotNetCore", "src\Nuke.DotNetCore\Rocket.Surgery.Nuke.DotNetCore.csproj", "{2D88A441-0EF9-40EF-8A1A-CE5E12F62660}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rocket.Surgery.Nuke.MsBuild", "src\Nuke.MsBuild\Rocket.Surgery.Nuke.MsBuild.csproj", "{99357C68-3D56-4707-A489-8D223E643FB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rocket.Surgery.Nuke.MsBuild", "src\Nuke.MsBuild\Rocket.Surgery.Nuke.MsBuild.csproj", "{99357C68-3D56-4707-A489-8D223E643FB7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rocket.Surgery.Nuke.Xamarin", "src\Nuke.Xamarin\Rocket.Surgery.Nuke.Xamarin.csproj", "{4EF107CD-1AAA-4C78-8201-5CCD1426449A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".solution", ".solution", "{096E2487-547C-4DCF-977A-DA9E1C75B6BC}"
 ProjectSection(SolutionItems) = preProject
@@ -111,6 +113,18 @@ Global
 		{99357C68-3D56-4707-A489-8D223E643FB7}.Release|x64.Build.0 = Release|Any CPU
 		{99357C68-3D56-4707-A489-8D223E643FB7}.Release|x86.ActiveCfg = Release|Any CPU
 		{99357C68-3D56-4707-A489-8D223E643FB7}.Release|x86.Build.0 = Release|Any CPU
+		{4EF107CD-1AAA-4C78-8201-5CCD1426449A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EF107CD-1AAA-4C78-8201-5CCD1426449A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EF107CD-1AAA-4C78-8201-5CCD1426449A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4EF107CD-1AAA-4C78-8201-5CCD1426449A}.Debug|x64.Build.0 = Debug|Any CPU
+		{4EF107CD-1AAA-4C78-8201-5CCD1426449A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4EF107CD-1AAA-4C78-8201-5CCD1426449A}.Debug|x86.Build.0 = Debug|Any CPU
+		{4EF107CD-1AAA-4C78-8201-5CCD1426449A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EF107CD-1AAA-4C78-8201-5CCD1426449A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4EF107CD-1AAA-4C78-8201-5CCD1426449A}.Release|x64.ActiveCfg = Release|Any CPU
+		{4EF107CD-1AAA-4C78-8201-5CCD1426449A}.Release|x64.Build.0 = Release|Any CPU
+		{4EF107CD-1AAA-4C78-8201-5CCD1426449A}.Release|x86.ActiveCfg = Release|Any CPU
+		{4EF107CD-1AAA-4C78-8201-5CCD1426449A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -121,6 +135,7 @@ Global
 		{29950FB4-8A41-4C83-9FE0-FEA9C8D0BF67} = {DF33E0FB-9790-4654-B60F-8AB22E0CC3D1}
 		{2D88A441-0EF9-40EF-8A1A-CE5E12F62660} = {8FFDF555-DB50-45F9-9A2D-6410F39151C3}
 		{99357C68-3D56-4707-A489-8D223E643FB7} = {8FFDF555-DB50-45F9-9A2D-6410F39151C3}
+		{4EF107CD-1AAA-4C78-8201-5CCD1426449A} = {8FFDF555-DB50-45F9-9A2D-6410F39151C3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {439897C2-CCBD-44FE-B2DC-A3E4670ADA59}

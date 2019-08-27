@@ -10,12 +10,12 @@ using Nuke.Common.Tools.NuGet;
 namespace Rocket.Surgery.Nuke
 {
     /// <summary>
-    /// Mapping for nuget Verbosities
+    /// Mapping for nuget Verbosity
     /// </summary>
     public class NuGetVerbosityMappingAttribute : VerbosityMappingAttribute
     {
         /// <summary>
-        /// Mapping for nuget Verbosities
+        /// Mapping for nuget Verbosity
         /// </summary>
         public NuGetVerbosityMappingAttribute()
                     : base(typeof(NuGetVerbosity))
