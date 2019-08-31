@@ -105,6 +105,16 @@ namespace Rocket.Surgery.Nuke
         public AbsolutePath NuGetPackageDirectory => ArtifactsDirectory / "nuget";
 
         /// <summary>
+        /// The directory where publish output should be placed
+        /// </summary>
+        public AbsolutePath PublishDirectory => ArtifactsDirectory / "publish";
+
+        /// <summary>
+        /// The directory where packaged output should be placed (zip, webdeploy, etc)
+        /// </summary>
+        public AbsolutePath OutputDirectory => ArtifactsDirectory / "output";
+
+        /// <summary>
         /// The directory where coverage artifacts are to be dropped
         /// </summary>
         [Parameter("The directory where coverage artifacts are to be dropped", Name = "Coverage")]
@@ -131,20 +141,18 @@ namespace Rocket.Surgery.Nuke
             .Executes(() =>
             {
                 EnsureCleanDirectory(ArtifactsDirectory);
+                EnsureExistingDirectory(LogsDirectory);
+                EnsureExistingDirectory(TestResultsDirectory);
+                EnsureExistingDirectory(NuGetPackageDirectory);
+                EnsureExistingDirectory(PublishDirectory);
+                EnsureExistingDirectory(OutputDirectory);
                 EnsureCleanDirectory(CoverageDirectory);
 
                 if (Force)
                 {
-                    EnsureExistingDirectory(SampleDirectory);
                     SampleDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
-
-                    EnsureExistingDirectory(SourceDirectory);
                     SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
-
-                    EnsureExistingDirectory(TemplatesDirectory);
                     TemplatesDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
-
-                    EnsureExistingDirectory(TestDirectory);
                     TestDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
                 }
             });

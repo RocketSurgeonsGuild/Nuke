@@ -72,7 +72,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
         /// dotnet test
         /// </summary>
         public Target Test => _ => _
-            .DependsOn(Build)
+            // .DependsOn(Build)
             .DependentFor(DotNetCore)
             .DependentFor(Pack)
             .DependentFor(Generate_Code_Coverage_Reports)
