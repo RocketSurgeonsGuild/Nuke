@@ -27,6 +27,22 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rocket.Surgery.Nuke.DotNetC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rocket.Surgery.Nuke.MsBuild", "src\Nuke.MsBuild\Rocket.Surgery.Nuke.MsBuild.csproj", "{99357C68-3D56-4707-A489-8D223E643FB7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".solution", ".solution", "{096E2487-547C-4DCF-977A-DA9E1C75B6BC}"
+ProjectSection(SolutionItems) = preProject
+	azure-pipelines.yml = azure-pipelines.yml
+	build.ps1 = build.ps1
+	build.sh = build.sh
+	Directory.Build.props = Directory.Build.props
+	Directory.Build.targets = Directory.Build.targets
+	GitReleaseManager.yaml = GitReleaseManager.yaml
+	GitVersion.yml = GitVersion.yml
+	LICENSE = LICENSE
+	NuGet.config = NuGet.config
+	omnisharp.json = omnisharp.json
+	Packages.props = Packages.props
+	Readme.md = Readme.md
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -204,3 +204,6 @@ project.lock.json
 src/Cake.Scripts/tools/tools/
 
 codealike.json
+
+# Rider
+.idea/
