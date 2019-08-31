@@ -20,6 +20,7 @@ using Nuke.Common.Utilities;
 using Rocket.Surgery.Nuke.Readme;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
+using Nuke.Common.IO;
 
 namespace Rocket.Surgery.Nuke
 {
@@ -195,8 +196,8 @@ namespace Rocket.Surgery.Nuke
                     .SetReportTypes(ReportTypes.HtmlSummary, ReportTypes.TextSummary)
                     .SetTag(GitVersion.InformationalVersion)
                 );
-                CopyFile(CoverageDirectory / "Cobertura.xml", CoverageDirectory / "solution.cobertura");
-                RenameFile(CoverageDirectory / "Cobertura.xml", "solution.xml");
+                CopyFile(CoverageDirectory / "Cobertura.xml", CoverageDirectory / "solution.cobertura", FileExistsPolicy.OverwriteIfNewer);
+                RenameFile(CoverageDirectory / "Cobertura.xml", "solution.xml", FileExistsPolicy.OverwriteIfNewer);
             });
 
         /// <summary>
