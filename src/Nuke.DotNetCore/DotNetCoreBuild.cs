@@ -24,21 +24,26 @@ namespace Rocket.Surgery.Nuke.DotNetCore
         /// </summary>
         public Target DotNetCore => _ => _;
 
-        // /// <summary>
-        // /// This will ensure that all local dotnet tools are installed
-        // /// </summary>
-        // public Target DotnetToolRestore => _ => _
-        //    .DependsOn(Clean)
-        //    .DependentFor(DotNetCore)
-        //    .Unlisted()
-        //    .Executes(() => DotNet("tool restore"));
+        /// <summary>
+        /// This will ensure that all local dotnet tools are installed
+        /// </summary>
+        public Target DotnetToolRestore => _ => _
+           .After(Clean)
+           .Before(Build)
+#if NETSTANDARD2_1
+           .DependentFor(DotNetCore)
+#endif
+           .Unlisted()
+           .Executes(() => DotNet("tool restore"));
 
         /// <summary>
         /// dotnet restore
         /// </summary>
         public Target Restore => _ => _
             .DependentFor(DotNetCore)
-            // .DependsOn(DotnetToolRestore)
+#if NETSTANDARD2_1
+            .DependsOn(DotnetToolRestore)
+#endif
             .DependsOn(Clean)
             .Executes(() =>
             {
@@ -72,7 +77,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
         /// dotnet test
         /// </summary>
         public Target Test => _ => _
-            // .DependsOn(Build)
+            .After(Build)
             .DependentFor(DotNetCore)
             .DependentFor(Pack)
             .DependentFor(Generate_Code_Coverage_Reports)
