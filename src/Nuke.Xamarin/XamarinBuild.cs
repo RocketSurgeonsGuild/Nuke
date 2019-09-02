@@ -37,7 +37,7 @@ namespace Rocket.Surgery.Nuke.Xamarin
         /// <summary>
         /// msbuild
         /// </summary>
-        public Target Build => _ => _
+        public virtual Target Build => _ => _
             .DependsOn(Restore)
             .Executes(() =>
             {
@@ -56,23 +56,24 @@ namespace Rocket.Surgery.Nuke.Xamarin
         /// <summary>
         /// xunit test
         /// </summary>
-        public Target Test => _ => _
+        public virtual Target Test => _ => _
             .DependsOn(Build)
             .Executes(() =>
             {
-                DotNetTasks.DotNetTest(settings =>
-                    settings
-                        .SetProjectFile(Solution)
-                        .SetBinaryLogger(LogsDirectory / "test.binlog", LogImportType(IsLocalBuild))
-                        .SetFileLogger(LogsDirectory / "test.log")
-                        .SetGitVersionEnvironment(GitVersion)
-                        .SetConfiguration(Configuration)
-                        .EnableNoRestore()
-                        .SetLogger($"trx")
-                        .SetProperty("CollectCoverage", "true")
-                        .SetProperty("DeterministicSourcePaths", "false") // DeterministicSourcePaths being true breaks coverlet!
-                        .SetProperty("CoverageDirectory", CoverageDirectory)
-                        .SetResultsDirectory(TestResultsDirectory));
+                DotNetTasks
+                    .DotNetTest(settings =>
+                        settings
+                            .SetProjectFile(Solution)
+                            .SetBinaryLogger(LogsDirectory / "test.binlog", LogImportType(IsLocalBuild))
+                            .SetFileLogger(LogsDirectory / "test.log")
+                            .SetGitVersionEnvironment(GitVersion)
+                            .SetConfiguration(Configuration)
+                            .EnableNoRestore()
+                            .SetLogger($"trx")
+                            .SetProperty("CollectCoverage", "true")
+                            .SetProperty("DeterministicSourcePaths", "false") // DeterministicSourcePaths being true breaks coverlet!
+                            .SetProperty("CoverageDirectory", CoverageDirectory)
+                            .SetResultsDirectory(TestResultsDirectory));
 
                 foreach (var coverage in TestResultsDirectory.GlobFiles("**/*.cobertura.xml"))
                 {
