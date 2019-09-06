@@ -12,6 +12,9 @@ using Rocket.Surgery.Nuke;
 
 namespace Rocket.Surgery.Nuke.Xamarin
 {
+    /// <summary>
+    /// Base build plan for Xamarin based applications
+    /// </summary>
     public abstract class XamarinBuild : RocketBoosterBuild
     {
         protected Func<bool, MSBuildBinaryLogImports> LogImportType = isLocal =>
@@ -20,7 +23,7 @@ namespace Rocket.Surgery.Nuke.Xamarin
         /// <summary>
         /// nuget restore
         /// </summary>
-        public Target Restore => _ => _
+        public virtual Target Restore => _ => _
             .DependsOn(Clean)
             .Executes(() =>
             {
