@@ -10,19 +10,19 @@
   <ItemGroup>
     <PackageReference Update="Nuke.Common" Version="0.21.2" />
     <PackageReference Update="GitVersion.CommandLine.DotNetCore" Version="5.0.1" />
-    <PackageReference Update="ReportGenerator" Version="4.2.15" />
+    <PackageReference Update="ReportGenerator" Version="4.2.19" />
     <PackageReference Update="YamlDotNet" Version="6.1.2" />
     <PackageReference Update="Buildalyzer" Version="2.3.0" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="Rocket.Surgery.Extensions.Testing" Version="1.2.1" />
+    <PackageReference Update="Rocket.Surgery.Extensions.Testing" Version="1.2.3" />
     <PackageReference Update="Autofac.Extras.FakeItEasy" Version="5.0.1" />
-    <PackageReference Update="Bogus" Version="28.0.2" />
+    <PackageReference Update="Bogus" Version="28.2.1" />
     <PackageReference Update="coverlet.collector" Version="1.0.1" />
     <PackageReference Update="coverlet.msbuild" Version="2.6.3" IncludeAssets="all" PrivateAssets="runtime;build;native;contentfiles;analyzers" />
-    <PackageReference Update="FakeItEasy" Version="5.1.1" />
-    <PackageReference Update="FakeItEasy.Analyzer.CSharp" Version="5.1.1" />
-    <PackageReference Update="FluentAssertions" Version="5.8.0" />
+    <PackageReference Update="FakeItEasy" Version="5.2.0" />
+    <PackageReference Update="FakeItEasy.Analyzer.CSharp" Version="5.2.0" />
+    <PackageReference Update="FluentAssertions" Version="5.9.0" />
     <PackageReference Update="FluentAssertions.Analyzers" Version="0.11.4" />
     <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.2.0" />
     <PackageReference Update="xunit" Version="2.4.1" />
