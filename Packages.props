@@ -10,7 +10,7 @@
   <ItemGroup>
     <PackageReference Update="Nuke.Common" Version="0.21.2" />
     <PackageReference Update="GitVersion.CommandLine.DotNetCore" Version="5.0.1" />
-    <PackageReference Update="ReportGenerator" Version="4.2.19" />
+    <PackageReference Update="ReportGenerator" Version="4.2.20" />
     <PackageReference Update="YamlDotNet" Version="6.1.2" />
     <PackageReference Update="Buildalyzer" Version="2.3.0" />
   </ItemGroup>
