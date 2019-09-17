@@ -1,5 +1,21 @@
 root = true
 
+[*.{cs,cshtml}]
+charset = utf-8
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+
+[*.{js,ts,vue}]
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+
+[*.{json,xml,yml,yaml}]
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+
 [*]
 insert_final_newline = false
 
@@ -247,19 +263,3 @@ dotnet_naming_style.begins_with_t.required_prefix = T
 dotnet_naming_style.begins_with_t.required_suffix =
 dotnet_naming_style.begins_with_t.word_separator =
 dotnet_naming_style.begins_with_t.capitalization = pascal_case
-
-[*.{cs,cshtml}]
-charset = utf-8
-indent_style = space
-indent_size = 4
-insert_final_newline = true
-
-[*.{js,ts,vue}]
-indent_style = space
-indent_size = 4
-insert_final_newline = true
-
-[*.{json,xml,yml,yaml}]
-indent_style = space
-indent_size = 2
-insert_final_newline = true

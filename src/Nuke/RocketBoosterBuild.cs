@@ -82,7 +82,12 @@ namespace Rocket.Surgery.Nuke
         /// <summary>
         /// The directory where tests will be placed
         /// </summary>
-        public AbsolutePath TestDirectory => RootDirectory / "test";
+        public AbsolutePath TestDirectory => DirectoryExists(RootDirectory / "tests") ? RootDirectory / "tests" : RootDirectory / "test";
+
+        /// <summary>
+        /// The directory where tests will be placed
+        /// </summary>
+        public AbsolutePath TestsDirectory => TestDirectory;
 
         /// <summary>
         /// The directory where artifacts are to be dropped
@@ -205,7 +210,6 @@ namespace Rocket.Surgery.Nuke
         /// </summary>
         public Target GenerateReadme => _ => _
             .Unlisted()
-            .TriggeredBy(Clean)
             .OnlyWhenDynamic(() => IsLocalBuild && (Force || InvokedTargets.Any(z => z.Name == nameof(GenerateReadme))))
             .Executes(() =>
             {
