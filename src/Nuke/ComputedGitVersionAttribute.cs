@@ -19,23 +19,10 @@ namespace Rocket.Surgery.Nuke
     /// </summary>
     [PublicAPI]
     [UsedImplicitly(ImplicitUseKindFlags.Default)]
-    internal class ComputedGitVersionAttribute : InjectionAttributeBase
+    internal class ComputedGitVersionAttribute : GitVersionAttribute
     {
         /// <inheritdoc />
         public override object GetValue(MemberInfo member, object instance)
-        {
-            return ControlFlow.SuppressErrors(GitVer, includeStackTrace: true);
-        }
-
-        /// <summary>
-        /// Returns if GitVersion data is available
-        /// </summary>
-        public static bool HasGitVer()
-        {
-            return Variables.Keys.Any(z => z.StartsWith("GITVERSION_", StringComparison.OrdinalIgnoreCase));
-        }
-
-        public GitVersion GitVer()
         {
             if (HasGitVer())
             {
@@ -47,16 +34,17 @@ namespace Rocket.Surgery.Nuke
                 });
                 return json.ToObject<GitVersion>(new JsonSerializer() { ContractResolver = new AllWritableContractResolver() });
             }
-            else
-            {
-                return ControlFlow.SuppressErrors(() =>
-                    GitVersionTasks.GitVersion(s => s
-                            .DisableLogOutput()
-                            .SetOutput(GitVersionOutput.json))
-                        .Result,
-                includeStackTrace: true);
-            }
+            return base.GetValue(member, instance);
         }
+
+        /// <summary>
+        /// Returns if GitVersion data is available
+        /// </summary>
+        public static bool HasGitVer()
+        {
+            return Variables.Keys.Any(z => z.StartsWith("GITVERSION_", StringComparison.OrdinalIgnoreCase));
+        }
+
         private class AllWritableContractResolver : DefaultContractResolver
         {
             protected override JsonProperty CreateProperty([NotNull] MemberInfo member, MemberSerialization memberSerialization)

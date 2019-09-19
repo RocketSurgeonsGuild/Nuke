@@ -93,7 +93,7 @@ namespace Rocket.Surgery.Nuke
         /// The directory where artifacts are to be dropped
         /// </summary>
         [Parameter("The directory where artifacts are to be dropped", Name = "Artifacts")]
-        public readonly AbsolutePath ArtifactsDirectory = Variable("Artifacts") != null ? (AbsolutePath)Variable("Artifacts") : RootDirectory / "artifacts";
+        public readonly AbsolutePath ArtifactsDirectory = GetVariable<AbsolutePath>("Artifacts") ?? RootDirectory / "artifacts";
 
         /// <summary>
         /// The directory where logs will be placed
@@ -124,7 +124,7 @@ namespace Rocket.Surgery.Nuke
         /// The directory where coverage artifacts are to be dropped
         /// </summary>
         [Parameter("The directory where coverage artifacts are to be dropped", Name = "Coverage")]
-        public readonly AbsolutePath CoverageDirectory = Variable("Coverage") != null ? (AbsolutePath)Variable("Coverage") : RootDirectory / "coverage";
+        public readonly AbsolutePath CoverageDirectory = GetVariable<AbsolutePath>("Coverage") ?? RootDirectory / "coverage";
 
         /// <summary>
         /// prints the build information.
