@@ -14,7 +14,7 @@ resources:
     - repository: rsg
       type: github
       name: RocketSurgeonsGuild/AzureDevopsTemplates
-      ref: refs/tags/v0.9.1
+      ref: refs/tags/v0.9.2
       endpoint: github
 
 variables:
@@ -41,5 +41,5 @@ jobs:
       GitHubPackages: false
       DotNet21Version: "2.1.x"
       DotNetVersion: "2.2.x"
-      DotNet3Version: "3.0.100-preview9-014004"
+      DotNet3Version: "3.0.100-rc1-014190"
       NuGetVersion: "5.2.0"
