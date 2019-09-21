@@ -14,11 +14,10 @@ resources:
     - repository: rsg
       type: github
       name: RocketSurgeonsGuild/AzureDevopsTemplates
-      ref: refs/tags/v0.9.2
+      ref: refs/tags/v0.9.4
       endpoint: github
 
 variables:
-  - group: rsg-bot
   - name: CONFIGURATION
     value: Release
   - name: VERBOSITY
@@ -35,6 +34,7 @@ variables:
 jobs:
   - template: pipeline/nuke.yml@rsg
     parameters:
+      GithubAuthVariableGroup: rsg-bot
       Configuration: $(Configuration)
       Verbosity: $(Verbosity)
       GitHub: true
