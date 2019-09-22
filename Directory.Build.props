@@ -5,6 +5,9 @@
         <Authors>David Driscoll</Authors>
         <LangVersion>8.0</LangVersion>
         <!-- <Nullable>enable</Nullable> -->
-        <PackageIconUrl>https://raw.githubusercontent.com/RocketSurgeonsGuild/graphics/master/png/rsg-patch-circle-color.png</PackageIconUrl>
+        <PackageIcon>images/packageicon.png</PackageIcon>
     </PropertyGroup>
+    <ItemGroup>
+        <None Include="$(MSBuildThisFileDirectory)/.tmp/packageicon.png" Condition="Exists('$(MSBuildThisFileDirectory)/.tmp/packageicon.png')" Pack="true" PackagePath="/images/"/>
+    </ItemGroup>
 </Project>

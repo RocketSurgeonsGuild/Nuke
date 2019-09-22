@@ -61,9 +61,8 @@ namespace Rocket.Surgery.Nuke.Readme
         public References References { get; }
 
         /// <summary>
-        /// Updates the given markdown content with all the sections replaced.
-        ///
-        /// The "generated references" is special and will always be run through last, to make sure all sections can contribute references.
+        /// <para>Updates the given markdown content with all the sections replaced.</para>
+        /// <para>The "generated references" is special and will always be run through last, to make sure all sections can contribute references.</para>
         /// </summary>
         /// <param name="content"></param>
         /// <param name="build"></param>
