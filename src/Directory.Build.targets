@@ -1,6 +1,3 @@
 <Project>
-    <ItemGroup>
-        <None Include="$(MSBuildThisFileDirectory)/../.tmp/packageicon.png" Pack="true" PackagePath="/images/"/>
-    </ItemGroup>
     <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.targets', '$(MSBuildThisFileDirectory)../'))" />
 </Project>

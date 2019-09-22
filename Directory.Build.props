@@ -5,5 +5,6 @@
         <Authors>David Driscoll</Authors>
         <LangVersion>8.0</LangVersion>
         <!-- <Nullable>enable</Nullable> -->
+        <PackageIcon>images/packageicon.png</PackageIcon>
     </PropertyGroup>
 </Project>

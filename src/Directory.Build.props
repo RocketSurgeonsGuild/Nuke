@@ -5,6 +5,5 @@
         <IsPackable>true</IsPackable>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <RootNamespace>$(MSBuildProjectName.Replace('.Abstractions', ''))</RootNamespace>
-        <PackageIcon>images/packageicon.png</PackageIcon>
     </PropertyGroup>
 </Project>
