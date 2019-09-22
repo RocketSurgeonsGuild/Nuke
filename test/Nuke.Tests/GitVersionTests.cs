@@ -9,7 +9,7 @@ using static Nuke.Common.EnvironmentInfo;
 
 namespace Rocket.Surgery.Nuke.Tests
 {
-    public class GitVersionTests : AutoTestBase
+    public class GitVersionTests : AutoFakeTest
     {
         public GitVersionTests(ITestOutputHelper outputHelper) : base(outputHelper, LogLevel.Trace)
         {

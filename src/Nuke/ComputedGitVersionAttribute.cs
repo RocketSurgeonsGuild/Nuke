@@ -1,5 +1,3 @@
-using Nuke.Common;
-using Nuke.Common.Execution;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
 using static Nuke.Common.EnvironmentInfo;
@@ -19,7 +17,7 @@ namespace Rocket.Surgery.Nuke
     /// </summary>
     [PublicAPI]
     [UsedImplicitly(ImplicitUseKindFlags.Default)]
-    internal class ComputedGitVersionAttribute : GitVersionAttribute
+    public class ComputedGitVersionAttribute : GitVersionAttribute
     {
         /// <inheritdoc />
         public override object GetValue(MemberInfo member, object instance)
@@ -55,5 +53,4 @@ namespace Rocket.Surgery.Nuke
             }
         }
     }
-
 }
