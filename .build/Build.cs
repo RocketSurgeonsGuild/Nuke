@@ -1,10 +1,6 @@
 using Nuke.Common;
 using Nuke.Common.Execution;
 using Rocket.Surgery.Nuke.DotNetCore;
-using static Nuke.Common.IO.HttpTasks;
-using static Nuke.Common.IO.FileSystemTasks;
-using static Nuke.Common.IO.PathConstruction;
-using System.Reflection;
 using Rocket.Surgery.Nuke;
 
 [CheckBuildProjectConfigurations]
