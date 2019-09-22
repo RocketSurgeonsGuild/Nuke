@@ -7,4 +7,7 @@
         <!-- <Nullable>enable</Nullable> -->
         <PackageIcon>images/packageicon.png</PackageIcon>
     </PropertyGroup>
+    <ItemGroup>
+        <None Include="$(MSBuildThisFileDirectory)/.tmp/packageicon.png" Condition="Exists('$(MSBuildThisFileDirectory)/.tmp/packageicon.png')" Pack="true" PackagePath="/images/"/>
+    </ItemGroup>
 </Project>

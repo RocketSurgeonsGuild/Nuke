@@ -1,7 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project>
-  <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)/.tmp/packageicon.png" Condition="Exists('$(MSBuildThisFileDirectory)/.tmp/packageicon.png')" Pack="true" PackagePath="/images/"/>
-  </ItemGroup>
   <Sdk Name="Microsoft.Build.CentralPackageVersions" Version="2.0.46" />
 </Project>
