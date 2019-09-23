@@ -29,11 +29,11 @@ namespace Rocket.Surgery.Nuke
         /// Ensures that the icon at the given url is downloaded into the specified filePath
         /// </summary>
         /// <param name="url">The Url to download</param>
-        /// <param name="filePath">The file path to download to, defaults to TemporaryDirectory / packageicon.[ext]</param>
+        /// <param name="filePath">The file path to download to inside the temporary directory</param>
         public DownloadFileAttribute(string url, string filePath)
         {
             _url = url ?? throw new ArgumentNullException(nameof(url));
-            _filePath = filePath == null ? throw new ArgumentNullException(nameof(filePath)) : (AbsolutePath)filePath;
+            _filePath = filePath == null ? throw new ArgumentNullException(nameof(filePath)) : NukeBuild.TemporaryDirectory / filePath;
         }
 
         /// <inheritdoc />
