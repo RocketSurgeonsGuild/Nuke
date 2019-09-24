@@ -1,10 +1,6 @@
 <Project>
     <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
     <PropertyGroup>
-        <PreserveCompilationContext>true</PreserveCompilationContext>
-        <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
-        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <Include>[Rocket.Surgery.*]*</Include>
-        <Exclude>[xunit*]*</Exclude>
     </PropertyGroup>
 </Project>
