@@ -17,7 +17,7 @@ issue-labels-include:
   - ":raised_hand: good first issue"
   - ":raised_hand: help wanted"
   - ":sparkles: mysterious"
-  - "dependencies"
+  - ":package: dependencies"
 issue-labels-exclude:
   - ":x: invalid"
   - ":grey_question: question"
