@@ -5,6 +5,8 @@
 #   footer-includes-milestone: true
 export:
   include-created-date-in-title: false
+  perform-regex-removal: true
+  regex-text: '[a-f\d]{40}\s'
 issue-labels-include:
   - ":boom: breaking change"
   - ":rocket: feature"
