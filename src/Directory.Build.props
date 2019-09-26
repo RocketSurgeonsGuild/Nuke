@@ -4,5 +4,6 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <IsPackable>true</IsPackable>
         <RootNamespace>$(MSBuildProjectName.Replace('.Abstractions', ''))</RootNamespace>
+        <NoWarn>NU5105;$(NoWarn)</NoWarn>
     </PropertyGroup>
 </Project>
