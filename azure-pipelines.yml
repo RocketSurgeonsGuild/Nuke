@@ -1,8 +1,22 @@
 trigger:
+  batch: true
   branches:
     include:
       - master
       - refs/tags/*
+  paths:
+    exclude:
+    - '**/*.md'
+    - .appveyor.yml
+    - .codecov.yml
+    - .git*
+    - .editorconfig
+    - .nuke
+    - GitReleaseManager.yaml
+    - .dependabot/config.yml
+    - .vscode/*
+    - LICENSE
+
 pr:
   autoCancel: true
   branches:
