@@ -3,5 +3,21 @@ update_configs:
   - package_manager: "dotnet:nuget"
     directory: "/"
     update_schedule: "live"
+    target_branch: master
     default_labels:
       - ":package: dependencies"
+    default_assignees:
+      - "david-driscoll"
+    default_reviewers:
+      - "david-driscoll"
+    automerged_updates:
+      - match:
+          dependency_name: "Rocket.Surgery.*"
+          update_type: "semver:minor"
+    ignored_updates:
+      - match:
+          dependency_name: Microsoft.Extensions.*
+      - match:
+          dependency_name: Microsoft.AspNetCore.*
+      - match:
+          dependency_name: System.Diagnostics.*
