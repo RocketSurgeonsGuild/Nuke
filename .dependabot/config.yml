@@ -8,8 +8,8 @@ update_configs:
       - ":package: dependencies"
     default_assignees:
       - "david-driscoll"
-    default_reviewers:
-      - "david-driscoll"
+    # default_reviewers:
+    #   - "david-driscoll"
     automerged_updates:
       - match:
           dependency_name: "Rocket.Surgery.*"
