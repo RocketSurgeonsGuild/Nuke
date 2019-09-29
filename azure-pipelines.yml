@@ -7,8 +7,10 @@ trigger:
   paths:
     exclude:
     - '**/*.md'
-    - '**/*.yml'
-    - '**/*.yaml'
+    - '.appveyor.yml'
+    - '.codecov.yml'
+    - 'GitVersion.yml'
+    - 'GitReleaseManager.yaml'
     - .vscode/*
     - .git*
     - .editorconfig
@@ -26,7 +28,7 @@ resources:
     - repository: rsg
       type: github
       name: RocketSurgeonsGuild/AzureDevopsTemplates
-      ref: refs/tags/v0.10.8
+      ref: refs/tags/v0.10.10
       endpoint: github
 
 variables:
