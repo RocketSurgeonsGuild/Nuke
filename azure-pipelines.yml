@@ -28,7 +28,7 @@ resources:
     - repository: rsg
       type: github
       name: RocketSurgeonsGuild/AzureDevopsTemplates
-      ref: refs/tags/v0.10.10
+      ref: refs/tags/v0.10.11
       endpoint: github
 
 variables:
