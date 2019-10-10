@@ -9,13 +9,13 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Nuke.Common" Version="0.22.2" />
-    <PackageReference Update="YamlDotNet" Version="6.1.2" />
+    <PackageReference Update="YamlDotNet" Version="7.0.0" />
     <PackageReference Update="Buildalyzer" Version="2.3.0" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Rocket.Surgery.Extensions.Testing.FakeItEasy" Version="2.1.2" />
     <PackageReference Update="Autofac.Extras.FakeItEasy" Version="5.0.1" />
-    <PackageReference Update="Bogus" Version="28.3.1" />
+    <PackageReference Update="Bogus" Version="28.3.2" />
     <PackageReference Update="coverlet.collector" Version="1.1.0" />
     <PackageReference Update="coverlet.msbuild" Version="2.7.0" IncludeAssets="all" PrivateAssets="runtime;build;native;contentfiles;analyzers" />
     <PackageReference Update="FakeItEasy" Version="5.2.0" />
