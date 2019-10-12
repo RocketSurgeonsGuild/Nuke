@@ -10,7 +10,7 @@
   <ItemGroup>
     <PackageReference Update="Nuke.Common" Version="0.22.2" />
     <PackageReference Update="YamlDotNet" Version="7.0.0" />
-    <PackageReference Update="Buildalyzer" Version="2.3.0" />
+    <PackageReference Update="Buildalyzer" Version="2.4.0" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Rocket.Surgery.Extensions.Testing.FakeItEasy" Version="2.1.2" />
