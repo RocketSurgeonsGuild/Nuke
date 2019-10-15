@@ -13,7 +13,7 @@
     <PackageReference Update="Buildalyzer" Version="2.4.0" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="Rocket.Surgery.Extensions.Testing.FakeItEasy" Version="2.1.2" />
+    <PackageReference Update="Rocket.Surgery.Extensions.Testing.FakeItEasy" Version="2.2.0" />
     <PackageReference Update="Autofac.Extras.FakeItEasy" Version="5.0.1" />
     <PackageReference Update="Bogus" Version="28.3.2" />
     <PackageReference Update="coverlet.collector" Version="1.1.0" />
