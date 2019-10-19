@@ -21,6 +21,7 @@ using Rocket.Surgery.Nuke.Readme;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
 using Nuke.Common.IO;
+using Nuke.Common.Tooling;
 
 namespace Rocket.Surgery.Nuke
 {
@@ -174,14 +175,23 @@ namespace Rocket.Surgery.Nuke
             .Executes(() =>
             {
                 var reports = CoverageDirectory.GlobFiles("**/*.cobertura.xml").Select(z => z.ToString());
+                // TEMP work around for issue in nuke
+                var toolPath =
+#if NETSTANDARD2_1
+                    ToolPathResolver.GetPackageExecutable("ReportGenerator", "ReportGenerator.exe", framework: "netcoreapp3.0");
+#else
+                    ToolPathResolver.GetPackageExecutable("ReportGenerator", "ReportGenerator.exe", framework: "net47");
+#endif
                 ReportGenerator(s => s
-                        .SetReports(reports)
+                    .SetToolPath(toolPath)
+                    .SetReports(reports)
                         .SetTargetDirectory(CoverageDirectory / "report")
                         .SetReportTypes(ReportTypes.HtmlInline_AzurePipelines_Dark)
                         .SetTag(GitVersion.InformationalVersion)
                     );
 
                 ReportGenerator(s => s
+                    .SetToolPath(toolPath)
                     .SetReports(reports)
                     .SetTargetDirectory(CoverageDirectory)
                     .SetReportTypes(ReportTypes.Cobertura)
@@ -189,6 +199,7 @@ namespace Rocket.Surgery.Nuke
                 );
 
                 ReportGenerator(s => s
+                    .SetToolPath(toolPath)
                     .SetReports(reports)
                     .SetTargetDirectory(CoverageDirectory / "badges")
                     .SetReportTypes(ReportTypes.Badges)
@@ -196,6 +207,7 @@ namespace Rocket.Surgery.Nuke
                 );
 
                 ReportGenerator(s => s
+                    .SetToolPath(toolPath)
                     .SetReports(reports)
                     .SetTargetDirectory(CoverageDirectory / "summary")
                     .SetReportTypes(ReportTypes.HtmlSummary, ReportTypes.TextSummary)
