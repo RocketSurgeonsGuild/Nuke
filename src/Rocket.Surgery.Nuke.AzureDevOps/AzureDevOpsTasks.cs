@@ -16,7 +16,7 @@ namespace Rocket.Surgery.Nuke.AzureDevOps
         /// Gets a value that determines if the build is running on Azure DevOps.
         /// </summary>
         public static Expression<Func<bool>> IsRunningOnAzureDevOps => () =>
-            NukeBuild.Host == HostType.AzureDevOps || Environment.GetEnvironmentVariable("LOGNAME") == "vsts";
+            NukeBuild.Host == HostType.AzurePipelines || Environment.GetEnvironmentVariable("LOGNAME") == "vsts";
 
         Target PrintAzureDevOpsEnvironment => _ => _
             .OnlyWhenStatic(IsRunningOnAzureDevOps)

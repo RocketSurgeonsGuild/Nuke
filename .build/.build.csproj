@@ -3,7 +3,8 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <AssetTargetFallback>$(AssetTargetFallback);netcoreapp2.1</AssetTargetFallback>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <RootNamespace></RootNamespace>
     <IsPackable>False</IsPackable>
@@ -12,8 +13,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Nuke.Common" Version="0.22.2" />
-    <PackageReference Include="GitVersion.CommandLine.DotNetCore" Version="5.0.1" />
+    <PackageReference Include="Nuke.Common" Version="0.23.0-alpha0142" />
+    <PackageDownload Include="GitVersion.Tool" Version="[5.0.2-beta1.130]" />
     <PackageReference Include="ReportGenerator" Version="4.3.2" />
     <ProjectReference Include="../src/Nuke/Rocket.Surgery.Nuke.csproj" />
     <ProjectReference Include="../src/Nuke.DotNetCore/Rocket.Surgery.Nuke.DotNetCore.csproj" />

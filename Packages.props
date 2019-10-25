@@ -8,7 +8,7 @@
     <GlobalPackageReference Include="Roslynator.Analyzers" Version="2.1.0" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="Nuke.Common" Version="0.22.2" />
+    <PackageReference Update="Nuke.Common" Version="0.23.0-alpha0142" />
     <PackageReference Update="YamlDotNet" Version="8.0.0" />
     <PackageReference Update="Buildalyzer" Version="2.4.0" />
   </ItemGroup>
