@@ -12,6 +12,7 @@ using Nuke.Common.Tooling;
 using Nuke.Common.Utilities;
 using Nuke.Common.Utilities.Collections;
 using static Nuke.Common.IO.PathConstruction;
+using static Nuke.Common.IO.FileSystemTasks;
 using Nuke.Common.CI.AzurePipelines;
 using Nuke.Common.CI;
 using Nuke.Common;
@@ -19,6 +20,7 @@ using System.IO;
 using System.Reflection;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
+using Nuke.Common.Tools.DotNet;
 
 namespace Rocket.Surgery.Nuke.AzurePipelines
 {
@@ -89,10 +91,19 @@ namespace Rocket.Surgery.Nuke.AzurePipelines
                     }
                 },
                 new DotNetCoreCli() {
+                    DisplayName = "Restore Local Tools",
                     Inputs = new DotNetCoreCliInputs() {
                         Command = DotNetCoreCliCommand.Custom,
                         Custom = "tool",
                         Arguments = "restore",
+                    }
+                },
+                new DotNetCoreCli() {
+                    DisplayName = "Restore",
+                    Inputs = new DotNetCoreCliInputs() {
+                        Command = DotNetCoreCliCommand.Restore,
+                        FeedsToUse = DotNetCoreCliFeeds.Config,
+                        NugetConfigPath = (RelativePath)GlobFiles(NukeBuild.RootDirectory, "NuGet.config", ".nuget/NuGet.config").Select(x => GetRelativePath(NukeBuild.RootDirectory, x)).FirstOrDefault(),
                     }
                 }
             };
@@ -109,11 +120,6 @@ namespace Rocket.Surgery.Nuke.AzurePipelines
             foreach (IExecutableTarget executableTarget in relevantTargets)
             {
                 var (partitionName, totalPartitions) = ArtifactExtensions.GetPartition(executableTarget.Definition);
-                var publishedArtifacts = ArtifactExtensions.GetArtifactProducts(executableTarget.Definition)
-                    .Distinct()
-                    .Select(x => GetRelativePath(NukeBuild.RootDirectory, x))
-                    .ToArray();
-
                 var invokedTargets = executableTarget
                     .DescendantsAndSelf(x => x.Triggers.Concat(x.ExecutionDependencies), x => NonEntryTargets.Contains(x.Name))
                     .Where(x => x == executableTarget || NonEntryTargets.Contains(x.Name))
@@ -137,22 +143,6 @@ namespace Rocket.Surgery.Nuke.AzurePipelines
                         Arguments = arguments,
                     }
                 });
-                // steps.Add(new PwshTask()
-                // {
-                //     DisplayName = executableTarget.Name,
-                //     Inputs = new PwshTaskInputs()
-                //     {
-                //         TargetType = PwshTargetType.FilePath,
-                //         Arguments = arguments,
-                //         FilePath = "build.ps1",
-                //     }
-                // });
-
-                // var dependencies = executableTarget
-                //     .ExecutionDependencies
-                //     .Where(x => !attribute.ExcludedTargets.Contains(x.Name) && !attribute.NonEntryTargets.Contains(x.Name))
-                //     .ToArray();
-
 
             }
             return steps;

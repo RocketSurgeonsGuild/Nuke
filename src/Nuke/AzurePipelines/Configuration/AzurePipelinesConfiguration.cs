@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
+using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Utilities;
 using Nuke.Common.Utilities.Collections;
 using YamlDotNet.Core;
@@ -515,6 +516,7 @@ namespace Rocket.Surgery.Nuke.AzurePipelines.Configuration
 
     public class UseDotNet : Task<UseDotNetInputs>
     {
+        [YamlMember(Alias = "task")]
         public override string Name => "UseDotNet@2";
     }
     // build, push, pack, publish, restore, run, test, custom
@@ -588,14 +590,14 @@ namespace Rocket.Surgery.Nuke.AzurePipelines.Configuration
         public string? TestRunTitle { get; set; }
         public bool? ZipAfterPublish { get; set; }
         public bool? ModifyOutputPath { get; set; }
-        public DotNetCoreCliFeeds? feedsToUse { get; set; }
+        public DotNetCoreCliFeeds? FeedsToUse { get; set; }
         public string? VstsFeed { get; set; }
         public bool? IncludeNuGetOrg { get; set; }
-        public string? NugetConfigPath { get; set; }
+        public RelativePath? NugetConfigPath { get; set; }
         public string? ExternalFeedCredentials { get; set; }
         public bool? NoCache { get; set; }
         public string? RestoreDirectory { get; set; }
-        public DotNetCoreCliVerbosity? VerbosityRestore { get; set; }
+        public DotNetVerbosity? VerbosityRestore { get; set; }
         public string? PackagesToPush { get; set; }
         public DotNetCoreCliNuGetFeedType? NuGetFeedType { get; set; }
         public string? PublishVstsFeed { get; set; }
@@ -612,12 +614,13 @@ namespace Rocket.Surgery.Nuke.AzurePipelines.Configuration
         public char? NajorVersion { get; set; }
         public char? MinorVersion { get; set; }
         public char? PatchVersion { get; set; }
-        public DotNetCoreCliVerbosity? VerbosityPack { get; set; }
+        public DotNetVerbosity? VerbosityPack { get; set; }
         public IDictionary<string, string>? BuildProperties { get; set; }
     }
 
     public class DotNetCoreCli : Task<DotNetCoreCliInputs>
     {
+        [YamlMember(Alias = "task")]
         public override string Name => "DotNetCoreCLI@2";
     }
 

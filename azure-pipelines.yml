@@ -54,44 +54,39 @@ jobs:
     inputs:
       configFilePath: GitVersion.yml
     displayName: GitVersion
-  - name: UseDotNet@2
+  - task: UseDotNet@2
     inputs:
       packageType: Sdk
       version: 2.2.x
-  - name: UseDotNet@2
+  - task: UseDotNet@2
     inputs:
       packageType: Sdk
       version: 3.0.x
-  - name: DotNetCoreCLI@2
+  - task: DotNetCoreCLI@2
     inputs:
       command: Custom
       custom: tool
       arguments: restore
-  - name: DotNetCoreCLI@2
+    displayName: Restore Local Tools
+  - task: DotNetCoreCLI@2
     inputs:
-      command: Custom
-      custom: nuke
-      arguments: BuildVersion --skip
-    displayName: BuildVersion
-  - name: DotNetCoreCLI@2
-    inputs:
-      command: Custom
-      custom: nuke
-      arguments: Restore --skip
+      command: Restore
+      feedsToUse: Config
+      nugetConfigPath: {}
     displayName: Restore
-  - name: DotNetCoreCLI@2
+  - task: DotNetCoreCLI@2
     inputs:
       command: Custom
       custom: nuke
       arguments: Build --skip
     displayName: Build
-  - name: DotNetCoreCLI@2
+  - task: DotNetCoreCLI@2
     inputs:
       command: Custom
       custom: nuke
       arguments: Test Generate_Code_Coverage_Reports --skip
     displayName: Test
-  - name: DotNetCoreCLI@2
+  - task: DotNetCoreCLI@2
     inputs:
       command: Custom
       custom: nuke
@@ -105,44 +100,39 @@ jobs:
     inputs:
       configFilePath: GitVersion.yml
     displayName: GitVersion
-  - name: UseDotNet@2
+  - task: UseDotNet@2
     inputs:
       packageType: Sdk
       version: 2.2.x
-  - name: UseDotNet@2
+  - task: UseDotNet@2
     inputs:
       packageType: Sdk
       version: 3.0.x
-  - name: DotNetCoreCLI@2
+  - task: DotNetCoreCLI@2
     inputs:
       command: Custom
       custom: tool
       arguments: restore
-  - name: DotNetCoreCLI@2
+    displayName: Restore Local Tools
+  - task: DotNetCoreCLI@2
     inputs:
-      command: Custom
-      custom: nuke
-      arguments: BuildVersion --skip
-    displayName: BuildVersion
-  - name: DotNetCoreCLI@2
-    inputs:
-      command: Custom
-      custom: nuke
-      arguments: Restore --skip
+      command: Restore
+      feedsToUse: Config
+      nugetConfigPath: {}
     displayName: Restore
-  - name: DotNetCoreCLI@2
+  - task: DotNetCoreCLI@2
     inputs:
       command: Custom
       custom: nuke
       arguments: Build --skip
     displayName: Build
-  - name: DotNetCoreCLI@2
+  - task: DotNetCoreCLI@2
     inputs:
       command: Custom
       custom: nuke
       arguments: Test Generate_Code_Coverage_Reports --skip
     displayName: Test
-  - name: DotNetCoreCLI@2
+  - task: DotNetCoreCLI@2
     inputs:
       command: Custom
       custom: nuke
@@ -156,44 +146,39 @@ jobs:
     inputs:
       configFilePath: GitVersion.yml
     displayName: GitVersion
-  - name: UseDotNet@2
+  - task: UseDotNet@2
     inputs:
       packageType: Sdk
       version: 2.2.x
-  - name: UseDotNet@2
+  - task: UseDotNet@2
     inputs:
       packageType: Sdk
       version: 3.0.x
-  - name: DotNetCoreCLI@2
+  - task: DotNetCoreCLI@2
     inputs:
       command: Custom
       custom: tool
       arguments: restore
-  - name: DotNetCoreCLI@2
+    displayName: Restore Local Tools
+  - task: DotNetCoreCLI@2
     inputs:
-      command: Custom
-      custom: nuke
-      arguments: BuildVersion --skip
-    displayName: BuildVersion
-  - name: DotNetCoreCLI@2
-    inputs:
-      command: Custom
-      custom: nuke
-      arguments: Restore --skip
+      command: Restore
+      feedsToUse: Config
+      nugetConfigPath: {}
     displayName: Restore
-  - name: DotNetCoreCLI@2
+  - task: DotNetCoreCLI@2
     inputs:
       command: Custom
       custom: nuke
       arguments: Build --skip
     displayName: Build
-  - name: DotNetCoreCLI@2
+  - task: DotNetCoreCLI@2
     inputs:
       command: Custom
       custom: nuke
       arguments: Test Generate_Code_Coverage_Reports --skip
     displayName: Test
-  - name: DotNetCoreCLI@2
+  - task: DotNetCoreCLI@2
     inputs:
       command: Custom
       custom: nuke

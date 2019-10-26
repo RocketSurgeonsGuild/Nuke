@@ -21,7 +21,7 @@ using Nuke.Common.Utilities;
     AutoGenerate = true,
     InvokedTargets = new[] { nameof(Default) },
     NonEntryTargets = new[] { nameof(Generate_Code_Coverage_Reports) },
-    ExcludedTargets = new string[] { nameof(DotnetToolRestore), nameof(DotNetCore), nameof(Default), nameof(Clean) }
+    ExcludedTargets = new string[] { nameof(DotnetToolRestore), nameof(BuildVersion), nameof(Restore), nameof(DotNetCore), nameof(Default), nameof(Clean) }
 )]
 [PackageIcon("https://raw.githubusercontent.com/RocketSurgeonsGuild/graphics/master/png/social-square-thrust-rounded.png")]
 class Build : DotNetCoreBuild
