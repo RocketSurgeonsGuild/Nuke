@@ -496,6 +496,131 @@ namespace Rocket.Surgery.Nuke.AzurePipelines.Configuration
         public override string Name => "PowerShell@2";
     }
 
+    public enum UseDotNetPackageType
+    {
+        [EnumMember(Value = "sdk")]
+        Sdk,
+        [EnumMember(Value = "runtime")]
+        Runtime,
+    }
+    public class UseDotNetInputs
+    {
+        public UseDotNetPackageType PackageType { get; set; }
+        public bool? UseGlobalJson { get; set; }
+        public string? Version { get; set; }
+        public bool? IncludePreviewVersions { get; set; }
+        public string? InstallationPath { get; set; }
+        public bool? PerformMultiLevelLookup { get; set; }
+    }
+
+    public class UseDotNet : Task<UseDotNetInputs>
+    {
+        public override string Name => "UseDotNet@2";
+    }
+    // build, push, pack, publish, restore, run, test, custom
+    public enum DotNetCoreCliCommand
+    {
+        [EnumMember(Value = "build")]
+        Build,
+        [EnumMember(Value = "push")]
+        Push,
+        [EnumMember(Value = "pack")]
+        Pack,
+        [EnumMember(Value = "publish")]
+        Publish,
+        [EnumMember(Value = "restore")]
+        Restore,
+        [EnumMember(Value = "run")]
+        Run,
+        [EnumMember(Value = "test")]
+        Test,
+        [EnumMember(Value = "custom")]
+        Custom
+    }
+
+    public enum DotNetCoreCliFeeds
+    {
+        [EnumMember(Value = "select")]
+        Select,
+        [EnumMember(Value = "config")]
+        Config
+    }
+    public enum DotNetCoreCliNuGetFeedType
+    {
+        [EnumMember(Value = "internal")]
+        Internal,
+        [EnumMember(Value = "external")]
+        External
+    }
+    public enum DotNetCoreCliVersioningScheme
+    {
+        [EnumMember(Value = "off")]
+        Off,
+        [EnumMember(Value = "byPrereleaseNumber")]
+        ByPrereleaseNumber,
+        [EnumMember(Value = "byEnvVar")]
+        ByEnvVar,
+        [EnumMember(Value = "byBuildNumber")]
+        ByBuildNumber
+    }
+    public enum DotNetCoreCliVerbosity
+    {
+        [EnumMember(Value = "config")]
+        Quiet,
+        [EnumMember(Value = "minimal")]
+        Minimal,
+        [EnumMember(Value = "normal")]
+        Normal,
+        [EnumMember(Value = "detailed")]
+        Detailed,
+        [EnumMember(Value = "diagnostic")]
+        Diagnostic
+    }
+
+    public class DotNetCoreCliInputs
+    {
+        public DotNetCoreCliCommand? Command { get; set; }
+        public bool? PublishWebProjects { get; set; }
+        public string? Projects { get; set; }
+        public string? Custom { get; set; }
+        public string? Arguments { get; set; }
+        public bool? PublishTestResults { get; set; }
+        public string? TestRunTitle { get; set; }
+        public bool? ZipAfterPublish { get; set; }
+        public bool? ModifyOutputPath { get; set; }
+        public DotNetCoreCliFeeds? feedsToUse { get; set; }
+        public string? VstsFeed { get; set; }
+        public bool? IncludeNuGetOrg { get; set; }
+        public string? NugetConfigPath { get; set; }
+        public string? ExternalFeedCredentials { get; set; }
+        public bool? NoCache { get; set; }
+        public string? RestoreDirectory { get; set; }
+        public DotNetCoreCliVerbosity? VerbosityRestore { get; set; }
+        public string? PackagesToPush { get; set; }
+        public DotNetCoreCliNuGetFeedType? NuGetFeedType { get; set; }
+        public string? PublishVstsFeed { get; set; }
+        public bool? PublishPackageMetadata { get; set; }
+        public string? PublishFeedCredentials { get; set; }
+        public string? PackagesToPack { get; set; }
+        public string? Configuration { get; set; }
+        public string? PackDirectory { get; set; }
+        public bool? Nobuild { get; set; }
+        public bool? Includesymbols { get; set; }
+        public bool? Includesource { get; set; }
+        public DotNetCoreCliVersioningScheme? VersioningScheme { get; set; }
+        public string? VersionEnvVar { get; set; }
+        public char? NajorVersion { get; set; }
+        public char? MinorVersion { get; set; }
+        public char? PatchVersion { get; set; }
+        public DotNetCoreCliVerbosity? VerbosityPack { get; set; }
+        public IDictionary<string, string>? BuildProperties { get; set; }
+    }
+
+    public class DotNetCoreCli : Task<DotNetCoreCliInputs>
+    {
+        public override string Name => "DotNetCoreCLI@2";
+    }
+
     public class Publish : Step
     {
         [YamlMember(Alias = "publish")]

@@ -54,28 +54,47 @@ jobs:
     inputs:
       configFilePath: GitVersion.yml
     displayName: GitVersion
-  - task: PowerShell@2
+  - name: UseDotNet@2
     inputs:
-      targetType: FilePath
-      filePath: build.ps1
-      arguments: DotnetToolRestore Restore --skip
+      packageType: Sdk
+      version: 2.2.x
+  - name: UseDotNet@2
+    inputs:
+      packageType: Sdk
+      version: 3.0.x
+  - name: DotNetCoreCLI@2
+    inputs:
+      command: Custom
+      custom: tool
+      arguments: restore
+  - name: DotNetCoreCLI@2
+    inputs:
+      command: Custom
+      custom: nuke
+      arguments: BuildVersion --skip
+    displayName: BuildVersion
+  - name: DotNetCoreCLI@2
+    inputs:
+      command: Custom
+      custom: nuke
+      arguments: Restore --skip
     displayName: Restore
-  - task: PowerShell@2
+  - name: DotNetCoreCLI@2
     inputs:
-      targetType: FilePath
-      filePath: build.ps1
+      command: Custom
+      custom: nuke
       arguments: Build --skip
     displayName: Build
-  - task: PowerShell@2
+  - name: DotNetCoreCLI@2
     inputs:
-      targetType: FilePath
-      filePath: build.ps1
+      command: Custom
+      custom: nuke
       arguments: Test Generate_Code_Coverage_Reports --skip
     displayName: Test
-  - task: PowerShell@2
+  - name: DotNetCoreCLI@2
     inputs:
-      targetType: FilePath
-      filePath: build.ps1
+      command: Custom
+      custom: nuke
       arguments: Pack --skip
     displayName: Pack
 - job: Ubuntu
@@ -86,28 +105,47 @@ jobs:
     inputs:
       configFilePath: GitVersion.yml
     displayName: GitVersion
-  - task: PowerShell@2
+  - name: UseDotNet@2
     inputs:
-      targetType: FilePath
-      filePath: build.ps1
-      arguments: DotnetToolRestore Restore --skip
+      packageType: Sdk
+      version: 2.2.x
+  - name: UseDotNet@2
+    inputs:
+      packageType: Sdk
+      version: 3.0.x
+  - name: DotNetCoreCLI@2
+    inputs:
+      command: Custom
+      custom: tool
+      arguments: restore
+  - name: DotNetCoreCLI@2
+    inputs:
+      command: Custom
+      custom: nuke
+      arguments: BuildVersion --skip
+    displayName: BuildVersion
+  - name: DotNetCoreCLI@2
+    inputs:
+      command: Custom
+      custom: nuke
+      arguments: Restore --skip
     displayName: Restore
-  - task: PowerShell@2
+  - name: DotNetCoreCLI@2
     inputs:
-      targetType: FilePath
-      filePath: build.ps1
+      command: Custom
+      custom: nuke
       arguments: Build --skip
     displayName: Build
-  - task: PowerShell@2
+  - name: DotNetCoreCLI@2
     inputs:
-      targetType: FilePath
-      filePath: build.ps1
+      command: Custom
+      custom: nuke
       arguments: Test Generate_Code_Coverage_Reports --skip
     displayName: Test
-  - task: PowerShell@2
+  - name: DotNetCoreCLI@2
     inputs:
-      targetType: FilePath
-      filePath: build.ps1
+      command: Custom
+      custom: nuke
       arguments: Pack --skip
     displayName: Pack
 - job: macOS
@@ -118,27 +156,46 @@ jobs:
     inputs:
       configFilePath: GitVersion.yml
     displayName: GitVersion
-  - task: PowerShell@2
+  - name: UseDotNet@2
     inputs:
-      targetType: FilePath
-      filePath: build.ps1
-      arguments: DotnetToolRestore Restore --skip
+      packageType: Sdk
+      version: 2.2.x
+  - name: UseDotNet@2
+    inputs:
+      packageType: Sdk
+      version: 3.0.x
+  - name: DotNetCoreCLI@2
+    inputs:
+      command: Custom
+      custom: tool
+      arguments: restore
+  - name: DotNetCoreCLI@2
+    inputs:
+      command: Custom
+      custom: nuke
+      arguments: BuildVersion --skip
+    displayName: BuildVersion
+  - name: DotNetCoreCLI@2
+    inputs:
+      command: Custom
+      custom: nuke
+      arguments: Restore --skip
     displayName: Restore
-  - task: PowerShell@2
+  - name: DotNetCoreCLI@2
     inputs:
-      targetType: FilePath
-      filePath: build.ps1
+      command: Custom
+      custom: nuke
       arguments: Build --skip
     displayName: Build
-  - task: PowerShell@2
+  - name: DotNetCoreCLI@2
     inputs:
-      targetType: FilePath
-      filePath: build.ps1
+      command: Custom
+      custom: nuke
       arguments: Test Generate_Code_Coverage_Reports --skip
     displayName: Test
-  - task: PowerShell@2
+  - name: DotNetCoreCLI@2
     inputs:
-      targetType: FilePath
-      filePath: build.ps1
+      command: Custom
+      custom: nuke
       arguments: Pack --skip
     displayName: Pack

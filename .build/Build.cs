@@ -20,8 +20,8 @@ using Nuke.Common.Utilities;
     ConfigurationFile = "azure-pipelines.yml",
     AutoGenerate = true,
     InvokedTargets = new[] { nameof(Default) },
-    NonEntryTargets = new[] { nameof(DotnetToolRestore), nameof(Generate_Code_Coverage_Reports) },
-    ExcludedTargets = new string[] { nameof(DotNetCore), nameof(Default), nameof(Clean), nameof(BuildVersion) }
+    NonEntryTargets = new[] { nameof(Generate_Code_Coverage_Reports) },
+    ExcludedTargets = new string[] { nameof(DotnetToolRestore), nameof(DotNetCore), nameof(Default), nameof(Clean) }
 )]
 [PackageIcon("https://raw.githubusercontent.com/RocketSurgeonsGuild/graphics/master/png/social-square-thrust-rounded.png")]
 class Build : DotNetCoreBuild

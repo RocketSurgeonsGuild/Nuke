@@ -75,30 +75,44 @@ namespace Rocket.Surgery.Nuke.AzurePipelines
 
         public IEnumerable<Step> GetSteps(IEnumerable<IExecutableTarget> relevantTargets)
         {
-            var steps = new List<Step>();
+            var steps = new List<Step> {
+                new UseDotNet() {
+                    Inputs = new UseDotNetInputs {
+                        PackageType = UseDotNetPackageType.Sdk,
+                        Version = "2.2.x"
+                    }
+                },
+                new UseDotNet() {
+                    Inputs = new UseDotNetInputs {
+                        PackageType = UseDotNetPackageType.Sdk,
+                        Version = "3.0.x"
+                    }
+                },
+                new DotNetCoreCli() {
+                    Inputs = new DotNetCoreCliInputs() {
+                        Command = DotNetCoreCliCommand.Custom,
+                        Custom = "tool",
+                        Arguments = "restore",
+                    }
+                }
+            };
+
+            /*
+              - task: DotNetCoreCLI@2
+                displayName: "dotnet tool restore"
+                inputs:
+                  command: custom
+                  custom: tool
+                  arguments: "restore"
+             */
+
             foreach (IExecutableTarget executableTarget in relevantTargets)
             {
                 var (partitionName, totalPartitions) = ArtifactExtensions.GetPartition(executableTarget.Definition);
                 var publishedArtifacts = ArtifactExtensions.GetArtifactProducts(executableTarget.Definition)
-                    // .Select(x => (AbsolutePath)x)
-                    // .Select(x => x.DescendantsAndSelf(y => y.Parent).FirstOrDefault(y => !y.ToString().ContainsOrdinalIgnoreCase("*")))
                     .Distinct()
                     .Select(x => GetRelativePath(NukeBuild.RootDirectory, x))
-                    // .Select(x => x.ToString().TrimStart(x.Parent.ToString()).TrimStart('/', '\\'))
                     .ToArray();
-
-                // var artifactDependencies = (
-                //     from artifactDependency in ArtifactExtensions.ArtifactDependencies[executableTarget.Definition]
-                //     let dependency = executableTarget.ExecutionDependencies.Single(x => x.Factory == artifactDependency.Item1)
-                //     let rules = (artifactDependency.Item2.Any()
-                //             ? artifactDependency.Item2
-                //             : ArtifactExtensions.ArtifactProducts[dependency.Definition])
-                //         .Select(GetArtifactRule).ToArray()
-                //     select new TeamCityArtifactDependency
-                //            {
-                //                BuildType = buildTypes[dependency].Single(x => x.Partition == null),
-                //                ArtifactRules = rules
-                //            }).ToArray<TeamCityDependency>();
 
                 var invokedTargets = executableTarget
                     .DescendantsAndSelf(x => x.Triggers.Concat(x.ExecutionDependencies), x => NonEntryTargets.Contains(x.Name))
@@ -113,16 +127,26 @@ namespace Rocket.Surgery.Nuke.AzurePipelines
                 if (partitionName != null)
                     arguments += $" --{ParameterService.GetParameterDashedName(partitionName)} $(System.JobPositionInPhase)";
 
-                steps.Add(new PwshTask()
+                steps.Add(new DotNetCoreCli()
                 {
                     DisplayName = executableTarget.Name,
-                    Inputs = new PwshTaskInputs()
+                    Inputs = new DotNetCoreCliInputs()
                     {
-                        TargetType = PwshTargetType.FilePath,
+                        Command = DotNetCoreCliCommand.Custom,
+                        Custom = "nuke",
                         Arguments = arguments,
-                        FilePath = "build.ps1",
                     }
                 });
+                // steps.Add(new PwshTask()
+                // {
+                //     DisplayName = executableTarget.Name,
+                //     Inputs = new PwshTaskInputs()
+                //     {
+                //         TargetType = PwshTargetType.FilePath,
+                //         Arguments = arguments,
+                //         FilePath = "build.ps1",
+                //     }
+                // });
 
                 // var dependencies = executableTarget
                 //     .ExecutionDependencies
