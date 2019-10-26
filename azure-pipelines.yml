@@ -72,7 +72,7 @@ jobs:
     inputs:
       command: Restore
       feedsToUse: Config
-      nugetConfigPath: {}
+      nugetConfigPath: NuGet.config
     displayName: Restore
   - task: DotNetCoreCLI@2
     inputs:
@@ -118,7 +118,7 @@ jobs:
     inputs:
       command: Restore
       feedsToUse: Config
-      nugetConfigPath: {}
+      nugetConfigPath: NuGet.config
     displayName: Restore
   - task: DotNetCoreCLI@2
     inputs:
@@ -164,7 +164,7 @@ jobs:
     inputs:
       command: Restore
       feedsToUse: Config
-      nugetConfigPath: {}
+      nugetConfigPath: NuGet.config
     displayName: Restore
   - task: DotNetCoreCLI@2
     inputs:

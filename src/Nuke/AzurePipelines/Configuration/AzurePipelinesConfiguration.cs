@@ -593,7 +593,7 @@ namespace Rocket.Surgery.Nuke.AzurePipelines.Configuration
         public DotNetCoreCliFeeds? FeedsToUse { get; set; }
         public string? VstsFeed { get; set; }
         public bool? IncludeNuGetOrg { get; set; }
-        public RelativePath? NugetConfigPath { get; set; }
+        public string? NugetConfigPath { get; set; }
         public string? ExternalFeedCredentials { get; set; }
         public bool? NoCache { get; set; }
         public string? RestoreDirectory { get; set; }
