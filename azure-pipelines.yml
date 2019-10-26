@@ -50,6 +50,10 @@ jobs:
   pool:
     vmImage: 'windows-latest'
   steps:
+  - task: gittools.gitversion.gitversion-task.GitVersion@5
+    inputs:
+      configFilePath: GitVersion.yml
+    displayName: GitVersion
   - task: PowerShell@2
     inputs:
       targetType: FilePath
