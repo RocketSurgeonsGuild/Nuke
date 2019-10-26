@@ -57,7 +57,7 @@ namespace Rocket.Surgery.Nuke
         /// <summary>
         /// The Git Version information either computed by GitVersion itself, or as defined by environment variables of the format `GITVERSION_*`
         /// </summary>
-        [GitVersion] public readonly GitVersion GitVersion;
+        [ComputedGitVersion] public readonly GitVersion GitVersion;
 
         /// <summary>
         /// The readme updater that ensures that all the badges are in sync.
@@ -133,8 +133,9 @@ namespace Rocket.Surgery.Nuke
         public Target BuildVersion => _ => _
             .Executes(() =>
             {
+                GitVersionTasks.GitVersion(x => x.SetOutput(GitVersionOutput.buildserver));
                 Logger.Info("Building version {0} of {1} ({2}) using version {3} of Nuke.",
-                    GitVersion.NuGetVersionV2 ?? GitVersion.NuGetVersion,
+                    GitVersion.FullSemVer,
                     Solution.Name,
                     Configuration,
                     typeof(NukeBuild).Assembly.GetVersionText());
