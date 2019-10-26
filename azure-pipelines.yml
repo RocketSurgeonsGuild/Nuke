@@ -1,59 +1,314 @@
+resources:
+  containers: []
+  repositories:
+  - repository: rsg
+    name: RocketSurgeonsGuild/AzureDevopsTemplates
+    type: GitHub
+    ref: refs/tags/v0.10.12
+    endpoint: github
+variables:
+- name: 'CONFIGURATION'
+  value: 'Release'
+- name: 'VERBOSITY'
+  value: 'Normal'
+- name: 'COVERAGE'
+  value: '$(Agent.BuildDirectory)/c'
+- name: 'ARTIFACTS'
+  value: '$(Build.ArtifactStagingDirectory)'
+- name: 'DOTNET_SKIP_FIRST_TIME_EXPERIENCE'
+  value: 'true'
+- name: 'CodeCovToken'
+  value: 'c93f6719-da50-4d00-ba2b-b73fd95239e0'
 trigger:
   batch: true
   branches:
     include:
-      - master
-      - refs/tags/*
+    - master
+    - refs/tags/*
+    exclude: []
   paths:
+    include: []
     exclude:
     - '**/*.md'
-    - '.appveyor.yml'
-    - '.codecov.yml'
-    - 'GitVersion.yml'
-    - 'GitReleaseManager.yaml'
+    - .appveyor.yml
+    - .codecov.yml
+    - GitVersion.yml
+    - GitReleaseManager.yaml
     - .vscode/*
     - .git*
     - .editorconfig
     - .nuke
     - LICENSE
-
 pr:
   autoCancel: true
   branches:
     include:
-      - master
-
-resources:
-  repositories:
-    - repository: rsg
-      type: github
-      name: RocketSurgeonsGuild/AzureDevopsTemplates
-      ref: refs/tags/v0.10.12
-      endpoint: github
-
-variables:
-  - name: CONFIGURATION
-    value: Release
-  - name: VERBOSITY
-    value: Normal
-  - name: COVERAGE
-    value: "$(Agent.BuildDirectory)/c"
-  - name: ARTIFACTS
-    value: $(Build.ArtifactStagingDirectory)
-  - name: DOTNET_SKIP_FIRST_TIME_EXPERIENCE
-    value: "true"
-  - name: CodeCovToken
-    value: 'c93f6719-da50-4d00-ba2b-b73fd95239e0'
-
+    - master
+    exclude: []
 jobs:
-  - template: pipeline/nuke.yml@rsg
-    parameters:
-      GithubAuthVariableGroup: rsg-bot
-      Configuration: $(Configuration)
-      Verbosity: $(Verbosity)
-      GitHub: true
-      GitHubPackages: true
-      DotNetSdk:
-        - "2.2.x"
-        - "3.0.x"
-      NuGetVersion: "5.3.0"
+- job: BuildVersion
+  pool:
+    demands: []
+    vmImage:
+      name: macOS-latest
+  steps:
+  - name: PowerShell@2
+    targetType: FilePath
+    arguments: BuildVersion --skip
+    displayName: BuildVersion
+- job: Clean
+  dependsOn:
+  - BuildVersion
+  pool:
+    demands: []
+    vmImage:
+      name: macOS-latest
+  steps:
+  - name: PowerShell@2
+    targetType: FilePath
+    arguments: Clean --skip
+    displayName: Clean
+- job: Restore
+  dependsOn:
+  - Clean
+  pool:
+    demands: []
+    vmImage:
+      name: macOS-latest
+  steps:
+  - name: PowerShell@2
+    targetType: FilePath
+    arguments: DotnetToolRestore Restore --skip
+    displayName: Restore
+- job: Build
+  dependsOn:
+  - Restore
+  pool:
+    demands: []
+    vmImage:
+      name: macOS-latest
+  steps:
+  - name: PowerShell@2
+    targetType: FilePath
+    arguments: Build --skip
+    displayName: Build
+- job: Test
+  pool:
+    demands: []
+    vmImage:
+      name: macOS-latest
+  steps:
+  - name: PowerShell@2
+    targetType: FilePath
+    arguments: Test Generate_Code_Coverage_Reports --skip
+    displayName: Test
+- job: Pack
+  dependsOn:
+  - Build
+  pool:
+    demands: []
+    vmImage:
+      name: macOS-latest
+  steps:
+  - name: PowerShell@2
+    targetType: FilePath
+    arguments: Pack --skip
+    displayName: Pack
+- job: BuildVersion
+  pool:
+    demands: []
+    vmImage:
+      name: ubuntu-latest
+  steps:
+  - name: PowerShell@2
+    targetType: FilePath
+    arguments: BuildVersion --skip
+    displayName: BuildVersion
+- job: Clean
+  dependsOn:
+  - BuildVersion
+  pool:
+    demands: []
+    vmImage:
+      name: ubuntu-latest
+  steps:
+  - name: PowerShell@2
+    targetType: FilePath
+    arguments: Clean --skip
+    displayName: Clean
+- job: Restore
+  dependsOn:
+  - Clean
+  pool:
+    demands: []
+    vmImage:
+      name: ubuntu-latest
+  steps:
+  - name: PowerShell@2
+    targetType: FilePath
+    arguments: DotnetToolRestore Restore --skip
+    displayName: Restore
+- job: Build
+  dependsOn:
+  - Restore
+  pool:
+    demands: []
+    vmImage:
+      name: ubuntu-latest
+  steps:
+  - name: PowerShell@2
+    targetType: FilePath
+    arguments: Build --skip
+    displayName: Build
+- job: Test
+  pool:
+    demands: []
+    vmImage:
+      name: ubuntu-latest
+  steps:
+  - name: PowerShell@2
+    targetType: FilePath
+    arguments: Test Generate_Code_Coverage_Reports --skip
+    displayName: Test
+- job: Pack
+  dependsOn:
+  - Build
+  pool:
+    demands: []
+    vmImage:
+      name: ubuntu-latest
+  steps:
+  - name: PowerShell@2
+    targetType: FilePath
+    arguments: Pack --skip
+    displayName: Pack
+- job: BuildVersion
+  pool:
+    demands: []
+    vmImage:
+      name: windows-latest
+  steps:
+  - name: PowerShell@2
+    targetType: FilePath
+    arguments: BuildVersion --skip
+    displayName: BuildVersion
+- job: Clean
+  dependsOn:
+  - BuildVersion
+  pool:
+    demands: []
+    vmImage:
+      name: windows-latest
+  steps:
+  - name: PowerShell@2
+    targetType: FilePath
+    arguments: Clean --skip
+    displayName: Clean
+- job: Restore
+  dependsOn:
+  - Clean
+  pool:
+    demands: []
+    vmImage:
+      name: windows-latest
+  steps:
+  - name: PowerShell@2
+    targetType: FilePath
+    arguments: DotnetToolRestore Restore --skip
+    displayName: Restore
+- job: Build
+  dependsOn:
+  - Restore
+  pool:
+    demands: []
+    vmImage:
+      name: windows-latest
+  steps:
+  - name: PowerShell@2
+    targetType: FilePath
+    arguments: Build --skip
+    displayName: Build
+- job: Test
+  pool:
+    demands: []
+    vmImage:
+      name: windows-latest
+  steps:
+  - name: PowerShell@2
+    targetType: FilePath
+    arguments: Test Generate_Code_Coverage_Reports --skip
+    displayName: Test
+- job: Pack
+  dependsOn:
+  - Build
+  pool:
+    demands: []
+    vmImage:
+      name: windows-latest
+  steps:
+  - name: PowerShell@2
+    targetType: FilePath
+    arguments: Pack --skip
+    displayName: Pack
+- job: BuildVersion
+  pool:
+    name: Default
+    demands: []
+  steps:
+  - name: PowerShell@2
+    targetType: FilePath
+    arguments: BuildVersion --skip
+    displayName: BuildVersion
+- job: Clean
+  dependsOn:
+  - BuildVersion
+  pool:
+    name: Default
+    demands: []
+  steps:
+  - name: PowerShell@2
+    targetType: FilePath
+    arguments: Clean --skip
+    displayName: Clean
+- job: Restore
+  dependsOn:
+  - Clean
+  pool:
+    name: Default
+    demands: []
+  steps:
+  - name: PowerShell@2
+    targetType: FilePath
+    arguments: DotnetToolRestore Restore --skip
+    displayName: Restore
+- job: Build
+  dependsOn:
+  - Restore
+  pool:
+    name: Default
+    demands: []
+  steps:
+  - name: PowerShell@2
+    targetType: FilePath
+    arguments: Build --skip
+    displayName: Build
+- job: Test
+  pool:
+    name: Default
+    demands: []
+  steps:
+  - name: PowerShell@2
+    targetType: FilePath
+    arguments: Test Generate_Code_Coverage_Reports --skip
+    displayName: Test
+- job: Pack
+  dependsOn:
+  - Build
+  pool:
+    name: Default
+    demands: []
+  steps:
+  - name: PowerShell@2
+    targetType: FilePath
+    arguments: Pack --skip
+    displayName: Pack

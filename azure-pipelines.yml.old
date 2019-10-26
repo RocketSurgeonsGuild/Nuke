@@ -1,0 +1,59 @@
+trigger:
+  batch: true
+  branches:
+    include:
+      - master
+      - refs/tags/*
+  paths:
+    exclude:
+    - '**/*.md'
+    - '.appveyor.yml'
+    - '.codecov.yml'
+    - 'GitVersion.yml'
+    - 'GitReleaseManager.yaml'
+    - .vscode/*
+    - .git*
+    - .editorconfig
+    - .nuke
+    - LICENSE
+
+pr:
+  autoCancel: true
+  branches:
+    include:
+      - master
+
+resources:
+  repositories:
+    - repository: rsg
+      type: github
+      name: RocketSurgeonsGuild/AzureDevopsTemplates
+      ref: refs/tags/v0.10.12
+      endpoint: github
+
+variables:
+  - name: CONFIGURATION
+    value: Release
+  - name: VERBOSITY
+    value: Normal
+  - name: COVERAGE
+    value: "$(Agent.BuildDirectory)/c"
+  - name: ARTIFACTS
+    value: $(Build.ArtifactStagingDirectory)
+  - name: DOTNET_SKIP_FIRST_TIME_EXPERIENCE
+    value: "true"
+  - name: CodeCovToken
+    value: 'c93f6719-da50-4d00-ba2b-b73fd95239e0'
+
+jobs:
+  - template: pipeline/nuke.yml@rsg
+    parameters:
+      GithubAuthVariableGroup: rsg-bot
+      Configuration: $(Configuration)
+      Verbosity: $(Verbosity)
+      GitHub: true
+      GitHubPackages: true
+      DotNetSdk:
+        - "2.2.x"
+        - "3.0.x"
+      NuGetVersion: "5.3.0"
