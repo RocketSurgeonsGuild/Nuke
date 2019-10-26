@@ -48,8 +48,7 @@ pr:
 jobs:
 - job: BuildVersion
   pool:
-    vmImage:
-      name: macOS-latest
+    vmImage: 'macOS-latest'
   steps:
   - task: PowerShell@2
     inputs:
@@ -60,8 +59,7 @@ jobs:
   dependsOn:
   - BuildVersion
   pool:
-    vmImage:
-      name: macOS-latest
+    vmImage: 'macOS-latest'
   steps:
   - task: PowerShell@2
     inputs:
@@ -72,8 +70,7 @@ jobs:
   dependsOn:
   - Clean
   pool:
-    vmImage:
-      name: macOS-latest
+    vmImage: 'macOS-latest'
   steps:
   - task: PowerShell@2
     inputs:
@@ -84,8 +81,7 @@ jobs:
   dependsOn:
   - Restore
   pool:
-    vmImage:
-      name: macOS-latest
+    vmImage: 'macOS-latest'
   steps:
   - task: PowerShell@2
     inputs:
@@ -94,8 +90,7 @@ jobs:
     displayName: Build
 - job: Test
   pool:
-    vmImage:
-      name: macOS-latest
+    vmImage: 'macOS-latest'
   steps:
   - task: PowerShell@2
     inputs:
@@ -106,8 +101,7 @@ jobs:
   dependsOn:
   - Build
   pool:
-    vmImage:
-      name: macOS-latest
+    vmImage: 'macOS-latest'
   steps:
   - task: PowerShell@2
     inputs:
@@ -116,8 +110,7 @@ jobs:
     displayName: Pack
 - job: BuildVersion
   pool:
-    vmImage:
-      name: ubuntu-latest
+    vmImage: 'ubuntu-latest'
   steps:
   - task: PowerShell@2
     inputs:
@@ -128,8 +121,7 @@ jobs:
   dependsOn:
   - BuildVersion
   pool:
-    vmImage:
-      name: ubuntu-latest
+    vmImage: 'ubuntu-latest'
   steps:
   - task: PowerShell@2
     inputs:
@@ -140,8 +132,7 @@ jobs:
   dependsOn:
   - Clean
   pool:
-    vmImage:
-      name: ubuntu-latest
+    vmImage: 'ubuntu-latest'
   steps:
   - task: PowerShell@2
     inputs:
@@ -152,8 +143,7 @@ jobs:
   dependsOn:
   - Restore
   pool:
-    vmImage:
-      name: ubuntu-latest
+    vmImage: 'ubuntu-latest'
   steps:
   - task: PowerShell@2
     inputs:
@@ -162,8 +152,7 @@ jobs:
     displayName: Build
 - job: Test
   pool:
-    vmImage:
-      name: ubuntu-latest
+    vmImage: 'ubuntu-latest'
   steps:
   - task: PowerShell@2
     inputs:
@@ -174,8 +163,7 @@ jobs:
   dependsOn:
   - Build
   pool:
-    vmImage:
-      name: ubuntu-latest
+    vmImage: 'ubuntu-latest'
   steps:
   - task: PowerShell@2
     inputs:
@@ -184,8 +172,7 @@ jobs:
     displayName: Pack
 - job: BuildVersion
   pool:
-    vmImage:
-      name: windows-latest
+    vmImage: 'windows-latest'
   steps:
   - task: PowerShell@2
     inputs:
@@ -196,8 +183,7 @@ jobs:
   dependsOn:
   - BuildVersion
   pool:
-    vmImage:
-      name: windows-latest
+    vmImage: 'windows-latest'
   steps:
   - task: PowerShell@2
     inputs:
@@ -208,8 +194,7 @@ jobs:
   dependsOn:
   - Clean
   pool:
-    vmImage:
-      name: windows-latest
+    vmImage: 'windows-latest'
   steps:
   - task: PowerShell@2
     inputs:
@@ -220,8 +205,7 @@ jobs:
   dependsOn:
   - Restore
   pool:
-    vmImage:
-      name: windows-latest
+    vmImage: 'windows-latest'
   steps:
   - task: PowerShell@2
     inputs:
@@ -230,8 +214,7 @@ jobs:
     displayName: Build
 - job: Test
   pool:
-    vmImage:
-      name: windows-latest
+    vmImage: 'windows-latest'
   steps:
   - task: PowerShell@2
     inputs:
@@ -242,8 +225,7 @@ jobs:
   dependsOn:
   - Build
   pool:
-    vmImage:
-      name: windows-latest
+    vmImage: 'windows-latest'
   steps:
   - task: PowerShell@2
     inputs:
