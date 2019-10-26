@@ -133,7 +133,7 @@ namespace Rocket.Surgery.Nuke
         public Target BuildVersion => _ => _
             .Executes(() =>
             {
-                GitVersionTasks.GitVersion(x => x.SetOutput(GitVersionOutput.buildserver));
+                GitVersionTasks.GitVersion(x => x.SetFramework("netcoreapp3.0").SetOutput(GitVersionOutput.buildserver));
                 Logger.Info("Building version {0} of {1} ({2}) using version {3} of Nuke.",
                     GitVersion.FullSemVer,
                     Solution.Name,
