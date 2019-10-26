@@ -6,10 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Nuke.Common" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Nuke\Rocket.Surgery.Nuke.csproj" PrivateAssets="contentfiles;analyzers" />
   </ItemGroup>
 

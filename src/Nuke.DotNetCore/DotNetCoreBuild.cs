@@ -11,6 +11,7 @@ using Nuke.Common.IO;
 using Nuke.Common.Utilities.Collections;
 using System.IO;
 using System.Linq;
+using Nuke.Common.CI;
 
 namespace Rocket.Surgery.Nuke.DotNetCore
 {
@@ -30,9 +31,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
         public Target DotnetToolRestore => _ => _
            .After(Clean)
            .Before(Build)
-#if NETSTANDARD2_1
            .DependentFor(DotNetCore)
-#endif
            .Unlisted()
            .Executes(() => DotNet("tool restore"));
 
@@ -41,9 +40,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
         /// </summary>
         public Target Restore => _ => _
             .DependentFor(DotNetCore)
-#if NETSTANDARD2_1
             .DependsOn(DotnetToolRestore)
-#endif
             .DependsOn(Clean)
             .Executes(() =>
             {
@@ -78,34 +75,35 @@ namespace Rocket.Surgery.Nuke.DotNetCore
         /// </summary>
         public Target Test => _ => _
             .After(Build)
+            .DependsOn(Restore)
             .DependentFor(DotNetCore)
-            .DependentFor(Pack)
             .DependentFor(Generate_Code_Coverage_Reports)
             .Triggers(Generate_Code_Coverage_Reports)
             .OnlyWhenDynamic(() => TestDirectory.GlobFiles("**/*.csproj").Count > 0)
             .WhenSkipped(DependencyBehavior.Execute)
-            .Executes( async () =>
-            {
-                DotNetTest(s => s
-                    .SetProjectFile(Solution)
-                    .SetBinaryLogger(LogsDirectory / "test.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
-                    .SetFileLogger(LogsDirectory / "test.log")
-                    .SetGitVersionEnvironment(GitVersion)
-                    .SetConfiguration("Debug")
-                    .EnableNoRestore()
-                    .SetLogger($"trx")
-                    .SetProperty("CollectCoverage", "true")
-                    // DeterministicSourcePaths being true breaks coverlet!
-                    .SetProperty("DeterministicSourcePaths", "false")
-                    .SetProperty("CoverageDirectory", CoverageDirectory)
-                    .SetResultsDirectory(TestResultsDirectory)
-                );
+            .Produces(TestResultsDirectory / "*.trx")
+            .Executes(async () =>
+           {
+               DotNetTest(s => s
+                   .SetProjectFile(Solution)
+                   .SetBinaryLogger(LogsDirectory / "test.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
+                   .SetFileLogger(LogsDirectory / "test.log")
+                   .SetGitVersionEnvironment(GitVersion)
+                   .SetConfiguration("Debug")
+                   .EnableNoRestore()
+                   .SetLogger($"trx")
+                   .SetProperty("CollectCoverage", "true")
+                   // DeterministicSourcePaths being true breaks coverlet!
+                   .SetProperty("DeterministicSourcePaths", "false")
+                   .SetProperty("CoverageDirectory", CoverageDirectory)
+                   .SetResultsDirectory(TestResultsDirectory)
+               );
 
-                foreach (var coverage in TestResultsDirectory.GlobFiles("**/*.cobertura.xml"))
-                {
-                    CopyFileToDirectory(coverage, CoverageDirectory, FileExistsPolicy.OverwriteIfNewer);
-                }
-            });
+               foreach (var coverage in TestResultsDirectory.GlobFiles("**/*.cobertura.xml"))
+               {
+                   CopyFileToDirectory(coverage, CoverageDirectory, FileExistsPolicy.OverwriteIfNewer);
+               }
+           });
 
         /// <summary>
         /// dotnet pack

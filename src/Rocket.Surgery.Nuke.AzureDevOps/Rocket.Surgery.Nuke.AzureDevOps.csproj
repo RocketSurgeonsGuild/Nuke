@@ -5,7 +5,6 @@
   </PropertyGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="Rocket.Surgery.Nuke.Tests" />
-    <PackageReference Include="Nuke.Common" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nuke\Rocket.Surgery.Nuke.csproj" />
