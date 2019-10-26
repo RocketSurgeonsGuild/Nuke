@@ -177,7 +177,12 @@ namespace Rocket.Surgery.Nuke
             {
                 var reports = CoverageDirectory.GlobFiles("**/*.cobertura.xml").Select(z => z.ToString());
                 // TEMP work around for issue in nuke
-                var toolPath = ToolPathResolver.GetPackageExecutable("ReportGenerator", "ReportGenerator.exe", framework: "netcoreapp3.0");
+                var toolPath =
+#if NETSTANDARD2_1
+                    ToolPathResolver.GetPackageExecutable("ReportGenerator", "ReportGenerator.exe", framework: "netcoreapp3.0");
+#else
+                    ToolPathResolver.GetPackageExecutable("ReportGenerator", "ReportGenerator.exe", framework: "net47");
+#endif
                 ReportGenerator(s => s
                     .SetToolPath(toolPath)
                     .SetReports(reports)
