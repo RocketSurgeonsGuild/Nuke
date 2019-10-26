@@ -57,7 +57,7 @@ namespace Rocket.Surgery.Nuke
         /// <summary>
         /// The Git Version information either computed by GitVersion itself, or as defined by environment variables of the format `GITVERSION_*`
         /// </summary>
-        [ComputedGitVersion] public readonly GitVersion GitVersion;
+        [GitVersion] public readonly GitVersion GitVersion;
 
         /// <summary>
         /// The readme updater that ensures that all the badges are in sync.
