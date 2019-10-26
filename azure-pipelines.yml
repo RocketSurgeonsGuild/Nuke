@@ -94,6 +94,10 @@ jobs:
   pool:
     vmImage: 'ubuntu-latest'
   steps:
+  - task: gittools.gitversion.gitversion-task.GitVersion@5
+    inputs:
+      configFilePath: GitVersion.yml
+    displayName: GitVersion
   - task: PowerShell@2
     inputs:
       targetType: FilePath
@@ -134,6 +138,10 @@ jobs:
   pool:
     vmImage: 'macOS-latest'
   steps:
+  - task: gittools.gitversion.gitversion-task.GitVersion@5
+    inputs:
+      configFilePath: GitVersion.yml
+    displayName: GitVersion
   - task: PowerShell@2
     inputs:
       targetType: FilePath
