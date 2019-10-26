@@ -46,8 +46,39 @@ pr:
     - master
     exclude: []
 jobs:
-- job: GitVersion
-  displayName: GitVersion
+- job: Windows
+  pool:
+    vmImage: 'windows-latest'
+  steps:
+  - task: gittools.gitversion.gitversion-task.GitVersion@5
+    inputs:
+      configFilePath: GitVersion.yml
+    displayName: GitVersion
+  - task: PowerShell@2
+    inputs:
+      targetType: FilePath
+      filePath: build.ps1
+      arguments: DotnetToolRestore Restore --skip
+    displayName: Restore
+  - task: PowerShell@2
+    inputs:
+      targetType: FilePath
+      filePath: build.ps1
+      arguments: Build --skip
+    displayName: Build
+  - task: PowerShell@2
+    inputs:
+      targetType: FilePath
+      filePath: build.ps1
+      arguments: Test Generate_Code_Coverage_Reports --skip
+    displayName: Test
+  - task: PowerShell@2
+    inputs:
+      targetType: FilePath
+      filePath: build.ps1
+      arguments: Pack --skip
+    displayName: Pack
+- job: Ubuntu
   pool:
     vmImage: 'ubuntu-latest'
   steps:
@@ -55,164 +86,56 @@ jobs:
     inputs:
       configFilePath: GitVersion.yml
     displayName: GitVersion
-- job: Ubuntu_BuildVersion
-  displayName: Ubuntu - BuildVersion
-  dependsOn:
-  - GitVersion
-  pool:
-    vmImage: 'ubuntu-latest'
-  steps:
-  - task: PowerShell@2
-    inputs:
-      targetType: FilePath
-      filePath: build.ps1
-      arguments: BuildVersion --skip
-    displayName: BuildVersion
-- job: Ubuntu_Clean
-  displayName: Ubuntu - Clean
-  dependsOn:
-  - Ubuntu_BuildVersion
-  - GitVersion
-  pool:
-    vmImage: 'ubuntu-latest'
-  steps:
-  - task: PowerShell@2
-    inputs:
-      targetType: FilePath
-      filePath: build.ps1
-      arguments: Clean --skip
-    displayName: Clean
-- job: Ubuntu_Restore
-  displayName: Ubuntu - Restore
-  dependsOn:
-  - Ubuntu_Clean
-  - GitVersion
-  pool:
-    vmImage: 'ubuntu-latest'
-  steps:
   - task: PowerShell@2
     inputs:
       targetType: FilePath
       filePath: build.ps1
       arguments: DotnetToolRestore Restore --skip
     displayName: Restore
-- job: Ubuntu_Build
-  displayName: Ubuntu - Build
-  dependsOn:
-  - Ubuntu_Restore
-  - GitVersion
-  pool:
-    vmImage: 'ubuntu-latest'
-  steps:
   - task: PowerShell@2
     inputs:
       targetType: FilePath
       filePath: build.ps1
       arguments: Build --skip
     displayName: Build
-- job: Ubuntu_Test
-  displayName: Ubuntu - Test
-  dependsOn:
-  - GitVersion
-  pool:
-    vmImage: 'ubuntu-latest'
-  steps:
   - task: PowerShell@2
     inputs:
       targetType: FilePath
       filePath: build.ps1
       arguments: Test Generate_Code_Coverage_Reports --skip
     displayName: Test
-- job: Ubuntu_Pack
-  displayName: Ubuntu - Pack
-  dependsOn:
-  - Ubuntu_Build
-  - GitVersion
-  pool:
-    vmImage: 'ubuntu-latest'
-  steps:
   - task: PowerShell@2
     inputs:
       targetType: FilePath
       filePath: build.ps1
       arguments: Pack --skip
     displayName: Pack
-- job: Windows_BuildVersion
-  displayName: Windows - BuildVersion
-  dependsOn:
-  - GitVersion
+- job: macOS
   pool:
-    vmImage: 'windows-latest'
+    vmImage: 'macOS-latest'
   steps:
-  - task: PowerShell@2
+  - task: gittools.gitversion.gitversion-task.GitVersion@5
     inputs:
-      targetType: FilePath
-      filePath: build.ps1
-      arguments: BuildVersion --skip
-    displayName: BuildVersion
-- job: Windows_Clean
-  displayName: Windows - Clean
-  dependsOn:
-  - Windows_BuildVersion
-  - GitVersion
-  pool:
-    vmImage: 'windows-latest'
-  steps:
-  - task: PowerShell@2
-    inputs:
-      targetType: FilePath
-      filePath: build.ps1
-      arguments: Clean --skip
-    displayName: Clean
-- job: Windows_Restore
-  displayName: Windows - Restore
-  dependsOn:
-  - Windows_Clean
-  - GitVersion
-  pool:
-    vmImage: 'windows-latest'
-  steps:
+      configFilePath: GitVersion.yml
+    displayName: GitVersion
   - task: PowerShell@2
     inputs:
       targetType: FilePath
       filePath: build.ps1
       arguments: DotnetToolRestore Restore --skip
     displayName: Restore
-- job: Windows_Build
-  displayName: Windows - Build
-  dependsOn:
-  - Windows_Restore
-  - GitVersion
-  pool:
-    vmImage: 'windows-latest'
-  steps:
   - task: PowerShell@2
     inputs:
       targetType: FilePath
       filePath: build.ps1
       arguments: Build --skip
     displayName: Build
-- job: Windows_Test
-  displayName: Windows - Test
-  dependsOn:
-  - GitVersion
-  pool:
-    vmImage: 'windows-latest'
-  steps:
   - task: PowerShell@2
     inputs:
       targetType: FilePath
       filePath: build.ps1
       arguments: Test Generate_Code_Coverage_Reports --skip
     displayName: Test
-- job: Windows_Pack
-  displayName: Windows - Pack
-  dependsOn:
-  - Windows_Build
-  - GitVersion
-  pool:
-    vmImage: 'windows-latest'
-  steps:
   - task: PowerShell@2
     inputs:
       targetType: FilePath
