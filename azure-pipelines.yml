@@ -53,31 +53,37 @@ jobs:
   - task: PowerShell@2
     inputs:
       targetType: FilePath
+      filePath: build.ps1
       arguments: BuildVersion --skip
     displayName: BuildVersion
   - task: PowerShell@2
     inputs:
       targetType: FilePath
+      filePath: build.ps1
       arguments: Clean --skip
     displayName: Clean
   - task: PowerShell@2
     inputs:
       targetType: FilePath
+      filePath: build.ps1
       arguments: DotnetToolRestore Restore --skip
     displayName: Restore
   - task: PowerShell@2
     inputs:
       targetType: FilePath
+      filePath: build.ps1
       arguments: Build --skip
     displayName: Build
   - task: PowerShell@2
     inputs:
       targetType: FilePath
+      filePath: build.ps1
       arguments: Test Generate_Code_Coverage_Reports --skip
     displayName: Test
   - task: PowerShell@2
     inputs:
       targetType: FilePath
+      filePath: build.ps1
       arguments: Pack --skip
     displayName: Pack
 - job: Ubuntu
@@ -87,31 +93,37 @@ jobs:
   - task: PowerShell@2
     inputs:
       targetType: FilePath
+      filePath: build.ps1
       arguments: BuildVersion --skip
     displayName: BuildVersion
   - task: PowerShell@2
     inputs:
       targetType: FilePath
+      filePath: build.ps1
       arguments: Clean --skip
     displayName: Clean
   - task: PowerShell@2
     inputs:
       targetType: FilePath
+      filePath: build.ps1
       arguments: DotnetToolRestore Restore --skip
     displayName: Restore
   - task: PowerShell@2
     inputs:
       targetType: FilePath
+      filePath: build.ps1
       arguments: Build --skip
     displayName: Build
   - task: PowerShell@2
     inputs:
       targetType: FilePath
+      filePath: build.ps1
       arguments: Test Generate_Code_Coverage_Reports --skip
     displayName: Test
   - task: PowerShell@2
     inputs:
       targetType: FilePath
+      filePath: build.ps1
       arguments: Pack --skip
     displayName: Pack
 - job: macOS
@@ -121,30 +133,36 @@ jobs:
   - task: PowerShell@2
     inputs:
       targetType: FilePath
+      filePath: build.ps1
       arguments: BuildVersion --skip
     displayName: BuildVersion
   - task: PowerShell@2
     inputs:
       targetType: FilePath
+      filePath: build.ps1
       arguments: Clean --skip
     displayName: Clean
   - task: PowerShell@2
     inputs:
       targetType: FilePath
+      filePath: build.ps1
       arguments: DotnetToolRestore Restore --skip
     displayName: Restore
   - task: PowerShell@2
     inputs:
       targetType: FilePath
+      filePath: build.ps1
       arguments: Build --skip
     displayName: Build
   - task: PowerShell@2
     inputs:
       targetType: FilePath
+      filePath: build.ps1
       arguments: Test Generate_Code_Coverage_Reports --skip
     displayName: Test
   - task: PowerShell@2
     inputs:
       targetType: FilePath
+      filePath: build.ps1
       arguments: Pack --skip
     displayName: Pack
