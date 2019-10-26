@@ -48,7 +48,6 @@ pr:
 jobs:
 - job: BuildVersion
   pool:
-    demands: []
     vmImage:
       name: macOS-latest
   steps:
@@ -61,7 +60,6 @@ jobs:
   dependsOn:
   - BuildVersion
   pool:
-    demands: []
     vmImage:
       name: macOS-latest
   steps:
@@ -74,7 +72,6 @@ jobs:
   dependsOn:
   - Clean
   pool:
-    demands: []
     vmImage:
       name: macOS-latest
   steps:
@@ -87,7 +84,6 @@ jobs:
   dependsOn:
   - Restore
   pool:
-    demands: []
     vmImage:
       name: macOS-latest
   steps:
@@ -98,7 +94,6 @@ jobs:
     displayName: Build
 - job: Test
   pool:
-    demands: []
     vmImage:
       name: macOS-latest
   steps:
@@ -111,7 +106,6 @@ jobs:
   dependsOn:
   - Build
   pool:
-    demands: []
     vmImage:
       name: macOS-latest
   steps:
@@ -122,7 +116,6 @@ jobs:
     displayName: Pack
 - job: BuildVersion
   pool:
-    demands: []
     vmImage:
       name: ubuntu-latest
   steps:
@@ -135,7 +128,6 @@ jobs:
   dependsOn:
   - BuildVersion
   pool:
-    demands: []
     vmImage:
       name: ubuntu-latest
   steps:
@@ -148,7 +140,6 @@ jobs:
   dependsOn:
   - Clean
   pool:
-    demands: []
     vmImage:
       name: ubuntu-latest
   steps:
@@ -161,7 +152,6 @@ jobs:
   dependsOn:
   - Restore
   pool:
-    demands: []
     vmImage:
       name: ubuntu-latest
   steps:
@@ -172,7 +162,6 @@ jobs:
     displayName: Build
 - job: Test
   pool:
-    demands: []
     vmImage:
       name: ubuntu-latest
   steps:
@@ -185,7 +174,6 @@ jobs:
   dependsOn:
   - Build
   pool:
-    demands: []
     vmImage:
       name: ubuntu-latest
   steps:
@@ -196,7 +184,6 @@ jobs:
     displayName: Pack
 - job: BuildVersion
   pool:
-    demands: []
     vmImage:
       name: windows-latest
   steps:
@@ -209,7 +196,6 @@ jobs:
   dependsOn:
   - BuildVersion
   pool:
-    demands: []
     vmImage:
       name: windows-latest
   steps:
@@ -222,7 +208,6 @@ jobs:
   dependsOn:
   - Clean
   pool:
-    demands: []
     vmImage:
       name: windows-latest
   steps:
@@ -235,7 +220,6 @@ jobs:
   dependsOn:
   - Restore
   pool:
-    demands: []
     vmImage:
       name: windows-latest
   steps:
@@ -246,7 +230,6 @@ jobs:
     displayName: Build
 - job: Test
   pool:
-    demands: []
     vmImage:
       name: windows-latest
   steps:
@@ -259,7 +242,6 @@ jobs:
   dependsOn:
   - Build
   pool:
-    demands: []
     vmImage:
       name: windows-latest
   steps:
@@ -271,7 +253,6 @@ jobs:
 - job: BuildVersion
   pool:
     name: Default
-    demands: []
   steps:
   - task: PowerShell@2
     inputs:
@@ -283,7 +264,6 @@ jobs:
   - BuildVersion
   pool:
     name: Default
-    demands: []
   steps:
   - task: PowerShell@2
     inputs:
@@ -295,7 +275,6 @@ jobs:
   - Clean
   pool:
     name: Default
-    demands: []
   steps:
   - task: PowerShell@2
     inputs:
@@ -307,7 +286,6 @@ jobs:
   - Restore
   pool:
     name: Default
-    demands: []
   steps:
   - task: PowerShell@2
     inputs:
@@ -317,7 +295,6 @@ jobs:
 - job: Test
   pool:
     name: Default
-    demands: []
   steps:
   - task: PowerShell@2
     inputs:
@@ -329,7 +306,6 @@ jobs:
   - Build
   pool:
     name: Default
-    demands: []
   steps:
   - task: PowerShell@2
     inputs:
