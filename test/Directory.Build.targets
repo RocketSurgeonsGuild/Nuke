@@ -2,7 +2,6 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" />
         <PackageReference Include="Rocket.Surgery.Extensions.Testing.FakeItEasy" />
-        <PackageReference Include="Autofac.Extras.FakeItEasy" />
         <PackageReference Include="Bogus" />
         <PackageReference Include="coverlet.collector" />
         <PackageReference Include="coverlet.msbuild" />
