@@ -18,6 +18,19 @@ namespace Rocket.Surgery.Nuke
         /// <param name="settings"></param>
         /// <param name="path"></param>
         /// <param name="imports"></param>
+        public static T SetBinaryLogger<T>(this T settings, AbsolutePath path) where T : ToolSettings
+        {
+            var existingArgs = settings.ArgumentConfigurator;
+            return settings.SetArgumentConfigurator(args =>
+                existingArgs(args).Add($"/bl:{path};ProjectImports={NukeBuild.IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed}"));
+        }
+
+        /// <summary>
+        /// Configures binary logging for MSBuild
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <param name="path"></param>
+        /// <param name="imports"></param>
         public static T SetBinaryLogger<T>(this T settings, AbsolutePath path, MSBuildBinaryLogImports imports) where T : ToolSettings
         {
             var existingArgs = settings.ArgumentConfigurator;
