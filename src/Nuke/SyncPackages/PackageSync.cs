@@ -14,6 +14,7 @@ using static Nuke.Common.IO.PathConstruction;
 using NuGet.Protocol;
 using System.Threading;
 
+#if NETSTANDARD2_1
 namespace Rocket.Surgery.Nuke.SyncPackages
 {
     public static class PackageSync
@@ -78,8 +79,9 @@ namespace Rocket.Surgery.Nuke.SyncPackages
 
             using var fileWrite = File.OpenWrite(packagesProps);
 
-            document.Save(fileWrite, SaveOptions.None);
+            await document.SaveAsync(fileWrite, SaveOptions.None, CancellationToken.None);
         }
+
         public static async Task RemoveExtraPackages(
             AbsolutePath solutionPath,
             AbsolutePath packagesProps,
@@ -101,9 +103,7 @@ namespace Rocket.Surgery.Nuke.SyncPackages
             {
                 if (project.Items.TryGetValue("PackageReference", out var projectPackageReferences))
                 {
-                    foreach (var item in projectPackageReferences
-                        .Where(x => !x.Metadata.ContainsKey("IsImplicitlyDefined") && !x.Metadata.ContainsKey("Version"))
-                    )
+                    foreach (var item in projectPackageReferences)
                     {
                         packageReferences.Remove(item.ItemSpec);
                     }
@@ -124,8 +124,10 @@ namespace Rocket.Surgery.Nuke.SyncPackages
                 }
             }
 
-            using var fileWrite = File.OpenWrite(packagesProps);
-            document.Save(fileWrite, SaveOptions.None);
+            using var fileWrite = File.Open(packagesProps, FileMode.Truncate);
+
+            await document.SaveAsync(fileWrite, SaveOptions.None, CancellationToken.None);
         }
     }
 }
+#endif

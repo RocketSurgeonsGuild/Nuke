@@ -21,8 +21,8 @@ using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
-using Rocket.Surgery.Nuke.SyncPackages;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Rocket.Surgery.Nuke
 {
@@ -231,7 +231,7 @@ namespace Rocket.Surgery.Nuke
                 File.WriteAllText(RootDirectory / "Readme.md", readmeContent);
             });
 
-
+#if NETSTANDARD2_1
         /// <summary>
         /// Attempts to add any missing packages that are referenced but do not have a version.
         /// Then also removes any packages that no longer have a reference
@@ -241,9 +241,11 @@ namespace Rocket.Surgery.Nuke
             .OnlyWhenDynamic(() => IsLocalBuild && (Force || InvokedTargets.Any(z => z.Name == nameof(SyncVersions))))
             .Executes(async () =>
             {
-                await PackageSync.AddMissingPackages(Solution.Path, RootDirectory / "Packages.props", CancellationToken.None).ConfigureAwait(false);
-                await PackageSync.RemoveExtraPackages(Solution.Path, RootDirectory / "Packages.props", CancellationToken.None).ConfigureAwait(false);
+                await Rocket.Surgery.Nuke.SyncPackages.PackageSync.AddMissingPackages(Solution.Path, RootDirectory / "Packages.props", CancellationToken.None).ConfigureAwait(false);
+                await Task.Delay(1000);
+                await Rocket.Surgery.Nuke.SyncPackages.PackageSync.RemoveExtraPackages(Solution.Path, RootDirectory / "Packages.props", CancellationToken.None).ConfigureAwait(false);
             });
+#endif
     }
 
 }
