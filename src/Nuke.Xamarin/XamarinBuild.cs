@@ -17,9 +17,6 @@ namespace Rocket.Surgery.Nuke.Xamarin
     /// </summary>
     public abstract class XamarinBuild : RocketBoosterBuild
     {
-        protected Func<bool, MSBuildBinaryLogImports> LogImportType = isLocal =>
-            isLocal ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed;
-
         /// <summary>
         /// nuget restore
         /// </summary>
@@ -32,7 +29,7 @@ namespace Rocket.Surgery.Nuke.Xamarin
                         settings
                             .SetProjectFile(Solution)
                             .SetDisableParallel(true)
-                            .SetBinaryLogger(LogsDirectory / "restore.binlog", LogImportType(IsLocalBuild))
+                            .SetBinaryLogger(LogsDirectory / "restore.binlog")
                             .SetFileLogger(LogsDirectory / "restore.log")
                             .SetGitVersionEnvironment(GitVersion));
             });
@@ -49,7 +46,7 @@ namespace Rocket.Surgery.Nuke.Xamarin
                         settings
                             .SetSolutionFile(Solution)
                             .SetConfiguration(Configuration)
-                            .SetBinaryLogger(LogsDirectory / "build.binlog", LogImportType(IsLocalBuild))
+                            .SetBinaryLogger(LogsDirectory / "build.binlog")
                             .SetFileLogger(LogsDirectory / "build.log")
                             .SetGitVersionEnvironment(GitVersion)
                             .SetAssemblyVersion(GitVersion.AssemblySemVer)
@@ -67,7 +64,7 @@ namespace Rocket.Surgery.Nuke.Xamarin
                     .DotNetTest(settings =>
                         settings
                             .SetProjectFile(Solution)
-                            .SetBinaryLogger(LogsDirectory / "test.binlog", LogImportType(IsLocalBuild))
+                            .SetBinaryLogger(LogsDirectory / "test.binlog")
                             .SetFileLogger(LogsDirectory / "test.log")
                             .SetGitVersionEnvironment(GitVersion)
                             .SetConfiguration(Configuration)

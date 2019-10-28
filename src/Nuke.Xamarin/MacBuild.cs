@@ -43,7 +43,7 @@ namespace Rocket.Surgery.Nuke.Xamarin
                         settings
                             .SetSolutionFile(Solution)
                             .SetConfiguration(Configuration)
-                            .SetBinaryLogger(LogsDirectory / "build.binlog", LogImportType(IsLocalBuild))
+                            .SetBinaryLogger(LogsDirectory / "build.binlog")
                             .SetFileLogger(LogsDirectory / "build.log")
                             .SetGitVersionEnvironment(GitVersion)
                             .SetAssemblyVersion(GitVersion.AssemblySemVer)

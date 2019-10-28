@@ -50,7 +50,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                 DotNetRestore(s => s
                     .SetProjectFile(Solution)
                     .SetDisableParallel(true)
-                    .SetBinaryLogger(LogsDirectory / "restore.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
+                    .SetBinaryLogger(LogsDirectory / "restore.binlog")
                     .SetFileLogger(LogsDirectory / "restore.log")
                     .SetGitVersionEnvironment(GitVersion)
                 );
@@ -66,7 +66,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
             {
                 DotNetBuild(s => s
                     .SetProjectFile(Solution)
-                    .SetBinaryLogger(LogsDirectory / "build.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
+                    .SetBinaryLogger(LogsDirectory / "build.binlog")
                     .SetFileLogger(LogsDirectory / "build.log")
                     .SetGitVersionEnvironment(GitVersion)
                     .SetConfiguration(Configuration)
@@ -84,28 +84,28 @@ namespace Rocket.Surgery.Nuke.DotNetCore
             .Triggers(Generate_Code_Coverage_Reports)
             .OnlyWhenDynamic(() => TestDirectory.GlobFiles("**/*.csproj").Count > 0)
             .WhenSkipped(DependencyBehavior.Execute)
-            .Executes( async () =>
-            {
-                DotNetTest(s => s
-                    .SetProjectFile(Solution)
-                    .SetBinaryLogger(LogsDirectory / "test.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
-                    .SetFileLogger(LogsDirectory / "test.log")
-                    .SetGitVersionEnvironment(GitVersion)
-                    .SetConfiguration("Debug")
-                    .EnableNoRestore()
-                    .SetLogger($"trx")
-                    .SetProperty("CollectCoverage", "true")
-                    // DeterministicSourcePaths being true breaks coverlet!
-                    .SetProperty("DeterministicSourcePaths", "false")
-                    .SetProperty("CoverageDirectory", CoverageDirectory)
-                    .SetResultsDirectory(TestResultsDirectory)
-                );
+            .Executes(async () =>
+           {
+               DotNetTest(s => s
+                   .SetProjectFile(Solution)
+                   .SetBinaryLogger(LogsDirectory / "test.binlog")
+                   .SetFileLogger(LogsDirectory / "test.log")
+                   .SetGitVersionEnvironment(GitVersion)
+                   .SetConfiguration("Debug")
+                   .EnableNoRestore()
+                   .SetLogger($"trx")
+                   .SetProperty("CollectCoverage", "true")
+                   // DeterministicSourcePaths being true breaks coverlet!
+                   .SetProperty("DeterministicSourcePaths", "false")
+                   .SetProperty("CoverageDirectory", CoverageDirectory)
+                   .SetResultsDirectory(TestResultsDirectory)
+               );
 
-                foreach (var coverage in TestResultsDirectory.GlobFiles("**/*.cobertura.xml"))
-                {
-                    CopyFileToDirectory(coverage, CoverageDirectory, FileExistsPolicy.OverwriteIfNewer);
-                }
-            });
+               foreach (var coverage in TestResultsDirectory.GlobFiles("**/*.cobertura.xml"))
+               {
+                   CopyFileToDirectory(coverage, CoverageDirectory, FileExistsPolicy.OverwriteIfNewer);
+               }
+           });
 
         /// <summary>
         /// dotnet pack
@@ -117,7 +117,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
             {
                 DotNetPack(s => s
                     .SetProject(Solution)
-                    .SetBinaryLogger(LogsDirectory / "pack.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
+                    .SetBinaryLogger(LogsDirectory / "pack.binlog")
                     .SetFileLogger(LogsDirectory / "pack.log")
                     .SetGitVersionEnvironment(GitVersion)
                     .SetConfiguration(Configuration)

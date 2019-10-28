@@ -22,7 +22,7 @@ namespace Rocket.Surgery.Nuke
         {
             var existingArgs = settings.ArgumentConfigurator;
             return settings.SetArgumentConfigurator(args =>
-                existingArgs(args).Add($"/bl:{path};ProjectImports={NukeBuild.IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed}"));
+                existingArgs(args).Add($"/bl:{path};ProjectImports={(NukeBuild.IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)}"));
         }
 
         /// <summary>

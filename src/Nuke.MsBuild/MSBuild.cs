@@ -55,7 +55,7 @@ namespace Rocket.Surgery.Nuke.MsBuild
                         settings
                             .SetSolutionFile(Solution)
                             .SetConfiguration(Configuration)
-                            .SetBinaryLogger(LogsDirectory / "build.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
+                            .SetBinaryLogger(LogsDirectory / "build.binlog")
                             .SetFileLogger(LogsDirectory / "build.log")
                             .SetGitVersionEnvironment(GitVersion)
                             .SetAssemblyVersion(GitVersion.AssemblySemVer)
@@ -79,7 +79,7 @@ namespace Rocket.Surgery.Nuke.MsBuild
                                 .SetProjectFile(project)
                                 .SetConfiguration(Configuration)
                                 .SetGitVersionEnvironment(GitVersion)
-                                .SetBinaryLogger(LogsDirectory / "test.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
+                                .SetBinaryLogger(LogsDirectory / "test.binlog")
                                 .SetFileLogger(LogsDirectory / "test.log")
                                 .EnableNoRestore()
                                 .SetLogger($"trx")
