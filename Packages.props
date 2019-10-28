@@ -11,6 +11,14 @@
     <PackageReference Update="Nuke.Common" Version="0.22.2" />
     <PackageReference Update="YamlDotNet" Version="8.0.0" />
     <PackageReference Update="Buildalyzer" Version="2.4.0" />
+    <PackageReference Update="NuGet.Common" Version="5.3.1" />
+    <PackageReference Update="NuGet.Configuration" Version="5.3.1" />
+    <PackageReference Update="NuGet.Frameworks" Version="5.3.1" />
+    <PackageReference Update="NuGet.Packaging" Version="5.3.1" />
+    <PackageReference Update="NuGet.Packaging.Core" Version="5.3.1" />
+    <PackageReference Update="NuGet.Protocol" Version="5.3.1" />
+    <PackageReference Update="NuGet.Resolver" Version="5.3.1" />
+    <PackageReference Update="NuGet.Versioning" Version="5.3.1" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Rocket.Surgery.Extensions.Testing.FakeItEasy" Version="3.0.1" />

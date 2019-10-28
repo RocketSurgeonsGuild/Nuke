@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nuke.Common;
+﻿using Nuke.Common;
 using Nuke.Common.Execution;
 using Nuke.Common.Git;
 using Nuke.Common.ProjectModel;
@@ -22,6 +21,8 @@ using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
+using Rocket.Surgery.Nuke.SyncPackages;
+using System.Threading;
 
 namespace Rocket.Surgery.Nuke
 {
@@ -229,5 +230,20 @@ namespace Rocket.Surgery.Nuke
                 readmeContent = Readme.Process(readmeContent, this);
                 File.WriteAllText(RootDirectory / "Readme.md", readmeContent);
             });
+
+
+        /// <summary>
+        /// Attempts to add any missing packages that are referenced but do not have a version.
+        /// Then also removes any packages that no longer have a reference
+        /// </summary>
+        public Target SyncVersions => _ => _
+            .Unlisted()
+            .OnlyWhenDynamic(() => IsLocalBuild && (Force || InvokedTargets.Any(z => z.Name == nameof(SyncVersions))))
+            .Executes(async () =>
+            {
+                await PackageSync.AddMissingPackages(Solution.Path, RootDirectory / "Packages.props", CancellationToken.None).ConfigureAwait(false);
+                await PackageSync.RemoveExtraPackages(Solution.Path, RootDirectory / "Packages.props", CancellationToken.None).ConfigureAwait(false);
+            });
     }
+
 }
