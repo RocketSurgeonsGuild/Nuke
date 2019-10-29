@@ -23,6 +23,7 @@ using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using System.Threading;
 using System.Threading.Tasks;
+using Rocket.Surgery.Nuke.SyncPackages;
 
 namespace Rocket.Surgery.Nuke
 {
@@ -223,7 +224,7 @@ namespace Rocket.Surgery.Nuke
         /// </summary>
         public Target GenerateReadme => _ => _
             .Unlisted()
-            .OnlyWhenDynamic(() => IsLocalBuild && (Force || InvokedTargets.Any(z => z.Name == nameof(GenerateReadme))))
+            .OnlyWhenDynamic(() => IsLocalBuild && (Force || InvokedTargets.Any(z => z.Name == nameof(GenerateReadme)) || ExecutingTargets.Any(z => z.Name == nameof(GenerateReadme))))
             .Executes(() =>
             {
                 var readmeContent = File.ReadAllText(RootDirectory / "Readme.md");
@@ -238,12 +239,14 @@ namespace Rocket.Surgery.Nuke
         /// </summary>
         public Target SyncVersions => _ => _
             .Unlisted()
-            .OnlyWhenDynamic(() => IsLocalBuild && (Force || InvokedTargets.Any(z => z.Name == nameof(SyncVersions))))
+            .OnlyWhenDynamic(() => IsLocalBuild && (Force || InvokedTargets.Any(z => z.Name == nameof(SyncVersions)) || ExecutingTargets.Any(z => z.Name == nameof(SyncVersions))))
             .Executes(async () =>
             {
-                await Rocket.Surgery.Nuke.SyncPackages.PackageSync.AddMissingPackages(Solution.Path, RootDirectory / "Packages.props", CancellationToken.None).ConfigureAwait(false);
-                await Task.Delay(1000);
-                await Rocket.Surgery.Nuke.SyncPackages.PackageSync.RemoveExtraPackages(Solution.Path, RootDirectory / "Packages.props", CancellationToken.None).ConfigureAwait(false);
+                await PackageSync.AddMissingPackages(Solution.Path, RootDirectory / "Packages.props", CancellationToken.None).ConfigureAwait(false);
+                await Task.Delay(300).ConfigureAwait(false);
+                await PackageSync.RemoveExtraPackages(Solution.Path, RootDirectory / "Packages.props", CancellationToken.None).ConfigureAwait(false);
+                await Task.Delay(300).ConfigureAwait(false);
+                await PackageSync.MoveVersions(Solution.Path, RootDirectory / "Packages.props", CancellationToken.None).ConfigureAwait(false);
             });
 #endif
     }
