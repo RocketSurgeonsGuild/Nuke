@@ -15,11 +15,11 @@ using NuGet.Protocol;
 using System.Threading;
 using System.Xml;
 
-#if NETSTANDARD2_1
 namespace Rocket.Surgery.Nuke.SyncPackages
 {
     public static class PackageSync
     {
+#if NETSTANDARD2_1
         public static async Task AddMissingPackages(
             AbsolutePath solutionPath,
             AbsolutePath packagesProps,
@@ -220,6 +220,6 @@ namespace Rocket.Surgery.Nuke.SyncPackages
                 item.Last().Remove();
             }
         }
+#endif
     }
 }
-#endif
