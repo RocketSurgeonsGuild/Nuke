@@ -74,7 +74,7 @@ namespace Rocket.Surgery.Nuke.SyncPackages
                 {
                     var dependencyInfoResource = await sourceRepository.GetResourceAsync<DependencyInfoResource>().ConfigureAwait(false);
                     var resolvedPackages = await dependencyInfoResource.ResolvePackages(item, sourceCacheContext, NuGet.Common.NullLogger.Instance, cancellationToken).ConfigureAwait(false);
-                    var packageInfo = resolvedPackages.OrderByDescending(x => x.Identity.Version).First();
+                    var packageInfo = resolvedPackages.OrderByDescending(x => x.Identity.Version).First(x => !x.Identity.Version.IsPrerelease);
                     element.SetAttributeValue("Version", packageInfo.Identity.Version.ToString());
                     Logger.Trace("Found Version {0} for {1}", packageInfo.Identity.Version.ToString(), packageInfo.Identity.Id);
                 }
