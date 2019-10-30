@@ -241,15 +241,11 @@ namespace Rocket.Surgery.Nuke
             .OnlyWhenDynamic(() => IsLocalBuild && (Force || InvokedTargets.Any(z => z.Name == nameof(SyncVersions)) || ExecutingTargets.Any(z => z.Name == nameof(SyncVersions))))
             .Executes(async () =>
             {
-                await PackageSync.AddMissingPackages(Solution.Path, RootDirectory / "Packages.props", CancellationToken.None).ConfigureAwait(false);
-
-                await Task.Delay(300).ConfigureAwait(false);
-
-                await PackageSync.RemoveExtraPackages(Solution.Path, RootDirectory / "Packages.props", CancellationToken.None).ConfigureAwait(false);
-
-                await Task.Delay(300).ConfigureAwait(false);
-
                 await PackageSync.MoveVersions(Solution.Path, RootDirectory / "Packages.props", CancellationToken.None).ConfigureAwait(false);
+                await Task.Delay(300).ConfigureAwait(false);
+                await PackageSync.RemoveExtraPackages(Solution.Path, RootDirectory / "Packages.props", CancellationToken.None).ConfigureAwait(false);
+                await Task.Delay(300).ConfigureAwait(false);
+                await PackageSync.AddMissingPackages(Solution.Path, RootDirectory / "Packages.props", CancellationToken.None).ConfigureAwait(false);
             });
     }
 
