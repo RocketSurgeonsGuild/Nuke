@@ -19,7 +19,6 @@ namespace Rocket.Surgery.Nuke.SyncPackages
 {
     public static class PackageSync
     {
-#if NETSTANDARD2_1
         public static async Task AddMissingPackages(
             AbsolutePath solutionPath,
             AbsolutePath packagesProps,
@@ -196,7 +195,7 @@ namespace Rocket.Surgery.Nuke.SyncPackages
         {
             using var fileWrite = File.Open(path, FileMode.Truncate);
             using var writer = XmlWriter.Create(fileWrite, new XmlWriterSettings { OmitXmlDeclaration = true, Async = true, Indent = true });
-            await document.SaveAsync(writer, cancellationToken).ConfigureAwait(false);
+            document.Save(writer);
         }
 
         private static void OrderPackageReferences(params XElement[] itemGroups)
@@ -220,6 +219,5 @@ namespace Rocket.Surgery.Nuke.SyncPackages
                 item.Last().Remove();
             }
         }
-#endif
     }
 }

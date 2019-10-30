@@ -182,7 +182,7 @@ namespace Rocket.Surgery.Nuke
 #if NETSTANDARD2_1
                     ToolPathResolver.GetPackageExecutable("ReportGenerator", "ReportGenerator.dll", framework: "netcoreapp3.0");
 #else
-                    ToolPathResolver.GetPackageExecutable("ReportGenerator", "ReportGenerator.dll", framework: "net47");
+                    ToolPathResolver.GetPackageExecutable("ReportGenerator", "ReportGenerator.dll", framework: "netcoreapp2.1");
 #endif
                 ReportGenerator(s => s
                     .SetToolPath(toolPath)
@@ -232,7 +232,6 @@ namespace Rocket.Surgery.Nuke
                 File.WriteAllText(RootDirectory / "Readme.md", readmeContent);
             });
 
-#if NETSTANDARD2_1
         /// <summary>
         /// Attempts to add any missing packages that are referenced but do not have a version.
         /// Then also removes any packages that no longer have a reference
@@ -252,7 +251,6 @@ namespace Rocket.Surgery.Nuke
 
                 await PackageSync.MoveVersions(Solution.Path, RootDirectory / "Packages.props", CancellationToken.None).ConfigureAwait(false);
             });
-#endif
     }
 
 }
