@@ -32,40 +32,39 @@ namespace Rocket.Surgery.Nuke
     /// </summary>
     [PublicAPI]
     [DotNetVerbosityMapping, MSBuildVerbosityMapping, NuGetVerbosityMapping]
-    public abstract class RocketBoosterBuild : NukeBuild
+    public abstract class RocketBoosterBuild : NukeBuild, IRocketBoosterBuild
     {
         /// <summary>
         /// Configuration to build - Default is 'Debug' (local) or 'Release' (server)
         /// </summary>
         [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
-        public readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
+        public Configuration Configuration { get; } = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
         /// <summary>
         /// Force a clean build, otherwise leave some incremental build pieces
         /// </summary>
         [Parameter("Force a clean build")]
-        public readonly bool Force;
+        public bool Force { get; }
 
         /// <summary>
         /// The solution currently being build
         /// </summary>
-        [Solution] public readonly Solution Solution;
+        [Solution] public Solution Solution { get; }
 
         /// <summary>
         /// The Git Repository currently being built
         /// </summary>
-        [GitRepository] public readonly GitRepository GitRepository;
+        [GitRepository] public GitRepository GitRepository { get; }
 
         /// <summary>
         /// The Git Version information either computed by GitVersion itself, or as defined by environment variables of the format `GITVERSION_*`
         /// </summary>
-        [ComputedGitVersion] public readonly GitVersion GitVersion;
+        [ComputedGitVersion] public GitVersion GitVersion { get; }
 
         /// <summary>
         /// The readme updater that ensures that all the badges are in sync.
         /// </summary>
-
-        [Readme] public readonly ReadmeUpdater Readme;
+        [Readme] public ReadmeUpdater Readme { get; }
 
         /// <summary>
         /// The directory where samples will be placed
@@ -96,7 +95,7 @@ namespace Rocket.Surgery.Nuke
         /// The directory where artifacts are to be dropped
         /// </summary>
         [Parameter("The directory where artifacts are to be dropped", Name = "Artifacts")]
-        public readonly AbsolutePath ArtifactsDirectory = GetVariable<AbsolutePath>("Artifacts") ?? RootDirectory / "artifacts";
+        public AbsolutePath ArtifactsDirectory { get; } = GetVariable<AbsolutePath>("Artifacts") ?? RootDirectory / "artifacts";
 
         /// <summary>
         /// The directory where logs will be placed
@@ -127,7 +126,7 @@ namespace Rocket.Surgery.Nuke
         /// The directory where coverage artifacts are to be dropped
         /// </summary>
         [Parameter("The directory where coverage artifacts are to be dropped", Name = "Coverage")]
-        public readonly AbsolutePath CoverageDirectory = GetVariable<AbsolutePath>("Coverage") ?? RootDirectory / "coverage";
+        public AbsolutePath CoverageDirectory { get; } = GetVariable<AbsolutePath>("Coverage") ?? RootDirectory / "coverage";
 
         /// <summary>
         /// prints the build information.
@@ -159,10 +158,10 @@ namespace Rocket.Surgery.Nuke
 
                 if (Force)
                 {
-                    SampleDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
-                    SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
-                    TemplatesDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
-                    TestDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+                    if (DirectoryExists(SampleDirectory)) SampleDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+                    if (DirectoryExists(SourceDirectory)) SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+                    if (DirectoryExists(TemplatesDirectory)) TemplatesDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+                    if (DirectoryExists(TestDirectory)) TestDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
                 }
             });
 
