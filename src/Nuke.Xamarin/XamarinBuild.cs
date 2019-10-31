@@ -9,6 +9,10 @@ using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Tools.MSBuild;
 using Nuke.Common.Tools.NuGet;
 using Rocket.Surgery.Nuke;
+using static Nuke.Common.IO.FileSystemTasks;
+using static Nuke.Common.Tools.DotNet.DotNetTasks;
+using static Nuke.Common.Tools.MSBuild.MSBuildTasks;
+using static Nuke.Common.Tools.NuGet.NuGetTasks;
 
 namespace Rocket.Surgery.Nuke.Xamarin
 {
@@ -20,61 +24,58 @@ namespace Rocket.Surgery.Nuke.Xamarin
         /// <summary>
         /// nuget restore
         /// </summary>
-        public virtual Target Restore => _ => _
-            .DependsOn(Clean)
+        public static ITargetDefinition Restore(ITargetDefinition _, IXamarinBuild build) => _
+            .DependsOn(build.Clean)
             .Executes(() =>
             {
-                DotNetTasks
-                    .DotNetRestore(settings =>
-                        settings
-                            .SetProjectFile(Solution)
-                            .SetDisableParallel(true)
-                            .SetDefaultLoggers(LogsDirectory / "restore.log")
-                            .SetGitVersionEnvironment(GitVersion));
+                DotNetRestore(settings =>
+                    settings
+                        .SetProjectFile(build.Solution)
+                        .SetDisableParallel(true)
+                        .SetDefaultLoggers(build.LogsDirectory / "restore.log")
+                        .SetGitVersionEnvironment(build.GitVersion));
             });
 
         /// <summary>
         /// msbuild
         /// </summary>
-        public virtual Target Build => _ => _
-            .DependsOn(Restore)
+        public static ITargetDefinition Build(ITargetDefinition _, IXamarinBuild build) => _
+            .DependsOn(build.Restore)
             .Executes(() =>
             {
-                MSBuildTasks
-                    .MSBuild(settings =>
-                        settings
-                            .SetSolutionFile(Solution)
-                            .SetConfiguration(Configuration)
-                            .SetDefaultLoggers(LogsDirectory / "build.log")
-                            .SetGitVersionEnvironment(GitVersion)
-                            .SetAssemblyVersion(GitVersion.AssemblySemVer)
-                            .SetPackageVersion(GitVersion.NuGetVersionV2));
+                MSBuild(settings =>
+                    settings
+                        .SetSolutionFile(build.Solution)
+                        .SetConfiguration(build.Configuration)
+                        .SetDefaultLoggers(build.LogsDirectory / "build.log")
+                        .SetGitVersionEnvironment(build.GitVersion)
+                        .SetAssemblyVersion(build.GitVersion.AssemblySemVer)
+                        .SetPackageVersion(build.GitVersion.NuGetVersionV2));
             });
 
         /// <summary>
         /// xunit test
         /// </summary>
-        public virtual Target Test => _ => _
-            .DependsOn(Build)
+        public static ITargetDefinition Test(ITargetDefinition _, IXamarinBuild build) => _
+            .DependsOn(build.Build)
             .Executes(() =>
             {
-                DotNetTasks
-                    .DotNetTest(settings =>
-                        settings
-                            .SetProjectFile(Solution)
-                            .SetDefaultLoggers(LogsDirectory / "test.log")
-                            .SetGitVersionEnvironment(GitVersion)
-                            .SetConfiguration(Configuration)
-                            .EnableNoRestore()
-                            .SetLogger($"trx")
-                            .SetProperty("CollectCoverage", "true")
-                            .SetProperty("DeterministicSourcePaths", "false") // DeterministicSourcePaths being true breaks coverlet!
-                            .SetProperty("CoverageDirectory", CoverageDirectory)
-                            .SetResultsDirectory(TestResultsDirectory));
+                DotNetTest(settings =>
+                    settings
+                        .SetProjectFile(build.Solution)
+                        .SetDefaultLoggers(build.LogsDirectory / "test.log")
+                        .SetGitVersionEnvironment(build.GitVersion)
+                        .SetConfiguration(build.Configuration)
+                        .EnableNoRestore()
+                        .SetLogger($"trx")
+                        .SetProperty("CollectCoverage", "true")
+                        .SetProperty("DeterministicSourcePaths", "false") // DeterministicSourcePaths being true breaks coverlet!
+                        .SetProperty("CoverageDirectory", build.CoverageDirectory)
+                        .SetResultsDirectory(build.TestResultsDirectory));
 
-                foreach (var coverage in TestResultsDirectory.GlobFiles("**/*.cobertura.xml"))
+                foreach (var coverage in build.TestResultsDirectory.GlobFiles("**/*.cobertura.xml"))
                 {
-                    FileSystemTasks.CopyFileToDirectory(coverage, CoverageDirectory, FileExistsPolicy.OverwriteIfNewer);
+                    CopyFileToDirectory(coverage, build.CoverageDirectory, FileExistsPolicy.OverwriteIfNewer);
                 }
             });
 
