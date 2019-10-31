@@ -27,11 +27,11 @@ class Solution : DotNetCoreBuild, IDotNetCoreBuild
         .DependsOn(Pack)
         ;
 
-    public Target Restore => _ => _.With(DotNetCoreBuild.Restore, this);
+    public new Target Restore => _ => _.With(DotNetCoreBuild.Restore, this);
 
-    public Target Build => _ => _.With(DotNetCoreBuild.Build, this);
+    public new Target Build => _ => _.With(DotNetCoreBuild.Build, this);
 
-    public Target Test => _ => _.With(DotNetCoreBuild.Test, this);
+    public new Target Test => _ => _.With(DotNetCoreBuild.Test, this);
 
-    public Target Pack => _ => _.With(DotNetCoreBuild.Pack, this);
+    public new Target Pack => _ => _.With(DotNetCoreBuild.Pack, this);
 }
