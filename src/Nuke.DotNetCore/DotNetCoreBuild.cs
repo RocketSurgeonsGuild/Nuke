@@ -11,6 +11,7 @@ using Nuke.Common.IO;
 using Nuke.Common.Utilities.Collections;
 using System.IO;
 using System.Linq;
+using System;
 
 namespace Rocket.Surgery.Nuke.DotNetCore
 {
@@ -20,110 +21,96 @@ namespace Rocket.Surgery.Nuke.DotNetCore
     public abstract class DotNetCoreBuild : RocketBoosterBuild
     {
         /// <summary>
-        /// Core target that can be used to trigger all targets for this build
-        /// </summary>
-        public Target DotNetCore => _ => _;
-
-        /// <summary>
         /// This will ensure that all local dotnet tools are installed
         /// </summary>
         public Target DotnetToolRestore => _ => _
            .After(Clean)
-           .Before(Build)
-#if NETSTANDARD2_1
-           .DependentFor(DotNetCore)
-#endif
+           .OnlyWhenStatic(() => FileExists(RootDirectory / ".config/dotnet-tools.json"))
            .Unlisted()
            .Executes(() => DotNet("tool restore"));
 
         /// <summary>
         /// dotnet restore
         /// </summary>
-        public Target Restore => _ => _
-            .DependentFor(DotNetCore)
-#if NETSTANDARD2_1
-            .DependsOn(DotnetToolRestore)
-#endif
-            .DependsOn(Clean)
+        public static ITargetDefinition Restore(ITargetDefinition _, IDotNetCoreBuild build) => _
+            .Description("Restores the dependencies.")
+            .DependsOn(build.Clean)
+            .DependsOn(build.DotnetToolRestore)
             .Executes(() =>
             {
                 DotNetRestore(s => s
-                    .SetProjectFile(Solution)
+                    .SetProjectFile(build.Solution)
                     .SetDisableParallel(true)
-                    .SetBinaryLogger(LogsDirectory / "restore.binlog")
-                    .SetFileLogger(LogsDirectory / "restore.log")
-                    .SetGitVersionEnvironment(GitVersion)
+                    .SetDefaultLoggers(build.LogsDirectory / "restore.log")
+                    .SetGitVersionEnvironment(build.GitVersion)
                 );
             });
 
         /// <summary>
         /// dotnet build
         /// </summary>
-        public Target Build => _ => _
-            .DependsOn(Restore)
-            .DependentFor(DotNetCore)
+        public static ITargetDefinition Build(ITargetDefinition _, IDotNetCoreBuild build) => _
+            .Description("Builds all the projects.")
+            .DependsOn(build.Restore)
             .Executes(() =>
             {
                 DotNetBuild(s => s
-                    .SetProjectFile(Solution)
-                    .SetBinaryLogger(LogsDirectory / "build.binlog")
-                    .SetFileLogger(LogsDirectory / "build.log")
-                    .SetGitVersionEnvironment(GitVersion)
-                    .SetConfiguration(Configuration)
+                    .SetProjectFile(build.Solution)
+                    .SetDefaultLoggers(build.LogsDirectory / "build.log")
+                    .SetGitVersionEnvironment(build.GitVersion)
+                    .SetConfiguration(build.Configuration)
                     .EnableNoRestore());
             });
 
         /// <summary>
         /// dotnet test
         /// </summary>
-        public Target Test => _ => _
-            .After(Build)
-            .DependentFor(DotNetCore)
-            .DependentFor(Pack)
-            .DependentFor(Generate_Code_Coverage_Reports)
-            .Triggers(Generate_Code_Coverage_Reports)
-            .OnlyWhenDynamic(() => TestDirectory.GlobFiles("**/*.csproj").Count > 0)
+        public static ITargetDefinition Test(ITargetDefinition _, IDotNetCoreBuild build) => _
+            .Description("Executes all the unit tests.")
+            .After(build.Build)
+            .DependentFor(build.Pack)
+            .DependentFor(build.Generate_Code_Coverage_Reports)
+            .Triggers(build.Generate_Code_Coverage_Reports)
+            .OnlyWhenDynamic(() => build.TestDirectory.GlobFiles("**/*.csproj").Count > 0)
             .WhenSkipped(DependencyBehavior.Execute)
             .Executes(async () =>
            {
                DotNetTest(s => s
-                   .SetProjectFile(Solution)
-                   .SetBinaryLogger(LogsDirectory / "test.binlog")
-                   .SetFileLogger(LogsDirectory / "test.log")
-                   .SetGitVersionEnvironment(GitVersion)
+                   .SetProjectFile(build.Solution)
+                   .SetDefaultLoggers(build.LogsDirectory / "test.log")
+                   .SetGitVersionEnvironment(build.GitVersion)
                    .SetConfiguration("Debug")
                    .EnableNoRestore()
                    .SetLogger($"trx")
                    .SetProperty("CollectCoverage", "true")
                    // DeterministicSourcePaths being true breaks coverlet!
                    .SetProperty("DeterministicSourcePaths", "false")
-                   .SetProperty("CoverageDirectory", CoverageDirectory)
-                   .SetResultsDirectory(TestResultsDirectory)
+                   .SetProperty("CoverageDirectory", build.CoverageDirectory)
+                   .SetResultsDirectory(build.TestResultsDirectory)
                );
 
-               foreach (var coverage in TestResultsDirectory.GlobFiles("**/*.cobertura.xml"))
+               foreach (var coverage in build.TestResultsDirectory.GlobFiles("**/*.cobertura.xml"))
                {
-                   CopyFileToDirectory(coverage, CoverageDirectory, FileExistsPolicy.OverwriteIfNewer);
+                   CopyFileToDirectory(coverage, build.CoverageDirectory, FileExistsPolicy.OverwriteIfNewer);
                }
            });
 
         /// <summary>
         /// dotnet pack
         /// </summary>
-        public Target Pack => _ => _
-            .DependsOn(Build)
-            .DependentFor(DotNetCore)
+        public static ITargetDefinition Pack(ITargetDefinition _, IDotNetCoreBuild build) => _
+            .Description("Packs all the NuGet packages.")
+            .DependsOn(build.Build)
             .Executes(() =>
             {
                 DotNetPack(s => s
-                    .SetProject(Solution)
-                    .SetBinaryLogger(LogsDirectory / "pack.binlog")
-                    .SetFileLogger(LogsDirectory / "pack.log")
-                    .SetGitVersionEnvironment(GitVersion)
-                    .SetConfiguration(Configuration)
+                    .SetProject(build.Solution)
+                    .SetDefaultLoggers(build.LogsDirectory / "pack.log")
+                    .SetGitVersionEnvironment(build.GitVersion)
+                    .SetConfiguration(build.Configuration)
                     .EnableNoRestore()
                     .EnableNoBuild()
-                    .SetOutputDirectory(NuGetPackageDirectory));
+                    .SetOutputDirectory(build.NuGetPackageDirectory));
             });
     }
 }

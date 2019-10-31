@@ -2,11 +2,13 @@ using Nuke.Common;
 using Nuke.Common.Execution;
 using Rocket.Surgery.Nuke.DotNetCore;
 using Rocket.Surgery.Nuke;
+using JetBrains.Annotations;
 
 [CheckBuildProjectConfigurations]
 [UnsetVisualStudioEnvironmentVariables]
 [PackageIcon("https://raw.githubusercontent.com/RocketSurgeonsGuild/graphics/master/png/social-square-thrust-rounded.png")]
-class Build : DotNetCoreBuild
+[PublicAPI]
+class Solution : DotNetCoreBuild, IDotNetCoreBuild
 {
     /// <summary>
     /// Support plugins are available for:
@@ -16,7 +18,20 @@ class Build : DotNetCoreBuild
     ///   - Microsoft VSCode           https://nuke.build/vscode
     /// </summary>
 
-    public static int Main() => Execute<Build>(x => x.Default);
+    public static int Main() => Execute<Solution>(x => x.Default);
 
-    Target Default => _ => _.DependsOn(DotNetCore);
+    Target Default => _ => _
+        .DependsOn(Restore)
+        .DependsOn(Build)
+        .DependsOn(Test)
+        .DependsOn(Pack)
+        ;
+
+    public Target Restore => _ => _.With(DotNetCoreBuild.Restore, this);
+
+    public Target Build => _ => _.With(DotNetCoreBuild.Build, this);
+
+    public Target Test => _ => _.With(DotNetCoreBuild.Test, this);
+
+    public Target Pack => _ => _.With(DotNetCoreBuild.Pack, this);
 }
