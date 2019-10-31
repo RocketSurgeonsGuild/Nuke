@@ -55,8 +55,7 @@ namespace Rocket.Surgery.Nuke.MsBuild
                         settings
                             .SetSolutionFile(Solution)
                             .SetConfiguration(Configuration)
-                            .SetBinaryLogger(LogsDirectory / "build.binlog")
-                            .SetFileLogger(LogsDirectory / "build.log")
+                            .SetDefaultLoggers(LogsDirectory / "build.log")
                             .SetGitVersionEnvironment(GitVersion)
                             .SetAssemblyVersion(GitVersion.AssemblySemVer)
                             .SetPackageVersion(GitVersion.NuGetVersionV2));
@@ -79,8 +78,7 @@ namespace Rocket.Surgery.Nuke.MsBuild
                                 .SetProjectFile(project)
                                 .SetConfiguration(Configuration)
                                 .SetGitVersionEnvironment(GitVersion)
-                                .SetBinaryLogger(LogsDirectory / "test.binlog")
-                                .SetFileLogger(LogsDirectory / "test.log")
+                                .SetDefaultLoggers(LogsDirectory / "test.log")
                                 .EnableNoRestore()
                                 .SetLogger($"trx")
                                 .SetProperty("VSTestResultsDirectory", TestResultsDirectory));

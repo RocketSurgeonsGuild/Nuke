@@ -4,6 +4,8 @@ using static Nuke.Common.IO.PathConstruction;
 using Nuke.Common.Tooling;
 using Newtonsoft.Json.Linq;
 using Nuke.Common.Tools.MSBuild;
+using System.IO;
+using System;
 
 namespace Rocket.Surgery.Nuke
 {
@@ -13,11 +15,35 @@ namespace Rocket.Surgery.Nuke
     public static class ToolSettingsExtensions
     {
         /// <summary>
+        /// <para>Call a target definition in context of a build script</para>
+        /// <para>if the build scripts aren't setup correctly the nuke extensions will not detect them.</para>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="target"></param>
+        /// <param name="func"></param>
+        /// <param name="value"></param>
+        public static ITargetDefinition With<T>(this ITargetDefinition target, Func<ITargetDefinition, T, ITargetDefinition> func, T value)
+        {
+            return func(target, value);
+        }
+
+        /// <summary>
+        /// Configures binary and file logging for MSBuild
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <param name="path"></param>
+        public static T SetDefaultLoggers<T>(this T settings, AbsolutePath path) where T : ToolSettings
+        {
+            return settings
+                .SetBinaryLogger((AbsolutePath)Path.ChangeExtension(path, "binlog"))
+                .SetFileLogger((AbsolutePath)Path.ChangeExtension(path, "log"));
+        }
+
+        /// <summary>
         /// Configures binary logging for MSBuild
         /// </summary>
         /// <param name="settings"></param>
         /// <param name="path"></param>
-        /// <param name="imports"></param>
         public static T SetBinaryLogger<T>(this T settings, AbsolutePath path) where T : ToolSettings
         {
             var existingArgs = settings.ArgumentConfigurator;

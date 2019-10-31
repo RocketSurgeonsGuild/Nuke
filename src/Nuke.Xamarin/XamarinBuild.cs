@@ -29,8 +29,7 @@ namespace Rocket.Surgery.Nuke.Xamarin
                         settings
                             .SetProjectFile(Solution)
                             .SetDisableParallel(true)
-                            .SetBinaryLogger(LogsDirectory / "restore.binlog")
-                            .SetFileLogger(LogsDirectory / "restore.log")
+                            .SetDefaultLoggers(LogsDirectory / "restore.log")
                             .SetGitVersionEnvironment(GitVersion));
             });
 
@@ -46,8 +45,7 @@ namespace Rocket.Surgery.Nuke.Xamarin
                         settings
                             .SetSolutionFile(Solution)
                             .SetConfiguration(Configuration)
-                            .SetBinaryLogger(LogsDirectory / "build.binlog")
-                            .SetFileLogger(LogsDirectory / "build.log")
+                            .SetDefaultLoggers(LogsDirectory / "build.log")
                             .SetGitVersionEnvironment(GitVersion)
                             .SetAssemblyVersion(GitVersion.AssemblySemVer)
                             .SetPackageVersion(GitVersion.NuGetVersionV2));
@@ -64,8 +62,7 @@ namespace Rocket.Surgery.Nuke.Xamarin
                     .DotNetTest(settings =>
                         settings
                             .SetProjectFile(Solution)
-                            .SetBinaryLogger(LogsDirectory / "test.binlog")
-                            .SetFileLogger(LogsDirectory / "test.log")
+                            .SetDefaultLoggers(LogsDirectory / "test.log")
                             .SetGitVersionEnvironment(GitVersion)
                             .SetConfiguration(Configuration)
                             .EnableNoRestore()
