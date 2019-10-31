@@ -8,7 +8,7 @@ using Rocket.Surgery.Nuke.Readme;
 namespace Rocket.Surgery.Nuke
 {
     /// <summary>
-    /// Common interface to allow build targets to be extended from in later builds
+    /// Base build plan and tasks
     /// </summary>
     public interface IRocketBoosterBuild
     {

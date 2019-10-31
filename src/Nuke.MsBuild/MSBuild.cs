@@ -25,84 +25,77 @@ namespace Rocket.Surgery.Nuke.MsBuild
         public AbsolutePath NuspecDirectory => RootDirectory / ".nuspec";
 
         /// <summary>
-        /// Core target that can be used to trigger all targets for this build
-        /// </summary>
-        public Target NetFramework => _ => _;
-
-        /// <summary>
         /// nuget restore
         /// </summary>
-        public Target Restore => _ => _
-            .DependsOn(Clean)
+        public static ITargetDefinition Restore(ITargetDefinition _, IMsBuild build) => _
+            .DependsOn(build.Clean)
             .Executes(() =>
             {
                 NuGetTasks
                     .NuGetRestore(settings =>
                         settings
-                            .SetSolutionDirectory(Solution)
+                            .SetSolutionDirectory(build.Solution)
                             .EnableNoCache());
             });
 
         /// <summary>
         /// msbuild
         /// </summary>
-        public Target Build => _ => _
-            .DependsOn(Restore)
+        public static ITargetDefinition Build(ITargetDefinition _, IMsBuild build) => _
+            .DependsOn(build.Restore)
             .Executes(() =>
             {
                 MSBuildTasks
                     .MSBuild(settings =>
                         settings
-                            .SetSolutionFile(Solution)
-                            .SetConfiguration(Configuration)
-                            .SetDefaultLoggers(LogsDirectory / "build.log")
-                            .SetGitVersionEnvironment(GitVersion)
-                            .SetAssemblyVersion(GitVersion.AssemblySemVer)
-                            .SetPackageVersion(GitVersion.NuGetVersionV2));
+                            .SetSolutionFile(build.Solution)
+                            .SetConfiguration(build.Configuration)
+                            .SetDefaultLoggers(build.LogsDirectory / "build.log")
+                            .SetGitVersionEnvironment(build.GitVersion)
+                            .SetAssemblyVersion(build.GitVersion.AssemblySemVer)
+                            .SetPackageVersion(build.GitVersion.NuGetVersionV2));
             });
 
         /// <summary>
         /// xunit test
         /// </summary>
-        public Target Test => _ => _
-            .DependsOn(Build)
-            .DependentFor(Pack)
-            .DependentFor(NetFramework)
+        public static ITargetDefinition Test(ITargetDefinition _, IMsBuild build) => _
+            .DependsOn(build.Build)
+            .DependentFor(build.Pack)
             .Executes(() =>
             {
-                foreach (var project in Solution.GetTestProjects())
+                foreach (var project in build.Solution.GetTestProjects())
                 {
                     DotNetTasks
                         .DotNetTest(settings =>
                             settings
                                 .SetProjectFile(project)
-                                .SetConfiguration(Configuration)
-                                .SetGitVersionEnvironment(GitVersion)
-                                .SetDefaultLoggers(LogsDirectory / "test.log")
+                                .SetConfiguration(build.Configuration)
+                                .SetGitVersionEnvironment(build.GitVersion)
+                                .SetDefaultLoggers(build.LogsDirectory / "test.log")
                                 .EnableNoRestore()
                                 .SetLogger($"trx")
-                                .SetProperty("VSTestResultsDirectory", TestResultsDirectory));
+                                .SetProperty("VSTestResultsDirectory", build.TestResultsDirectory));
                 }
             });
 
         /// <summary>
         /// nuget pack
         /// </summary>
-        public Target Pack => _ => _
-            .DependsOn(Build)
-            .DependentFor(NetFramework)
+        public static ITargetDefinition Pack(ITargetDefinition _, IMsBuild build) => _
+            .DependsOn(build.Build)
             .Executes(() =>
             {
-                foreach (var project in NuspecDirectory.GlobFiles("*.nuspec"))
+                foreach (var project in build.NuspecDirectory.GlobFiles("*.nuspec"))
                 {
                     NuGetTasks
                         .NuGetPack(settings =>
                             settings
                                 .SetTargetPath(project)
-                                .SetConfiguration(Configuration)
-                                .SetGitVersionEnvironment(GitVersion)
-                                .SetVersion(GitVersion.NuGetVersionV2)
-                                .SetOutputDirectory(NuGetPackageDirectory)
+                                .SetConfiguration(build.Configuration)
+                                .SetGitVersionEnvironment(build.GitVersion)
+                                .SetVersion(build.GitVersion.NuGetVersionV2)
+                                .SetOutputDirectory(build.NuGetPackageDirectory)
                                 .SetSymbols(true));
                 }
             });

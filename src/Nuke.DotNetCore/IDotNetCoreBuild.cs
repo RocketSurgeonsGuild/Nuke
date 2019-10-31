@@ -3,7 +3,7 @@ using Nuke.Common;
 namespace Rocket.Surgery.Nuke.DotNetCore
 {
     /// <summary>
-    /// Common interface to allow dotnet build targets to be extended from in later builds
+    /// Base build plan for .NET Core based applications
     /// </summary>
     public interface IDotNetCoreBuild : IRocketBoosterBuild
     {
