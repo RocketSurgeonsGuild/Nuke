@@ -16,7 +16,7 @@
     <PackageReference Update="NuGet.Protocol" Version="5.3.1" />
     <PackageReference Update="NuGet.Resolver" Version="5.3.1" />
     <PackageReference Update="NuGet.Versioning" Version="5.3.1" />
-    <PackageReference Update="Nuke.Common" Version="0.22.2" />
+    <PackageReference Update="Nuke.Common" Version="0.23.3" />
     <PackageReference Update="YamlDotNet" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>
