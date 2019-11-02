@@ -18,11 +18,28 @@ namespace Rocket.Surgery.Nuke
         /// <para>Call a target definition in context of a build script</para>
         /// <para>if the build scripts aren't setup correctly the nuke extensions will not detect them.</para>
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="target"></param>
-        /// <param name="func"></param>
-        /// <param name="value"></param>
+        /// <typeparam name="T">The value type.</typeparam>
+        /// <param name="target">The target.</param>
+        /// <param name="func">The function.</param>
+        /// <param name="value">The value.</param>
+        /// <returns>The target definition.</returns>
+        [Obsolete("use With(T value, Func<ITargetDefinition, T, ITargetDefinition> func) version")]
         public static ITargetDefinition With<T>(this ITargetDefinition target, Func<ITargetDefinition, T, ITargetDefinition> func, T value)
+        {
+            return func(target, value);
+        }
+
+        /// <summary>
+        /// <para>Call a target definition in context of a build script</para>
+        /// <para>if the build scripts aren't setup correctly the nuke extensions will not detect them.</para>
+        /// </summary>
+        /// <typeparam name="T">The value type.</typeparam>
+        /// <param name="target">The target.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="func">The function.</param>
+        /// <returns>The target definition.</returns>
+
+        public static ITargetDefinition With<T>(this ITargetDefinition target, T value, Func<ITargetDefinition, T, ITargetDefinition> func)
         {
             return func(target, value);
         }
