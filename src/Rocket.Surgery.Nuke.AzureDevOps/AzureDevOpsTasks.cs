@@ -8,18 +8,18 @@ using Nuke.Common;
 using Nuke.Common.Tools.GitVersion;
 using static Rocket.Surgery.Nuke.LoggingExtensions;
 
-namespace Rocket.Surgery.Nuke.AzureDevOps
+namespace Rocket.Surgery.Nuke.AzurePipelines
 {
-    public class AzureDevOpsTasks
+    public class AzurePipelinesTasks
     {
         /// <summary>
         /// Gets a value that determines if the build is running on Azure DevOps.
         /// </summary>
-        public static Expression<Func<bool>> IsRunningOnAzureDevOps => () =>
-            NukeBuild.Host == HostType.AzureDevOps || Environment.GetEnvironmentVariable("LOGNAME") == "vsts";
+        public static Expression<Func<bool>> IsRunningOnAzurePipelines => () =>
+            NukeBuild.Host == HostType.AzurePipelines || Environment.GetEnvironmentVariable("LOGNAME") == "vsts";
 
-        Target PrintAzureDevOpsEnvironment => _ => _
-            .OnlyWhenStatic(IsRunningOnAzureDevOps)
+        Target PrintAzurePipelinesEnvironment => _ => _
+            .OnlyWhenStatic(IsRunningOnAzurePipelines)
             .Executes(() =>
             {
                 Information("AGENT_ID: {0}", EnvironmentVariable("AGENT_ID"));
@@ -43,24 +43,24 @@ namespace Rocket.Surgery.Nuke.AzureDevOps
                 Information("BUILD_REPOSITORY_PROVIDER: {0}", EnvironmentVariable("BUILD_REPOSITORY_PROVIDER"));
             });
 
-        Target UploadAzureDevOpsArtifacts => _ => _
-            .Before(PublishAzureDevOpsTestResults)
-            .OnlyWhenStatic(IsRunningOnAzureDevOps)
+        Target UploadAzurePipelinesArtifacts => _ => _
+            .Before(PublishAzurePipelinesTestResults)
+            .OnlyWhenStatic(IsRunningOnAzurePipelines)
             .Executes(() => { });
 
-        Target PublishAzureDevOpsTestResults => _ => _
-            .Before(PublishAzureDevOpsCodeCoverage)
-            .OnlyWhenStatic(IsRunningOnAzureDevOps)
+        Target PublishAzurePipelinesTestResults => _ => _
+            .Before(PublishAzurePipelinesCodeCoverage)
+            .OnlyWhenStatic(IsRunningOnAzurePipelines)
             .Executes(() => { });
 
-        Target PublishAzureDevOpsCodeCoverage => _ => _
-            .OnlyWhenStatic(IsRunningOnAzureDevOps)
+        Target PublishAzurePipelinesCodeCoverage => _ => _
+            .OnlyWhenStatic(IsRunningOnAzurePipelines)
             .Executes(() => { });
 
-        Target AzureDevOps => _ => _
-            .DependsOn(PrintAzureDevOpsEnvironment)
-            .DependsOn(UploadAzureDevOpsArtifacts)
-            .DependsOn(PublishAzureDevOpsTestResults)
-            .DependsOn(PublishAzureDevOpsCodeCoverage);
+        Target AzurePipelines => _ => _
+            .DependsOn(PrintAzurePipelinesEnvironment)
+            .DependsOn(UploadAzurePipelinesArtifacts)
+            .DependsOn(PublishAzurePipelinesTestResults)
+            .DependsOn(PublishAzurePipelinesCodeCoverage);
     }
 }
