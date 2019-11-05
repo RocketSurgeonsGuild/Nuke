@@ -8,13 +8,12 @@
     <RootNamespace></RootNamespace>
     <IsPackable>False</IsPackable>
     <NoWarn>CS0649;CS0169</NoWarn>
-    <EnableCentralPackageVersions>false</EnableCentralPackageVersions>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Nuke.Common" Version="0.23.3" />
-    <PackageDownload Include="GitVersion.Tool" Version="[5.1.1]" />
-    <PackageReference Include="ReportGenerator" Version="4.3.5" />
+    <PackageReference Include="Nuke.Common" />
+    <PackageReference Include="GitVersion.Tool" ExcludeAssets="All" />
+    <PackageReference Include="ReportGenerator" ExcludeAssets="All" />
     <ProjectReference Include="../src/Nuke/Rocket.Surgery.Nuke.csproj" />
     <ProjectReference Include="../src/Nuke.DotNetCore/Rocket.Surgery.Nuke.DotNetCore.csproj" />
   </ItemGroup>
