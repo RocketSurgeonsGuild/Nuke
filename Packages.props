@@ -18,7 +18,7 @@
     <PackageReference Update="NuGet.Versioning" Version="5.3.1" />
     <PackageReference Update="Nuke.Common" Version="0.23.3" />
     <PackageReference Update="ReportGenerator" Version="4.3.6" />
-    <PackageReference Update="GitVersion.Tool" Version="5.1.1" />
+    <PackageReference Update="GitVersion.Tool" Version="5.1.2" />
     <PackageReference Update="YamlDotNet" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>
