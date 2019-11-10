@@ -216,7 +216,7 @@ namespace Rocket.Surgery.Nuke
                     .SetTag(GitVersion.InformationalVersion)
                 );
                 CopyFile(CoverageDirectory / "cobertura.xml", CoverageDirectory / "solution.cobertura", FileExistsPolicy.OverwriteIfNewer);
-                CopyFile(CoverageDirectory / "cobertura.xml", "solution.xml", FileExistsPolicy.OverwriteIfNewer);
+                CopyFile(CoverageDirectory / "cobertura.xml", CoverageDirectory / "solution.xml", FileExistsPolicy.OverwriteIfNewer);
             });
 
         /// <summary>
