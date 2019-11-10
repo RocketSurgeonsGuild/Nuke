@@ -12,6 +12,7 @@ namespace Rocket.Surgery.Nuke
     /// <summary>
     /// Mapping for nuget Verbosity
     /// </summary>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class NuGetVerbosityMappingAttribute : VerbosityMappingAttribute
     {
         /// <summary>

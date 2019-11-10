@@ -19,7 +19,7 @@ namespace Rocket.Surgery.Nuke.Readme
         public string ConfigKey { get; } = string.Empty;
 
         /// <inheritdoc />
-        public string AddReference(string name, string value, string altText = null)
+        public string AddReference(string name, string value, string? altText = null)
         {
             var key = $"[{name}]";
             if (string.IsNullOrEmpty(altText))

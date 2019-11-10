@@ -12,6 +12,7 @@ using Nuke.Common.Utilities.Collections;
 using System.IO;
 using System.Linq;
 using System;
+using Nuke.Common.Tooling;
 
 namespace Rocket.Surgery.Nuke.DotNetCore
 {
@@ -65,36 +66,69 @@ namespace Rocket.Surgery.Nuke.DotNetCore
         /// <summary>
         /// dotnet test
         /// </summary>
-        public static ITargetDefinition Test(ITargetDefinition _, IDotNetCoreBuild build) => _
-            .Description("Executes all the unit tests.")
-            .After(build.Build)
-            .DependentFor(build.Pack)
-            .DependentFor(build.Generate_Code_Coverage_Reports)
-            .Triggers(build.Generate_Code_Coverage_Reports)
-            .OnlyWhenStatic(() => DirectoryExists(build.TestDirectory))
-            .OnlyWhenDynamic(() => build.TestDirectory.GlobFiles("**/*.csproj").Count > 0)
-            .WhenSkipped(DependencyBehavior.Execute)
-            .Executes(async () =>
-           {
-               DotNetTest(s => s
-                   .SetProjectFile(build.Solution)
-                   .SetDefaultLoggers(build.LogsDirectory / "test.log")
-                   .SetGitVersionEnvironment(build.GitVersion)
-                   .SetConfiguration("Debug")
-                   .EnableNoRestore()
-                   .SetLogger($"trx")
-                   .SetProperty("CollectCoverage", "true")
-                   // DeterministicSourcePaths being true breaks coverlet!
-                   .SetProperty("DeterministicSourcePaths", "false")
-                   .SetProperty("CoverageDirectory", build.CoverageDirectory)
-                   .SetResultsDirectory(build.TestResultsDirectory)
-               );
+        public static ITargetDefinition Test(ITargetDefinition _, IDotNetCoreBuild build) => Test(true)(_, build);
 
-               foreach (var coverage in build.TestResultsDirectory.GlobFiles("**/*.cobertura.xml"))
-               {
-                   CopyFileToDirectory(coverage, build.CoverageDirectory, FileExistsPolicy.OverwriteIfNewer);
-               }
-           });
+        /// <summary>
+        /// dotnet test
+        /// </summary>
+        public static Func<ITargetDefinition, IDotNetCoreBuild, ITargetDefinition> Test(bool useDataCollector) =>
+            (ITargetDefinition _, IDotNetCoreBuild build) => _
+                .Description("Executes all the unit tests.")
+                .After(build.Build)
+                .DependentFor(build.Pack)
+                .DependentFor(build.Generate_Code_Coverage_Reports)
+                .Triggers(build.Generate_Code_Coverage_Reports)
+                .OnlyWhenStatic(() => DirectoryExists(build.TestDirectory))
+                .OnlyWhenDynamic(() => build.TestDirectory.GlobFiles("**/*.csproj").Count > 0)
+                .WhenSkipped(DependencyBehavior.Execute)
+                .Executes(() => EnsureCleanDirectory(build.TestResultsDirectory))
+                .Executes(async () =>
+                {
+                    var runsettings = build.TestDirectory / "coverlet.runsettings";
+                    if (!FileExists(runsettings))
+                    {
+                        runsettings = TemporaryDirectory / "default.runsettings";
+                        if (!FileExists(runsettings))
+                        {
+                            using var tempFile = File.Open(runsettings, FileMode.CreateNew);
+                            await typeof(DotNetCoreBuild).Assembly
+                                    .GetManifestResourceStream("Rocket.Surgery.Nuke.default.runsettings")!
+                                    .CopyToAsync(tempFile)
+                                    .ConfigureAwait(false);
+                        }
+                    }
+
+                    DotNetTest(s => s
+                        .SetProjectFile(build.Solution)
+                        .SetDefaultLoggers(build.LogsDirectory / "test.log")
+                        .SetGitVersionEnvironment(build.GitVersion)
+                        .SetConfiguration("Debug")
+                        .EnableNoRestore()
+                        .SetLogger($"trx")
+                        // DeterministicSourcePaths being true breaks coverlet!
+                        .SetProperty("DeterministicSourcePaths", "false")
+                        .SetResultsDirectory(build.TestResultsDirectory)
+                        .When(useDataCollector, x => x
+                            .SetProperty("CollectCoverage", "true")
+                            .SetProperty("CoverageDirectory", build.CoverageDirectory)
+                        )
+                        .When(!useDataCollector, x => x
+                            .SetProperty("CollectCoverage", "false")
+                            .SetDataCollector("XPlat Code Coverage")
+                            .SetSettingsFile(runsettings)
+                        )
+                    );
+
+                    foreach (var coverage in build.TestResultsDirectory.GlobFiles("**/*.cobertura.xml"))
+                    {
+                        CopyDirectoryRecursively(
+                            Path.GetDirectoryName(coverage),
+                            build.CoverageDirectory,
+                            DirectoryExistsPolicy.Merge,
+                            FileExistsPolicy.OverwriteIfNewer
+                        );
+                    }
+                });
 
         /// <summary>
         /// dotnet pack

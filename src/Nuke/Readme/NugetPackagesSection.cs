@@ -50,9 +50,9 @@ namespace Rocket.Surgery.Nuke.Readme
 
             var dcfg = config;
             var myget = dcfg["myget"] as IDictionary<object, object>;
-            var mygetUrlReference = references.AddReference($"myget-{hash}", MyGetUrl(myget["account"].ToString(), packageName));
-            var mygetVersionBadge = references.AddReference($"myget-version-{hash}-badge", MyGetPrereleaseVersionBadge(myget["account"].ToString(), packageName), "MyGet Pre-Release Version");
-            var mygetDownloadsBadge = references.AddReference($"myget-downloads-{hash}-badge", MyGetDownloadsBadge(myget["account"].ToString(), packageName), "MyGet Downloads");
+            var mygetUrlReference = references.AddReference($"myget-{hash}", MyGetUrl(myget!["account"].ToString()!, packageName));
+            var mygetVersionBadge = references.AddReference($"myget-version-{hash}-badge", MyGetPrereleaseVersionBadge(myget["account"].ToString()!, packageName), "MyGet Pre-Release Version");
+            var mygetDownloadsBadge = references.AddReference($"myget-downloads-{hash}-badge", MyGetDownloadsBadge(myget["account"].ToString()!, packageName), "MyGet Downloads");
             return $"| {packageName} | [!{nugetVersionBadge}!{nugetDownloadsBadge}]{nugetUrlReference} | [!{mygetVersionBadge}!{mygetDownloadsBadge}]{mygetUrlReference} |";
         }
 

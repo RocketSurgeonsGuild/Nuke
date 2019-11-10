@@ -49,22 +49,22 @@ namespace Rocket.Surgery.Nuke
         /// <summary>
         /// The solution currently being build
         /// </summary>
-        [Solution] public Solution Solution { get; }
+        [Solution] public Solution Solution { get; } = null!;
 
         /// <summary>
         /// The Git Repository currently being built
         /// </summary>
-        [GitRepository] public GitRepository GitRepository { get; }
+        [GitRepository] public GitRepository GitRepository { get; } = null!;
 
         /// <summary>
         /// The Git Version information either computed by GitVersion itself, or as defined by environment variables of the format `GITVERSION_*`
         /// </summary>
-        [ComputedGitVersion] public GitVersion GitVersion { get; }
+        [ComputedGitVersion] public GitVersion GitVersion { get; } = null!;
 
         /// <summary>
         /// The readme updater that ensures that all the badges are in sync.
         /// </summary>
-        [Readme] public ReadmeUpdater Readme { get; }
+        [Readme] public ReadmeUpdater Readme { get; } = null!;
 
         /// <summary>
         /// The directory where samples will be placed

@@ -17,7 +17,7 @@ using System.Xml;
 
 namespace Rocket.Surgery.Nuke.SyncPackages
 {
-    public static class PackageSync
+    internal static class PackageSync
     {
         public static async Task AddMissingPackages(
             AbsolutePath solutionPath,
@@ -84,10 +84,10 @@ namespace Rocket.Surgery.Nuke.SyncPackages
             OrderPackageReferences(itemGroups.ToArray());
             RemoveDuplicatePackageReferences(document);
 
-            await UpdateXDocument(packagesProps, document, cancellationToken).ConfigureAwait(false);
+            UpdateXDocument(packagesProps, document);
         }
 
-        public static async Task RemoveExtraPackages(
+        public static Task RemoveExtraPackages(
             AbsolutePath solutionPath,
             AbsolutePath packagesProps,
             CancellationToken cancellationToken
@@ -129,10 +129,11 @@ namespace Rocket.Surgery.Nuke.SyncPackages
                 }
             }
 
-            await UpdateXDocument(packagesProps, document, cancellationToken).ConfigureAwait(false);
+            UpdateXDocument(packagesProps, document);
+            return Task.CompletedTask;
         }
 
-        public static async Task MoveVersions(
+        public static Task MoveVersions(
             AbsolutePath solutionPath,
             AbsolutePath packagesProps,
             CancellationToken cancellationToken)
@@ -173,13 +174,14 @@ namespace Rocket.Surgery.Nuke.SyncPackages
                     item.SetAttributeValue("Version", null);
                 }
 
-                await UpdateXDocument(path, document, cancellationToken).ConfigureAwait(false);
+                UpdateXDocument(path, document);
             }
 
             OrderPackageReferences(itemGroups.ToArray());
             RemoveDuplicatePackageReferences(packagesDocument);
 
-            await UpdateXDocument(packagesProps, packagesDocument, cancellationToken).ConfigureAwait(false);
+            UpdateXDocument(packagesProps, packagesDocument);
+            return Task.CompletedTask;
         }
 
         private static IEnumerable<ProjectAnalyzer> GetProjects(AbsolutePath solutionPath)
@@ -191,7 +193,7 @@ namespace Rocket.Surgery.Nuke.SyncPackages
             }
         }
 
-        private static async Task UpdateXDocument(string path, XDocument document, CancellationToken cancellationToken)
+        private static void UpdateXDocument(string path, XDocument document)
         {
             using var fileWrite = File.Open(path, FileMode.Truncate);
             using var writer = XmlWriter.Create(fileWrite, new XmlWriterSettings { OmitXmlDeclaration = true, Async = true, Indent = true });

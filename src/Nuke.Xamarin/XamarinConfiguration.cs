@@ -11,7 +11,6 @@ namespace Rocket.Surgery
     /// <summary>
     /// Represents xamarin build configuration.
     /// </summary>
-    [PublicAPI]
     [TypeConverter(typeof(TypeConverter<Configuration>))]
     public class XamarinConfiguration : Enumeration
     {
