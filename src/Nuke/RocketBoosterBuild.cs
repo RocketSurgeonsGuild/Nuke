@@ -24,6 +24,7 @@ using Nuke.Common.Tooling;
 using System.Threading;
 using System.Threading.Tasks;
 using Rocket.Surgery.Nuke.SyncPackages;
+using System;
 
 namespace Rocket.Surgery.Nuke
 {
@@ -214,8 +215,8 @@ namespace Rocket.Surgery.Nuke
                     .SetReportTypes(ReportTypes.HtmlSummary, ReportTypes.TextSummary)
                     .SetTag(GitVersion.InformationalVersion)
                 );
-                CopyFile(CoverageDirectory / "Cobertura.xml", CoverageDirectory / "solution.cobertura", FileExistsPolicy.OverwriteIfNewer);
-                RenameFile(CoverageDirectory / "Cobertura.xml", "solution.xml", FileExistsPolicy.OverwriteIfNewer);
+                CopyFile(CoverageDirectory / "cobertura.xml", CoverageDirectory / "solution.cobertura", FileExistsPolicy.OverwriteIfNewer);
+                CopyFile(CoverageDirectory / "cobertura.xml", "solution.xml", FileExistsPolicy.OverwriteIfNewer);
             });
 
         /// <summary>

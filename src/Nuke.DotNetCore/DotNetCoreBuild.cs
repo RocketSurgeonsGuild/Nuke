@@ -13,6 +13,8 @@ using System.IO;
 using System.Linq;
 using System;
 using Nuke.Common.Tooling;
+using Nuke.Common.Tools.ReportGenerator;
+using static Nuke.Common.Tools.ReportGenerator.ReportGeneratorTasks;
 
 namespace Rocket.Surgery.Nuke.DotNetCore
 {
@@ -81,7 +83,13 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                 .OnlyWhenStatic(() => DirectoryExists(build.TestDirectory))
                 .OnlyWhenDynamic(() => build.TestDirectory.GlobFiles("**/*.csproj").Count > 0)
                 .WhenSkipped(DependencyBehavior.Execute)
-                .Executes(() => EnsureCleanDirectory(build.TestResultsDirectory))
+                .Executes(() =>
+                {
+                    EnsureCleanDirectory(build.TestResultsDirectory);
+                    build.CoverageDirectory.GlobFiles("*.cobertura.xml", "*.opencover.xml", "*.json", "*.info")
+                        .Where(x => Guid.TryParse(Path.GetFileName(x).Split('.')[0], out var _))
+                        .ForEach(DeleteFile);
+                })
                 .Executes(async () =>
                 {
                     var runsettings = build.TestDirectory / "coverlet.runsettings";
@@ -119,14 +127,16 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                         )
                     );
 
-                    foreach (var coverage in build.TestResultsDirectory.GlobFiles("**/*.cobertura.xml"))
+                    // Ensure anything that has been dropped in the test results from a collector is
+                    // into the coverage directory
+                    foreach (var file in build.TestResultsDirectory
+                        .GlobFiles("**/*.cobertura.xml")
+                        .Where(x => Guid.TryParse(Path.GetFileName(x.Parent), out var _))
+                        .SelectMany(coverage => coverage.Parent.GlobFiles("*.*")))
                     {
-                        CopyDirectoryRecursively(
-                            Path.GetDirectoryName(coverage),
-                            build.CoverageDirectory,
-                            DirectoryExistsPolicy.Merge,
-                            FileExistsPolicy.OverwriteIfNewer
-                        );
+                        var folderName = Path.GetFileName(file.Parent);
+                        var extensionPart = string.Join(".", Path.GetFileName(file).Split('.').Skip(1));
+                        CopyFile(file, build.CoverageDirectory / $"{folderName}.{extensionPart}", FileExistsPolicy.OverwriteIfNewer);
                     }
                 });
 
