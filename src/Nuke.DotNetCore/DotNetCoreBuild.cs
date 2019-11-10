@@ -108,11 +108,11 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                         // DeterministicSourcePaths being true breaks coverlet!
                         .SetProperty("DeterministicSourcePaths", "false")
                         .SetResultsDirectory(build.TestResultsDirectory)
-                        .When(useDataCollector, x => x
+                        .When(!useDataCollector, x => x
                             .SetProperty("CollectCoverage", "true")
                             .SetProperty("CoverageDirectory", build.CoverageDirectory)
                         )
-                        .When(!useDataCollector, x => x
+                        .When(useDataCollector, x => x
                             .SetProperty("CollectCoverage", "false")
                             .SetDataCollector("XPlat Code Coverage")
                             .SetSettingsFile(runsettings)
