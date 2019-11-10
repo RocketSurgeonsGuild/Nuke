@@ -218,7 +218,7 @@ namespace Rocket.Surgery.Nuke
 
                 CopyFile(CoverageDirectory / "Cobertura.xml", CoverageDirectory / "solution.cobertura", FileExistsPolicy.OverwriteIfNewer);
                 CopyFile(CoverageDirectory / "Cobertura.xml", CoverageDirectory / "solution.xml", FileExistsPolicy.OverwriteIfNewer);
-                RenameFile(CoverageDirectory / "Cobertura.xml", CoverageDirectory / "cobertura.xml", FileExistsPolicy.OverwriteIfNewer);
+                RenameFile(CoverageDirectory / "solution.xml", CoverageDirectory / "cobertura.xml", FileExistsPolicy.OverwriteIfNewer);
             });
 
         /// <summary>
