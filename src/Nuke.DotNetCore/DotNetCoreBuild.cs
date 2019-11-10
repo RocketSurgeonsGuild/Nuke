@@ -92,7 +92,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                         {
                             using var tempFile = File.Open(runsettings, FileMode.CreateNew);
                             await typeof(DotNetCoreBuild).Assembly
-                                    .GetManifestResourceStream("Rocket.Surgery.Nuke.default.runsettings")!
+                                    .GetManifestResourceStream("Rocket.Surgery.Nuke.DotNetCore.default.runsettings")!
                                     .CopyToAsync(tempFile)
                                     .ConfigureAwait(false);
                         }
