@@ -47,7 +47,7 @@ variables:
   - group: rsg-bot
 
 jobs:
-  - template: new/nuke.yml@rsg
+  - template: pipeline/nuke.yml@rsg
     parameters:
       AuthNuGetFeeds:
         - name: RocketSurgeonsGuild
