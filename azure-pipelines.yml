@@ -44,6 +44,7 @@ variables:
     value: "true"
   - name: CodeCovToken
     value: 'c93f6719-da50-4d00-ba2b-b73fd95239e0'
+  - group: rsg-bot
 
 jobs:
   - template: pipeline/nuke.yml@rsg
