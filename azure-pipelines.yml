@@ -61,5 +61,6 @@ jobs:
       GitHubPackages: true
       MyGetPackages: false
       DotNetSdk:
-        - "3.0.x"
+        - "2.x"
+        - "3.x"
       NuGetVersion: "5.3.1"
