@@ -17,28 +17,21 @@ namespace Rocket.Surgery.Nuke
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
     public class EnsurePackageSourceHasCredentialsAttribute : Attribute, IOnBeforeLogo
     {
+        /// <summary>
+        /// Ensures that the package source name has credentials set
+        /// This is useful to ensure that credentials are defined on a users local environment
+        /// </summary>
         public EnsurePackageSourceHasCredentialsAttribute(string sourceName)
         {
             SourceName = sourceName;
         }
 
+        /// <summary>
+        /// The nuget source name
+        /// </summary>
         public string SourceName { get; }
 
-        public void OnAfterLogo(NukeBuild build, IReadOnlyCollection<ExecutableTarget> executableTargets, IReadOnlyCollection<ExecutableTarget> executionPlan)
-        {
-            // var settings = Settings.LoadDefaultSettings(NukeBuild.RootDirectory);
-            // var packageSourceProvider = new PackageSourceProvider(settings);
-            // var sources = packageSourceProvider.LoadPackageSources();
-            // foreach (var source in sources)
-            // {
-            //     Logger.Info(source.Name);
-            //     Logger.Info(source.Description);
-            //     Logger.Info(source.Credentials != null);
-            //     Logger.Info(source.Source);
-            //     Logger.Info(source.SourceUri);
-            // }
-        }
-
+        /// <inheritdoc />
         public void OnBeforeLogo(NukeBuild build, IReadOnlyCollection<ExecutableTarget> executableTargets)
         {
             var settings = Settings.LoadDefaultSettings(NukeBuild.RootDirectory);
