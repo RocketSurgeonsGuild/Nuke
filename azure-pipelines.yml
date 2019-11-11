@@ -28,7 +28,7 @@ resources:
     - repository: rsg
       type: github
       name: RocketSurgeonsGuild/AzureDevopsTemplates
-      ref: refs/heads/feature/simplify
+      ref: refs/tags/v0.11.0
       endpoint: github
 
 variables:
