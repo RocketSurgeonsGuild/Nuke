@@ -51,8 +51,8 @@ jobs:
       GitHubAuthVariableGroup: rsg-bot
       AuthNuGetFeeds:
         - name: RocketSurgeonsGuild
-          username: $(Github.UserName)
-          password: $(Github.Token)
+          username: $(GitHub.UserName)
+          password: $(GitHub.Token)
       Configuration: $(Configuration)
       Verbosity: $(Verbosity)
       GitHub: true
