@@ -52,6 +52,7 @@ jobs:
       GitHubAuthVariableGroup: rsg-bot
       AuthNuGetFeeds:
         - name: RocketSurgeonsGuild
+          source: https://nuget.pkg.github.com/RocketSurgeonsGuild/index.json
           username: $(GitHub.UserName)
           password: $(GitHub.Token)
       Configuration: $(Configuration)
