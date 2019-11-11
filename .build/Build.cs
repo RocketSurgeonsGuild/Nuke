@@ -8,6 +8,7 @@ using JetBrains.Annotations;
 [UnsetVisualStudioEnvironmentVariables]
 [PackageIcon("https://raw.githubusercontent.com/RocketSurgeonsGuild/graphics/master/png/social-square-thrust-rounded.png")]
 [PublicAPI]
+[EnsurePackageSourceHasCredentials("RocketSurgeonsGuild")]
 class Solution : DotNetCoreBuild, IDotNetCoreBuild
 {
     /// <summary>
