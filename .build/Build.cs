@@ -4,10 +4,10 @@ using Rocket.Surgery.Nuke.DotNetCore;
 using Rocket.Surgery.Nuke;
 using JetBrains.Annotations;
 
+[PublicAPI]
 [CheckBuildProjectConfigurations]
 [UnsetVisualStudioEnvironmentVariables]
 [PackageIcon("https://raw.githubusercontent.com/RocketSurgeonsGuild/graphics/master/png/social-square-thrust-rounded.png")]
-[PublicAPI]
 [EnsurePackageSourceHasCredentials("RocketSurgeonsGuild")]
 class Solution : DotNetCoreBuild, IDotNetCoreBuild
 {
