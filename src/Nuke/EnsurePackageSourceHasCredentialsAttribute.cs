@@ -37,9 +37,6 @@ namespace Rocket.Surgery.Nuke
             var settings = Settings.LoadDefaultSettings(NukeBuild.RootDirectory);
             var packageSourceProvider = new PackageSourceProvider(settings);
 
-            foreach (var item in executableTargets)
-                Logger.Warn(item.Name);
-
             var source = packageSourceProvider.LoadPackageSources().FirstOrDefault(x => x.Name.Equals(SourceName, StringComparison.OrdinalIgnoreCase));
             if (source == null)
             {
