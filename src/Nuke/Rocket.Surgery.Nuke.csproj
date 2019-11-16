@@ -5,7 +5,8 @@
     </PropertyGroup>
     <ItemGroup>
         <InternalsVisibleTo Include="Rocket.Surgery.Nuke.Tests" />
-        <PackageReference Include="Nuke.Common" />
+        <!-- <PackageReference Include="Nuke.Common" /> -->
+        <ProjectReference Include="../../../../../Github/nuke/nuke/source/Nuke.Common/Nuke.Common.csproj" />
         <PackageReference Include="YamlDotNet" />
         <PackageReference Include="Buildalyzer" />
 

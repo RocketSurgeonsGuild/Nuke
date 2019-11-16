@@ -11,7 +11,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Nuke.Common" />
+    <!-- <PackageReference Include="Nuke.Common" /> -->
+    <!-- <ProjectReference Include="../../../../Github/nuke/nuke/source/Nuke.Common/Nuke.Common.csproj" /> -->
+    <PackageReference Include="JetBrains.ReSharper.CommandLineTools" ExcludeAssets="All" />
     <PackageReference Include="GitVersion.Tool" ExcludeAssets="All" />
     <PackageReference Include="ReportGenerator" ExcludeAssets="All" />
     <ProjectReference Include="../src/Nuke/Rocket.Surgery.Nuke.csproj" />

@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Nuke.Common" />
+    <!-- <PackageReference Include="Nuke.Common" /> -->
   </ItemGroup>
 
   <ItemGroup>
