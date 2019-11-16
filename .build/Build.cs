@@ -1,3 +1,4 @@
+using System;
 using Nuke.Common;
 using Nuke.Common.Execution;
 using Rocket.Surgery.Nuke.DotNetCore;
@@ -27,14 +28,6 @@ class Solution : DotNetCoreBuild, IDotNetCoreBuild
         .DependsOn(Test)
         .DependsOn(Pack)
         ;
-
-    Target Cleanup => _ => _
-        .Executes(() =>
-        {
-            CleanupCode(x =>
-                x.SetOutput(ArtifactsDirectory / "cleanupcode.xml").SetTargetPath(Solution.Path)
-                    .AddExclude("*JetBrains.Annotations.cs"));
-        });
 
     public new Target Restore => _ => _.With(this, DotNetCoreBuild.Restore);
 

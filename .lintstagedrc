@@ -1,0 +1,3 @@
+{
+    "*.cs": "dotnet nuke lint --no-logo --lint-files"
+}
