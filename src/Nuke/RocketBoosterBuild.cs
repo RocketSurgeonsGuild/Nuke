@@ -259,6 +259,12 @@ namespace Rocket.Surgery.Nuke
         public string[] LintFiles { get; set; } = Array.Empty<string>();
 
         /// <summary>
+        /// The files to lint, if not given lints all files
+        /// </summary>
+        [Parameter("The profile to use for linting")]
+        public string LintProfile { get; set; } = "Full Cleanup";
+
+        /// <summary>
         /// Applies code cleanup tasks
         /// </summary>
         public Target Lint => _ => _
@@ -267,6 +273,7 @@ namespace Rocket.Surgery.Nuke
             {
                 CleanupCode(x => x
                     .SetTargetPath(Solution.Path)
+                    .SetProfile(LintProfile)
                     .AddInclude(LintFiles)
                 );
             });
