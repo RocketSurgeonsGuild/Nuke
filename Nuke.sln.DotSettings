@@ -175,7 +175,7 @@
       &lt;Entry.Match&gt;&#xD;
         &lt;And&gt;&#xD;
           &lt;Kind Is="Member" /&gt;&#xD;
-          &lt;ImplementsInterface Immediate="True" /&gt;&#xD;
+          &lt;ImplementsInterface /&gt;&#xD;
         &lt;/And&gt;&#xD;
       &lt;/Entry.Match&gt;&#xD;
       &lt;Entry.SortBy&gt;&#xD;
