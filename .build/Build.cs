@@ -28,6 +28,14 @@ class Solution : DotNetCoreBuild, IDotNetCoreBuild
         .DependsOn(Pack)
         ;
 
+    Target Cleanup => _ => _
+        .Executes(() =>
+        {
+            CleanupCode(x =>
+                x.SetOutput(ArtifactsDirectory / "cleanupcode.xml").SetTargetPath(Solution.Path)
+                    .AddExclude("*JetBrains.Annotations.cs"));
+        });
+
     public new Target Restore => _ => _.With(this, DotNetCoreBuild.Restore);
 
     public new Target Build => _ => _.With(this, DotNetCoreBuild.Build);
