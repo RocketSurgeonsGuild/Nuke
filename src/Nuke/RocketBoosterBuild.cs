@@ -25,6 +25,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Rocket.Surgery.Nuke.SyncPackages;
 using System;
+using Temp.CleanupCode;
+using static Temp.CleanupCode.CleanupCodeTasks;
+using System.Collections.Generic;
 
 namespace Rocket.Surgery.Nuke
 {
@@ -248,6 +251,32 @@ namespace Rocket.Surgery.Nuke
                 await PackageSync.RemoveExtraPackages(Solution.Path, RootDirectory / "Packages.props", CancellationToken.None).ConfigureAwait(false);
                 await Task.Delay(300).ConfigureAwait(false);
                 await PackageSync.AddMissingPackages(Solution.Path, RootDirectory / "Packages.props", CancellationToken.None).ConfigureAwait(false);
+            });
+
+        /// <summary>
+        /// The files to lint, if not given lints all files
+        /// </summary>
+        [Parameter("The files to lint, if not given lints all files", Separator = " ")]
+        public string[] LintFiles { get; set; } = Array.Empty<string>();
+
+        /// <summary>
+        /// The files to lint, if not given lints all files
+        /// </summary>
+        [Parameter("The profile to use for linting")]
+        public string LintProfile { get; set; } = "Full Cleanup";
+
+        /// <summary>
+        /// Applies code cleanup tasks
+        /// </summary>
+        public Target Lint => _ => _
+            .Requires(() => LintFiles)
+            .Executes(() =>
+            {
+                CleanupCode(x => x
+                    .SetTargetPath(Solution.Path)
+                    .SetProfile(LintProfile)
+                    .AddInclude(LintFiles)
+                );
             });
     }
 

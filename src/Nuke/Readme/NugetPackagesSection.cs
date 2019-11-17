@@ -39,7 +39,11 @@ namespace Rocket.Surgery.Nuke.Readme
         }
         public string GetResult(IDictionary<string, object> config, IMarkdownReferences references, string packageName)
         {
-            var hash = Convert.ToBase64String(MD5.Create().ComputeHash(Encoding.ASCII.GetBytes(packageName))).Replace("=", "").Substring(10).ToLower();
+            using var hasher = MD5.Create();
+            var hash = Convert.ToBase64String(hasher.ComputeHash(Encoding.ASCII.GetBytes(packageName)))
+                .Replace("=", "")
+                .Substring(10)
+                .ToLowerInvariant();
             var nugetUrlReference = references.AddReference($"nuget-{hash}", NugetUrl(packageName));
             var nugetVersionBadge = references.AddReference($"nuget-version-{hash}-badge", NuGetVersionBadge(packageName), "NuGet Version");
             var nugetDownloadsBadge = references.AddReference($"nuget-downloads-{hash}-badge", NuGetDownloadsBadge(packageName), "NuGet Downloads");

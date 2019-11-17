@@ -1,3 +1,4 @@
+using System;
 using Nuke.Common;
 using Nuke.Common.Execution;
 using Rocket.Surgery.Nuke.DotNetCore;
@@ -9,6 +10,7 @@ using JetBrains.Annotations;
 [UnsetVisualStudioEnvironmentVariables]
 [PackageIcon("https://raw.githubusercontent.com/RocketSurgeonsGuild/graphics/master/png/social-square-thrust-rounded.png")]
 [EnsurePackageSourceHasCredentials("RocketSurgeonsGuild")]
+[EnsureGitHooks(GitHook.PreCommit)]
 class Solution : DotNetCoreBuild, IDotNetCoreBuild
 {
     /// <summary>
