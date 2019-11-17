@@ -6,10 +6,18 @@
     <GlobalPackageReference Include="Rocket.Surgery.MSBuild.JetBrains.Annotations" Version="0.1.0" Condition="'$(MSBuildProjectName)'!='.build'" />
     <GlobalPackageReference Include="Rocket.Surgery.MSBuild.Metadata" Version="0.1.0" />
     <GlobalPackageReference Include="Rocket.Surgery.MSBuild.SourceLink" Version="0.1.0" />
-    <!-- <GlobalPackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.3" /> -->
+    <GlobalPackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.7" />
+    <GlobalPackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="2.9.7" />
     <GlobalPackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0-preview.2" />
     <GlobalPackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19554-01" />
     <GlobalPackageReference Include="Roslynator.Analyzers" Version="2.2.0" />
+  </ItemGroup>
+  <!-- .editorconfig analyzer work around -->
+  <PropertyGroup>
+    <SkipDefaultEditorConfigAsAdditionalFile>true</SkipDefaultEditorConfigAsAdditionalFile>
+  </PropertyGroup>
+  <ItemGroup Condition="Exists('$(MSBuildThisFileDirectory)\.editorconfig')">
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)\.editorconfig" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Buildalyzer" Version="2.4.0" />
