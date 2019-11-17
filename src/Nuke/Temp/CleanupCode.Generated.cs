@@ -1,5 +1,5 @@
 // Generated from https://github.com/nuke-build/nuke/blob/master/build/specifications/CleanupCode.json
-
+#pragma warning disable CS1591
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Nuke.Common;

@@ -9,6 +9,7 @@
         <!-- <ProjectReference Include="../../../../../Github/nuke/nuke/source/Nuke.Common/Nuke.Common.csproj" /> -->
         <PackageReference Include="YamlDotNet" />
         <PackageReference Include="Buildalyzer" />
+        <PackageReference Include="Humanizer.Core" />
 
         <PackageReference Include="NuGet.Common" />
         <PackageReference Include="NuGet.Configuration" />

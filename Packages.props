@@ -21,6 +21,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Buildalyzer" Version="2.4.0" />
+    <PackageReference Update="Humanizer.Core" Version="2.7.9" />
     <PackageReference Update="NuGet.Common" Version="5.3.1" />
     <PackageReference Update="NuGet.Configuration" Version="5.3.1" />
     <PackageReference Update="NuGet.Frameworks" Version="5.3.1" />

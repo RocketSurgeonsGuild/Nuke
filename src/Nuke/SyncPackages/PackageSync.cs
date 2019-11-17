@@ -65,7 +65,7 @@ namespace Rocket.Surgery.Nuke.SyncPackages
             providers.AddRange(Repository.Provider.GetCoreV3());  // Add v3 API support
             var packageSource = new PackageSource("https://api.nuget.org/v3/index.json");
             var sourceRepository = new SourceRepository(packageSource, providers);
-            var sourceCacheContext = new SourceCacheContext();
+            using var sourceCacheContext = new SourceCacheContext();
 
             foreach (var item in missingPackages.OrderBy(x => x))
             {

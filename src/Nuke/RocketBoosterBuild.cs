@@ -27,6 +27,7 @@ using Rocket.Surgery.Nuke.SyncPackages;
 using System;
 using Temp.CleanupCode;
 using static Temp.CleanupCode.CleanupCodeTasks;
+using System.Collections.Generic;
 
 namespace Rocket.Surgery.Nuke
 {
