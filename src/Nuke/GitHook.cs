@@ -98,6 +98,6 @@ namespace Rocket.Surgery.Nuke
         /// <summary>
         /// update
         /// </summary>
-        Update,
+        Update
     }
 }

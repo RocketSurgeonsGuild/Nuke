@@ -1,9 +1,7 @@
-using Buildalyzer;
-using Nuke.Common.ProjectModel;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using Buildalyzer;
+using Nuke.Common.ProjectModel;
 
 namespace Rocket.Surgery.Nuke
 {
@@ -13,7 +11,8 @@ namespace Rocket.Surgery.Nuke
     public static class SolutionExtensions
     {
         /// <summary>
-        /// Gets the <see cref="Project"/> that are marked packable.</summary>
+        /// Gets the <see cref="Project" /> that are marked packable.
+        /// </summary>
         /// <param name="solution">The solution.</param>
         /// <returns>An enumerable of projects.</returns>
         public static IEnumerable<Project> WherePackable(this Solution solution)
@@ -21,12 +20,17 @@ namespace Rocket.Surgery.Nuke
             var am = new AnalyzerManager(solution.Path.ToString(), new AnalyzerManagerOptions());
 
             return solution.AllProjects
-                .Where(x =>
-                {
-                    var projectResults = am.GetProject(x.Path.ToString()).Build().First();
-                    return bool.TryParse(projectResults.GetProperty("IsPackable") ?? "false", out var b) ? b : false;
-                })
-                .ToArray();
+               .Where(
+                    x =>
+                    {
+                        var projectResults = am.GetProject(x.Path.ToString()).Build().First();
+                        return bool.TryParse(
+                            projectResults.GetProperty("IsPackable") ?? "false",
+                            out var b
+                        ) && b;
+                    }
+                )
+               .ToArray();
         }
 
         /// <summary>
@@ -35,7 +39,11 @@ namespace Rocket.Surgery.Nuke
         /// <param name="solution">The solution.</param>
         /// <param name="testProjectNameSchema">The test project name schema.</param>
         /// <returns></returns>
-        public static IEnumerable<Project> GetTestProjects(this Solution solution, string testProjectNameSchema = "Tests") =>
-            solution.AllProjects.Where(x => x.Name.Contains(testProjectNameSchema));
+        public static IEnumerable<Project> GetTestProjects(
+            this Solution solution,
+            string testProjectNameSchema = "Tests"
+#pragma warning disable CA1307 // Specify StringComparison
+        ) => solution.AllProjects.Where(x => x.Name.Contains(testProjectNameSchema));
+#pragma warning restore CA1307 // Specify StringComparison
     }
 }

@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
-using JetBrains.Annotations;
 using Nuke.Common;
 using Nuke.Common.Tooling;
+#pragma warning disable CA2211 // Non-constant fields should not be visible
 
 namespace Rocket.Surgery
 {
@@ -57,12 +54,15 @@ namespace Rocket.Surgery
             new XamarinConfiguration { Value = nameof(Store) };
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="XamarinConfiguration"/> to <see cref="System.String"/>.
+        /// Performs an implicit conversion from <see cref="XamarinConfiguration" /> to <see cref="System.String" />.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
         /// <returns>
         /// The result of the conversion.
         /// </returns>
         public static implicit operator string(XamarinConfiguration configuration) => configuration.Value;
+
+        /// <inheritdoc />
+        public override string ToString() => this;
     }
 }

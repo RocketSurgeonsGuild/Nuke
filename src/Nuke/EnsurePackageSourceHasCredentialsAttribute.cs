@@ -21,10 +21,7 @@ namespace Rocket.Surgery.Nuke
         /// Ensures that the package source name has credentials set
         /// This is useful to ensure that credentials are defined on a users local environment
         /// </summary>
-        public EnsurePackageSourceHasCredentialsAttribute(string sourceName)
-        {
-            SourceName = sourceName;
-        }
+        public EnsurePackageSourceHasCredentialsAttribute(string sourceName) => SourceName = sourceName;
 
         /// <summary>
         /// The nuget source name
@@ -37,17 +34,20 @@ namespace Rocket.Surgery.Nuke
             var settings = Settings.LoadDefaultSettings(NukeBuild.RootDirectory);
             var packageSourceProvider = new PackageSourceProvider(settings);
 
-            var source = packageSourceProvider.LoadPackageSources().FirstOrDefault(x => x.Name.Equals(SourceName, StringComparison.OrdinalIgnoreCase));
+            var source = packageSourceProvider.LoadPackageSources()
+               .FirstOrDefault(x => x.Name.Equals(SourceName, StringComparison.OrdinalIgnoreCase));
             if (source == null)
             {
-                var error = $"NuGet Package Source {SourceName} could not be found. This is required for the build to complete.";
+                var error =
+                    $"NuGet Package Source {SourceName} could not be found. This is required for the build to complete.";
                 Logger.Error(error);
                 throw new Exception(error);
             }
 
             if (source.Credentials?.IsValid() != true)
             {
-                var error = $"NuGet Package Source {SourceName} does not have any credentials defined.  Please configure the credentials for {SourceName} to build.";
+                var error =
+                    $"NuGet Package Source {SourceName} does not have any credentials defined.  Please configure the credentials for {SourceName} to build.";
                 Logger.Error(error);
                 throw new Exception(error);
             }

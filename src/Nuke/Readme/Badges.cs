@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Text;
 using Nuke.Common.Utilities.Collections;
 
@@ -30,22 +29,30 @@ namespace Rocket.Surgery.Nuke.Readme
         public string ConfigKey => string.Empty;
 
         /// <inheritdoc />
-        public string Process(IDictionary<string, object> config, IMarkdownReferences references, RocketBoosterBuild build)
+        public string Process(
+            IDictionary<string, object> config,
+            IMarkdownReferences references,
+            RocketBoosterBuild build
+        )
         {
             var sb = new StringBuilder();
             foreach (var section in _sections)
             {
-                var subConfig = string.IsNullOrEmpty(section.ConfigKey) ? config.ToDictionary(x => (object)x.Key, x => x.Value) : config.TryGetValue(section.ConfigKey, out var o) ? o as IDictionary<object, object> : null;
+                var subConfig = string.IsNullOrEmpty(section.ConfigKey) ?
+                    config.ToDictionary(x => (object)x.Key, x => x.Value) :
+                    config.TryGetValue(section.ConfigKey, out var o) ? o as IDictionary<object, object> : null;
                 // Assume if not configured, it will never be able to be rendered
                 if (subConfig is null)
                 {
                     continue;
                 }
+
                 var result = section.Process(subConfig, references, build);
                 if (string.IsNullOrWhiteSpace(result))
                 {
                     continue;
                 }
+
                 sb.AppendLine(result);
             }
 

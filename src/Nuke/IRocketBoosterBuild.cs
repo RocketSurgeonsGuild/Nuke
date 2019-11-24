@@ -2,8 +2,8 @@ using Nuke.Common;
 using Nuke.Common.Git;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tools.GitVersion;
-using static Nuke.Common.IO.PathConstruction;
 using Rocket.Surgery.Nuke.Readme;
+using static Nuke.Common.IO.PathConstruction;
 
 namespace Rocket.Surgery.Nuke
 {
@@ -33,7 +33,8 @@ namespace Rocket.Surgery.Nuke
         GitRepository GitRepository { get; }
 
         /// <summary>
-        /// The Git Version information either computed by GitVersion itself, or as defined by environment variables of the format `GITVERSION_*`
+        /// The Git Version information either computed by GitVersion itself, or as defined by environment variables of the format
+        /// `GITVERSION_*`
         /// </summary>
         GitVersion GitVersion { get; }
 
@@ -119,7 +120,8 @@ namespace Rocket.Surgery.Nuke
         Target Generate_Code_Coverage_Reports { get; }
 
         /// <summary>
-        /// Loops through the Readme to update sections that are automated to give nuget packages, build histories and more, while keeping the rest of the readme correct.
+        /// Loops through the Readme to update sections that are automated to give nuget packages, build histories and more, while
+        /// keeping the rest of the readme correct.
         /// </summary>
         Target GenerateReadme { get; }
 
@@ -129,5 +131,4 @@ namespace Rocket.Surgery.Nuke
         /// </summary>
         Target SyncVersions { get; }
     }
-
 }

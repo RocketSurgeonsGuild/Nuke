@@ -15,6 +15,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+#pragma warning disable RS0026 // Do not add multiple public overloads with optional parameters
 
 namespace Temp.CleanupCode
 {
@@ -33,10 +34,10 @@ namespace Temp.CleanupCode
             ToolPathResolver.TryGetEnvironmentExecutable("CLEANUPCODE_EXE") ??
             ToolPathResolver.GetPackageExecutable("JetBrains.ReSharper.CommandLineTools", GetPackageExecutable());
         public static Action<OutputType, string> CleanupCodeLogger { get; set; } = ProcessTasks.DefaultLogger;
-        /// <summary>
-        ///   <p>CleanupCode is a free command-line tool that can perform code cleanup to instantly eliminate code style violations in a project or solution and ensure a uniform code base.</p>
-        ///   <p>For more details, visit the <a href="https://www.jetbrains.com/help/resharper/CleanupCode.html">official website</a>.</p>
-        /// </summary>
+                              /// <summary>
+                              ///   <p>CleanupCode is a free command-line tool that can perform code cleanup to instantly eliminate code style violations in a project or solution and ensure a uniform code base.</p>
+                              ///   <p>For more details, visit the <a href="https://www.jetbrains.com/help/resharper/CleanupCode.html">official website</a>.</p>
+                              /// </summary>
         public static IReadOnlyCollection<Output> CleanupCode(string arguments, string workingDirectory = null, IReadOnlyDictionary<string, string> environmentVariables = null, int? timeout = null, bool? logOutput = null, bool? logInvocation = null, Func<string, string> outputFilter = null)
         {
             var process = ProcessTasks.StartProcess(CleanupCodePath, arguments, workingDirectory, environmentVariables, timeout, logOutput, logInvocation, CleanupCodeLogger, outputFilter);

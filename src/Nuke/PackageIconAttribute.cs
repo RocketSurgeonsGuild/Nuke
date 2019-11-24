@@ -1,5 +1,4 @@
-using Nuke.Common;
-using System;
+using System.IO;
 using JetBrains.Annotations;
 using static Nuke.Common.IO.PathConstruction;
 
@@ -18,9 +17,7 @@ namespace Rocket.Surgery.Nuke
         /// <param name="url">The Url to download</param>
         /// <param name="filePath">The file path to download to, defaults to TemporaryDirectory / packageicon.[ext]</param>
         public PackageIconAttribute(string url, string? filePath = null)
-            : base(url, filePath == null ? ("packageicon" + System.IO.Path.GetExtension(url)) : (AbsolutePath)filePath)
-        {
-            Type = "Package Icon";
-        }
+            : base(url, filePath == null ? "packageicon" + Path.GetExtension(url) : (AbsolutePath)filePath)
+            => Type = "Package Icon";
     }
 }

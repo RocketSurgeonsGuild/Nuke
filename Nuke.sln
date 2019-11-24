@@ -27,25 +27,25 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rocket.Surgery.Nuke.DotNetC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rocket.Surgery.Nuke.MsBuild", "src\Nuke.MsBuild\Rocket.Surgery.Nuke.MsBuild.csproj", "{99357C68-3D56-4707-A489-8D223E643FB7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rocket.Surgery.Nuke.AzureDevOps", "src\Rocket.Surgery.Nuke.AzureDevOps\Rocket.Surgery.Nuke.AzureDevOps.csproj", "{9311CC13-B7F8-4210-9F2E-86B4C278F90E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rocket.Surgery.Nuke.AzureDevOps", "src\Rocket.Surgery.Nuke.AzureDevOps\Rocket.Surgery.Nuke.AzureDevOps.csproj", "{9311CC13-B7F8-4210-9F2E-86B4C278F90E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rocket.Surgery.Nuke.Xamarin", "src\Nuke.Xamarin\Rocket.Surgery.Nuke.Xamarin.csproj", "{4EF107CD-1AAA-4C78-8201-5CCD1426449A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".solution", ".solution", "{096E2487-547C-4DCF-977A-DA9E1C75B6BC}"
-ProjectSection(SolutionItems) = preProject
-	azure-pipelines.yml = azure-pipelines.yml
-	build.ps1 = build.ps1
-	build.sh = build.sh
-	Directory.Build.props = Directory.Build.props
-	Directory.Build.targets = Directory.Build.targets
-	GitReleaseManager.yaml = GitReleaseManager.yaml
-	GitVersion.yml = GitVersion.yml
-	LICENSE = LICENSE
-	NuGet.config = NuGet.config
-	omnisharp.json = omnisharp.json
-	Packages.props = Packages.props
-	Readme.md = Readme.md
-EndProjectSection
+	ProjectSection(SolutionItems) = preProject
+		azure-pipelines.yml = azure-pipelines.yml
+		build.ps1 = build.ps1
+		build.sh = build.sh
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+		GitReleaseManager.yaml = GitReleaseManager.yaml
+		GitVersion.yml = GitVersion.yml
+		LICENSE = LICENSE
+		NuGet.config = NuGet.config
+		omnisharp.json = omnisharp.json
+		Packages.props = Packages.props
+		Readme.md = Readme.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

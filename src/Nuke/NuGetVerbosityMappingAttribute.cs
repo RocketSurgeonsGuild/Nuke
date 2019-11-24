@@ -1,8 +1,5 @@
 using System;
-using System.Text;
 using Nuke.Common.Tooling;
-using Nuke.Common.Tools.DotNet;
-using Nuke.Common.Tools.MSBuild;
 using Nuke.Common.Tools.NuGet;
 
 namespace Rocket.Surgery.Nuke
@@ -10,14 +7,14 @@ namespace Rocket.Surgery.Nuke
     /// <summary>
     /// Mapping for nuget Verbosity
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class)]
     public class NuGetVerbosityMappingAttribute : VerbosityMappingAttribute
     {
         /// <summary>
         /// Mapping for nuget Verbosity
         /// </summary>
         public NuGetVerbosityMappingAttribute()
-                    : base(typeof(NuGetVerbosity))
+            : base(typeof(NuGetVerbosity))
         {
             Quiet = nameof(NuGetVerbosity.Quiet);
             Minimal = nameof(NuGetVerbosity.Normal);

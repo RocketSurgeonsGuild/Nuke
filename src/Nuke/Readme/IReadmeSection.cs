@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Dynamic;
 
 namespace Rocket.Surgery.Nuke.Readme
 {
@@ -12,6 +11,7 @@ namespace Rocket.Surgery.Nuke.Readme
         /// The name of the section
         /// </summary>
         string Name { get; }
+
         /// <summary>
         /// The configuration key, if you expect to get configuration from the yaml block.
         /// </summary>

@@ -1,18 +1,18 @@
-﻿using Nuke.Common;
-using Nuke.Common.Execution;
-using System;
-using static Nuke.Common.IO.FileSystemTasks;
+﻿using System;
 using System.Collections.Generic;
-using Nuke.Common.Tooling;
 using System.Linq;
 using Humanizer;
+using Nuke.Common;
+using Nuke.Common.Execution;
+using Nuke.Common.Tooling;
+using static Nuke.Common.IO.FileSystemTasks;
 
 namespace Rocket.Surgery.Nuke
 {
     /// <summary>
     /// Ensures that the given git hooks are defined in the .git directory
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
     public class EnsureGitHooksAttribute : Attribute, IOnBeforeLogo
     {
         /// <summary>
@@ -21,7 +21,8 @@ namespace Rocket.Surgery.Nuke
         public EnsureGitHooksAttribute(params GitHook[] hookNames)
         {
 #pragma warning disable CA1307, CA1308
-            HookNames = hookNames.Select(x => x.ToString().Humanize().Replace(" ", "_").Dasherize().ToLowerInvariant()).ToArray();
+            HookNames = hookNames.Select(x => x.ToString().Humanize().Replace(" ", "_").Dasherize().ToLowerInvariant())
+               .ToArray();
 #pragma warning restore CA1307, CA1308
         }
 
@@ -33,7 +34,10 @@ namespace Rocket.Surgery.Nuke
         /// <inheritdoc />
         public void OnBeforeLogo(NukeBuild build, IReadOnlyCollection<ExecutableTarget> executableTargets)
         {
-            if (!NukeBuild.IsLocalBuild) return;
+            if (!NukeBuild.IsLocalBuild)
+            {
+                return;
+            }
             // We only care on local machines
 
             if (HookNames.Any(hook => !FileExists(NukeBuild.RootDirectory / $".git/hooks/{hook}")))
@@ -43,7 +47,8 @@ namespace Rocket.Surgery.Nuke
                 if (FileExists(NukeBuild.RootDirectory / "package.json"))
                 {
                     Logger.Info("package.json found running npm install to see if that installs any hooks");
-                    ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npm"), "install").AssertWaitForExit().AssertZeroExitCode();
+                    ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npm"), "install").AssertWaitForExit()
+                       .AssertZeroExitCode();
                 }
             }
 
@@ -54,7 +59,6 @@ namespace Rocket.Surgery.Nuke
                     Logger.Info($"Was unable to install {hook} hook.");
                 }
             }
-
         }
     }
 }

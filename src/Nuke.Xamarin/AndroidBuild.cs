@@ -1,7 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Nuke.Common;
+#pragma warning disable CA1822
 
 namespace Rocket.Surgery.Nuke.Xamarin
 {
