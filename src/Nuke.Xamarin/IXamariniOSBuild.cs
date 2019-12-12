@@ -1,4 +1,4 @@
-﻿using Microsoft.Build.Logging.StructuredLogger;
+﻿using Nuke.Common;
 
 namespace Rocket.Surgery.Nuke.Xamarin
 {
