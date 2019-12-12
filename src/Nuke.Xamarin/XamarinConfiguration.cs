@@ -1,9 +1,10 @@
 using System.ComponentModel;
 using Nuke.Common;
 using Nuke.Common.Tooling;
+
 #pragma warning disable CA2211 // Non-constant fields should not be visible
 
-namespace Rocket.Surgery
+namespace Rocket.Surgery.Nuke.Xamarin
 {
     /// <summary>
     /// Represents xamarin build configuration.

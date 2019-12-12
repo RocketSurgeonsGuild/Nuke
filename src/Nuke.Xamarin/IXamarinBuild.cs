@@ -21,5 +21,10 @@ namespace Rocket.Surgery.Nuke.Xamarin
         /// xunit test
         /// </summary>
         Target Test { get; }
+
+        /// <summary>
+        /// package the application
+        /// </summary>
+        Target Package { get; }
     }
 }
