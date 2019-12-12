@@ -73,7 +73,7 @@ namespace Rocket.Surgery.Nuke.Xamarin
             });
 
         /// <summary>
-        /// package binary
+        /// package
         /// </summary>
         public static ITargetDefinition Package(ITargetDefinition _, IXamarinBuild build) => _
            .DependsOn(build.Test)
