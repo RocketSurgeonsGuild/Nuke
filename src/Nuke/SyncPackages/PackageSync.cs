@@ -12,6 +12,7 @@ using NuGet.Configuration;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 using Nuke.Common;
+using Nuke.Common.IO;
 using static Nuke.Common.IO.PathConstruction;
 
 namespace Rocket.Surgery.Nuke.SyncPackages

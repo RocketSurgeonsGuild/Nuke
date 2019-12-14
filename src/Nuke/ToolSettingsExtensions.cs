@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using Newtonsoft.Json.Linq;
 using Nuke.Common;
+using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Tools.MSBuild;
