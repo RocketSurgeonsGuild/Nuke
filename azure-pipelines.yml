@@ -64,5 +64,4 @@ jobs:
         - "2.x"
         - "3.x"
       NuGetVersion: "5.3.1"
-      BuildSteps:
-        - template: ./azure-pipelines.nuke.yml
+      StepTemplate: ./azure-pipelines.nuke.yml
