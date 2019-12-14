@@ -204,7 +204,7 @@ namespace Rocket.Surgery.Nuke
 #pragma warning restore CA1308
                 using (writer.WriteBlock($"- task: DotNetCoreCLI@2"))
                 {
-                    writer.WriteLine("displayName: 'dotnet tool -g upgrade Nuke.GlobalTool'");
+                    writer.WriteLine("displayName: 'install nuke'");
                     using (writer.WriteBlock("inputs:"))
                     {
                         writer.WriteLine("command: custom");

@@ -21,7 +21,7 @@ parameters:
   Verbosity: 'Normal'
 steps:
   - task: DotNetCoreCLI@2
-    displayName: 'dotnet tool -g upgrade Nuke.GlobalTool'
+    displayName: 'install nuke'
     inputs:
       command: custom
       custom: tool
