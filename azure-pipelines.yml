@@ -44,8 +44,14 @@ variables:
     value: "true"
   - name: CodeCovToken
     value: 'c93f6719-da50-4d00-ba2b-b73fd95239e0'
-
   - group: rsg-bot
+
+parameters:
+  AuthNuGetFeeds:
+    - name: RocketSurgeonsGuild
+      source: https://nuget.pkg.github.com/RocketSurgeonsGuild/index.json
+      username: $(GitHub.UserName)
+      password: $(GitHub.Token)
 
 jobs:
   - template: jobs/gitversion.yml@rsg
@@ -59,16 +65,7 @@ jobs:
       GitHubPackages: true
       GitHubAuthVariableGroup: rsg-bot
       Postfix: " - Windows"
-      AuthNuGetFeeds:
-        - name: RocketSurgeonsGuild
-          source: https://nuget.pkg.github.com/RocketSurgeonsGuild/index.json
-          username: $(GitHub.UserName)
-          password: $(GitHub.Token)
-      DotNetSdk:
-        - "2.x"
-        - "3.x"
-      NuGetVersion: "5.3.1"
-      PublishNuGetPackages: 'Windows'
+      AuthNuGetFeeds: ${{ parameters.AuthNuGetFeeds }}
 
   - job: Build
     dependsOn:
@@ -91,7 +88,6 @@ jobs:
       vmImage: $(ImageName)
     steps:
       - template: support/mono.yml@rsg
-        parameters:
       - template: support/download-release-notes.yml@rsg
         parameters:
           EnableReleaseNotes: true
@@ -101,12 +97,10 @@ jobs:
 
       - template: support/install-dotnet.yml@rsg
         parameters:
-          DotNetSdk: ${{ parameters.DotNetSdk }}
-          AuthNuGetFeeds:
-            - name: RocketSurgeonsGuild
-              source: https://nuget.pkg.github.com/RocketSurgeonsGuild/index.json
-              username: $(GitHub.UserName)
-              password: $(GitHub.Token)
+          DotNetSdk:
+            - "2.x"
+            - "3.x"
+          AuthNuGetFeeds: ${{ parameters.AuthNuGetFeeds }}
 
       - task: DotNetCoreCLI@2
         displayName: "dotnet tool restore"
