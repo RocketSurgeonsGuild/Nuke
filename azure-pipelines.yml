@@ -135,5 +135,5 @@ jobs:
           Artifacts: $(Artifacts)
           Configuration: $(Configuration)
           Coverage: $(Coverage)
-          # Postfix: ' - $(BuildName)'
+          Postfix: ' - $(BuildName)'
           PublishVSTest: true
