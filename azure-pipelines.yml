@@ -65,7 +65,11 @@ jobs:
       GitHubPackages: true
       GitHubAuthVariableGroup: rsg-bot
       Postfix: " - Windows"
-      AuthNuGetFeeds: ${{ parameters.AuthNuGetFeeds }}
+      AuthNuGetFeeds:
+        - name: RocketSurgeonsGuild
+          source: https://nuget.pkg.github.com/RocketSurgeonsGuild/index.json
+          username: $(GitHub.UserName)
+          password: $(GitHub.Token)
 
   - job: Build
     dependsOn:
@@ -100,7 +104,11 @@ jobs:
           DotNetSdk:
             - "2.x"
             - "3.x"
-          AuthNuGetFeeds: ${{ parameters.AuthNuGetFeeds }}
+          AuthNuGetFeeds:
+            - name: RocketSurgeonsGuild
+              source: https://nuget.pkg.github.com/RocketSurgeonsGuild/index.json
+              username: $(GitHub.UserName)
+              password: $(GitHub.Token)
 
       - task: DotNetCoreCLI@2
         displayName: "dotnet tool restore"
