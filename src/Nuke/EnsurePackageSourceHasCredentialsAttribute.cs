@@ -230,7 +230,7 @@ namespace Rocket.Surgery.Nuke
 
         public void Write(CustomFileWriter writer, string parameters)
         {
-            using (writer.WriteBlock($"- script: nuke {InvokedTargets.JoinSpace()} --skip --no-logo {parameters}".TrimEnd()))
+            using (writer.WriteBlock($"- script: nuke {InvokedTargets.JoinSpace()} --skip {parameters}".TrimEnd()))
             {
                 writer.WriteLine($"displayName: {DisplayName.SingleQuote()}");
             }
