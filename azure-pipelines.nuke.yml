@@ -25,7 +25,7 @@ steps:
     inputs:
       command: custom
       custom: tool
-      arguments: 'upgrade -g Nuke.GlobalTool'
+      arguments: 'update -g Nuke.GlobalTool'
   - script: nuke DotnetToolRestore BuildVersion Restore --skip --no-logo --configuration '${{ parameters.Configuration }}' --artifacts '${{ parameters.Artifacts }}' --coverage '${{ parameters.Coverage }}' --verbosity '${{ parameters.Verbosity }}'
     displayName: 'Restore'
   - script: nuke Build --skip --no-logo --configuration '${{ parameters.Configuration }}' --artifacts '${{ parameters.Artifacts }}' --coverage '${{ parameters.Coverage }}' --verbosity '${{ parameters.Verbosity }}'

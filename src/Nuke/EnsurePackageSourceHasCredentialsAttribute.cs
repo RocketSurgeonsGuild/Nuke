@@ -209,7 +209,7 @@ namespace Rocket.Surgery.Nuke
                     {
                         writer.WriteLine("command: custom");
                         writer.WriteLine("custom: tool");
-                        writer.WriteLine("arguments: 'upgrade -g Nuke.GlobalTool'");
+                        writer.WriteLine("arguments: 'update -g Nuke.GlobalTool'");
                     }
                 }
 
