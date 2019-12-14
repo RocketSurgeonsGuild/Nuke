@@ -119,7 +119,7 @@ namespace Rocket.Surgery.Nuke
 
             var lookupTable = new LookupTable<ExecutableTarget, AzurePipelinesStep>();
             var steps = relevantTargets
-               .Select(x => ( ExecutableTarget: x, Job: GetStep(x, lookupTable) ))
+               .Select(x => (ExecutableTarget: x, Job: GetStep(x, lookupTable)))
                .ForEachLazy(x => lookupTable.Add(x.ExecutableTarget, x.Job))
                .Select(x => x.Job).ToArray();
 
@@ -186,19 +186,16 @@ namespace Rocket.Surgery.Nuke
         {
             if (Parameters.Length > 0)
             {
-                using (writer.WriteBlock($"- parameters:"))
+                using (writer.WriteBlock($"parameters:"))
                 {
-                    using (writer.Indent())
+                    foreach (var item in Parameters)
                     {
-                        foreach (var item in Parameters)
-                        {
-                            item.Write(writer);
-                        }
+                        item.Write(writer);
                     }
                 }
             }
 
-            using (writer.WriteBlock($"- steps:"))
+            using (writer.WriteBlock($"steps:"))
             {
 #pragma warning disable CA1308
                 var parameters = Parameters.Select(z => $"--{z.Name.ToLowerInvariant()} '${{{{ parameters.{z.Name} }}}}'")

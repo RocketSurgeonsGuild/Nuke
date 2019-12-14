@@ -4,18 +4,18 @@ trigger:
     include:
       - master
       - refs/tags/*
-  # paths:
-  #   exclude:
-  #   - '**/*.md'
-  #   - '.appveyor.yml'
-  #   - '.codecov.yml'
-  #   - 'GitVersion.yml'
-  #   - 'GitReleaseManager.yaml'
-  #   - .vscode/*
-  #   - .git*
-  #   - .editorconfig
-  #   - .nuke
-  #   - LICENSE
+  paths:
+    exclude:
+    - '**/*.md'
+    - '.appveyor.yml'
+    - '.codecov.yml'
+    - 'GitVersion.yml'
+    - 'GitReleaseManager.yaml'
+    - .vscode/*
+    - .git*
+    - .editorconfig
+    - .nuke
+    - LICENSE
 
 pr:
   autoCancel: true

@@ -14,23 +14,23 @@
 # </auto-generated>
 # ------------------------------------------------------------------------------
 
-- parameters:
-    Configuration: 'Release'
-    Artifacts: ''
-    Coverage: ''
-    Verbosity: 'Normal'
-- steps:
+parameters:
+  Configuration: 'Release'
+  Artifacts: ''
+  Coverage: ''
+  Verbosity: 'Normal'
+steps:
   - task: DotNetCoreCLI@2
     displayName: 'dotnet tool -g upgrade Nuke.GlobalTool'
     inputs:
       command: custom
       custom: tool
       arguments: 'upgrade -g Nuke.GlobalTool'
-  - script: nuke DotnetToolRestore BuildVersion Restore --skip --no-logo --configuration ${{ parameters.Configuration }} --artifacts ${{ parameters.Artifacts }} --coverage ${{ parameters.Coverage }} --verbosity ${{ parameters.Verbosity }}
+  - script: nuke DotnetToolRestore BuildVersion Restore --skip --no-logo --configuration '${{ parameters.Configuration }}' --artifacts '${{ parameters.Artifacts }}' --coverage '${{ parameters.Coverage }}' --verbosity '${{ parameters.Verbosity }}'
     displayName: 'Restore'
-  - script: nuke Build --skip --no-logo --configuration ${{ parameters.Configuration }} --artifacts ${{ parameters.Artifacts }} --coverage ${{ parameters.Coverage }} --verbosity ${{ parameters.Verbosity }}
+  - script: nuke Build --skip --no-logo --configuration '${{ parameters.Configuration }}' --artifacts '${{ parameters.Artifacts }}' --coverage '${{ parameters.Coverage }}' --verbosity '${{ parameters.Verbosity }}'
     displayName: 'Build'
-  - script: nuke Generate_Code_Coverage_Reports Test --skip --no-logo --configuration ${{ parameters.Configuration }} --artifacts ${{ parameters.Artifacts }} --coverage ${{ parameters.Coverage }} --verbosity ${{ parameters.Verbosity }}
+  - script: nuke Generate_Code_Coverage_Reports Test --skip --no-logo --configuration '${{ parameters.Configuration }}' --artifacts '${{ parameters.Artifacts }}' --coverage '${{ parameters.Coverage }}' --verbosity '${{ parameters.Verbosity }}'
     displayName: 'Test'
-  - script: nuke Pack --skip --no-logo --configuration ${{ parameters.Configuration }} --artifacts ${{ parameters.Artifacts }} --coverage ${{ parameters.Coverage }} --verbosity ${{ parameters.Verbosity }}
+  - script: nuke Pack --skip --no-logo --configuration '${{ parameters.Configuration }}' --artifacts '${{ parameters.Artifacts }}' --coverage '${{ parameters.Coverage }}' --verbosity '${{ parameters.Verbosity }}'
     displayName: 'Pack'
