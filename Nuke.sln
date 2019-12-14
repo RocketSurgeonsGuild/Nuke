@@ -27,7 +27,25 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rocket.Surgery.Nuke.DotNetC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rocket.Surgery.Nuke.MsBuild", "src\Nuke.MsBuild\Rocket.Surgery.Nuke.MsBuild.csproj", "{99357C68-3D56-4707-A489-8D223E643FB7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rocket.Surgery.Nuke.AzureDevOps", "src\Rocket.Surgery.Nuke.AzureDevOps\Rocket.Surgery.Nuke.AzureDevOps.csproj", "{9311CC13-B7F8-4210-9F2E-86B4C278F90E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rocket.Surgery.Nuke.AzureDevOps", "src\Rocket.Surgery.Nuke.AzureDevOps\Rocket.Surgery.Nuke.AzureDevOps.csproj", "{9311CC13-B7F8-4210-9F2E-86B4C278F90E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rocket.Surgery.Nuke.Xamarin", "src\Nuke.Xamarin\Rocket.Surgery.Nuke.Xamarin.csproj", "{4EF107CD-1AAA-4C78-8201-5CCD1426449A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".solution", ".solution", "{096E2487-547C-4DCF-977A-DA9E1C75B6BC}"
+	ProjectSection(SolutionItems) = preProject
+		azure-pipelines.yml = azure-pipelines.yml
+		build.ps1 = build.ps1
+		build.sh = build.sh
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+		GitReleaseManager.yaml = GitReleaseManager.yaml
+		GitVersion.yml = GitVersion.yml
+		LICENSE = LICENSE
+		NuGet.config = NuGet.config
+		omnisharp.json = omnisharp.json
+		Packages.props = Packages.props
+		Readme.md = Readme.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -109,6 +127,18 @@ Global
 		{9311CC13-B7F8-4210-9F2E-86B4C278F90E}.Release|x64.Build.0 = Release|Any CPU
 		{9311CC13-B7F8-4210-9F2E-86B4C278F90E}.Release|x86.ActiveCfg = Release|Any CPU
 		{9311CC13-B7F8-4210-9F2E-86B4C278F90E}.Release|x86.Build.0 = Release|Any CPU
+		{4EF107CD-1AAA-4C78-8201-5CCD1426449A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EF107CD-1AAA-4C78-8201-5CCD1426449A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EF107CD-1AAA-4C78-8201-5CCD1426449A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4EF107CD-1AAA-4C78-8201-5CCD1426449A}.Debug|x64.Build.0 = Debug|Any CPU
+		{4EF107CD-1AAA-4C78-8201-5CCD1426449A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4EF107CD-1AAA-4C78-8201-5CCD1426449A}.Debug|x86.Build.0 = Debug|Any CPU
+		{4EF107CD-1AAA-4C78-8201-5CCD1426449A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EF107CD-1AAA-4C78-8201-5CCD1426449A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4EF107CD-1AAA-4C78-8201-5CCD1426449A}.Release|x64.ActiveCfg = Release|Any CPU
+		{4EF107CD-1AAA-4C78-8201-5CCD1426449A}.Release|x64.Build.0 = Release|Any CPU
+		{4EF107CD-1AAA-4C78-8201-5CCD1426449A}.Release|x86.ActiveCfg = Release|Any CPU
+		{4EF107CD-1AAA-4C78-8201-5CCD1426449A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -120,6 +150,7 @@ Global
 		{2D88A441-0EF9-40EF-8A1A-CE5E12F62660} = {8FFDF555-DB50-45F9-9A2D-6410F39151C3}
 		{99357C68-3D56-4707-A489-8D223E643FB7} = {8FFDF555-DB50-45F9-9A2D-6410F39151C3}
 		{9311CC13-B7F8-4210-9F2E-86B4C278F90E} = {8FFDF555-DB50-45F9-9A2D-6410F39151C3}
+		{4EF107CD-1AAA-4C78-8201-5CCD1426449A} = {8FFDF555-DB50-45F9-9A2D-6410F39151C3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {439897C2-CCBD-44FE-B2DC-A3E4670ADA59}

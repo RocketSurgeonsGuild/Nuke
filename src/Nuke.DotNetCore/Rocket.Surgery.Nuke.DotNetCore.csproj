@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netcoreapp3.0;net472</TargetFrameworks>
     <NoWarn>$(NoWarn);CS0436</NoWarn>
   </PropertyGroup>
 
@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Nuke\Rocket.Surgery.Nuke.csproj" PrivateAssets="contentfiles;analyzers" />
+    <EmbeddedResource Include="default.runsettings" />
   </ItemGroup>
 
 </Project>

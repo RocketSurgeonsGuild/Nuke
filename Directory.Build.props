@@ -1,9 +1,23 @@
 <Project>
     <PropertyGroup>
         <Company>Rocket Surgeons Guild</Company>
-        <Copyright>Copyright David Driscoll © 2017</Copyright>
-        <Authors>David Driscoll</Authors>
-        <LangVersion>latest</LangVersion>
-        <PackageIconUrl>https://raw.githubusercontent.com/RocketSurgeonsGuild/graphics/master/png/rsg-patch-circle-color.png</PackageIconUrl>
+        <Copyright>Copyright Rocket Surgeons Guild © $([System.DateTime]::Now.ToString('yyyy'))</Copyright>
+        <Authors>David Driscoll,Rocket Surgeons Guild contributors</Authors>
+        <PackageProjectUrl>https://rocketsurgeonsguild.github.io/</PackageProjectUrl>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <PackageIcon>images/packageicon.png</PackageIcon>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <!--
+            in package
+            Title
+            Description
+            Tags
+        -->
+        <LangVersion>8.0</LangVersion>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
+    <ItemGroup>
+        <None Include="$(MSBuildThisFileDirectory)/.tmp/packageicon.png" Condition="Exists('$(MSBuildThisFileDirectory)/.tmp/packageicon.png')" Pack="true" PackagePath="/images/" Visible="false" />
+        <None Include="$(MSBuildThisFileDirectory)/LICENSE" Pack="true" PackagePath="/" Visible="false" />
+    </ItemGroup>
 </Project>

@@ -1,0 +1,14 @@
+Rocket.Surgery.Nuke.DotNetCore.DotNetCoreBuild
+Rocket.Surgery.Nuke.DotNetCore.DotNetCoreBuild.DotNetCoreBuild() -> void
+Rocket.Surgery.Nuke.DotNetCore.DotNetCoreBuild.DotnetToolRestore.get -> Nuke.Common.Target
+Rocket.Surgery.Nuke.DotNetCore.IDotNetCoreBuild
+Rocket.Surgery.Nuke.DotNetCore.IDotNetCoreBuild.Build.get -> Nuke.Common.Target
+Rocket.Surgery.Nuke.DotNetCore.IDotNetCoreBuild.DotnetToolRestore.get -> Nuke.Common.Target
+Rocket.Surgery.Nuke.DotNetCore.IDotNetCoreBuild.Pack.get -> Nuke.Common.Target
+Rocket.Surgery.Nuke.DotNetCore.IDotNetCoreBuild.Restore.get -> Nuke.Common.Target
+Rocket.Surgery.Nuke.DotNetCore.IDotNetCoreBuild.Test.get -> Nuke.Common.Target
+static Rocket.Surgery.Nuke.DotNetCore.DotNetCoreBuild.Build(Nuke.Common.ITargetDefinition _, Rocket.Surgery.Nuke.DotNetCore.IDotNetCoreBuild build) -> Nuke.Common.ITargetDefinition
+static Rocket.Surgery.Nuke.DotNetCore.DotNetCoreBuild.Pack(Nuke.Common.ITargetDefinition _, Rocket.Surgery.Nuke.DotNetCore.IDotNetCoreBuild build) -> Nuke.Common.ITargetDefinition
+static Rocket.Surgery.Nuke.DotNetCore.DotNetCoreBuild.Restore(Nuke.Common.ITargetDefinition _, Rocket.Surgery.Nuke.DotNetCore.IDotNetCoreBuild build) -> Nuke.Common.ITargetDefinition
+static Rocket.Surgery.Nuke.DotNetCore.DotNetCoreBuild.Test(Nuke.Common.ITargetDefinition _, Rocket.Surgery.Nuke.DotNetCore.IDotNetCoreBuild build) -> Nuke.Common.ITargetDefinition
+static Rocket.Surgery.Nuke.DotNetCore.DotNetCoreBuild.Test(bool useDataCollector) -> System.Func<Nuke.Common.ITargetDefinition, Rocket.Surgery.Nuke.DotNetCore.IDotNetCoreBuild, Nuke.Common.ITargetDefinition>

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Dynamic;
 
 namespace Rocket.Surgery.Nuke.Readme
 {
@@ -12,6 +11,7 @@ namespace Rocket.Surgery.Nuke.Readme
         /// The name of the section
         /// </summary>
         string Name { get; }
+
         /// <summary>
         /// The configuration key, if you expect to get configuration from the yaml block.
         /// </summary>
@@ -24,6 +24,10 @@ namespace Rocket.Surgery.Nuke.Readme
         /// <param name="references"></param>
         /// <param name="build"></param>
         /// <returns></returns>
-        (string badge, string history) Process(IDictionary<object, object> config, IMarkdownReferences references, RocketBoosterBuild build);
+        (string badge, string history) Process(
+            IDictionary<object, object> config,
+            IMarkdownReferences references,
+            RocketBoosterBuild build
+        );
     }
 }

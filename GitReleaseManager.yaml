@@ -4,7 +4,9 @@
 #   footer-content: ''
 #   footer-includes-milestone: true
 export:
-  include-created-date-in-title: true
+  include-created-date-in-title: false
+  perform-regex-removal: true
+  regex-text: '([a-f\d]{40}\s|:boom:|:rocket:|:fire:|:blue_book:|:beetle:|:squirrel:|:raised_hand:|:sparkles:|:package:)'
 issue-labels-include:
   - ":boom: breaking change"
   - ":rocket: feature"
@@ -15,6 +17,7 @@ issue-labels-include:
   - ":raised_hand: good first issue"
   - ":raised_hand: help wanted"
   - ":sparkles: mysterious"
+  - ":package: dependencies"
 issue-labels-exclude:
   - ":x: invalid"
   - ":grey_question: question"

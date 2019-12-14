@@ -1,16 +1,9 @@
 using Nuke.Common;
-using Nuke.Common.IO;
+using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
 using Nuke.Common.Tools.NuGet;
-using Nuke.Common.Tools.Xunit;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using Nuke.Common.Tools.DotNet;
-using Nuke.Common.ProjectModel;
-using Buildalyzer;
-using static Rocket.Surgery.Nuke.VerbosityDictionaries;
+using static Nuke.Common.IO.PathConstruction;
+#pragma warning disable CA1724
 
 namespace Rocket.Surgery.Nuke.MsBuild
 {
@@ -20,92 +13,100 @@ namespace Rocket.Surgery.Nuke.MsBuild
     public abstract class MSBuild : RocketBoosterBuild
     {
         /// <summary>
-        /// Core target that can be used to trigger all targets for this build
+        /// The directory where templates will be placed
         /// </summary>
-        public Target NetFramework => _ => _;
+        public static AbsolutePath NuspecDirectory => RootDirectory / ".nuspec";
 
         /// <summary>
         /// nuget restore
         /// </summary>
-        public Target Restore => _ => _
-            .DependsOn(Clean)
-            .Executes(() =>
-            {
-                NuGetTasks
-                    .NuGetRestore(settings =>
-                        settings
-                            .SetSolutionDirectory(Solution)
-                            .SetVerbosity(NuGetVerbosityDictionary[Verbosity])
-                            .EnableNoCache());
-            });
+        public static ITargetDefinition Restore(ITargetDefinition _, IMsBuild build) => _
+           .DependsOn(build.Clean)
+           .Executes(
+                () =>
+                {
+                    NuGetTasks
+                       .NuGetRestore(
+                            settings =>
+                                settings
+                                   .SetSolutionDirectory(build.Solution)
+                                   .EnableNoCache()
+                        );
+                }
+            );
 
         /// <summary>
         /// msbuild
         /// </summary>
-        public Target Build => _ => _
-            .DependsOn(Restore)
-            .Executes(() =>
-            {
-                MSBuildTasks
-                    .MSBuild(settings =>
-                        settings
-                            .SetSolutionFile(Solution)
-                            .SetConfiguration(Configuration)
-                            .SetBinaryLogger(LogsDirectory / "build.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
-                            .SetFileLogger(LogsDirectory / "build.log", Verbosity)
-                            .SetVerbosity(MSBuildVerbosityDictionary[Verbosity])
-                            .SetGitVersionEnvironment(GitVersion)
-                            .SetAssemblyVersion(GitVersion.AssemblySemVer));
-            });
+        public static ITargetDefinition Build(ITargetDefinition _, IMsBuild build) => _
+           .DependsOn(build.Restore)
+           .Executes(
+                () =>
+                {
+                    MSBuildTasks
+                       .MSBuild(
+                            settings =>
+                                settings
+                                   .SetSolutionFile(build.Solution)
+                                   .SetConfiguration(build.Configuration)
+                                   .SetDefaultLoggers(build.LogsDirectory / "build.log")
+                                   .SetGitVersionEnvironment(build.GitVersion)
+                                   .SetAssemblyVersion(build.GitVersion.AssemblySemVer)
+                                   .SetPackageVersion(build.GitVersion.NuGetVersionV2)
+                        );
+                }
+            );
 
         /// <summary>
         /// xunit test
         /// </summary>
-        public Target Test => _ => _
-            .DependsOn(Build)
-            .DependentFor(Pack)
-            .DependentFor(NetFramework)
-            .Executes(() =>
-            {
-                foreach (var project in Solution.GetTestProjects())
+        public static ITargetDefinition Test(ITargetDefinition _, IMsBuild build) => _
+           .DependsOn(build.Build)
+           .DependentFor(build.Pack)
+           .Executes(
+                () =>
                 {
-                    DotNetTasks
-                        .DotNetTest(settings =>
-                            settings
-                                .SetProjectFile(project)
-                                .SetConfiguration(Configuration)
-                                .SetGitVersionEnvironment(GitVersion)
-                                .SetBinaryLogger(LogsDirectory / "test.binlog", IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed)
-                                .SetFileLogger(LogsDirectory / "test.log", Verbosity)
-                                .EnableNoRestore()
-                                .SetLogger($"trx")
-                                .SetVerbosity(DotNetVerbosityDictionary[Verbosity])
-                                .SetProperty("VSTestResultsDirectory", TestResultsDirectory));
+                    foreach (var project in build.Solution.GetTestProjects())
+                    {
+                        DotNetTasks
+                           .DotNetTest(
+                                settings =>
+                                    settings
+                                       .SetProjectFile(project)
+                                       .SetConfiguration(build.Configuration)
+                                       .SetGitVersionEnvironment(build.GitVersion)
+                                       .SetDefaultLoggers(build.LogsDirectory / "test.log")
+                                       .EnableNoRestore()
+                                       .SetLogger("trx")
+                                       .SetProperty("VSTestResultsDirectory", build.TestResultsDirectory)
+                            );
+                    }
                 }
-            });
+            );
 
         /// <summary>
         /// nuget pack
         /// </summary>
-        public Target Pack => _ => _
-            .DependsOn(Build)
-            .DependentFor(NetFramework)
-            .Executes(() =>
-            {
-                foreach (var project in Solution.WherePackable())
+        public static ITargetDefinition Pack(ITargetDefinition _, IMsBuild build) => _
+           .DependsOn(build.Build)
+           .Executes(
+                () =>
                 {
-                    NuGetTasks
-                        .NuGetPack(settings =>
-                            settings
-                                .SetTargetPath(project.Path)
-                                .SetConfiguration(Configuration)
-                                .SetGitVersionEnvironment(GitVersion)
-                                .SetVersion(GitVersion.NuGetVersionV2)
-                                .SetOutputDirectory(NuGetPackageDirectory)
-                                .SetVerbosity(NuGetVerbosityDictionary[Verbosity])
-                                .SetSymbols(true)
-                                .SetBuild(true));
+                    foreach (var project in build.NuspecDirectory.GlobFiles("*.nuspec"))
+                    {
+                        NuGetTasks
+                           .NuGetPack(
+                                settings =>
+                                    settings
+                                       .SetTargetPath(project)
+                                       .SetConfiguration(build.Configuration)
+                                       .SetGitVersionEnvironment(build.GitVersion)
+                                       .SetVersion(build.GitVersion.NuGetVersionV2)
+                                       .SetOutputDirectory(build.NuGetPackageDirectory)
+                                       .SetSymbols(true)
+                            );
+                    }
                 }
-            });
+            );
     }
 }

@@ -1,8 +1,22 @@
 trigger:
+  batch: true
   branches:
     include:
       - master
       - refs/tags/*
+  paths:
+    exclude:
+    - '**/*.md'
+    - '.appveyor.yml'
+    - '.codecov.yml'
+    - 'GitVersion.yml'
+    - 'GitReleaseManager.yaml'
+    - .vscode/*
+    - .git*
+    - .editorconfig
+    - .nuke
+    - LICENSE
+
 pr:
   autoCancel: true
   branches:
@@ -14,11 +28,10 @@ resources:
     - repository: rsg
       type: github
       name: RocketSurgeonsGuild/AzureDevopsTemplates
-      # ref: refs/tags/v0.8.5
+      ref: refs/tags/v0.11.1
       endpoint: github
 
 variables:
-  - group: rsg-bot
   - name: CONFIGURATION
     value: Release
   - name: VERBOSITY
@@ -31,14 +44,23 @@ variables:
     value: "true"
   - name: CodeCovToken
     value: 'c93f6719-da50-4d00-ba2b-b73fd95239e0'
+  - group: rsg-bot
 
 jobs:
   - template: pipeline/nuke.yml@rsg
     parameters:
+      AuthNuGetFeeds:
+        - name: RocketSurgeonsGuild
+          source: https://nuget.pkg.github.com/RocketSurgeonsGuild/index.json
+          username: $(GitHub.UserName)
+          password: $(GitHub.Token)
       Configuration: $(Configuration)
       Verbosity: $(Verbosity)
       GitHub: true
-      GitHubPackages: false
-      DotNetVersion: "2.2.301"
-      DotNet3Version: "3.0.100-preview7-012821"
-      NuGetVersion: "5.2.0"
+      GitHubAuthVariableGroup: rsg-bot
+      GitHubPackages: true
+      MyGetPackages: false
+      DotNetSdk:
+        - "2.x"
+        - "3.x"
+      NuGetVersion: "5.3.1"

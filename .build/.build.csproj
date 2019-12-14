@@ -3,7 +3,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <RootNamespace></RootNamespace>
     <IsPackable>False</IsPackable>
@@ -12,8 +12,9 @@
 
   <ItemGroup>
     <PackageReference Include="Nuke.Common" />
-    <PackageReference Include="GitVersion.CommandLine.DotNetCore" />
-    <PackageReference Include="ReportGenerator" />
+    <PackageReference Include="JetBrains.ReSharper.CommandLineTools" ExcludeAssets="All" />
+    <PackageReference Include="GitVersion.Tool" ExcludeAssets="All" />
+    <PackageReference Include="ReportGenerator" ExcludeAssets="All" />
     <ProjectReference Include="../src/Nuke/Rocket.Surgery.Nuke.csproj" />
     <ProjectReference Include="../src/Nuke.DotNetCore/Rocket.Surgery.Nuke.DotNetCore.csproj" />
   </ItemGroup>

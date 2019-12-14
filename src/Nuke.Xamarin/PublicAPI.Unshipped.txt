@@ -1,0 +1,38 @@
+Rocket.Surgery.Nuke.Xamarin.AndroidBuild
+Rocket.Surgery.Nuke.Xamarin.AndroidBuild.AndroidBuild() -> void
+Rocket.Surgery.Nuke.Xamarin.AndroidBuild.XamarinAndroid.get -> Nuke.Common.Target
+Rocket.Surgery.Nuke.Xamarin.FormsBuild
+Rocket.Surgery.Nuke.Xamarin.FormsBuild.FormsBuild() -> void
+Rocket.Surgery.Nuke.Xamarin.FormsBuild.XamarinForms.get -> Nuke.Common.Target
+Rocket.Surgery.Nuke.Xamarin.IMacBuild
+Rocket.Surgery.Nuke.Xamarin.IMacBuild.Build.get -> Nuke.Common.Target
+Rocket.Surgery.Nuke.Xamarin.IMacBuild.Restore.get -> Nuke.Common.Target
+Rocket.Surgery.Nuke.Xamarin.IMacBuild.Test.get -> Nuke.Common.Target
+Rocket.Surgery.Nuke.Xamarin.IXamarinBuild
+Rocket.Surgery.Nuke.Xamarin.IXamarinBuild.Build.get -> Nuke.Common.Target
+Rocket.Surgery.Nuke.Xamarin.IXamarinBuild.Restore.get -> Nuke.Common.Target
+Rocket.Surgery.Nuke.Xamarin.IXamarinBuild.Test.get -> Nuke.Common.Target
+Rocket.Surgery.Nuke.Xamarin.MacBuild
+Rocket.Surgery.Nuke.Xamarin.MacBuild.Build.get -> Nuke.Common.Target
+Rocket.Surgery.Nuke.Xamarin.MacBuild.MacBuild() -> void
+Rocket.Surgery.Nuke.Xamarin.MacBuild.Restore.get -> Nuke.Common.Target
+Rocket.Surgery.Nuke.Xamarin.XamarinBuild
+Rocket.Surgery.Nuke.Xamarin.XamarinBuild.XamarinBuild() -> void
+Rocket.Surgery.Nuke.Xamarin.iOSBuild
+Rocket.Surgery.Nuke.Xamarin.iOSBuild.XamariniOS.get -> Nuke.Common.Target
+Rocket.Surgery.Nuke.Xamarin.iOSBuild.iOSBuild() -> void
+Rocket.Surgery.XamarinConfiguration
+Rocket.Surgery.XamarinConfiguration.XamarinConfiguration() -> void
+override Rocket.Surgery.XamarinConfiguration.ToString() -> string
+static Rocket.Surgery.Nuke.Xamarin.MacBuild.Test(Nuke.Common.ITargetDefinition _, Rocket.Surgery.Nuke.Xamarin.IXamarinBuild build) -> Nuke.Common.ITargetDefinition
+static Rocket.Surgery.Nuke.Xamarin.XamarinBuild.Build(Nuke.Common.ITargetDefinition _, Rocket.Surgery.Nuke.Xamarin.IXamarinBuild build) -> Nuke.Common.ITargetDefinition
+static Rocket.Surgery.Nuke.Xamarin.XamarinBuild.Restore(Nuke.Common.ITargetDefinition _, Rocket.Surgery.Nuke.Xamarin.IXamarinBuild build) -> Nuke.Common.ITargetDefinition
+static Rocket.Surgery.Nuke.Xamarin.XamarinBuild.Test(Nuke.Common.ITargetDefinition _, Rocket.Surgery.Nuke.Xamarin.IXamarinBuild build) -> Nuke.Common.ITargetDefinition
+static Rocket.Surgery.XamarinConfiguration.DebugDev -> Rocket.Surgery.XamarinConfiguration
+static Rocket.Surgery.XamarinConfiguration.DebugMock -> Rocket.Surgery.XamarinConfiguration
+static Rocket.Surgery.XamarinConfiguration.DebugTest -> Rocket.Surgery.XamarinConfiguration
+static Rocket.Surgery.XamarinConfiguration.Dev -> Rocket.Surgery.XamarinConfiguration
+static Rocket.Surgery.XamarinConfiguration.Mock -> Rocket.Surgery.XamarinConfiguration
+static Rocket.Surgery.XamarinConfiguration.Store -> Rocket.Surgery.XamarinConfiguration
+static Rocket.Surgery.XamarinConfiguration.Test -> Rocket.Surgery.XamarinConfiguration
+static Rocket.Surgery.XamarinConfiguration.implicit operator string(Rocket.Surgery.XamarinConfiguration configuration) -> string

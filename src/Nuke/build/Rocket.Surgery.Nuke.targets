@@ -12,5 +12,8 @@
         <None Include="$(_NukeRoot)\*.md" Link="docs\$([MSBuild]::MakeRelative($(_NukeRoot), %(FullPath)))" />
         <None Include="$(_NukeRoot)\LICENSE" Condition="Exists('$(_NukeRoot)\LICENSE')" Link="docs\$([MSBuild]::MakeRelative($(_NukeRoot), %(FullPath)))" />
         <None Include="$(_NukeRoot)\*.props;$(_NukeRoot)\*.targets" />
+        <None Include="$(_NukeRoot)\version\*.props;$(_NukeRoot)\version\*.targets" Link="$([MSBuild]::MakeRelative($(_NukeRoot), %(FullPath)))" />
+        <None Include="$(_NukeRoot)\test\*.props;$(_NukeRoot)\test\*.targets" Link="$([MSBuild]::MakeRelative($(_NukeRoot), %(FullPath)))" />
+        <None Include="$(_NukeRoot)\src\*.props;$(_NukeRoot)\src\*.targets" Link="$([MSBuild]::MakeRelative($(_NukeRoot), %(FullPath)))" />
     </ItemGroup>
 </Project>

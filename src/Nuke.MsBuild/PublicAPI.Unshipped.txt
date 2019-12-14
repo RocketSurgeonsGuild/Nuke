@@ -1,0 +1,13 @@
+Rocket.Surgery.Nuke.MsBuild.IMsBuild
+Rocket.Surgery.Nuke.MsBuild.IMsBuild.Build.get -> Nuke.Common.Target
+Rocket.Surgery.Nuke.MsBuild.IMsBuild.NuspecDirectory.get -> Nuke.Common.IO.PathConstruction.AbsolutePath
+Rocket.Surgery.Nuke.MsBuild.IMsBuild.Pack.get -> Nuke.Common.Target
+Rocket.Surgery.Nuke.MsBuild.IMsBuild.Restore.get -> Nuke.Common.Target
+Rocket.Surgery.Nuke.MsBuild.IMsBuild.Test.get -> Nuke.Common.Target
+Rocket.Surgery.Nuke.MsBuild.MSBuild
+Rocket.Surgery.Nuke.MsBuild.MSBuild.MSBuild() -> void
+static Rocket.Surgery.Nuke.MsBuild.MSBuild.Build(Nuke.Common.ITargetDefinition _, Rocket.Surgery.Nuke.MsBuild.IMsBuild build) -> Nuke.Common.ITargetDefinition
+static Rocket.Surgery.Nuke.MsBuild.MSBuild.NuspecDirectory.get -> Nuke.Common.IO.PathConstruction.AbsolutePath
+static Rocket.Surgery.Nuke.MsBuild.MSBuild.Pack(Nuke.Common.ITargetDefinition _, Rocket.Surgery.Nuke.MsBuild.IMsBuild build) -> Nuke.Common.ITargetDefinition
+static Rocket.Surgery.Nuke.MsBuild.MSBuild.Restore(Nuke.Common.ITargetDefinition _, Rocket.Surgery.Nuke.MsBuild.IMsBuild build) -> Nuke.Common.ITargetDefinition
+static Rocket.Surgery.Nuke.MsBuild.MSBuild.Test(Nuke.Common.ITargetDefinition _, Rocket.Surgery.Nuke.MsBuild.IMsBuild build) -> Nuke.Common.ITargetDefinition

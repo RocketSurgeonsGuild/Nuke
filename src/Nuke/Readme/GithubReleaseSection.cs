@@ -1,18 +1,28 @@
 using System.Collections.Generic;
-using System.Dynamic;
 
 namespace Rocket.Surgery.Nuke.Readme
 {
-    class GithubReleaseSection : IBadgeSection
+    internal class GithubReleaseSection : IBadgeSection
     {
         public string Name => "Github Release";
 
         public string ConfigKey => "github";
 
-        public string Process(IDictionary<object, object> config, IMarkdownReferences references, RocketBoosterBuild build)
+        public string Process(
+            IDictionary<object, object> config,
+            IMarkdownReferences references,
+            RocketBoosterBuild build
+        )
         {
-            var url = references.AddReference("github-release", $"https://github.com/{config["owner"]}/{config["repository"]}/releases/latest");
-            var badge = references.AddReference("github-release-badge", $"https://img.shields.io/github/release/{config["owner"]}/{config["repository"]}.svg?logo=github&style=flat", "Latest Release");
+            var url = references.AddReference(
+                "github-release",
+                $"https://github.com/{config["owner"]}/{config["repository"]}/releases/latest"
+            );
+            var badge = references.AddReference(
+                "github-release-badge",
+                $"https://img.shields.io/github/release/{config["owner"]}/{config["repository"]}.svg?logo=github&style=flat",
+                "Latest Release"
+            );
             return $"[!{badge}]{url}";
         }
     }

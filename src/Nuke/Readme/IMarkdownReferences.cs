@@ -13,6 +13,6 @@ namespace Rocket.Surgery.Nuke.Readme
         /// <param name="value"></param>
         /// <param name="altText"></param>
         /// <returns></returns>
-        string AddReference(string name, string value, string altText = null);
+        string AddReference(string name, string value, string? altText = null);
     }
 }

@@ -1,15 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0</TargetFrameworks>
+        <TargetFrameworks>netcoreapp3.0;net472</TargetFrameworks>
         <NoWarn>$(NoWarn);CS0436</NoWarn>
     </PropertyGroup>
     <ItemGroup>
         <InternalsVisibleTo Include="Rocket.Surgery.Nuke.Tests" />
         <PackageReference Include="Nuke.Common" />
-        <PackageReference Include="GitVersion.CommandLine.DotNetCore" />
-        <PackageReference Include="ReportGenerator" />
         <PackageReference Include="YamlDotNet" />
         <PackageReference Include="Buildalyzer" />
+        <PackageReference Include="Humanizer.Core" />
+
+        <PackageReference Include="NuGet.Common" />
+        <PackageReference Include="NuGet.Configuration" />
+        <PackageReference Include="NuGet.Frameworks" />
+        <PackageReference Include="NuGet.Packaging" />
+        <PackageReference Include="NuGet.Packaging.Core" />
+        <PackageReference Include="NuGet.Protocol" />
+        <PackageReference Include="NuGet.Resolver" />
+        <PackageReference Include="NuGet.Versioning" />
     </ItemGroup>
     <ItemGroup>
         <None Include="build/*.*" Pack="true" PackagePath="build" />
