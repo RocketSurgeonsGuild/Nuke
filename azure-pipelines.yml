@@ -48,9 +48,6 @@ variables:
 
 jobs:
   - template: jobs/gitversion.yml@rsg
-    parameters:
-      BranchNameFix: true
-
   - template: jobs/publish-release.yml@rsg
     parameters:
       EnableReleaseNotes: true
@@ -81,11 +78,7 @@ jobs:
     steps:
       - template: support/mono.yml@rsg
       - template: support/download-release-notes.yml@rsg
-        parameters:
-          EnableReleaseNotes: true
       - template: support/gitversion-hack.yml@rsg
-        parameters:
-          BranchNameFix: true
       - template: support/install-dotnet.yml@rsg
         parameters:
           DotNetSdk:
