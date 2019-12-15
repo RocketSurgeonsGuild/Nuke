@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -37,8 +37,7 @@ namespace Rocket.Surgery.Nuke
     public abstract class RocketBoosterBuild<T> : NukeBuild, IRocketBoosterBuild<T>
         where T : Configuration
     {
-
-        public RocketBoosterBuild(Func<T> configurationDefault)
+        protected RocketBoosterBuild(Func<T> configurationDefault)
         {
             Configuration = configurationDefault();
         }
@@ -363,8 +362,16 @@ namespace Rocket.Surgery.Nuke
             );
     }
 
+    /// <summary>
+    /// Base build plan and tasks.
+    /// </summary>
+    /// <seealso cref="NukeBuild" />
+    /// <seealso cref="IRocketBoosterBuild{T}" />
     public abstract class RocketBoosterBuild : RocketBoosterBuild<Configuration>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RocketBoosterBuild"/> class.
+        /// </summary>
         protected RocketBoosterBuild()
             : base(() => IsLocalBuild ? Configuration.Debug : Configuration.Release) { }
     }
