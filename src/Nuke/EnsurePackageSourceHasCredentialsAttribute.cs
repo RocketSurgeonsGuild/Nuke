@@ -202,16 +202,6 @@ namespace Rocket.Surgery.Nuke
                    .ToArray()
                    .JoinSpace();
 #pragma warning restore CA1308
-                using (writer.WriteBlock($"- task: DotNetCoreCLI@2"))
-                {
-                    writer.WriteLine("displayName: 'install nuke'");
-                    using (writer.WriteBlock("inputs:"))
-                    {
-                        writer.WriteLine("command: custom");
-                        writer.WriteLine("custom: tool");
-                        writer.WriteLine("arguments: 'update -g Nuke.GlobalTool'");
-                    }
-                }
 
                 foreach (var step in Steps)
                 {
@@ -230,7 +220,7 @@ namespace Rocket.Surgery.Nuke
 
         public void Write(CustomFileWriter writer, string parameters)
         {
-            using (writer.WriteBlock($"- script: nuke {InvokedTargets.JoinSpace()} --skip {parameters}".TrimEnd()))
+            using (writer.WriteBlock($"- pwsh: ./{ScriptPath} {InvokedTargets.JoinSpace()} --skip {parameters}".TrimEnd()))
             {
                 writer.WriteLine($"displayName: {DisplayName.SingleQuote()}");
             }

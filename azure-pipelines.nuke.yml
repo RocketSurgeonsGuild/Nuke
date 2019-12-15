@@ -20,15 +20,9 @@ parameters:
   Coverage: ''
   Verbosity: 'Normal'
 steps:
-  - task: DotNetCoreCLI@2
-    displayName: 'install nuke'
-    inputs:
-      command: custom
-      custom: tool
-      arguments: 'update -g Nuke.GlobalTool'
-  - script: nuke DotnetToolRestore BuildVersion Build --skip --configuration '${{ parameters.Configuration }}' --artifacts '${{ parameters.Artifacts }}' --coverage '${{ parameters.Coverage }}' --verbosity '${{ parameters.Verbosity }}'
+  - pwsh: ./build.ps1 DotnetToolRestore BuildVersion Build --skip --configuration '${{ parameters.Configuration }}' --artifacts '${{ parameters.Artifacts }}' --coverage '${{ parameters.Coverage }}' --verbosity '${{ parameters.Verbosity }}'
     displayName: 'Build'
-  - script: nuke Generate_Code_Coverage_Reports Test --skip --configuration '${{ parameters.Configuration }}' --artifacts '${{ parameters.Artifacts }}' --coverage '${{ parameters.Coverage }}' --verbosity '${{ parameters.Verbosity }}'
+  - pwsh: ./build.ps1 Generate_Code_Coverage_Reports Test --skip --configuration '${{ parameters.Configuration }}' --artifacts '${{ parameters.Artifacts }}' --coverage '${{ parameters.Coverage }}' --verbosity '${{ parameters.Verbosity }}'
     displayName: 'Test'
-  - script: nuke Pack --skip --configuration '${{ parameters.Configuration }}' --artifacts '${{ parameters.Artifacts }}' --coverage '${{ parameters.Coverage }}' --verbosity '${{ parameters.Verbosity }}'
+  - pwsh: ./build.ps1 Pack --skip --configuration '${{ parameters.Configuration }}' --artifacts '${{ parameters.Artifacts }}' --coverage '${{ parameters.Coverage }}' --verbosity '${{ parameters.Verbosity }}'
     displayName: 'Pack'
