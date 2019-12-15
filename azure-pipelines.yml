@@ -46,23 +46,94 @@ variables:
     value: 'c93f6719-da50-4d00-ba2b-b73fd95239e0'
   - group: rsg-bot
 
+parameters:
+  AuthNuGetFeeds:
+    - name: RocketSurgeonsGuild
+      source: https://nuget.pkg.github.com/RocketSurgeonsGuild/index.json
+      username: $(GitHub.UserName)
+      password: $(GitHub.Token)
+
 jobs:
-  - template: pipeline/nuke.yml@rsg
+  - template: jobs/gitversion.yml@rsg
     parameters:
+      BranchNameFix: true
+
+  - template: support/publish-release.yml@rsg
+    parameters:
+      EnableReleaseNotes: true
+      GitHub: true
+      GitHubPackages: true
+      GitHubAuthVariableGroup: rsg-bot
+      Postfix: " - Windows"
       AuthNuGetFeeds:
         - name: RocketSurgeonsGuild
           source: https://nuget.pkg.github.com/RocketSurgeonsGuild/index.json
           username: $(GitHub.UserName)
           password: $(GitHub.Token)
-      Configuration: $(Configuration)
-      Verbosity: $(Verbosity)
-      GitHub: true
-      GitHubAuthVariableGroup: rsg-bot
-      GitHubPackages: true
-      MyGetPackages: false
-      DotNetSdk:
-        - "2.x"
-        - "3.x"
-      NuGetVersion: "5.3.1"
-      Steps:
-        - template: azure-pipelines.nuke.yml@self
+
+  - job: Build
+    dependsOn:
+      - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/tags/v') }}:
+        - GitHub_Draft_Release
+    variables:
+      - group: rsg-bot
+    strategy:
+      matrix:
+        Windows:
+          BuildName: "Windows"
+          ImageName: "windows-latest"
+        Linux:
+          BuildName: "Linux"
+          ImageName: "ubuntu-latest"
+        macOS:
+          BuildName: "macOS"
+          ImageName: "macOS-latest"
+    pool:
+      vmImage: $(ImageName)
+    steps:
+      - template: support/mono.yml@rsg
+      - template: support/download-release-notes.yml@rsg
+        parameters:
+          EnableReleaseNotes: true
+      - template: support/gitversion-hack.yml@rsg
+        parameters:
+          BranchNameFix: true
+
+      - template: support/install-dotnet.yml@rsg
+        parameters:
+          DotNetSdk:
+            - "2.x"
+            - "3.x"
+          AuthNuGetFeeds:
+            - name: RocketSurgeonsGuild
+              source: https://nuget.pkg.github.com/RocketSurgeonsGuild/index.json
+              username: $(GitHub.UserName)
+              password: $(GitHub.Token)
+
+      - task: DotNetCoreCLI@2
+        displayName: "dotnet tool restore"
+        inputs:
+          command: custom
+          custom: tool
+          arguments: "restore"
+
+      - task: DotNetCoreCLI@2
+        displayName: 'dotnet restore'
+        inputs:
+          command: restore
+          feedsToUse: config
+          nugetConfigPath: NuGet.config
+
+      - template: ./azure-pipelines.nuke.yml
+        parameters:
+          Artifacts: $(Artifacts)
+          Configuration: $(Configuration)
+          Coverage: $(Coverage)
+
+      - template: support/publish-artifacts.yml@rsg
+        parameters:
+          Artifacts: $(Artifacts)
+          Configuration: $(Configuration)
+          Coverage: $(Coverage)
+          Postfix: ' - $(BuildName)'
+          PublishVSTest: true
