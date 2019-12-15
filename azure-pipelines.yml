@@ -54,7 +54,7 @@ jobs:
       GitHub: true
       GitHubPackages: true
       GitHubAuthVariableGroup: rsg-bot
-      Postfix: " - Windows"
+      PublishNuGetPackagesFromArtifact: "NuGet - Windows"
 
   - job: Build
     dependsOn:
