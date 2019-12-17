@@ -1,3 +1,0 @@
-Rocket.Surgery.Nuke.AzurePipelines.AzurePipelinesTasks
-Rocket.Surgery.Nuke.AzurePipelines.AzurePipelinesTasks.AzurePipelinesTasks() -> void
-static Rocket.Surgery.Nuke.AzurePipelines.AzurePipelinesTasks.IsRunningOnAzurePipelines.get -> System.Linq.Expressions.Expression<System.Func<bool>>
