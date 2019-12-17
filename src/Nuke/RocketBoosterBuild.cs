@@ -34,8 +34,15 @@ namespace Rocket.Surgery.Nuke
     [DotNetVerbosityMapping]
     [MSBuildVerbosityMapping]
     [NuGetVerbosityMapping]
-    public abstract class RocketBoosterBuild : NukeBuild, IRocketBoosterBuild
+    public abstract class RocketBoosterBuild<T> : NukeBuild, IRocketBoosterBuild<T>
+        where T : Configuration
     {
+
+        public RocketBoosterBuild(Func<T> configurationDefault)
+        {
+            Configuration = configurationDefault();
+        }
+
         /// <summary>
         /// The files to lint, if not given lints all files
         /// </summary>
@@ -71,7 +78,7 @@ namespace Rocket.Surgery.Nuke
         /// Configuration to build - Default is 'Debug' (local) or 'Release' (server)
         /// </summary>
         [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
-        public Configuration Configuration { get; } = IsLocalBuild ? Configuration.Debug : Configuration.Release;
+        public T Configuration { get; }
 
         /// <summary>
         /// Force a clean build, otherwise leave some incremental build pieces
@@ -354,5 +361,11 @@ namespace Rocket.Surgery.Nuke
                     ).ConfigureAwait(false);
                 }
             );
+    }
+
+    public abstract class RocketBoosterBuild : RocketBoosterBuild<Configuration>
+    {
+        protected RocketBoosterBuild()
+            : base(() => IsLocalBuild ? Configuration.Debug : Configuration.Release) { }
     }
 }

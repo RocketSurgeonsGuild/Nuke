@@ -6,7 +6,8 @@ namespace Rocket.Surgery.Nuke.MsBuild
     /// <summary>
     /// Base build plan for .NET Framework based applications
     /// </summary>
-    public interface IMsBuild : IRocketBoosterBuild
+    public interface IMsBuild<T> : IRocketBoosterBuild<T>
+        where T : Configuration
     {
         /// <summary>
         /// nuget restore
@@ -32,5 +33,9 @@ namespace Rocket.Surgery.Nuke.MsBuild
         /// The directory where templates will be placed
         /// </summary>
         AbsolutePath NuspecDirectory { get; }
+    }
+
+    public interface IMsBuild : IMsBuild<Configuration>
+    {
     }
 }

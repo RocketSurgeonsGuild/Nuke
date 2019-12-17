@@ -1,6 +1,8 @@
+using System;
 using Nuke.Common;
 using Nuke.Common.Git;
 using Nuke.Common.ProjectModel;
+using Nuke.Common.Tooling;
 using Nuke.Common.Tools.GitVersion;
 using Rocket.Surgery.Nuke.Readme;
 using static Nuke.Common.IO.PathConstruction;
@@ -10,13 +12,17 @@ namespace Rocket.Surgery.Nuke
     /// <summary>
     /// Base build plan and tasks
     /// </summary>
-    public interface IRocketBoosterBuild
+    public interface IRocketBoosterBuild<T> : IRocketBoosterBuild
+        where T : Configuration
     {
         /// <summary>
         /// Configuration to build - Default is 'Debug' (local) or 'Release' (server)
         /// </summary>
-        Configuration Configuration { get; }
+        T Configuration { get; }
+    }
 
+    public interface IRocketBoosterBuild
+    {
         /// <summary>
         /// Force a clean build, otherwise leave some incremental build pieces
         /// </summary>

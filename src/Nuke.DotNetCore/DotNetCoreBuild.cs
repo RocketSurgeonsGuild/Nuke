@@ -14,12 +14,15 @@ namespace Rocket.Surgery.Nuke.DotNetCore
     /// <summary>
     /// Base build plan for .NET Core based applications
     /// </summary>
-    public abstract class DotNetCoreBuild : RocketBoosterBuild
+    public abstract class DotNetCoreBuild<T> : RocketBoosterBuild<T>
+        where T : Configuration
     {
+        protected DotNetCoreBuild(Func<T> configurationDefault) : base(configurationDefault) { }
+
         /// <summary>
         /// dotnet restore
         /// </summary>
-        public static ITargetDefinition Restore(ITargetDefinition _, IDotNetCoreBuild build) => _
+        public static ITargetDefinition Restore(ITargetDefinition _, IDotNetCoreBuild<T> build) => _
            .Description("Restores the dependencies.")
            .DependsOn(build.Clean)
            .DependsOn(build.DotnetToolRestore)
@@ -39,7 +42,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
         /// <summary>
         /// dotnet build
         /// </summary>
-        public static ITargetDefinition Build(ITargetDefinition _, IDotNetCoreBuild build) => _
+        public static ITargetDefinition Build(ITargetDefinition _, IDotNetCoreBuild<T> build) => _
            .Description("Builds all the projects.")
            .DependsOn(build.Restore)
            .Executes(
@@ -59,12 +62,12 @@ namespace Rocket.Surgery.Nuke.DotNetCore
         /// <summary>
         /// dotnet test
         /// </summary>
-        public static ITargetDefinition Test(ITargetDefinition _, IDotNetCoreBuild build) => Test(true)(_, build);
+        public static ITargetDefinition Test(ITargetDefinition _, IDotNetCoreBuild<T> build) => Test(true)(_, build);
 
         /// <summary>
         /// dotnet test
         /// </summary>
-        public static Func<ITargetDefinition, IDotNetCoreBuild, ITargetDefinition> Test(bool useDataCollector)
+        public static Func<ITargetDefinition, IDotNetCoreBuild<T>, ITargetDefinition> Test(bool useDataCollector)
             => (_, build) => _
                .Description("Executes all the unit tests.")
                .After(build.Build)
@@ -93,7 +96,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                             if (!FileExists(runsettings))
                             {
                                 using var tempFile = File.Open(runsettings, FileMode.CreateNew);
-                                await typeof(DotNetCoreBuild).Assembly
+                                await typeof(DotNetCoreBuild<>).Assembly
                                        .GetManifestResourceStream("Rocket.Surgery.Nuke.DotNetCore.default.runsettings")!
                                    .CopyToAsync(tempFile)
                                    .ConfigureAwait(false);
@@ -147,7 +150,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
         /// <summary>
         /// dotnet pack
         /// </summary>
-        public static ITargetDefinition Pack(ITargetDefinition _, IDotNetCoreBuild build) => _
+        public static ITargetDefinition Pack(ITargetDefinition _, IDotNetCoreBuild<T> build) => _
            .Description("Packs all the NuGet packages.")
            .DependsOn(build.Build)
            .Executes(
@@ -174,5 +177,11 @@ namespace Rocket.Surgery.Nuke.DotNetCore
            .OnlyWhenStatic(() => FileExists(RootDirectory / ".config/dotnet-tools.json"))
            .Unlisted()
            .Executes(() => DotNet("tool restore"));
+    }
+
+    public class DotNetCoreBuild : DotNetCoreBuild<Configuration>
+    {
+        public DotNetCoreBuild()
+            : base(() => IsLocalBuild ? Configuration.Debug : Configuration.Release) { }
     }
 }

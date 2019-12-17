@@ -27,7 +27,7 @@ namespace Rocket.Surgery.Nuke.Readme
         (string badge, string history) Process(
             IDictionary<object, object> config,
             IMarkdownReferences references,
-            RocketBoosterBuild build
+            IRocketBoosterBuild build
         );
     }
 }
