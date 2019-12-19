@@ -31,6 +31,11 @@ namespace Rocket.Surgery.Nuke.Xamarin
         public virtual AbsolutePath InfoPlist { get; }
 
         /// <summary>
+        /// Gets the path for the info plist.
+        /// </summary>
+        public virtual string BaseBundleIdentifier { get; } = "com.rocketbooster.nuke";
+
+        /// <summary>
         /// A value indicated whether the build host is OSX.
         /// </summary>
         public Expression<Func<bool>> IsOsx = () => EnvironmentInfo.Platform == PlatformFamily.OSX;
@@ -46,12 +51,20 @@ namespace Rocket.Surgery.Nuke.Xamarin
         public Target ModifyPlist => _ => _
            .Executes(() =>
                 {
-                    Logger.Warn(InfoPlist);
+                    Logger.Trace($"Info.plist Path: {InfoPlist}");
                     var plist = Plist.Deserialize(InfoPlist);
+                    var bundleIdentifier = !Equals(Configuration, XamarinConfiguration.Store)
+                        ? Configuration
+                        : string.Empty;
 
-                    plist["CFBundleShortVersionString"] = $"{GitVersion.Major}.{GitVersion.Major}.{GitVersion.Patch}";
+                    plist["CFBundleIdentifier"] = $"{BaseBundleIdentifier}.{bundleIdentifier?.ToLower()}".TrimEnd('.');
+                    Logger.Info($"CFBundleIdentifier: {plist["CFBundleIdentifier"]}");
+
+                    plist["CFBundleShortVersionString"] = $"{GitVersion.Major}.{GitVersion.Minor}.{GitVersion.Patch}";
+                    Logger.Info($"CFBundleShortVersionString: {plist["CFBundleShortVersionString"]}");
+
                     plist["CFBundleVersion"] = $"{GitVersion.PreReleaseNumber}";
-                    plist["CFBundleIdentifier"] = Environment.GetEnvironmentVariable("BUNDLE_ID");
+                    Logger.Info($"CFBundleVersion: {plist["CFBundleVersion"]}");
 
                     Plist.Serialize(InfoPlist, plist);
                 });
