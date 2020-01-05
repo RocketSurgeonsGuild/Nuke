@@ -5,8 +5,11 @@ using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using Nuke.Common.Tools;
 using Nuke.Common.Tools.GitVersion;
 using static Nuke.Common.EnvironmentInfo;
+using Nuke.Common.Execution;
+using Nuke.Common.Tooling;
 
 namespace Rocket.Surgery.Nuke
 {
@@ -15,7 +18,7 @@ namespace Rocket.Surgery.Nuke
     /// </summary>
     [PublicAPI]
     [UsedImplicitly(ImplicitUseKindFlags.Default)]
-    public class ComputedGitVersionAttribute : GitVersionAttribute
+    public class ComputedGitVersionAttribute : InjectionAttributeBase
     {
         /// <summary>
         /// Returns if GitVersion data is available
@@ -43,8 +46,21 @@ namespace Rocket.Surgery.Nuke
                 );
             }
 
-            return base.GetValue(member, instance);
+            return GitVersionTasks.GitVersion(s => s
+                    .SetFramework("netcoreapp3.1")
+                    .DisableLogOutput()
+                    .SetUpdateAssemblyInfo(UpdateAssemblyInfo))
+                .Result;
         }
+
+
+        /// <summary>
+        /// </summary>
+        public bool DisableOnUnix { get; set; }
+
+        /// <summary>
+        /// </summary>
+        public bool UpdateAssemblyInfo { get; set; }
 
         private class AllWritableContractResolver : DefaultContractResolver
         {
