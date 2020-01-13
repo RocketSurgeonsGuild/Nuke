@@ -13,7 +13,7 @@
     <GlobalPackageReference Include="Roslynator.Analyzers" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="Buildalyzer" Version="2.4.0" />
+    <PackageReference Update="Buildalyzer" Version="2.5.0" />
     <PackageReference Update="Humanizer.Core" Version="2.7.9" />
     <PackageReference Update="NuGet.Common" Version="5.4.0" />
     <PackageReference Update="NuGet.Configuration" Version="5.4.0" />
