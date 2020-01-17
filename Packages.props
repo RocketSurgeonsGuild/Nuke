@@ -2,7 +2,7 @@
 <Project>
   <ItemGroup>
     <GlobalPackageReference Include="Rocket.Surgery.MSBuild.CI" Version="0.2.0" />
-    <GlobalPackageReference Include="Rocket.Surgery.MSBuild.GitVersion" Version="0.2.0" />
+    <GlobalPackageReference Include="Rocket.Surgery.MSBuild.GitVersion" Version="0.3.0" />
     <GlobalPackageReference Include="Rocket.Surgery.MSBuild.JetBrains.Annotations" Version="0.2.0" Condition="'$(MSBuildProjectName)'!='.build'" />
     <GlobalPackageReference Include="Rocket.Surgery.MSBuild.Metadata" Version="0.2.0" />
     <GlobalPackageReference Include="Rocket.Surgery.MSBuild.SourceLink" Version="0.2.0" />
