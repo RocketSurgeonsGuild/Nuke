@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project>
   <ItemGroup>
-    <GlobalPackageReference Include="Rocket.Surgery.MSBuild.CI" Version="0.2.0" />
-    <GlobalPackageReference Include="Rocket.Surgery.MSBuild.GitVersion" Version="0.2.0" />
-    <GlobalPackageReference Include="Rocket.Surgery.MSBuild.JetBrains.Annotations" Version="0.2.0" Condition="'$(MSBuildProjectName)'!='.build'" />
-    <GlobalPackageReference Include="Rocket.Surgery.MSBuild.Metadata" Version="0.2.0" />
-    <GlobalPackageReference Include="Rocket.Surgery.MSBuild.SourceLink" Version="0.2.0" />
+    <GlobalPackageReference Include="Rocket.Surgery.MSBuild.CI" Version="0.3.0" />
+    <GlobalPackageReference Include="Rocket.Surgery.MSBuild.GitVersion" Version="0.3.0" />
+    <GlobalPackageReference Include="Rocket.Surgery.MSBuild.JetBrains.Annotations" Version="0.3.0" Condition="'$(MSBuildProjectName)'!='.build'" />
+    <GlobalPackageReference Include="Rocket.Surgery.MSBuild.Metadata" Version="0.3.0" />
+    <GlobalPackageReference Include="Rocket.Surgery.MSBuild.SourceLink" Version="0.3.0" />
     <GlobalPackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8" />
     <GlobalPackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="2.9.8" />
     <GlobalPackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" />
@@ -33,8 +33,8 @@
     <PackageReference Update="Bogus" Version="28.4.4" />
     <PackageReference Update="coverlet.collector" Version="1.2.0" />
     <PackageReference Update="coverlet.msbuild" Version="2.8.0" IncludeAssets="all" PrivateAssets="runtime;build;native;contentfiles;analyzers" />
-    <PackageReference Update="FakeItEasy" Version="5.5.0" />
-    <PackageReference Update="FakeItEasy.Analyzer.CSharp" Version="5.5.0" />
+    <PackageReference Update="FakeItEasy" Version="6.0.0" />
+    <PackageReference Update="FakeItEasy.Analyzer.CSharp" Version="6.0.0" />
     <PackageReference Update="FluentAssertions" Version="5.10.0" />
     <PackageReference Update="FluentAssertions.Analyzers" Version="0.11.4" />
     <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.4.0" />
