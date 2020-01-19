@@ -4,8 +4,8 @@ codecov:
     strict_yaml_branch: master
 
 coverage:
-    round: up
-    precision: 1
+    round: down
+    precision: 2
 
     status:
         project: yes
