@@ -21,7 +21,6 @@ namespace Rocket.Surgery.Nuke
                 NukeBuild.RootDirectory,
                 x => x.GetDirectories(".git").Any()
             );
-
             if (rootDirectory != null)
             {
                 return base.GetValue(member, instance);
