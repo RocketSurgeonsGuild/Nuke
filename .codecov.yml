@@ -1,15 +1,16 @@
 codecov:
-  bot: rsg-bot
-  strict_yaml_branch: master
+    require_ci_to_pass: no
+    bot: rsg-bot
+    strict_yaml_branch: master
 
 coverage:
-  round: down
-  precision: 1
+    round: up
+    precision: 1
 
-  status:
-    project: yes
-    patch: yes
-    changes: no
+    status:
+        project: yes
+        patch: yes
+        changes: no
 
 comment:
-  branch: master
+    branch: master
