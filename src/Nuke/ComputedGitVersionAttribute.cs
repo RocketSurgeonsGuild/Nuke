@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using JetBrains.Annotations;
@@ -20,6 +21,7 @@ namespace Rocket.Surgery.Nuke
     /// </summary>
     [PublicAPI]
     [UsedImplicitly(ImplicitUseKindFlags.Default)]
+    [ExcludeFromCodeCoverage]
     public class ComputedGitVersionAttribute : InjectionAttributeBase
     {
         /// <summary>
@@ -78,7 +80,7 @@ namespace Rocket.Surgery.Nuke
         private class AllWritableContractResolver : DefaultContractResolver
         {
             protected override JsonProperty CreateProperty(
-                [NotNull] MemberInfo member,
+                [JetBrains.Annotations.NotNull] MemberInfo member,
                 MemberSerialization memberSerialization
             )
             {

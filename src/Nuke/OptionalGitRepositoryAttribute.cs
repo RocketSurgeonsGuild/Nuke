@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
 using Nuke.Common;
 using Nuke.Common.Git;
 using Nuke.Common.IO;
@@ -7,6 +9,9 @@ using Nuke.Common.IO;
 namespace Rocket.Surgery.Nuke
 {
     /// <inheritdoc />
+    [PublicAPI]
+    [UsedImplicitly(ImplicitUseKindFlags.Default)]
+    [ExcludeFromCodeCoverage]
     public class OptionalGitRepositoryAttribute : GitRepositoryAttribute
     {
         /// <inheritdoc />
