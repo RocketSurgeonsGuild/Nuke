@@ -36,13 +36,13 @@ namespace Rocket.Surgery.Nuke
         /// <summary>
         /// The Git Repository currently being built
         /// </summary>
-        GitRepository GitRepository { get; }
+        GitRepository? GitRepository { get; }
 
         /// <summary>
         /// The Git Version information either computed by GitVersion itself, or as defined by environment variables of the format
         /// `GITVERSION_*`
         /// </summary>
-        GitVersion GitVersion { get; }
+        GitVersion? GitVersion { get; }
 
         /// <summary>
         /// The readme updater that ensures that all the badges are in sync.
@@ -130,11 +130,5 @@ namespace Rocket.Surgery.Nuke
         /// keeping the rest of the readme correct.
         /// </summary>
         Target GenerateReadme { get; }
-
-        /// <summary>
-        /// Attempts to add any missing packages that are referenced but do not have a version.
-        /// Then also removes any packages that no longer have a reference
-        /// </summary>
-        Target SyncVersions { get; }
     }
 }
