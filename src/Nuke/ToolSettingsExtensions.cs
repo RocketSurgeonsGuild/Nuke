@@ -67,7 +67,7 @@ namespace Rocket.Surgery.Nuke
             return settings.SetArgumentConfigurator(
                 args =>
                     existingArgs(args).Add(
-                        $"/bl:{path};ProjectImports={( NukeBuild.IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed )}"
+                        $"/bl:\"{path}\";ProjectImports={( NukeBuild.IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed )}"
                     )
             );
         }
@@ -84,7 +84,7 @@ namespace Rocket.Surgery.Nuke
             var existingArgs = settings.ArgumentConfigurator;
             return settings.SetArgumentConfigurator(
                 args =>
-                    existingArgs(args).Add($"/bl:{path};ProjectImports={imports}")
+                    existingArgs(args).Add($"/bl:\"{path}\";ProjectImports={imports}")
             );
         }
 
