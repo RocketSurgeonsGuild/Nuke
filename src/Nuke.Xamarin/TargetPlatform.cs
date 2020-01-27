@@ -24,6 +24,11 @@ namespace Rocket.Surgery.Nuke.Xamarin
         public static TargetPlatform iPhoneSimulator = new TargetPlatform { Value =  nameof(iPhoneSimulator) };
 
         /// <summary>
+        /// Any CPU Target
+        /// </summary>
+        public static TargetPlatform AnyCPU = new TargetPlatform { Value = "Any CPU" };
+
+        /// <summary>
         /// Performs an implicit conversion from <see cref="XamarinConfiguration" /> to <see cref="System.String" />.
         /// </summary>
         /// <param name="platform">The target platform.</param>
