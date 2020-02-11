@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using Nuke.Common;
 using Nuke.Common.Execution;
+using Nuke.Common.IO;
 using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.IO.HttpTasks;
 using static Nuke.Common.IO.FileSystemTasks;

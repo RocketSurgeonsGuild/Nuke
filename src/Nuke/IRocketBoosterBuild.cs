@@ -1,6 +1,7 @@
 using System;
 using Nuke.Common;
 using Nuke.Common.Git;
+using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.GitVersion;
