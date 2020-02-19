@@ -21,8 +21,8 @@ parameters:
     Verbosity: 'Normal'
 steps:
     - pwsh: ./build.ps1 BuildVersion Build --skip --configuration '${{ parameters.Configuration }}' --artifacts '${{ parameters.Artifacts }}' --coverage '${{ parameters.Coverage }}' --verbosity '${{ parameters.Verbosity }}'
-      displayName: 'Nuke Build'
+      displayName: '⚙ Build'
     - pwsh: ./build.ps1 Generate_Code_Coverage_Reports Test --skip --configuration '${{ parameters.Configuration }}' --artifacts '${{ parameters.Artifacts }}' --coverage '${{ parameters.Coverage }}' --verbosity '${{ parameters.Verbosity }}'
-      displayName: 'Nuke Test'
+      displayName: '🚦 Test'
     - pwsh: ./build.ps1 Pack --skip --configuration '${{ parameters.Configuration }}' --artifacts '${{ parameters.Artifacts }}' --coverage '${{ parameters.Coverage }}' --verbosity '${{ parameters.Verbosity }}'
-      displayName: 'Nuke Pack'
+      displayName: '📦 Pack'

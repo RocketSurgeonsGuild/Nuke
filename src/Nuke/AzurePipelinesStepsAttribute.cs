@@ -88,13 +88,31 @@ namespace Rocket.Surgery.Nuke
             return new AzurePipelinesStep
             {
                 Name = executableTarget.Name,
-                DisplayName = executableTarget.Name,
+                DisplayName = GetStepName(executableTarget.Name),
                 ScriptPath = Path.ChangeExtension(NukeBuild.RootDirectory.GlobFiles("build.ps1", "build.sh")
                     .Select(x => NukeBuild.RootDirectory.GetUnixRelativePathTo(x))
                     .FirstOrDefault()
                     .NotNull("Must have a build script of build.ps1 or build.sh"), ".ps1"),
                 InvokedTargets = chainLinkNames,
             };
+        }
+
+        private readonly Dictionary<string, string> _defaultSymbols = new Dictionary<string, string>()
+        {
+            ["Build"] = "⚙",
+            ["Compile"] = "⚙",
+            ["Test"] = "🚦",
+            ["Pack"] = "📦",
+            ["Restore"] = "📪",
+            ["Publish"] = "🚢",
+        };
+
+        protected virtual string GetStepName(string name)
+        {
+            var symbol = _defaultSymbols.FirstOrDefault(z => z.Key.EndsWith(name, StringComparison.OrdinalIgnoreCase)).Value;
+            if (string.IsNullOrWhiteSpace(symbol)) return name;
+
+            return $"{symbol} {name}";
         }
     }
 }
