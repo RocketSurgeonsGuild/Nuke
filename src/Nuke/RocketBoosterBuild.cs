@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -16,7 +16,6 @@ using Nuke.Common.Tools.ReportGenerator;
 using Nuke.Common.Utilities;
 using Nuke.Common.Utilities.Collections;
 using Rocket.Surgery.Nuke.Readme;
-using Rocket.Surgery.Nuke.SyncPackages;
 using Temp.CleanupCode;
 using static Nuke.Common.EnvironmentInfo;
 using static Nuke.Common.IO.FileSystemTasks;
@@ -34,8 +33,14 @@ namespace Rocket.Surgery.Nuke
     [DotNetVerbosityMapping]
     [MSBuildVerbosityMapping]
     [NuGetVerbosityMapping]
-    public abstract class RocketBoosterBuild : NukeBuild, IRocketBoosterBuild
+    public abstract class RocketBoosterBuild<T> : NukeBuild, IRocketBoosterBuild<T>
+        where T : Configuration
     {
+        protected RocketBoosterBuild(Func<T> configurationDefault)
+        {
+            Configuration = configurationDefault();
+        }
+
         /// <summary>
         /// The files to lint, if not given lints all files
         /// </summary>
@@ -71,7 +76,7 @@ namespace Rocket.Surgery.Nuke
         /// Configuration to build - Default is 'Debug' (local) or 'Release' (server)
         /// </summary>
         [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
-        public Configuration Configuration { get; } = IsLocalBuild ? Configuration.Debug : Configuration.Release;
+        public T Configuration { get; }
 
         /// <summary>
         /// Force a clean build, otherwise leave some incremental build pieces
@@ -89,14 +94,14 @@ namespace Rocket.Surgery.Nuke
         /// The Git Repository currently being built
         /// </summary>
         [GitRepository]
-        public GitRepository GitRepository { get; }
+        public GitRepository? GitRepository { get; }
 
         /// <summary>
         /// The Git Version information either computed by GitVersion itself, or as defined by environment variables of the format
         /// `GITVERSION_*`
         /// </summary>
         [ComputedGitVersion]
-        public GitVersion GitVersion { get; }
+        public GitVersion? GitVersion { get; }
 
         /// <summary>
         /// The readme updater that ensures that all the badges are in sync.
@@ -323,36 +328,19 @@ namespace Rocket.Surgery.Nuke
                     File.WriteAllText(RootDirectory / "Readme.md", readmeContent);
                 }
             );
+    }
 
+    /// <summary>
+    /// Base build plan and tasks.
+    /// </summary>
+    /// <seealso cref="NukeBuild" />
+    /// <seealso cref="IRocketBoosterBuild{T}" />
+    public abstract class RocketBoosterBuild : RocketBoosterBuild<Configuration>
+    {
         /// <summary>
-        /// Attempts to add any missing packages that are referenced but do not have a version.
-        /// Then also removes any packages that no longer have a reference
+        /// Initializes a new instance of the <see cref="RocketBoosterBuild"/> class.
         /// </summary>
-        public Target SyncVersions => _ => _
-           .Unlisted()
-           .OnlyWhenDynamic(
-                () => IsLocalBuild && ( Force || InvokedTargets.Any(z => z.Name == nameof(SyncVersions)) ||
-                    ExecutingTargets.Any(z => z.Name == nameof(SyncVersions)) )
-            )
-           .Executes(
-                async () =>
-                {
-                    await PackageSync.MoveVersions(
-                        Solution.Path,
-                        RootDirectory / "Packages.props"
-                    ).ConfigureAwait(false);
-                    await Task.Delay(300).ConfigureAwait(false);
-                    await PackageSync.RemoveExtraPackages(
-                        Solution.Path,
-                        RootDirectory / "Packages.props"
-                    ).ConfigureAwait(false);
-                    await Task.Delay(300).ConfigureAwait(false);
-                    await PackageSync.AddMissingPackages(
-                        Solution.Path,
-                        RootDirectory / "Packages.props",
-                        CancellationToken.None
-                    ).ConfigureAwait(false);
-                }
-            );
+        protected RocketBoosterBuild()
+            : base(() => IsLocalBuild ? Configuration.Debug : Configuration.Release) { }
     }
 }

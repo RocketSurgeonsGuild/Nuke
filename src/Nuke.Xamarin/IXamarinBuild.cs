@@ -1,3 +1,5 @@
+using System;
+using System.Linq.Expressions;
 using Nuke.Common;
 
 namespace Rocket.Surgery.Nuke.Xamarin
@@ -10,7 +12,12 @@ namespace Rocket.Surgery.Nuke.Xamarin
         /// <summary>
         /// Configuration to build - Default is 'DebugMock' (local) or 'Mock' (release)
         /// </summary>
-        new XamarinConfiguration Configuration { get; }
+        XamarinConfiguration Configuration { get; }
+
+        /// <summary>
+        /// A value indicated whether the build host is OSX.
+        /// </summary>
+        Expression<Func<bool>> IsOsx { get; set; }
 
         /// <summary>
         /// nuget restore

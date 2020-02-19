@@ -1,3 +1,5 @@
+using System;
+using System.Linq.Expressions;
 using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.Tools.DotNet;
@@ -12,13 +14,20 @@ namespace Rocket.Surgery.Nuke.Xamarin
     /// <summary>
     /// Base build plan for Xamarin based applications
     /// </summary>
-    public abstract class XamarinBuild : RocketBoosterBuild
+    public abstract class XamarinBuild : RocketBoosterBuild<XamarinConfiguration>
     {
         /// <summary>
-        /// Configuration to build - Default is 'Debug' (local) or 'Release' (server)
+        /// Initializes a new instance of the <see cref="XamarinBuild"/> class.
         /// </summary>
-        [Parameter("Configuration to build - Default is 'DebugMock' (local) or 'Mock' (server)")]
-        public new XamarinConfiguration Configuration { get; } = IsLocalBuild ? XamarinConfiguration.DebugMock : XamarinConfiguration.Mock;
+        protected XamarinBuild()
+            : base(() => IsLocalBuild ? XamarinConfiguration.DebugMock : XamarinConfiguration.Mock)
+        {
+        }
+
+        /// <summary>
+        /// A value indicated whether the build host is OSX.
+        /// </summary>
+        public Expression<Func<bool>> IsOsx { get; set; } = () => EnvironmentInfo.Platform == PlatformFamily.OSX;
 
         /// <summary>
         /// nuget restore
@@ -73,12 +82,5 @@ namespace Rocket.Surgery.Nuke.Xamarin
                     CopyFileToDirectory(coverage, build.CoverageDirectory, FileExistsPolicy.OverwriteIfNewer);
                 }
             });
-
-        /// <summary>
-        /// packages a binary for distribution.
-        /// </summary>
-        public static ITargetDefinition Package(ITargetDefinition _, IXamarinBuild build) => _
-           .DependsOn(build.Test)
-           .Executes(() => { });
     }
 }

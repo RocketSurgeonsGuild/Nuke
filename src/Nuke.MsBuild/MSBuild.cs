@@ -1,3 +1,4 @@
+using System;
 using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.Tools.DotNet;
@@ -11,8 +12,12 @@ namespace Rocket.Surgery.Nuke.MsBuild
     /// <summary>
     /// Base build plan for .NET Framework based applications
     /// </summary>
-    public abstract class MSBuild : RocketBoosterBuild
+    public abstract class MSBuild<T> : RocketBoosterBuild<T>
+        where T : Configuration
     {
+        protected MSBuild(Func<T> configurationDefault)
+            : base(configurationDefault) { }
+
         /// <summary>
         /// The directory where templates will be placed
         /// </summary>
@@ -21,7 +26,7 @@ namespace Rocket.Surgery.Nuke.MsBuild
         /// <summary>
         /// nuget restore
         /// </summary>
-        public static ITargetDefinition Restore(ITargetDefinition _, IMsBuild build) => _
+        public static ITargetDefinition Restore(ITargetDefinition _, IMsBuild<T> build) => _
            .DependsOn(build.Clean)
            .Executes(
                 () =>
@@ -39,7 +44,7 @@ namespace Rocket.Surgery.Nuke.MsBuild
         /// <summary>
         /// msbuild
         /// </summary>
-        public static ITargetDefinition Build(ITargetDefinition _, IMsBuild build) => _
+        public static ITargetDefinition Build(ITargetDefinition _, IMsBuild<T> build) => _
            .DependsOn(build.Restore)
            .Executes(
                 () =>
@@ -61,7 +66,7 @@ namespace Rocket.Surgery.Nuke.MsBuild
         /// <summary>
         /// xunit test
         /// </summary>
-        public static ITargetDefinition Test(ITargetDefinition _, IMsBuild build) => _
+        public static ITargetDefinition Test(ITargetDefinition _, IMsBuild<T> build) => _
            .DependsOn(build.Build)
            .DependentFor(build.Pack)
            .Executes(
@@ -88,7 +93,7 @@ namespace Rocket.Surgery.Nuke.MsBuild
         /// <summary>
         /// nuget pack
         /// </summary>
-        public static ITargetDefinition Pack(ITargetDefinition _, IMsBuild build) => _
+        public static ITargetDefinition Pack(ITargetDefinition _, IMsBuild<T> build) => _
            .DependsOn(build.Build)
            .Executes(
                 () =>
@@ -109,5 +114,10 @@ namespace Rocket.Surgery.Nuke.MsBuild
                     }
                 }
             );
+    }
+
+    public class MSBuild : MSBuild<Configuration>
+    {
+        public MSBuild() : base(() => IsLocalBuild ? Configuration.Debug : Configuration.Release) { }
     }
 }

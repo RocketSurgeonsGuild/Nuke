@@ -1,11 +1,13 @@
 using Nuke.Common;
+using Nuke.Common.Tooling;
 
 namespace Rocket.Surgery.Nuke.DotNetCore
 {
     /// <summary>
     /// Base build plan for .NET Core based applications
     /// </summary>
-    public interface IDotNetCoreBuild : IRocketBoosterBuild
+    public interface IDotNetCoreBuild<T> : IRocketBoosterBuild<T>
+        where T : Configuration
     {
         /// <summary>
         /// This will ensure that all local dotnet tools are installed
@@ -31,5 +33,9 @@ namespace Rocket.Surgery.Nuke.DotNetCore
         /// dotnet build
         /// </summary>
         Target Pack { get; }
+    }
+
+    public interface IDotNetCoreBuild : IDotNetCoreBuild<Configuration>
+    {
     }
 }
