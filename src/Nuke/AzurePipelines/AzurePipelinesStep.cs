@@ -14,7 +14,7 @@ namespace Rocket.Surgery.Nuke.AzurePipelines
         {
             using (writer.WriteBlock($"- pwsh: ./{ScriptPath} {InvokedTargets.JoinSpace()} --skip {parameters}".TrimEnd()))
             {
-                writer.WriteLine($"displayName: Nuke {DisplayName.SingleQuote()}");
+                writer.WriteLine($"displayName: {DisplayName.SingleQuote()}");
             }
         }
     }
