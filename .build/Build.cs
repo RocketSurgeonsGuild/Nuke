@@ -9,8 +9,8 @@ using Rocket.Surgery.Nuke.DotNetCore;
 [UnsetVisualStudioEnvironmentVariables]
 [AzurePipelinesSteps(
     InvokedTargets = new[] { nameof(Restore), nameof(Build), nameof(Test), nameof(Pack) },
-    NonEntryTargets = new[] { nameof(DotnetToolRestore), nameof(BuildVersion), nameof(Generate_Code_Coverage_Reports) },
-    ExcludedTargets = new[] { nameof(Clean), nameof(Restore) },
+    NonEntryTargets = new[] { nameof(BuildVersion), nameof(Generate_Code_Coverage_Reports) },
+    ExcludedTargets = new[] { nameof(Clean), nameof(Restore), nameof(DotnetToolRestore) },
     Parameters = new[] { nameof(CoverageDirectory), nameof(ArtifactsDirectory), nameof(Verbosity), nameof(Configuration) }
 )]
 [PackageIcon(
