@@ -94,7 +94,6 @@ namespace Rocket.Surgery.Nuke
                    .Where(x => x.GetCustomAttribute<ParameterAttribute>() != null);
             foreach (var parameter in parameters)
             {
-                Logger.Info(parameter.Name);
                 if (Parameters.Any(
                     z => z.Equals(parameter.Name, StringComparison.OrdinalIgnoreCase) || z.Equals(
                         parameter.GetCustomAttribute<ParameterAttribute>().Name,
