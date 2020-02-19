@@ -13,6 +13,7 @@ using Nuke.Common.Utilities.Collections;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Utilities;
+using System.IO;
 
 namespace Rocket.Surgery.Nuke
 {
@@ -160,7 +161,10 @@ namespace Rocket.Surgery.Nuke
             {
                 Name = executableTarget.Name,
                 DisplayName = executableTarget.Name,
-                ScriptPath = PowerShellScript,
+                ScriptPath = Path.ChangeExtension(NukeBuild.RootDirectory.GlobFiles("build.ps1", "build.sh")
+                    .Select(x => NukeBuild.RootDirectory.GetUnixRelativePathTo(x))
+                    .FirstOrDefault()
+                    .NotNull("Must have a build script of build.ps1 or build.sh"), ".ps1"),
                 InvokedTargets = chainLinkNames,
             };
         }
