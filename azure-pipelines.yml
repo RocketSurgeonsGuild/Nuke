@@ -79,7 +79,6 @@ jobs:
           - template: support/mono.yml@rsg
           - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/tags/v') }}:
                 - template: support/download-release-notes.yml@rsg
-          - template: support/gitversion-hack.yml@rsg
           - template: support/install-dotnet.yml@rsg
             parameters:
                 DotNetSdk:
@@ -90,6 +89,7 @@ jobs:
                       source: https://nuget.pkg.github.com/RocketSurgeonsGuild/index.json
                       username: $(GitHub.UserName)
                       password: $(GitHub.Token)
+          - template: support/gitversion-hack.yml@rsg
 
           - task: DotNetCoreCLI@2
             displayName: 'dotnet tool restore'
