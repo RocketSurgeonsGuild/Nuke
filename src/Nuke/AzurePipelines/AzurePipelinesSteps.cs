@@ -13,6 +13,7 @@ namespace Rocket.Surgery.Nuke.AzurePipelines
 
         public override void Write(CustomFileWriter writer)
         {
+            writer.WriteLine("#");
             if (Parameters.Length > 0)
             {
                 using (writer.WriteBlock($"parameters:"))
