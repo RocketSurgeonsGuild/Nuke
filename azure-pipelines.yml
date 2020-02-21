@@ -28,7 +28,7 @@ resources:
         - repository: rsg
           type: github
           name: RocketSurgeonsGuild/AzureDevopsTemplates
-          ref: refs/heads/future
+          ref: refs/v0.12.0
           endpoint: github
 
 variables:
