@@ -83,7 +83,7 @@ jobs:
             parameters:
                 DotNetSdk:
                     - '2.x'
-                    - '3.1.101'
+                    - '3.x'
                 AuthNuGetFeeds:
                     - name: RocketSurgeonsGuild
                       source: https://nuget.pkg.github.com/RocketSurgeonsGuild/index.json
