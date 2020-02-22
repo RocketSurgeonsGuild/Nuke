@@ -52,8 +52,8 @@ variables:
     value: true
 
 jobs:
-  - template: support/gitversion.yml@rsg
-  - template: support/publish-release.yml@rsg
+  - template: jobs/gitversion.yml@rsg
+  - template: jobs/publish-release.yml@rsg
     parameters:
       EnableReleaseNotes: true
       GitHub: true
