@@ -28,7 +28,7 @@ resources:
         - repository: rsg
           type: github
           name: RocketSurgeonsGuild/AzureDevopsTemplates
-          ref: refs/tags/v0.11.8
+          ref: refs/tags/v0.12.0
           endpoint: github
 
 variables:
@@ -45,22 +45,82 @@ variables:
     - name: CodeCovToken
       value: 'c93f6719-da50-4d00-ba2b-b73fd95239e0'
     - group: rsg-bot
+    # Fixes the github package repo warnings on restore
+    - name: EmitAssetsLogMessages
+      value: false
+    - name: HideWarningsAndErrors
+      value: true
 
 jobs:
-    - template: pipeline/nuke.yml@rsg
+    - template: jobs/gitversion.yml@rsg
+    - template: jobs/publish-release.yml@rsg
       parameters:
-          AuthNuGetFeeds:
-              - name: RocketSurgeonsGuild
-                source: https://nuget.pkg.github.com/RocketSurgeonsGuild/index.json
-                username: $(GitHub.UserName)
-                password: $(GitHub.Token)
-          Configuration: $(Configuration)
-          Verbosity: $(Verbosity)
+          EnableReleaseNotes: true
           GitHub: true
-          GitHubAuthVariableGroup: rsg-bot
           GitHubPackages: true
-          MyGetPackages: false
-          DotNetSdk:
-              - '2.x'
-              - '3.x'
-          NuGetVersion: '5.4.0'
+          GitHubAuthVariableGroup: rsg-bot
+          PublishNuGetPackagesFromArtifact: 'NuGet - Windows'
+
+    - job: Build
+      dependsOn:
+          - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/tags/v') }}:
+                - GitHub_Draft_Release
+      variables:
+          - group: rsg-bot
+      strategy:
+          matrix:
+              Windows:
+                  BuildName: 'Windows'
+                  ImageName: 'windows-latest'
+              Linux:
+                  BuildName: 'Linux'
+                  ImageName: 'ubuntu-latest'
+              macOS:
+                  BuildName: 'macOS'
+                  ImageName: 'macOS-latest'
+      pool:
+          vmImage: $(ImageName)
+      steps:
+          - template: support/mono.yml@rsg
+          - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/tags/v') }}:
+                - template: support/download-release-notes.yml@rsg
+          - template: support/install-dotnet.yml@rsg
+            parameters:
+                DotNetSdk:
+                    - '2.x'
+                    - '3.x'
+                AuthNuGetFeeds:
+                    - name: RocketSurgeonsGuild
+                      source: https://nuget.pkg.github.com/RocketSurgeonsGuild/index.json
+                      username: $(GitHub.UserName)
+                      password: $(GitHub.Token)
+          - template: support/gitversion-hack.yml@rsg
+
+          - task: DotNetCoreCLI@2
+            displayName: 'dotnet tool restore'
+            inputs:
+                command: custom
+                custom: tool
+                arguments: 'restore'
+
+          - task: DotNetCoreCLI@2
+            displayName: 'dotnet restore'
+            inputs:
+                command: restore
+                feedsToUse: config
+                nugetConfigPath: NuGet.config
+                verbosityRestore: Minimal
+
+          - template: ./azure-pipelines.nuke.yml
+            parameters:
+                Artifacts: $(Artifacts)
+                Configuration: $(Configuration)
+                Coverage: $(Coverage)
+
+          - template: support/publish-artifacts.yml@rsg
+            parameters:
+                Artifacts: $(Artifacts)
+                Configuration: $(Configuration)
+                Coverage: $(Coverage)
+                Postfix: ' - $(BuildName)'
+                PublishVSTest: true
