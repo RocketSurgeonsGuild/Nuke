@@ -45,6 +45,11 @@ variables:
     - name: CodeCovToken
       value: 'c93f6719-da50-4d00-ba2b-b73fd95239e0'
     - group: rsg-bot
+    # Fixes the github package repo warnings on restore
+    - name: EmitAssetsLogMessages
+      value: false
+    - name: HideWarningsAndErrors
+      value: true
 
 jobs:
     - template: jobs/gitversion.yml@rsg
