@@ -4,10 +4,12 @@ using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
+using Nuke.Common.Tools.NuGet;
 using Nuke.Common.Utilities;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 using static Nuke.Common.Tools.MSBuild.MSBuildTasks;
+using static Nuke.Common.Tools.NuGet.NuGetTasks;
 
 namespace Rocket.Surgery.Nuke.Xamarin
 {
@@ -32,14 +34,15 @@ namespace Rocket.Surgery.Nuke.Xamarin
         /// <summary>
         /// nuget restore
         /// </summary>
+        /// <remarks>https://developercommunity.visualstudio.com/content/problem/20550/cant-run-dotnet-restore.html</remarks>
         public static ITargetDefinition Restore(ITargetDefinition _, IXamarinBuild build) => _
-            .DependsOn(build.Clean)
-            .Executes(() => DotNetRestore(settings =>
+           .DependsOn(build.Clean)
+           .Executes(() => NuGetRestore(settings =>
                                 settings
-                                    .SetProjectFile(build.Solution)
-                                    .SetDisableParallel(true)
-                                    .SetDefaultLoggers(build.LogsDirectory / "restore.log")
-                                    .SetGitVersionEnvironment(build.GitVersion)));
+                                   .SetTargetPath(build.Solution)
+                                   .SetDisableParallelProcessing(true)
+                                   .SetDefaultLoggers(build.LogsDirectory / "restore.log")
+                                   .SetGitVersionEnvironment(build.GitVersion)));
 
         /// <summary>
         /// msbuild
