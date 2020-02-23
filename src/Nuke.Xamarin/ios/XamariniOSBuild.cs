@@ -11,6 +11,7 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
 using static Nuke.Common.Tools.MSBuild.MSBuildTasks;
 using static Nuke.Common.IO.PathConstruction;
 
+
 namespace Rocket.Surgery.Nuke.Xamarin
 {
     /// <summary>
@@ -48,25 +49,26 @@ namespace Rocket.Surgery.Nuke.Xamarin
         /// <summary>
         /// modify info.plist
         /// </summary>
-        public Target ModifyPlist => _ => _
+        public static ITargetDefinition ModifyInfoPlist(ITargetDefinition _, IXamariniOSBuild build) => _
+           .DependsOn(build.Restore)
            .Executes(() =>
                 {
-                    Logger.Trace($"Info.plist Path: {InfoPlist}");
-                    var plist = Plist.Deserialize(InfoPlist);
-                    var bundleIdentifier = !Equals(Configuration, XamarinConfiguration.Store)
-                        ? Configuration
+                    Logger.Trace($"Info.plist Path: {build.InfoPlist}");
+                    var plist = Plist.Deserialize(build.InfoPlist);
+                    var bundleIdentifier = !Equals(build.Configuration, XamarinConfiguration.Store)
+                        ? build.Configuration
                         : string.Empty;
 
-                    plist["CFBundleIdentifier"] = $"{BaseBundleIdentifier}.{bundleIdentifier?.ToLower()}".TrimEnd('.');
+                    plist["CFBundleIdentifier"] = $"{build.BaseBundleIdentifier}.{bundleIdentifier?.ToLower()}".TrimEnd('.');
                     Logger.Info($"CFBundleIdentifier: {plist["CFBundleIdentifier"]}");
 
-                    plist["CFBundleShortVersionString"] = $"{GitVersion.Major}.{GitVersion.Minor}.{GitVersion.Patch}";
+                    plist["CFBundleShortVersionString"] = $"{build.GitVersion.Major}.{build.GitVersion.Minor}.{build.GitVersion.Patch}";
                     Logger.Info($"CFBundleShortVersionString: {plist["CFBundleShortVersionString"]}");
 
-                    plist["CFBundleVersion"] = $"{GitVersion.PreReleaseNumber}";
+                    plist["CFBundleVersion"] = $"{build.GitVersion.PreReleaseNumber}";
                     Logger.Info($"CFBundleVersion: {plist["CFBundleVersion"]}");
 
-                    Plist.Serialize(InfoPlist, plist);
+                    Plist.Serialize(build.InfoPlist, plist);
                 });
 
         /// <summary>

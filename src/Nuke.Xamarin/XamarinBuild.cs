@@ -40,9 +40,8 @@ namespace Rocket.Surgery.Nuke.Xamarin
            .Executes(() => NuGetRestore(settings =>
                                 settings
                                    .SetTargetPath(build.Solution)
-                                   .SetDisableParallelProcessing(true)
-                                   .SetDefaultLoggers(build.LogsDirectory / "restore.log")
-                                   .SetGitVersionEnvironment(build.GitVersion)));
+                                   .SetGitVersionEnvironment(build.GitVersion)
+                                   .SetNoCache(true)));
 
         /// <summary>
         /// msbuild
