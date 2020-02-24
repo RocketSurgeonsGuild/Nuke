@@ -5,11 +5,11 @@
     <!-- <GlobalPackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="2.9.8" /> -->
     <GlobalPackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" />
     <GlobalPackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" />
-    <GlobalPackageReference Include="Rocket.Surgery.MSBuild.CI" Version="0.3.0" />
-    <GlobalPackageReference Include="Rocket.Surgery.MSBuild.GitVersion" Version="0.3.0" />
-    <GlobalPackageReference Include="Rocket.Surgery.MSBuild.JetBrains.Annotations" Version="0.3.0" Condition="'$(MSBuildProjectName)'!='.build'" />
-    <GlobalPackageReference Include="Rocket.Surgery.MSBuild.Metadata" Version="0.3.0" />
-    <GlobalPackageReference Include="Rocket.Surgery.MSBuild.SourceLink" Version="0.3.0" />
+    <GlobalPackageReference Include="Rocket.Surgery.MSBuild.CI" Version="0.3.1" />
+    <GlobalPackageReference Include="Rocket.Surgery.MSBuild.GitVersion" Version="0.3.1" />
+    <GlobalPackageReference Include="Rocket.Surgery.MSBuild.JetBrains.Annotations" Version="0.3.1" Condition="'$(MSBuildProjectName)'!='.build'" />
+    <GlobalPackageReference Include="Rocket.Surgery.MSBuild.Metadata" Version="0.3.1" />
+    <GlobalPackageReference Include="Rocket.Surgery.MSBuild.SourceLink" Version="0.3.1" />
     <GlobalPackageReference Include="Roslynator.Analyzers" Version="2.3.0" />
   </ItemGroup>
   <ItemGroup>
@@ -30,7 +30,7 @@
     <PackageReference Update="FluentAssertions" Version="5.10.2" />
     <PackageReference Update="FluentAssertions.Analyzers" Version="0.11.4" />
     <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.5.0" />
-    <PackageReference Update="Rocket.Surgery.Extensions.Testing.FakeItEasy" Version="4.1.1" />
+    <PackageReference Update="Rocket.Surgery.Extensions.Testing.FakeItEasy" Version="5.0.0" />
     <PackageReference Update="xunit" Version="2.4.1" />
     <PackageReference Update="xunit.analyzers" Version="0.10.0" />
     <PackageReference Update="xunit.runner.visualstudio" Version="2.4.1" />
