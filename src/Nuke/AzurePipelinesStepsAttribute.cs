@@ -20,16 +20,16 @@ namespace Rocket.Surgery.Nuke
     {
         private string ConfigurationFile => NukeBuild.RootDirectory / "azure-pipelines.nuke.yml";
 
-        protected override HostType HostType => HostType.AzurePipelines;
-        protected override IEnumerable<string> GeneratedFiles => new[] { ConfigurationFile };
-        protected override IEnumerable<string> RelevantTargetNames => InvokedTargets;
+        public override HostType HostType => HostType.AzurePipelines;
+        public override IEnumerable<string> GeneratedFiles => new[] { ConfigurationFile };
+        public override IEnumerable<string> RelevantTargetNames => InvokedTargets;
 
         public string[] InvokedTargets { get; set; } = new string[0];
         public string[] Parameters { get; set; } = new string[0];
 
-        protected override CustomFileWriter CreateWriter() => new CustomFileWriter(ConfigurationFile, indentationFactor: 2, commentPrefix: "#");
+        public override CustomFileWriter CreateWriter() => new CustomFileWriter(ConfigurationFile, indentationFactor: 2, commentPrefix: "#");
 
-        protected override ConfigurationEntity GetConfiguration(
+        public override ConfigurationEntity GetConfiguration(
             NukeBuild build,
             IReadOnlyCollection<ExecutableTarget> relevantTargets
         )
