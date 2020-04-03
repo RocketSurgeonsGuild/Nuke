@@ -71,7 +71,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
             => (_, build) => _
                .Description("Executes all the unit tests.")
                .After(build.Build)
-               .DependentFor(build.Pack)
+               .Before(build.Pack)
                .DependentFor(build.Generate_Code_Coverage_Reports)
                .Triggers(build.Generate_Code_Coverage_Reports)
                .OnlyWhenStatic(() => DirectoryExists(build.TestDirectory))
@@ -111,7 +111,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                                .SetConfiguration("Debug")
                                .EnableNoRestore()
                                .SetLogger("trx")
-                                // DeterministicSourcePaths being true breaks coverlet!
+                               // DeterministicSourcePaths being true breaks coverlet!
                                .SetProperty("DeterministicSourcePaths", "false")
                                .SetResultsDirectory(build.TestResultsDirectory)
                                .When(
@@ -173,7 +173,6 @@ namespace Rocket.Surgery.Nuke.DotNetCore
         /// This will ensure that all local dotnet tools are installed
         /// </summary>
         public Target DotnetToolRestore => _ => _
-           .After(Clean)
            .OnlyWhenStatic(() => FileExists(RootDirectory / ".config/dotnet-tools.json"))
            .Unlisted()
            .Executes(() => DotNet("tool restore"));

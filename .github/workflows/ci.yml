@@ -16,25 +16,47 @@
 
 name: ci
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
+      - du-fuk
+    tags:
+      - v*
+  pull_request:
+    branches:
+      - master
+      - du-fuk
 
 jobs:
   Build:
     strategy:
+      fail-fast: false
       matrix:
         os: [macOS-latest, windows-latest, ubuntu-latest]
-    name: Build
     runs-on: ${{ matrix.os }}
     steps:
-      - name: 'Clean'
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install GitVersion
+        uses: david-driscoll/gittools-actions/gitversion/setup@feature/export-environment-github
+        with:
+          versionSpec: '5.1.x'
+      - name: Use GitVersion
+        id: gitversion
+        uses: david-driscoll/gittools-actions/gitversion/execute@feature/export-environment-github
+      - name: '🛠 DotnetToolRestore'
         shell: pwsh
-        run: ./build.ps1 BuildVersion Clean --skip --configuration '${{ parameters.Configuration }}' --artifacts '${{ parameters.Artifacts }}' --coverage '${{ parameters.Coverage }}' --verbosity '${{ parameters.Verbosity }}'
+        run: ./build.ps1 DotnetToolRestore --skip --configuration '${{ env.CONFIGURATION }}' --artifacts '${{ env.ARTIFACTS }}' --coverage '${{ env.COVERAGE }}' --verbosity '${{ env.VERBOSITY }}'
+      - name: '📪 Restore'
+        shell: pwsh
+        run: ./build.ps1 BuildVersion Clean Restore --skip --configuration '${{ env.CONFIGURATION }}' --artifacts '${{ env.ARTIFACTS }}' --coverage '${{ env.COVERAGE }}' --verbosity '${{ env.VERBOSITY }}'
       - name: '⚙ Build'
         shell: pwsh
-        run: ./build.ps1 Build --skip --configuration '${{ parameters.Configuration }}' --artifacts '${{ parameters.Artifacts }}' --coverage '${{ parameters.Coverage }}' --verbosity '${{ parameters.Verbosity }}'
+        run: ./build.ps1 Build --skip --configuration '${{ env.CONFIGURATION }}' --artifacts '${{ env.ARTIFACTS }}' --coverage '${{ env.COVERAGE }}' --verbosity '${{ env.VERBOSITY }}'
       - name: '🚦 Test'
         shell: pwsh
-        run: ./build.ps1 Generate_Code_Coverage_Reports Test --skip --configuration '${{ parameters.Configuration }}' --artifacts '${{ parameters.Artifacts }}' --coverage '${{ parameters.Coverage }}' --verbosity '${{ parameters.Verbosity }}'
+        run: ./build.ps1 Generate_Code_Coverage_Reports Test --skip --configuration '${{ env.CONFIGURATION }}' --artifacts '${{ env.ARTIFACTS }}' --coverage '${{ env.COVERAGE }}' --verbosity '${{ env.VERBOSITY }}'
       - name: '📦 Pack'
         shell: pwsh
-        run: ./build.ps1 Pack --skip --configuration '${{ parameters.Configuration }}' --artifacts '${{ parameters.Artifacts }}' --coverage '${{ parameters.Coverage }}' --verbosity '${{ parameters.Verbosity }}'
+        run: ./build.ps1 Pack --skip --configuration '${{ env.CONFIGURATION }}' --artifacts '${{ env.ARTIFACTS }}' --coverage '${{ env.COVERAGE }}' --verbosity '${{ env.VERBOSITY }}'

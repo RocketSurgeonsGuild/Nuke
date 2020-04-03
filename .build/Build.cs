@@ -23,24 +23,25 @@ using System.IO;
 [UnsetVisualStudioEnvironmentVariables]
 [AzurePipelinesSteps(
     InvokedTargets = new[] { nameof(Default) },
-    NonEntryTargets = new[] { nameof(BuildVersion), nameof(Generate_Code_Coverage_Reports), nameof(Default) },
-    ExcludedTargets = new[] { nameof(Restore), nameof(DotnetToolRestore) },
+    NonEntryTargets = new[] { nameof(BuildVersion), nameof(Generate_Code_Coverage_Reports), nameof(Default), nameof(Clean) },
+    ExcludedTargets = new[] { nameof(Restore), nameof(DotnetToolRestore), nameof(Clean) },
     Parameters = new[] { nameof(CoverageDirectory), nameof(ArtifactsDirectory), nameof(Verbosity), nameof(Configuration) }
 )]
 [GitHubActionsSteps("ci", GitHubActionsImage.MacOsLatest, GitHubActionsImage.WindowsLatest, GitHubActionsImage.UbuntuLatest,
     On = new[] { GitHubActionsTrigger.Push },
     OnPushTags = new[] { "v*" },
-    OnPushBranches = new[] { "master" },
-    OnPullRequestBranches = new[] { "master" },
+    OnPushBranches = new[] { "master", "du-fuk" },
+    OnPullRequestBranches = new[] { "master", "du-fuk" },
     InvokedTargets = new[] { nameof(Default) },
-    NonEntryTargets = new[] { nameof(BuildVersion), nameof(Generate_Code_Coverage_Reports), nameof(Default) },
-    ExcludedTargets = new[] { nameof(Restore), nameof(DotnetToolRestore) },
+    NonEntryTargets = new[] { nameof(BuildVersion), nameof(Generate_Code_Coverage_Reports), nameof(Default), nameof(Clean) },
+    ExcludedTargets = new[] { nameof(Clean) },
     Parameters = new[] { nameof(CoverageDirectory), nameof(ArtifactsDirectory), nameof(Verbosity), nameof(Configuration) }
+    // MiddlewareMethod = nameof(Middleware)
 )]
 [PackageIcon(
     "https://raw.githubusercontent.com/RocketSurgeonsGuild/graphics/master/png/social-square-thrust-rounded.png"
 )]
-[EnsurePackageSourceHasCredentials("RocketSurgeonsGuild")]
+// [EnsurePackageSourceHasCredentials("RocketSurgeonsGuild")]
 [EnsureGitHooks(GitHook.PreCommit)]
 internal class Solution : DotNetCoreBuild, IDotNetCoreBuild
 {
@@ -66,6 +67,11 @@ internal class Solution : DotNetCoreBuild, IDotNetCoreBuild
     public Target Test => _ => _.With(this, DotNetCoreBuild.Test);
 
     public Target Pack => _ => _.With(this, DotNetCoreBuild.Pack);
+
+    static GitHubActionsConfiguration Middleware(GitHubActionsConfiguration configuration)
+    {
+        return configuration;
+    }
 }
 
 [PublicAPI]
@@ -160,13 +166,12 @@ public class GitHubActionsStepsAttribute : ChainedConfigurationAttributeBase
         return new GitHubActionsConfiguration()
         {
             Name = _name,
-            ShortTriggers = On,
             DetailedTriggers = GetTriggers().ToArray(),
             Jobs = new[] {
                 new GitHubActionsJob
                 {
                     Name = "Build",
-                    Steps = steps.ToArray(),
+                    NukeSteps = steps.ToArray(),
                     Images = _images,
                     Parameters = paramList.ToArray()
                 }
@@ -192,35 +197,6 @@ public class GitHubActionsStepsAttribute : ChainedConfigurationAttributeBase
             Name = GetStepName(executableTarget.Name),
         };
     }
-
-    // private IEnumerable<GitHubActionsStep> GetSteps(GitHubActionsImage image, IReadOnlyCollection<ExecutableTarget> relevantTargets)
-    // {
-    //     yield return new GitHubActionsUsingStep
-    //     {
-    //         Using = "actions/checkout@v1"
-    //     };
-
-    //     yield return new GitHubActionsRunStep
-    //     {
-    //         Command = $"./{BuildCmdPath} {InvokedTargets.JoinSpace()}",
-    //         Imports = GetImports().ToDictionary(x => x.key, x => x.value)
-    //     };
-
-    //     var artifacts = relevantTargets
-    //         .SelectMany(x => ArtifactExtensions.ArtifactProducts[x.Definition])
-    //         .Select(x => (AbsolutePath)x)
-    //         // TODO: https://github.com/actions/upload-artifact/issues/11
-    //         .Select(x => x.DescendantsAndSelf(y => y.Parent).FirstOrDefault(y => !y.ToString().ContainsOrdinalIgnoreCase("*")))
-    //         .Distinct().ToList();
-    //     foreach (var artifact in artifacts)
-    //     {
-    //         yield return new GitHubActionsArtifactStep
-    //         {
-    //             Name = artifact.ToString().TrimStart(artifact.Parent.ToString()).TrimStart('/', '\\'),
-    //             Path = NukeBuild.RootDirectory.GetUnixRelativePathTo(artifact)
-    //         };
-    //     }
-    // }
 
     protected virtual IEnumerable<(string key, string value)> GetImports()
     {
@@ -276,6 +252,7 @@ public class GitHubActionsStepsAttribute : ChainedConfigurationAttributeBase
         ["Test"] = "🚦",
         ["Pack"] = "📦",
         ["Restore"] = "📪",
+        ["DotnetToolRestore"] = "🛠",
         ["Publish"] = "🚢",
     };
 
@@ -292,14 +269,35 @@ public class GitHubActionsStepsAttribute : ChainedConfigurationAttributeBase
             {
                 new GitHubActionsUsingStep
                 {
+                    Name = "Checkout",
                     Using = "actions/checkout@v1"
+                },
+                // new GitHubActionsRunStep
+                // {
+                //     Name = "Fetch all history for all tags and branches",
+                //     Command = "git fetch --prune --unshallow"
+                // },
+                new GitHubActionsUsingStep
+                {
+                    Name = "Install GitVersion",
+                    Using = "david-driscoll/gittools-actions/gitversion/setup@feature/export-environment-github",
+                    With = {
+                        ["versionSpec"] = "5.1.x",
+                    }
+
+                },
+                new GitHubActionsUsingStep
+                {
+                    Name = "Use GitVersion",
+                    Id= "gitversion",
+                    Using = "david-driscoll/gittools-actions/gitversion/execute@feature/export-environment-github"
                 }
             };
         public GithubActionsParameter[] Parameters { get; set; }
         public string Name { get; set; }
         public GitHubActionsImage[] Images { get; set; }
         public GitHubActionsStep[] SetupSteps { get; set; }
-        public GitHubActionsNukeStep[] Steps { get; set; }
+        public GitHubActionsNukeStep[] NukeSteps { get; set; }
 
         public override void Write(CustomFileWriter writer)
         {
@@ -310,6 +308,7 @@ public class GitHubActionsStepsAttribute : ChainedConfigurationAttributeBase
                 writer.WriteLine($"strategy:");
                 using (writer.Indent())
                 {
+                    writer.WriteLine($"fail-fast: false");
                     writer.WriteLine($"matrix:");
 
                     using (writer.Indent())
@@ -329,12 +328,17 @@ public class GitHubActionsStepsAttribute : ChainedConfigurationAttributeBase
                 using (writer.Indent())
                 {
 #pragma warning disable CA1308
-                    var parameters = Parameters.Select(z => $"--{z.Name.ToLowerInvariant()} '${{{{ parameters.{z.Name} }}}}'")
+                    var parameters = Parameters.Select(z => $"--{z.Name.ToLowerInvariant()} '${{{{ env.{z.Name.ToUpperInvariant()} }}}}'")
                        .ToArray()
                        .JoinSpace();
 #pragma warning restore CA1308
 
-                    foreach (var step in Steps)
+                    foreach (var step in SetupSteps)
+                    {
+                        step.Write(writer);
+                    }
+
+                    foreach (var step in NukeSteps)
                     {
                         step.Write(writer, parameters);
                     }
@@ -345,17 +349,36 @@ public class GitHubActionsStepsAttribute : ChainedConfigurationAttributeBase
 
     public abstract class GitHubActionsStep : ConfigurationEntity
     {
+        public string Id { get; set; }
         public string Name { get; set; }
     }
 
     public class GitHubActionsUsingStep : GitHubActionsStep
     {
         public string Using { get; set; }
+        public Dictionary<string, string> With { get; set; } = new Dictionary<string, string>();
 
         public override void Write(CustomFileWriter writer)
         {
             writer.WriteLine($"- name: {Name}");
+            if (!string.IsNullOrWhiteSpace(Id))
+            {
+                writer.WriteLine($"  id: {Id}");
+            }
             writer.WriteLine($"  uses: {Using}");
+
+            if (With.Any())
+            {
+                using (writer.Indent())
+                {
+                    writer.WriteLine("with:");
+                    using (writer.Indent())
+                    {
+                        foreach (var item in With)
+                            writer.WriteLine($"{item.Key}: '{item.Value}'");
+                    }
+                }
+            }
         }
     }
     public class GitHubActionsArtifactStep : GitHubActionsStep
@@ -409,7 +432,7 @@ public class GitHubActionsStepsAttribute : ChainedConfigurationAttributeBase
     {
         public string Name { get; set; }
 
-        public GitHubActionsTrigger[] ShortTriggers { get; set; }
+        public GitHubActionsTrigger[] ShortTriggers { get; set; } = Array.Empty<GitHubActionsTrigger>();
         public GitHubActionsDetailedTrigger[] DetailedTriggers { get; set; }
         public GitHubActionsJob[] Jobs { get; set; }
 
@@ -435,6 +458,79 @@ public class GitHubActionsStepsAttribute : ChainedConfigurationAttributeBase
             using (writer.Indent())
             {
                 Jobs.ForEach(x => x.Write(writer));
+            }
+        }
+    }
+
+    public class GitHubActionsVcsTrigger : GitHubActionsDetailedTrigger
+    {
+        public GitHubActionsTrigger Kind { get; set; }
+        public string[] Branches { get; set; }
+        public string[] Tags { get; set; }
+        public string[] IncludePaths { get; set; }
+        public string[] ExcludePaths { get; set; }
+
+        public override void Write(CustomFileWriter writer)
+        {
+            writer.WriteLine(Kind.GetValue() + ":");
+
+            using (writer.Indent())
+            {
+                if (Branches.Length > 0)
+                {
+                    writer.WriteLine("branches:");
+                    using (writer.Indent())
+                    {
+                        Branches.ForEach(x => writer.WriteLine($"- {x}"));
+                    }
+                }
+
+                if (Tags.Length > 0)
+                {
+                    writer.WriteLine("tags:");
+                    using (writer.Indent())
+                    {
+                        Tags.ForEach(x => writer.WriteLine($"- {x}"));
+                    }
+                }
+
+                if (IncludePaths.Length > 0 || ExcludePaths.Length > 0)
+                {
+                    writer.WriteLine("paths:");
+                    using (writer.Indent())
+                    {
+                        IncludePaths.ForEach(x => writer.WriteLine($"- {x}"));
+                        ExcludePaths.ForEach(x => writer.WriteLine($"- !{x}"));
+                    }
+                }
+            }
+        }
+    }
+
+    public class GitHubActionsRunStep : GitHubActionsStep
+    {
+        public string Command { get; set; }
+        public Dictionary<string, string> Imports { get; set; } = new Dictionary<string, string>();
+
+        public override void Write(CustomFileWriter writer)
+        {
+            writer.WriteLine($"- name: {Name}");
+            if (!string.IsNullOrWhiteSpace(Id))
+            {
+                writer.WriteLine($"  id: {Id}");
+            }
+            writer.WriteLine($"  run: {Command}");
+
+            if (Imports.Count > 0)
+            {
+                using (writer.Indent())
+                {
+                    writer.WriteLine("env:");
+                    using (writer.Indent())
+                    {
+                        Imports.ForEach(x => writer.WriteLine($"  {x.Key}: {x.Value}"));
+                    }
+                }
             }
         }
     }
