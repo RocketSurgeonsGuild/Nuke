@@ -24,6 +24,22 @@ namespace Rocket.Surgery.Nuke
     [ExcludeFromCodeCoverage]
     public class ComputedGitVersionAttribute : InjectionAttributeBase
     {
+        private readonly string _frameworkVersion;
+        /// <summary>
+        /// Computes the GitVersion for the repository.
+        /// </summary>
+        public ComputedGitVersionAttribute()
+            : this("netcoreapp3.1")
+        {
+        }
+
+
+        /// <summary>
+        /// Computes the GitVersion for the repository.
+        /// </summary>
+        /// <param name="frameworkVersion">The framework version to use with GitVersion.</param>
+        public ComputedGitVersionAttribute(string frameworkVersion) => _frameworkVersion = frameworkVersion;
+
         /// <summary>
         /// Returns if GitVersion data is available
         /// </summary>
@@ -44,7 +60,7 @@ namespace Rocket.Surgery.Nuke
             {
                 return GitVersionTasks.GitVersion(
                         s => s
-                           .SetFramework("netcoreapp3.1")
+                           .SetFramework(_frameworkVersion)
                            .DisableLogOutput()
                            .SetUpdateAssemblyInfo(UpdateAssemblyInfo)
                     )

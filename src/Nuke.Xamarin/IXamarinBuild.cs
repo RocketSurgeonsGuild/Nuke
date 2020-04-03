@@ -18,7 +18,7 @@ namespace Rocket.Surgery.Nuke.Xamarin
         /// A value indicated whether the build host is OSX.
         /// </summary>
         Expression<Func<bool>> IsOsx { get; set; }
-        
+
         /// <summary>
         /// Gets the base bundle identifier for the application.
         /// </summary>
