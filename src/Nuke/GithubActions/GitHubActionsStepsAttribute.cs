@@ -71,14 +71,11 @@ namespace Rocket.Surgery.Nuke.GithubActions
             IReadOnlyCollection<ExecutableTarget> relevantTargets
         )
         {
-
-
-            var buildcmd = Path.ChangeExtension(NukeBuild.RootDirectory.GlobFiles("build.ps1", "build.sh")
-                        .Select(x => NukeBuild.RootDirectory.GetUnixRelativePathTo(x))
-                        .FirstOrDefault()
-                        .NotNull("Must have a build script of build.ps1 or build.sh"), ".ps1");
             var steps = new List<GitHubActionsStep> {
                             new CheckoutStep("Checkout"),
+                            new RunStep("Fetch all history for all tags and branches") {
+                                Run = "git fetch --prune --unshallow"
+                            },
                             // new SetupDotNetStep("Install .NET Core Sdk"),
                             new RunStep("Install Nuke Global Tool") {
                                 Run = "dotnet tool install Nuke.GlobalTool"

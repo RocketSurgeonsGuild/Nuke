@@ -48,6 +48,8 @@ jobs:
       - name: 🔨 Use GitVersion
         id: gitversion
         uses: david-driscoll/gittools-actions/gitversion/execute@feature/export-environment-github
+      - name: Fetch all history for all tags and branches
+        run: git fetch --prune --unshallow
       - name: 📲 Install Nuke Global Tool
         run: dotnet tool install Nuke.GlobalTool
       - name: 📪 Dotnet Tool Restore
