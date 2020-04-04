@@ -98,7 +98,7 @@ internal class Solution : DotNetCoreBuild, IDotNetCoreBuild
             Using = "codecov/codecov-action@v1",
             With = new Dictionary<string, string>
             {
-                ["file"] = "${{ env.GITHUB_WORKSPACE }}/coverage/solution.xml",
+                // ["file"] = "${{ env.GITHUB_WORKSPACE }}/coverage/solution.xml",
                 ["name"] = "actions-${{ matrix.os }}",
                 ["fail_ci_if_error"] = "true",
             }

@@ -63,7 +63,6 @@ jobs:
       - name: Publish Coverage
         uses: codecov/codecov-action@v1
         with:
-          file: '${{ env.GITHUB_WORKSPACE }}/coverage/solution.xml'
           name: 'actions-${{ matrix.os }}'
           fail_ci_if_error: 'true'
       - uses: actions/upload-artifact@v1
