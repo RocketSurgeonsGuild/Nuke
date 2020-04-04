@@ -80,6 +80,12 @@ internal class Solution : DotNetCoreBuild, IDotNetCoreBuild
             new RunStep("Fetch all history for all tags and branches") {
                 Run = "git fetch --prune --unshallow"
             },
+            new SetupDotNetStep("Use .NET Core 2.1 SDK") {
+                DotnetVersion = "2.1.x"
+            },
+            new SetupDotNetStep("Use .NET Core 3.1 SDK") {
+                DotnetVersion = "3.1.x"
+            },
             new UsingStep("Install GitVersion")
             {
                 Uses = "david-driscoll/gittools-actions/gitversion/setup@feature/export-environment-github",

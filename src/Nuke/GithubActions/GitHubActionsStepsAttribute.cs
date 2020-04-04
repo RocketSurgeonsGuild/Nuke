@@ -72,9 +72,9 @@ namespace Rocket.Surgery.Nuke.GithubActions
         )
         {
             var steps = new List<GitHubActionsStep> {
-                            new CheckoutStep("Checkout"),
-                            // new SetupDotNetStep("Install .NET Core Sdk"),
-                        };
+                new CheckoutStep("Checkout"),
+                // new SetupDotNetStep("Install .NET Core Sdk"),
+            };
 
 
             var globalToolStep = new RunStep("Install Nuke Global Tool")
