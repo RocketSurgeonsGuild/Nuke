@@ -78,7 +78,7 @@ internal class Solution : DotNetCoreBuild, IDotNetCoreBuild
         // checkoutStep.FetchDepth = 0;
         buildJob.Steps.InsertRange(buildJob.Steps.IndexOf(checkoutStep) + 1, new BaseGitHubActionsStep[] {
             new RunStep("Fetch all history for all tags and branches") {
-                Run = "git fetch --prune"
+                Run = "git fetch --prune --unshallow"
             },
             new UsingStep("Install GitVersion")
             {

@@ -41,7 +41,7 @@ jobs:
         with:
           clean: 'false'
       - name: Fetch all history for all tags and branches
-        run: git fetch --prune
+        run: git fetch --prune --unshallow
       - name: 📲 Install GitVersion
         uses: david-driscoll/gittools-actions/gitversion/setup@feature/export-environment-github
         with:
