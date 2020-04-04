@@ -37,49 +37,55 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
-      - name: Install GitVersion
+        uses: actions/checkout@v2
+        with:
+          clean: 'false'
+          fetch-depth: '0'
+      - name: 📲 Install GitVersion
         uses: david-driscoll/gittools-actions/gitversion/setup@feature/export-environment-github
         with:
           versionSpec: '5.1.x'
-      - name: Use GitVersion
+      - name: 🔨 Use GitVersion
         id: gitversion
         uses: david-driscoll/gittools-actions/gitversion/execute@feature/export-environment-github
-      - name: '🛠 DotnetToolRestore'
-        shell: pwsh
-        run: ./build.ps1 DotnetToolRestore --skip
-      - name: '📪 Restore'
-        shell: pwsh
-        run: ./build.ps1 BuildVersion Clean Restore --skip
-      - name: '⚙ Build'
-        shell: pwsh
-        run: ./build.ps1 Build --skip
-      - name: '🚦 Test'
-        shell: pwsh
-        run: ./build.ps1 Generate_Code_Coverage_Reports Test --skip
-      - name: '📦 Pack'
-        shell: pwsh
-        run: ./build.ps1 Pack --skip
-      - name: Publish Coverage
+      - name: 📲 Install Nuke Global Tool
+        run: dotnet tool install Nuke.GlobalTool
+      - name: 📪 Dotnet Tool Restore
+        run: nuke DotnetToolRestore --skip
+      - name: 📪 Restore
+        run: nuke BuildVersion Clean Restore --skip
+      - name: ⚙ Build
+        run: nuke Build --skip
+      - name: 🚦 Test
+        run: nuke Generate_Code_Coverage_Reports Test --skip
+      - name: 📦 Pack
+        run: nuke Pack --skip
+      - name: 🐿 Publish Coverage
         uses: codecov/codecov-action@v1
         with:
           name: 'actions-${{ matrix.os }}'
           fail_ci_if_error: 'true'
-      - uses: actions/upload-artifact@v1
-        name: Publish logs
+      - name: 🐿 Publish logs
         if: always()
+        uses: actions/upload-artifact@v1
         with:
-          name: logs
-          path: artifacts/logs/
-      - uses: actions/upload-artifact@v1
-        name: Publish coverage data
+          name: 'logs'
+          path: 'artifacts/logs/'
+      - name: 🐿 Publish coverage data
         if: always()
+        uses: actions/upload-artifact@v1
         with:
-          name: coverage
-          path: coverage/
-      - uses: actions/upload-artifact@v1
-        name: Publish NuGet Packages
+          name: 'coverage'
+          path: 'coverage/'
+      - name: 🐿 Publish test data
         if: always()
+        uses: actions/upload-artifact@v1
         with:
-          name: nuget
-          path: artifacts/nuget/
+          name: 'coverage'
+          path: 'artifacts/test/'
+      - name: 🐿 Publish NuGet Packages
+        if: always()
+        uses: actions/upload-artifact@v1
+        with:
+          name: 'nuget'
+          path: 'artifacts/nuget/'

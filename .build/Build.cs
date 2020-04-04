@@ -17,9 +17,9 @@ using static Nuke.Common.IO.PathConstruction;
 using Rocket.Surgery.Nuke.GithubActions;
 using System.Reflection;
 using System.IO;
-using GitHubActionsConfiguration = Rocket.Surgery.Nuke.GithubActions.GitHubActionsConfiguration;
-using GitHubActionsUsingStep = Rocket.Surgery.Nuke.GithubActions.GitHubActionsUsingStep;
-using GitHubActionsArtifactStep = Rocket.Surgery.Nuke.GithubActions.GitHubActionsArtifactStep;
+using RocketSurgeonGitHubActionsConfiguration = Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration;
+using UsingStep = Rocket.Surgery.Nuke.GithubActions.UsingStep;
+using UploadArtifactStep = Rocket.Surgery.Nuke.GithubActions.UploadArtifactStep;
 
 [PublicAPI]
 [CheckBuildProjectConfigurations]
@@ -70,60 +70,62 @@ internal class Solution : DotNetCoreBuild, IDotNetCoreBuild
 
     public Target Pack => _ => _.With(this, DotNetCoreBuild.Pack);
 
-    public static GitHubActionsConfiguration Middleware(GitHubActionsConfiguration configuration)
+    public static RocketSurgeonGitHubActionsConfiguration Middleware(RocketSurgeonGitHubActionsConfiguration configuration)
     {
         var buildJob = configuration.Jobs.First(z => z.Name == "Build");
-        var checkoutStep = buildJob.Steps.First(z => z is GitHubActionsUsingStep step && step.Using == "actions/checkout@v1");
+        var checkoutStep = buildJob.Steps.OfType<CheckoutStep>().Single();
+        // For fetch all
+        checkoutStep.FetchDepth = 0;
         buildJob.Steps.InsertRange(buildJob.Steps.IndexOf(checkoutStep) + 1, new[] {
-            new GitHubActionsUsingStep
+            new UsingStep("Install GitVersion")
             {
-                Name = "Install GitVersion",
-                Using = "david-driscoll/gittools-actions/gitversion/setup@feature/export-environment-github",
+                Uses = "david-driscoll/gittools-actions/gitversion/setup@feature/export-environment-github",
                 With = {
                     ["versionSpec"] = "5.1.x",
                 }
 
             },
-            new GitHubActionsUsingStep
+            new UsingStep("Use GitVersion")
             {
-                Name = "Use GitVersion",
                 Id = "gitversion",
-                Using = "david-driscoll/gittools-actions/gitversion/execute@feature/export-environment-github"
+                Uses = "david-driscoll/gittools-actions/gitversion/execute@feature/export-environment-github"
             }
         });
 
-        buildJob.Steps.Add(new GitHubActionsUsingStep()
+        buildJob.Steps.Add(new UsingStep("Publish Coverage")
         {
-            Name = "Publish Coverage",
-            Using = "codecov/codecov-action@v1",
+            Uses = "codecov/codecov-action@v1",
             With = new Dictionary<string, string>
             {
-                // ["file"] = "${{ env.GITHUB_WORKSPACE }}/coverage/solution.xml",
                 ["name"] = "actions-${{ matrix.os }}",
                 ["fail_ci_if_error"] = "true",
             }
         });
 
-        buildJob.Steps.Add(new GitHubActionsArtifactStep()
+        buildJob.Steps.Add(new UploadArtifactStep("Publish logs")
         {
-            Name = "Publish logs",
-            ArtifactName = "logs",
+            Name = "logs",
             Path = "artifacts/logs/",
             If = "always()"
         });
 
-        buildJob.Steps.Add(new GitHubActionsArtifactStep()
+        buildJob.Steps.Add(new UploadArtifactStep("Publish coverage data")
         {
-            Name = "Publish coverage data",
-            ArtifactName = "coverage",
+            Name = "coverage",
             Path = "coverage/",
             If = "always()"
         });
 
-        buildJob.Steps.Add(new GitHubActionsArtifactStep()
+        buildJob.Steps.Add(new UploadArtifactStep("Publish test data")
         {
-            Name = "Publish NuGet Packages",
-            ArtifactName = "nuget",
+            Name = "coverage",
+            Path = "artifacts/test/",
+            If = "always()"
+        });
+
+        buildJob.Steps.Add(new UploadArtifactStep("Publish NuGet Packages")
+        {
+            Name = "nuget",
             Path = "artifacts/nuget/",
             If = "always()"
         });

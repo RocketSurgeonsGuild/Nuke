@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Humanizer;
 using JetBrains.Annotations;
 using Nuke.Common;
 using Nuke.Common.CI;
@@ -70,7 +71,64 @@ namespace Rocket.Surgery.Nuke.GithubActions
             IReadOnlyCollection<ExecutableTarget> relevantTargets
         )
         {
-            var paramList = new List<GithubActionsParameter>();
+
+
+            var buildcmd = Path.ChangeExtension(NukeBuild.RootDirectory.GlobFiles("build.ps1", "build.sh")
+                        .Select(x => NukeBuild.RootDirectory.GetUnixRelativePathTo(x))
+                        .FirstOrDefault()
+                        .NotNull("Must have a build script of build.ps1 or build.sh"), ".ps1");
+            var steps = new List<GitHubActionsStep> {
+                            new CheckoutStep("Checkout"),
+                            // new SetupDotNetStep("Install .NET Core Sdk"),
+                            new RunStep("Install Nuke Global Tool") {
+                                Run = "dotnet tool install Nuke.GlobalTool"
+                            }
+                        };
+
+            var stepParameters = GetParameters(build).Select(z => $"--{z.Name.ToLowerInvariant()} '${{{{ env.{z.Name.ToUpperInvariant()} }}}}'")
+               .ToArray()
+               .JoinSpace();
+
+            var lookupTable = new LookupTable<ExecutableTarget, string[]>();
+            foreach (var (execute, targets) in relevantTargets
+                .Select(x => (ExecutableTarget: x, Targets: GetInvokedTargets(x).ToArray()))
+                .ForEachLazy(x => lookupTable.Add(x.ExecutableTarget, x.Targets))
+            )
+            {
+                steps.Add(new RunStep(execute.Name.Humanize(LetterCasing.Title))
+                {
+                    Run = $"nuke {targets.JoinSpace()} --skip {stepParameters}".TrimEnd()
+                });
+            }
+
+            var config = new RocketSurgeonGitHubActionsConfiguration()
+            {
+                Name = _name,
+                DetailedTriggers = GetTriggers().ToList(),
+                Jobs = new List<RocketSurgeonsGithubActionsJob> {
+                    new RocketSurgeonsGithubActionsJob("Build")
+                    {
+                        Steps = steps,
+                        Images = _images,
+                    }
+                }
+            };
+
+            if (Enhancements?.Any() == true)
+            {
+                foreach (var method in Enhancements.Join(build.GetType().GetMethods(), z => z, z => z.Name, (_, e) => e))
+                {
+                    config = method.IsStatic
+                        ? method.Invoke(null, new object[] { config }) as RocketSurgeonGitHubActionsConfiguration ?? config
+                        : method.Invoke(build, new object[] { config }) as RocketSurgeonGitHubActionsConfiguration ?? config;
+                }
+            }
+
+            return config;
+        }
+
+        protected virtual IEnumerable<GithubActionsNukeParameter> GetParameters(NukeBuild build)
+        {
             var parameters =
                 build.GetType().GetMembers(
                         BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public |
@@ -92,69 +150,13 @@ namespace Rocket.Surgery.Nuke.GithubActions
                         value = null;
                     }
 
-                    paramList.Add(
-                        new GithubActionsParameter()
-                        {
-                            Name = parameter.GetCustomAttribute<ParameterAttribute>().Name ?? parameter.Name,
-                            Default = value?.ToString() ?? "",
-                        }
-                    );
-                }
-            }
-
-            var lookupTable = new LookupTable<ExecutableTarget, string[]>();
-            var steps = relevantTargets
-               .Select(x => (ExecutableTarget: x, Targets: GetInvokedTargets(x).ToArray()))
-               .ForEachLazy(x => lookupTable.Add(x.ExecutableTarget, x.Targets))
-               .ToArray();
-
-            var buildcmd = Path.ChangeExtension(NukeBuild.RootDirectory.GlobFiles("build.ps1", "build.sh")
-                        .Select(x => NukeBuild.RootDirectory.GetUnixRelativePathTo(x))
-                        .FirstOrDefault()
-                        .NotNull("Must have a build script of build.ps1 or build.sh"), ".ps1");
-            var nukeStep = new GitHubActionsNukeSteps()
-            {
-                Parameters = paramList.ToArray(),
-                Name = "Nuke",
-                ScriptPath = buildcmd,
-                Imports = GetImports()
-                    // .Concat(paramList.Select(z => (key: z.Name, value: $"${{{{ env.{z.Name} }}}}")))
-                    .ToDictionary(x => x.key, x => x.value),
-                InvokedTargets = steps,
-            };
-
-            var config = new GitHubActionsConfiguration()
-            {
-                Name = _name,
-                DetailedTriggers = GetTriggers().ToArray(),
-                Jobs = new[] {
-                    new GitHubActionsJob
+                    yield return new GithubActionsNukeParameter()
                     {
-                        Name = "Build",
-                        Steps = new List<GitHubActionsStep> {
-                            new GitHubActionsUsingStep
-                            {
-                                Name = "Checkout",
-                                Using = "actions/checkout@v1"
-                            },
-                            nukeStep
-                        },
-                        Images = _images,
-                    }
-                }
-            };
-
-            if (Enhancements?.Any() == true)
-            {
-                foreach (var method in Enhancements.Join(build.GetType().GetMethods(), z => z, z => z.Name, (_, e) => e))
-                {
-                    config = method.IsStatic
-                        ? method.Invoke(null, new object[] { config }) as GitHubActionsConfiguration ?? config
-                        : method.Invoke(build, new object[] { config }) as GitHubActionsConfiguration ?? config;
+                        Name = parameter.GetCustomAttribute<ParameterAttribute>().Name ?? parameter.Name,
+                        Default = value?.ToString() ?? "",
+                    };
                 }
             }
-
-            return config;
         }
 
         protected virtual IEnumerable<(string key, string value)> GetImports()
@@ -175,7 +177,7 @@ namespace Rocket.Surgery.Nuke.GithubActions
                 OnPushIncludePaths.Length > 0 ||
                 OnPushExcludePaths.Length > 0)
             {
-                yield return new GitHubActionsVcsTrigger
+                yield return new RocketSurgeonGitHubActionsVcsTrigger
                 {
                     Kind = GitHubActionsTrigger.Push,
                     Branches = OnPushBranches,
@@ -190,7 +192,7 @@ namespace Rocket.Surgery.Nuke.GithubActions
                 OnPullRequestIncludePaths.Length > 0 ||
                 OnPullRequestExcludePaths.Length > 0)
             {
-                yield return new GitHubActionsVcsTrigger
+                yield return new RocketSurgeonGitHubActionsVcsTrigger
                 {
                     Kind = GitHubActionsTrigger.PullRequest,
                     Branches = OnPullRequestBranches,

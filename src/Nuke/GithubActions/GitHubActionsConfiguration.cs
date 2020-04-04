@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
@@ -10,20 +11,20 @@ using Nuke.Common.Utilities.Collections;
 
 namespace Rocket.Surgery.Nuke.GithubActions
 {
-    public class GitHubActionsConfiguration : ConfigurationEntity
+    public class RocketSurgeonGitHubActionsConfiguration : ConfigurationEntity
     {
         public string Name { get; set; }
-
-        public GitHubActionsTrigger[] ShortTriggers { get; set; } = Array.Empty<GitHubActionsTrigger>();
-        public GitHubActionsDetailedTrigger[] DetailedTriggers { get; set; }
-        public GitHubActionsJob[] Jobs { get; set; }
+        public List<GitHubActionsTrigger> ShortTriggers { get; set; } = new List<GitHubActionsTrigger>();
+        public List<GitHubActionsDetailedTrigger> DetailedTriggers { get; set; } = new List<GitHubActionsDetailedTrigger>();
+        public List<RocketSurgeonsGithubActionsJob> Jobs { get; set; } = new List<RocketSurgeonsGithubActionsJob>();
+        public Dictionary<string, string> Environment { get; set; } = new Dictionary<string, string>();
 
         public override void Write(CustomFileWriter writer)
         {
             writer.WriteLine($"name: {Name}");
             writer.WriteLine();
 
-            if (ShortTriggers.Length > 0)
+            if (ShortTriggers.Count > 0)
             {
                 writer.WriteLine($"on: [{ShortTriggers.Select(x => x.GetValue().ToLowerInvariant()).JoinComma()}]");
             }
@@ -42,6 +43,14 @@ namespace Rocket.Surgery.Nuke.GithubActions
             using (writer.Indent())
             {
                 Jobs.ForEach(x => x.Write(writer));
+            }
+            if (Environment?.Any() == true)
+            {
+                writer.WriteLine("env:");
+                using (writer.Indent())
+                {
+                    Environment.ForEach(x => writer.WriteLine($"{x.Key}: {x.Value}"));
+                }
             }
         }
     }

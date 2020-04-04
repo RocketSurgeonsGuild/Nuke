@@ -1,4 +1,4 @@
-using Nuke.Common.CI.GitHubActions;
+﻿using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
 using Nuke.Common.Tooling;
 using Nuke.Common.Utilities;
@@ -6,7 +6,7 @@ using Nuke.Common.Utilities.Collections;
 
 namespace Rocket.Surgery.Nuke.GithubActions
 {
-    public class GitHubActionsVcsTrigger : GitHubActionsDetailedTrigger
+    public class RocketSurgeonGitHubActionsVcsTrigger : GitHubActionsDetailedTrigger
     {
         public GitHubActionsTrigger Kind { get; set; }
         public string[] Branches { get; set; }

@@ -4,7 +4,7 @@ using Nuke.Common.Utilities;
 
 namespace Rocket.Surgery.Nuke.GithubActions
 {
-    public class GithubActionsParameter : ConfigurationEntity
+    public class GithubActionsNukeParameter : ConfigurationEntity
     {
         public string Name { get; set; }
         public string Default { get; set; }
