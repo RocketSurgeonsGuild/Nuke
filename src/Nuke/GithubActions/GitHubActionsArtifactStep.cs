@@ -75,7 +75,7 @@ namespace Rocket.Surgery.Nuke.GithubActions
 
         public override void Write(CustomFileWriter writer)
         {
-            WithProperties(x => x.Underscore().Camelize().ToLowerInvariant());
+            WithProperties(x => x.Underscore().Dasherize().ToLowerInvariant());
             base.Write(writer);
         }
     }

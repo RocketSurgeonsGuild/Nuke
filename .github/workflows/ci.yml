@@ -45,11 +45,11 @@ jobs:
       - name: 🔨 Use .NET Core 2.1 SDK
         uses: david-driscoll/setup-dotnet@sxs-with-fallback
         with:
-          dotnetversion: '2.1.x'
+          dotnet-version: '2.1.x'
       - name: 🔨 Use .NET Core 3.1 SDK
         uses: david-driscoll/setup-dotnet@sxs-with-fallback
         with:
-          dotnetversion: '3.1.x'
+          dotnet-version: '3.1.x'
       - name: 📲 Install GitVersion
         uses: david-driscoll/gittools-actions/gitversion/setup@feature/export-environment-github
         with:
