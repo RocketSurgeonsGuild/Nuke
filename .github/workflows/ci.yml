@@ -40,9 +40,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           clean: 'false'
-          fetch-depth: '0'
       - name: Fetch all history for all tags and branches
-        run: git fetch --prune --unshallow
+        run: git fetch --prune
       - name: 📲 Install GitVersion
         uses: david-driscoll/gittools-actions/gitversion/setup@feature/export-environment-github
         with:
