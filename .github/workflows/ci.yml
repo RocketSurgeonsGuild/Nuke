@@ -50,7 +50,7 @@ jobs:
         id: gitversion
         uses: david-driscoll/gittools-actions/gitversion/execute@feature/export-environment-github
       - name: 📲 Install Nuke Global Tool
-        run: dotnet tool install Nuke.GlobalTool
+        run: dotnet tool install -g Nuke.GlobalTool
       - name: 📪 Dotnet Tool Restore
         run: nuke DotnetToolRestore --skip
       - name: 📪 Restore

@@ -75,7 +75,7 @@ namespace Rocket.Surgery.Nuke.GithubActions
                             new CheckoutStep("Checkout"),
                             // new SetupDotNetStep("Install .NET Core Sdk"),
                             new RunStep("Install Nuke Global Tool") {
-                                Run = "dotnet tool install Nuke.GlobalTool"
+                                Run = "dotnet tool install -g Nuke.GlobalTool"
                             }
                         };
 
