@@ -70,14 +70,14 @@ jobs:
         name: Publish logs
         with:
           name: logs
-          path: artifacts/logs/
+          path: ${{ env.GITHUB_WORKSPACE }}/artifacts/logs/
       - uses: actions/upload-artifact@v1
         name: Publish coverage data
         with:
           name: coverage
-          path: coverage/
+          path: ${{ env.GITHUB_WORKSPACE }}/coverage/
       - uses: actions/upload-artifact@v1
         name: Publish NuGet Packages
         with:
           name: nuget
-          path: artifacts/nuget/
+          path: ${{ env.GITHUB_WORKSPACE }}/artifacts/nuget/

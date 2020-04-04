@@ -108,21 +108,21 @@ internal class Solution : DotNetCoreBuild, IDotNetCoreBuild
         {
             Name = "Publish logs",
             ArtifactName = "logs",
-            Path = "artifacts/logs/"
+            Path = "${{ env.GITHUB_WORKSPACE }}/artifacts/logs/"
         });
 
         buildJob.Steps.Add(new GitHubActionsArtifactStep()
         {
             Name = "Publish coverage data",
             ArtifactName = "coverage",
-            Path = "coverage/"
+            Path = "${{ env.GITHUB_WORKSPACE }}/coverage/"
         });
 
         buildJob.Steps.Add(new GitHubActionsArtifactStep()
         {
             Name = "Publish NuGet Packages",
             ArtifactName = "nuget",
-            Path = "artifacts/nuget/"
+            Path = "${{ env.GITHUB_WORKSPACE }}/artifacts/nuget/"
         });
 
 
