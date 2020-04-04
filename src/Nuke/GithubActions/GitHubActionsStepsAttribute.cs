@@ -81,7 +81,7 @@ namespace Rocket.Surgery.Nuke.GithubActions
             {
                 Run = "dotnet tool install -g Nuke.GlobalTool"
             };
-            var dotnetTools = Path.Join(NukeBuild.RootDirectory, ".config/dotnet-tools.json");
+            var dotnetTools = Path.Combine(NukeBuild.RootDirectory, ".config/dotnet-tools.json");
             var localTool = false;
             if (File.Exists(dotnetTools))
             {
