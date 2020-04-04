@@ -14,4 +14,5 @@ namespace Rocket.Surgery.Nuke.GithubActions
             using var a = writer.WriteBlock($"{Name}: '{Default}'");
         }
     }
+
 }

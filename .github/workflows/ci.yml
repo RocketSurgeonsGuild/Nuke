@@ -47,16 +47,37 @@ jobs:
         uses: david-driscoll/gittools-actions/gitversion/execute@feature/export-environment-github
       - name: '🛠 DotnetToolRestore'
         shell: pwsh
-        run: ./build.ps1 DotnetToolRestore --skip --configuration '${{ env.CONFIGURATION }}' --artifacts '${{ env.ARTIFACTS }}' --coverage '${{ env.COVERAGE }}' --verbosity '${{ env.VERBOSITY }}'
+        run: ./build.ps1 DotnetToolRestore --skip
       - name: '📪 Restore'
         shell: pwsh
-        run: ./build.ps1 BuildVersion Clean Restore --skip --configuration '${{ env.CONFIGURATION }}' --artifacts '${{ env.ARTIFACTS }}' --coverage '${{ env.COVERAGE }}' --verbosity '${{ env.VERBOSITY }}'
+        run: ./build.ps1 BuildVersion Clean Restore --skip
       - name: '⚙ Build'
         shell: pwsh
-        run: ./build.ps1 Build --skip --configuration '${{ env.CONFIGURATION }}' --artifacts '${{ env.ARTIFACTS }}' --coverage '${{ env.COVERAGE }}' --verbosity '${{ env.VERBOSITY }}'
+        run: ./build.ps1 Build --skip
       - name: '🚦 Test'
         shell: pwsh
-        run: ./build.ps1 Generate_Code_Coverage_Reports Test --skip --configuration '${{ env.CONFIGURATION }}' --artifacts '${{ env.ARTIFACTS }}' --coverage '${{ env.COVERAGE }}' --verbosity '${{ env.VERBOSITY }}'
+        run: ./build.ps1 Generate_Code_Coverage_Reports Test --skip
       - name: '📦 Pack'
         shell: pwsh
-        run: ./build.ps1 Pack --skip --configuration '${{ env.CONFIGURATION }}' --artifacts '${{ env.ARTIFACTS }}' --coverage '${{ env.COVERAGE }}' --verbosity '${{ env.VERBOSITY }}'
+        run: ./build.ps1 Pack --skip
+      - name: Publish Coverage
+        uses: codecov/codecov-action@v1
+        with:
+          file: 'coverage/solution.xml'
+          name: 'actions-${{ matrix.os }}'
+          fail_ci_if_error: 'true'
+      - uses: actions/upload-artifact@v1
+        name: Publish logs
+        with:
+          name: logs
+          path: artifacts/logs/
+      - uses: actions/upload-artifact@v1
+        name: Publish coverage data
+        with:
+          name: coverage
+          path: coverage/
+      - uses: actions/upload-artifact@v1
+        name: Publish NuGet Packages
+        with:
+          name: nuget
+          path: artifacts/nuget/
