@@ -49,42 +49,40 @@ jobs:
       - name: 🔨 Use GitVersion
         id: gitversion
         uses: david-driscoll/gittools-actions/gitversion/execute@feature/export-environment-github
-      - name: 📲 Install Nuke Global Tool
-        run: dotnet tool install -g Nuke.GlobalTool
-      - name: 📪 Dotnet Tool Restore
-        run: nuke DotnetToolRestore --skip
-      - name: 📪 Restore
-        run: nuke BuildVersion Clean Restore --skip
+      - name: 🎁 dotnet tool restore
+        run: dotnet tool restore
+      - name: 🎁 Restore
+        run: dotnet nuke BuildVersion Clean Restore --skip
       - name: ⚙ Build
-        run: nuke Build --skip
+        run: dotnet nuke Build --skip
       - name: 🚦 Test
-        run: nuke Generate_Code_Coverage_Reports Test --skip
+        run: dotnet nuke Generate_Code_Coverage_Reports Test --skip
       - name: 📦 Pack
-        run: nuke Pack --skip
+        run: dotnet nuke Pack --skip
       - name: 🐿 Publish Coverage
         uses: codecov/codecov-action@v1
         with:
           name: 'actions-${{ matrix.os }}'
           fail_ci_if_error: 'true'
-      - name: 🐿 Publish logs
+      - name: 🏺 Publish logs
         if: always()
         uses: actions/upload-artifact@v1
         with:
           name: 'logs'
           path: 'artifacts/logs/'
-      - name: 🐿 Publish coverage data
+      - name: 🏺 Publish coverage data
         if: always()
         uses: actions/upload-artifact@v1
         with:
           name: 'coverage'
           path: 'coverage/'
-      - name: 🐿 Publish test data
+      - name: 🏺 Publish test data
         if: always()
         uses: actions/upload-artifact@v1
         with:
           name: 'coverage'
           path: 'artifacts/test/'
-      - name: 🐿 Publish NuGet Packages
+      - name: 🏺 Publish NuGet Packages
         if: always()
         uses: actions/upload-artifact@v1
         with:

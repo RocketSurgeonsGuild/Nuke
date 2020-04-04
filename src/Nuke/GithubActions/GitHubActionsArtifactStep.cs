@@ -19,6 +19,11 @@ namespace Rocket.Surgery.Nuke.GithubActions
             WithProperties(x => x.Underscore().Camelize().ToLowerInvariant());
             base.Write(writer);
         }
+
+        protected override string GetStepName(string name)
+        {
+            return $"🏺 {name}";
+        }
     }
     public class DownloadArtifactSet : UsingStep
     {
@@ -34,6 +39,11 @@ namespace Rocket.Surgery.Nuke.GithubActions
         {
             WithProperties(x => x.Underscore().Camelize().ToLowerInvariant());
             base.Write(writer);
+        }
+
+        protected override string GetStepName(string name)
+        {
+            return $"🚀 {name}";
         }
     }
 

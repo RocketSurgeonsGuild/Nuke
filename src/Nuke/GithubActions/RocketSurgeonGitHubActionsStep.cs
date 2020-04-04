@@ -52,7 +52,7 @@ namespace Rocket.Surgery.Nuke.GithubActions
             [new Regex("(^Pack|Pack$)", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "📦",
             [new Regex("^Use", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🔨",
             [new Regex("^Install", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "📲",
-            [new Regex("(^Restore|Restore$)", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "📪",
+            [new Regex("(^Restore|Restore$)", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🎁",
             [new Regex("(^Publish|Publish$)", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🐿",
             [new Regex(".*?Test.*?", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🚦",
             [new Regex("Tool", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🛠",

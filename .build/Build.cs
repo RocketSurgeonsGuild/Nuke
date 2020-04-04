@@ -37,7 +37,7 @@ using UploadArtifactStep = Rocket.Surgery.Nuke.GithubActions.UploadArtifactStep;
     OnPullRequestBranches = new[] { "master", "du-fuk" },
     InvokedTargets = new[] { nameof(Default) },
     NonEntryTargets = new[] { nameof(BuildVersion), nameof(Generate_Code_Coverage_Reports), nameof(Default), nameof(Clean) },
-    ExcludedTargets = new[] { nameof(Clean) },
+    ExcludedTargets = new[] { nameof(DotnetToolRestore), nameof(Clean) },
     Enhancements = new[] { nameof(Middleware) }
 )]
 [PackageIcon(

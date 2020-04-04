@@ -74,10 +74,34 @@ namespace Rocket.Surgery.Nuke.GithubActions
             var steps = new List<GitHubActionsStep> {
                             new CheckoutStep("Checkout"),
                             // new SetupDotNetStep("Install .NET Core Sdk"),
-                            new RunStep("Install Nuke Global Tool") {
-                                Run = "dotnet tool install -g Nuke.GlobalTool"
-                            }
                         };
+
+
+            var globalToolStep = new RunStep("Install Nuke Global Tool")
+            {
+                Run = "dotnet tool install -g Nuke.GlobalTool"
+            };
+            var dotnetTools = Path.Join(NukeBuild.RootDirectory, ".config/dotnet-tools.json");
+            var localTool = false;
+            if (File.Exists(dotnetTools))
+            {
+                steps.Add(new RunStep("dotnet tool restore")
+                {
+                    Run = "dotnet tool restore"
+                });
+                if (!File.ReadAllText(dotnetTools).Contains("\"nuke.globaltool\": {"))
+                {
+                    steps.Add(globalToolStep);
+                }
+                else
+                {
+                    localTool = true;
+                }
+            }
+            else
+            {
+                steps.Add(globalToolStep);
+            }
 
             var stepParameters = GetParameters(build).Select(z => $"--{z.Name.ToLowerInvariant()} '${{{{ env.{z.Name.ToUpperInvariant()} }}}}'")
                .ToArray()
@@ -91,7 +115,7 @@ namespace Rocket.Surgery.Nuke.GithubActions
             {
                 steps.Add(new RunStep(execute.Name.Humanize(LetterCasing.Title))
                 {
-                    Run = $"nuke {targets.JoinSpace()} --skip {stepParameters}".TrimEnd()
+                    Run = $"{( localTool ? "dotnet nuke" : "nuke" )} {targets.JoinSpace()} --skip {stepParameters}".TrimEnd()
                 });
             }
 
