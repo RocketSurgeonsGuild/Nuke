@@ -73,9 +73,6 @@ namespace Rocket.Surgery.Nuke.GithubActions
         {
             var steps = new List<GitHubActionsStep> {
                             new CheckoutStep("Checkout"),
-                            new RunStep("Fetch all history for all tags and branches") {
-                                Run = "git fetch --prune --unshallow"
-                            },
                             // new SetupDotNetStep("Install .NET Core Sdk"),
                             new RunStep("Install Nuke Global Tool") {
                                 Run = "dotnet tool install Nuke.GlobalTool"

@@ -76,7 +76,10 @@ internal class Solution : DotNetCoreBuild, IDotNetCoreBuild
         var checkoutStep = buildJob.Steps.OfType<CheckoutStep>().Single();
         // For fetch all
         checkoutStep.FetchDepth = 0;
-        buildJob.Steps.InsertRange(buildJob.Steps.IndexOf(checkoutStep) + 1, new[] {
+        buildJob.Steps.InsertRange(buildJob.Steps.IndexOf(checkoutStep) + 1, new BaseGitHubActionsStep[] {
+            new RunStep("Fetch all history for all tags and branches") {
+                Run = "git fetch --prune --unshallow"
+            },
             new UsingStep("Install GitVersion")
             {
                 Uses = "david-driscoll/gittools-actions/gitversion/setup@feature/export-environment-github",
