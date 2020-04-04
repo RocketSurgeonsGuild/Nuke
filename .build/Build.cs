@@ -98,7 +98,7 @@ internal class Solution : DotNetCoreBuild, IDotNetCoreBuild
             Using = "codecov/codecov-action@v1",
             With = new Dictionary<string, string>
             {
-                ["file"] = "coverage/solution.xml",
+                ["file"] = "${{ env.GITHUB_WORKSPACE }}/coverage/solution.xml",
                 ["name"] = "actions-${{ matrix.os }}",
                 ["fail_ci_if_error"] = "true",
             }
@@ -108,21 +108,24 @@ internal class Solution : DotNetCoreBuild, IDotNetCoreBuild
         {
             Name = "Publish logs",
             ArtifactName = "logs",
-            Path = "${{ env.GITHUB_WORKSPACE }}/artifacts/logs/"
+            Path = "artifacts/logs/",
+            If = "always()"
         });
 
         buildJob.Steps.Add(new GitHubActionsArtifactStep()
         {
             Name = "Publish coverage data",
             ArtifactName = "coverage",
-            Path = "${{ env.GITHUB_WORKSPACE }}/coverage/"
+            Path = "coverage/",
+            If = "always()"
         });
 
         buildJob.Steps.Add(new GitHubActionsArtifactStep()
         {
             Name = "Publish NuGet Packages",
             ArtifactName = "nuget",
-            Path = "${{ env.GITHUB_WORKSPACE }}/artifacts/nuget/"
+            Path = "artifacts/nuget/",
+            If = "always()"
         });
 
 

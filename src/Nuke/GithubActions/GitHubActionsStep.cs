@@ -6,5 +6,6 @@ namespace Rocket.Surgery.Nuke.GithubActions
     {
         public string Id { get; set; }
         public string Name { get; set; }
+        public string If { get; set; }
     }
 }

@@ -63,21 +63,24 @@ jobs:
       - name: Publish Coverage
         uses: codecov/codecov-action@v1
         with:
-          file: 'coverage/solution.xml'
+          file: '${{ env.GITHUB_WORKSPACE }}/coverage/solution.xml'
           name: 'actions-${{ matrix.os }}'
           fail_ci_if_error: 'true'
       - uses: actions/upload-artifact@v1
         name: Publish logs
+        if: always()
         with:
           name: logs
-          path: ${{ env.GITHUB_WORKSPACE }}/artifacts/logs/
+          path: artifacts/logs/
       - uses: actions/upload-artifact@v1
         name: Publish coverage data
+        if: always()
         with:
           name: coverage
-          path: ${{ env.GITHUB_WORKSPACE }}/coverage/
+          path: coverage/
       - uses: actions/upload-artifact@v1
         name: Publish NuGet Packages
+        if: always()
         with:
           name: nuget
-          path: ${{ env.GITHUB_WORKSPACE }}/artifacts/nuget/
+          path: artifacts/nuget/

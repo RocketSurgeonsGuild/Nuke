@@ -11,10 +11,12 @@ namespace Rocket.Surgery.Nuke.GithubActions
         public override void Write(CustomFileWriter writer)
         {
             writer.WriteLine("- uses: actions/upload-artifact@v1");
-            writer.WriteLine($"  name: {Name}");
 
             using (writer.Indent())
             {
+                writer.WriteLine($"name: {Name}");
+                if (!string.IsNullOrWhiteSpace(If))
+                    writer.WriteLine($"if: {If}");
                 writer.WriteLine("with:");
                 using (writer.Indent())
                 {
