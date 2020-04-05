@@ -86,6 +86,10 @@ internal class Solution : DotNetCoreBuild, IDotNetCoreBuild
             new SetupDotNetStep("Use .NET Core 3.1 SDK") {
                 DotNetVersion = "3.1.201"
             },
+            new SetupDotNetStep("Setup Github Packages Feed") {
+                SourceUrl = "https://nuget.pkg.github.com/RocketSurgeonsGuild/index.json",
+                NuGetAuthToken = "${{ secrets.RSG_PACKAGES_TOKEN }}"
+            },
             new UsingStep("Install GitVersion")
             {
                 Uses = "david-driscoll/gittools-actions/gitversion/setup@feature/export-environment-github",
@@ -98,10 +102,6 @@ internal class Solution : DotNetCoreBuild, IDotNetCoreBuild
             {
                 Id = "gitversion",
                 Uses = "david-driscoll/gittools-actions/gitversion/execute@feature/export-environment-github"
-            },
-            new SetupDotNetStep("Setup Github Packages Feed") {
-                SourceUrl = "https://nuget.pkg.github.com/RocketSurgeonsGuild/index.json",
-                NuGetAuthToken = "${{ secrets.RSG_PACKAGES_TOKEN }}"
             },
         });
 
