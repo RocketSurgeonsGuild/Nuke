@@ -84,8 +84,10 @@ internal class Solution : DotNetCoreBuild, IDotNetCoreBuild
                 DotnetVersion = "2.1.805"
             },
             new SetupDotNetStep("Use .NET Core 3.1 SDK") {
-                DotnetVersion = "3.1.201",
-                Environment = { ["NUGET_AUTH_TOKEN"] = "${{secrets.GITHUB_TOKEN}}" }
+                DotnetVersion = "3.1.201"
+            },
+            new SetupDotNetStep("Setup Github Packages Feed") {
+                SourceUrl = "https://nuget.pkg.github.com/RocketSurgeonsGuild/index.json"
             },
             new UsingStep("Install GitVersion")
             {
