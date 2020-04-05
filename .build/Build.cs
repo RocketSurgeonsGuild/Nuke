@@ -87,7 +87,8 @@ internal class Solution : DotNetCoreBuild, IDotNetCoreBuild
                 DotnetVersion = "3.1.201"
             },
             new SetupDotNetStep("Setup Github Packages Feed") {
-                SourceUrl = "https://nuget.pkg.github.com/RocketSurgeonsGuild/index.json"
+                SourceUrl = "https://nuget.pkg.github.com/RocketSurgeonsGuild/index.json",
+                NuGetAuthToken = "${{ secrets.RSG_PACKAGES_TOKEN }}"
             },
             new UsingStep("Install GitVersion")
             {
