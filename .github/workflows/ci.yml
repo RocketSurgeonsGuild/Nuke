@@ -45,11 +45,11 @@ jobs:
       - name: 🔨 Use .NET Core 2.1 SDK
         uses: david-driscoll/setup-dotnet@sxs-with-fallback
         with:
-          dotnet-version: '2.1.x'
+          dotnet-version: '2.1.805'
       - name: 🔨 Use .NET Core 3.1 SDK
         uses: david-driscoll/setup-dotnet@sxs-with-fallback
         with:
-          dotnet-version: '3.1.x'
+          dotnet-version: '3.1.201'
       - name: Setup Github Packages Feed
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

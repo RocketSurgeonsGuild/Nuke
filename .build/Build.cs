@@ -81,10 +81,10 @@ internal class Solution : DotNetCoreBuild, IDotNetCoreBuild
                 Run = "git fetch --prune --unshallow"
             },
             new SetupDotNetStep("Use .NET Core 2.1 SDK") {
-                DotnetVersion = "2.1.x"
+                DotnetVersion = "2.1.805"
             },
             new SetupDotNetStep("Use .NET Core 3.1 SDK") {
-                DotnetVersion = "3.1.x"
+                DotnetVersion = "3.1.201"
             },
             new SetupDotNetStep("Setup Github Packages Feed") {
                 SourceUrl = "RocketSurgeonsGuild"
