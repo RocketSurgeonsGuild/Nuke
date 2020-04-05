@@ -56,7 +56,7 @@ namespace Rocket.Surgery.Nuke.GithubActions
         }
 
         /// <summary>SDK version to use. Example: 2.2.104</summary>
-        public string DotnetVersion { get; set; }
+        public string DotNetVersion { get; set; }
 
         /// <summary>
         /// Optional package source for which to set up authentication. Will consult any existing NuGet.config in the root of the repo and provide a temporary NuGet.config using the NUGET_AUTH_TOKEN environment variable as a ClearTextPassword
@@ -83,15 +83,26 @@ namespace Rocket.Surgery.Nuke.GithubActions
 
         public override void Write(CustomFileWriter writer)
         {
-            WithProperties(x => x.Underscore().Dasherize().ToLowerInvariant());
-            if (With.TryGetValue(nameof(NuGetAuthToken).Dasherize(), out var token))
+            // WithProperties(x => x.Underscore().Dasherize().ToLowerInvariant());
+            if (!string.IsNullOrWhiteSpace(DotNetVersion))
             {
-                With.Remove(nameof(NuGetAuthToken).Dasherize());
+                With.Add("dotnet-version", DotNetVersion);
             }
             if (!string.IsNullOrWhiteSpace(SourceUrl))
             {
-                var t = string.IsNullOrWhiteSpace(NuGetAuthToken) ? "${{ secrets.GITHUB_TOKEN }}" : NuGetAuthToken;
-                Environment.Add("NUGET_AUTH_TOKEN", t);
+                With.Add("source-url", SourceUrl);
+            }
+            if (!string.IsNullOrWhiteSpace(Owner))
+            {
+                With.Add("owner", Owner);
+            }
+            if (!string.IsNullOrWhiteSpace(SourceUrl))
+            {
+                NuGetAuthToken = string.IsNullOrWhiteSpace(NuGetAuthToken) ? "${{ secrets.GITHUB_TOKEN }}" : NuGetAuthToken;
+            }
+            if (!string.IsNullOrWhiteSpace(NuGetAuthToken))
+            {
+                Environment.Add("NUGET_AUTH_TOKEN", NuGetAuthToken);
             }
             base.Write(writer);
         }

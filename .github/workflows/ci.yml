@@ -56,7 +56,6 @@ jobs:
         uses: david-driscoll/setup-dotnet@sxs-with-fallback
         with:
           source-url: 'https://nuget.pkg.github.com/RocketSurgeonsGuild/index.json'
-          nu-get-auth-token: '${{ secrets.RSG_PACKAGES_TOKEN }}'
       - name: 📲 Install GitVersion
         uses: david-driscoll/gittools-actions/gitversion/setup@feature/export-environment-github
         with:
