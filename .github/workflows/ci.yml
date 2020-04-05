@@ -52,7 +52,7 @@ jobs:
           dotnet-version: '3.1.201'
       - name: Setup Github Packages Feed
         env:
-          NUGET_AUTH_TOKEN: ${{ secrets.RSG_PACKAGES_TOKEN }}
+          NUGET_AUTH_TOKEN: 9fba089e66853b8691ff86ba413e82d44e334710
         uses: david-driscoll/setup-dotnet@sxs-with-fallback
         with:
           source-url: 'https://nuget.pkg.github.com/RocketSurgeonsGuild/index.json'
