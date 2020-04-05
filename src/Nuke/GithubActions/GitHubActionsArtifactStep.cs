@@ -73,9 +73,26 @@ namespace Rocket.Surgery.Nuke.GithubActions
         /// </summary>
         public string ConfigFile { get; set; }
 
+        /// <summary>
+        /// The nuget auth token (NUGET_AUTH_TOKEN)
+        /// </summary>
+        /// <remarks>
+        /// Defaults to ${{secrets.GITHUB_TOKEN}} if the source url is given
+        /// </remarks>
+        public string NuGetAuthToken { get; set; }
+
         public override void Write(CustomFileWriter writer)
         {
             WithProperties(x => x.Underscore().Dasherize().ToLowerInvariant());
+            if (With.TryGetValue(nameof(NuGetAuthToken).Dasherize(), out var token))
+            {
+                With.Remove(nameof(NuGetAuthToken).Dasherize());
+            }
+            if (!string.IsNullOrWhiteSpace(SourceUrl))
+            {
+                var t = string.IsNullOrWhiteSpace(NuGetAuthToken) ? "${{ secrets.GITHUB_TOKEN }}" : NuGetAuthToken;
+                Environment.Add("NUGET_AUTH_TOKEN", t);
+            }
             base.Write(writer);
         }
     }

@@ -43,7 +43,7 @@ using UploadArtifactStep = Rocket.Surgery.Nuke.GithubActions.UploadArtifactStep;
 [PackageIcon(
     "https://raw.githubusercontent.com/RocketSurgeonsGuild/graphics/master/png/social-square-thrust-rounded.png"
 )]
-// [EnsurePackageSourceHasCredentials("RocketSurgeonsGuild")]
+[EnsurePackageSourceHasCredentials("RocketSurgeonsGuild")]
 [EnsureGitHooks(GitHook.PreCommit)]
 internal class Solution : DotNetCoreBuild, IDotNetCoreBuild
 {
@@ -85,6 +85,9 @@ internal class Solution : DotNetCoreBuild, IDotNetCoreBuild
             },
             new SetupDotNetStep("Use .NET Core 3.1 SDK") {
                 DotnetVersion = "3.1.x"
+            },
+            new SetupDotNetStep("Setup Github Packages Feed") {
+                SourceUrl = "RocketSurgeonsGuild"
             },
             new UsingStep("Install GitVersion")
             {

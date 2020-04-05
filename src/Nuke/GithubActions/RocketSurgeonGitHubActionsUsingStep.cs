@@ -16,7 +16,7 @@ namespace Rocket.Surgery.Nuke.GithubActions
         }
 
         public string Uses { get; set; }
-        public Dictionary<string, string> With { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> With { get; set; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         protected void WithProperties(Func<string, string> transformName)
         {
