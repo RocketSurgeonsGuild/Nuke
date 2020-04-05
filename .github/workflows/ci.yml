@@ -48,11 +48,10 @@ jobs:
           dotnet-version: '2.1.805'
       - name: 🔨 Use .NET Core 3.1 SDK
         env:
-          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
         uses: david-driscoll/setup-dotnet@sxs-with-fallback
         with:
           dotnet-version: '3.1.201'
-          source-url: 'https://nuget.pkg.github.com/RocketSurgeonsGuild/index.json'
       - name: 📲 Install GitVersion
         uses: david-driscoll/gittools-actions/gitversion/setup@feature/export-environment-github
         with:
