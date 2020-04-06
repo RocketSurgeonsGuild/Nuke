@@ -89,7 +89,7 @@ internal class Solution : DotNetCoreBuild, IDotNetCoreBuild
             new RunStep("nuget source") {
                 Shell = GithubActionShell.Pwsh,
                 Run = "dotnet nuget add source -n RocketSurgeonsGuild -u 'anything' -p ${{ secrets.RSG_PACKAGES_TOKEN }}",
-            }
+            },
             new UsingStep("Install GitVersion")
             {
                 Uses = "david-driscoll/gittools-actions/gitversion/setup@feature/export-environment-github",
