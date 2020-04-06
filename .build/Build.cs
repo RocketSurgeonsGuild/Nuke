@@ -88,7 +88,7 @@ internal class Solution : DotNetCoreBuild, IDotNetCoreBuild
             },
             new RunStep("nuget source") {
                 Shell = GithubActionShell.Pwsh,
-                Run = "dotnet nuget update source RocketSurgeonsGuild -u 'anything' -p ${{ secrets.RSG_PACKAGES_TOKEN }}",
+                Run = "dotnet nuget update source RocketSurgeonsGuild -u 'anything' -p ${{ secrets.RSG_PACKAGES_TOKEN }} --store-password-in-clear-text",
             },
             new UsingStep("Install GitVersion")
             {
