@@ -18,7 +18,7 @@
     <PackageReference Update="Humanizer.Core" Version="2.7.9" />
     <PackageReference Update="JetBrains.ReSharper.CommandLineTools" Version="2019.3.4" />
     <PackageReference Update="Nuke.Common" Version="0.24.7" />
-    <PackageReference Update="ReportGenerator" Version="4.5.4" />
+    <PackageReference Update="ReportGenerator" Version="4.5.5" />
     <PackageReference Update="YamlDotNet" Version="8.1.0" />
   </ItemGroup>
   <ItemGroup>
