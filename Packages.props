@@ -13,7 +13,7 @@
     <GlobalPackageReference Include="Roslynator.Analyzers" Version="2.3.0" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="Buildalyzer" Version="2.5.1" />
+    <PackageReference Update="Buildalyzer" Version="2.6.0" />
     <PackageReference Update="GitVersion.Tool" Version="5.2.4" />
     <PackageReference Update="Humanizer.Core" Version="2.8.2" />
     <PackageReference Update="JetBrains.ReSharper.CommandLineTools" Version="2020.1.0" />
