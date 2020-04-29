@@ -19,7 +19,7 @@
     <PackageReference Update="JetBrains.ReSharper.CommandLineTools" Version="2020.1.1" />
     <PackageReference Update="Nuke.Common" Version="0.24.9" />
     <PackageReference Update="ReportGenerator" Version="4.5.6" />
-    <PackageReference Update="YamlDotNet" Version="8.1.0" />
+    <PackageReference Update="YamlDotNet" Version="8.1.1" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Bogus" Version="29.0.2" />
