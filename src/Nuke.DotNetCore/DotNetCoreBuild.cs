@@ -13,7 +13,11 @@ namespace Rocket.Surgery.Nuke.DotNetCore
 {
     public interface IDotNetCoreBuild : IRestoreWithDotNetCore, IBuildWithDotNetCore, ITestWithDotNetCore { }
 
-    public interface IRestoreWithDotNetCore : IHaveCleanTarget, IHaveSolution, IOutputLogs, IHaveGitVersion, IHaveRestoreTarget
+    public interface IRestoreWithDotNetCore : IHaveCleanTarget,
+                                              IHaveSolution,
+                                              IOutputLogs,
+                                              IHaveGitVersion,
+                                              IHaveRestoreTarget
     {
         /// <summary>
         /// This will ensure that all local dotnet tools are installed
@@ -30,7 +34,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
         public Target Restore => _ => _
            .Description("Restores the dependencies.")
            .Unlisted()
-           .DependsOn(Clean)
+           .After(Clean)
            .DependentFor(Restore)
            .DependsOn(DotnetToolRestore)
            .Executes(
@@ -59,7 +63,6 @@ namespace Rocket.Surgery.Nuke.DotNetCore
         /// </summary>
         public Target Build => _ => _
            .Description("Builds all the projects.")
-           .Unlisted()
            .DependsOn(Restore)
            .DependentFor(Build)
            .Executes(
@@ -102,13 +105,11 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                                            IHaveConfiguration,
                                            IOutputLogs
     {
-
         /// <summary>
         /// dotnet test
         /// </summary>
         public Target Test => _ => _
            .Description("Executes all the unit tests.")
-           .Unlisted()
            .DependentFor(Test)
            .After(Build)
            .OnlyWhenStatic(() => DirectoryExists(TestDirectory))
@@ -197,7 +198,6 @@ namespace Rocket.Surgery.Nuke.DotNetCore
         /// </summary>
         public Target Pack => _ => _
            .Description("Packs all the NuGet packages.")
-           .Unlisted()
            .DependsOn(Build)
            .DependentFor(Pack)
            .After(Test)

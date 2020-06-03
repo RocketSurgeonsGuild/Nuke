@@ -47,16 +47,17 @@ internal class Solution : RocketBoosterBuild,
 
     private Target Default => _ => _
        .DependsOn<IHaveBuildVersion>(x => x.BuildVersion)
-       .DependsOn<IRestoreWithDotNetCore>(x => x.Restore)
-       .DependsOn<IBuildWithDotNetCore>(x => x.Build)
-       .DependsOn<ITestWithDotNetCore>(x => x.Test)
-       .DependsOn<IPackWithDotNetCore>(x => x.Pack);
+       .DependsOn(Restore)
+       .DependsOn(Build)
+       .DependsOn(Test)
+       .DependsOn(Pack);
 
     public Target Clean => _ => _.Inherit<ICanClean>(x => x.Clean);
     public Target Restore => _ => _.Inherit<IRestoreWithDotNetCore>(x => x.Restore);
     public Target Build => _ => _.Inherit<IBuildWithDotNetCore>(x => x.Build);
     public Target Test => _ => _.Inherit<ITestWithDotNetCore>(x => x.Test);
-    public Target Pack => _ => _.Inherit<IPackWithDotNetCore>(x => x.Pack);
+    public Target Pack => _ => _.Inherit<IPackWithDotNetCore>(x => x.Pack)
+       .DependsOn(Clean);
 
     [ComputedGitVersion]
     public GitVersion GitVersion { get; }

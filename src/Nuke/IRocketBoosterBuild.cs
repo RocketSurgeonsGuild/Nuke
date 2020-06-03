@@ -263,12 +263,13 @@ namespace Rocket.Surgery.Nuke
         Target Clean { get; }
     }
 
-    public interface ICanClean : IHaveCleanTarget
+    public interface ICanClean : IHaveCleanTarget, IHaveBuildTarget
     {
         /// <summary>
         /// clean all artifact directories
         /// </summary>
         public Target Clean => _ => _
+           .Before(Build)
            .Executes(
                 () =>
                 {
@@ -321,6 +322,7 @@ namespace Rocket.Surgery.Nuke
     public interface IGenerateCodeCoverageReport : ITriggerCodeCoverageReports
     {
         public Target Generate_Code_Coverage_Report => _ => _
+           .After(Generate_Code_Coverage_Report_Cobertura)
            .TriggeredBy(Trigger_Code_Coverage_Reports)
            .Unlisted()
            .Executes(
@@ -336,6 +338,7 @@ namespace Rocket.Surgery.Nuke
     public interface IGenerateCodeCoverageSummary : ITriggerCodeCoverageReports
     {
         public Target Generate_Code_Coverage_Summary => _ => _
+           .After(Generate_Code_Coverage_Report_Cobertura)
            .TriggeredBy(Trigger_Code_Coverage_Reports)
            .Unlisted()
            .Executes(
@@ -352,6 +355,7 @@ namespace Rocket.Surgery.Nuke
     public interface IGenerateCodeCoverageBadges : ITriggerCodeCoverageReports
     {
         public Target Generate_Code_Coverage_Badges => _ => _
+           .After(Generate_Code_Coverage_Report_Cobertura)
            .TriggeredBy(Trigger_Code_Coverage_Reports)
            .Unlisted()
            .Executes(
@@ -441,24 +445,5 @@ namespace Rocket.Surgery.Nuke
                     );
                 }
             );
-    }
-
-    public interface IRocketBoosterBuild
-    {
-        /// <summary>
-        /// clean all artifact directories
-        /// </summary>
-        Target Clean { get; }
-
-        /// <summary>
-        /// This will generate code coverage reports from emitted coverage data
-        /// </summary>
-        Target Generate_Code_Coverage_Reports { get; }
-
-        /// <summary>
-        /// Loops through the Readme to update sections that are automated to give nuget packages, build histories and more, while
-        /// keeping the rest of the readme correct.
-        /// </summary>
-        Target GenerateReadme { get; }
     }
 }
