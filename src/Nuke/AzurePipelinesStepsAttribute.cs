@@ -18,8 +18,7 @@ namespace Rocket.Surgery.Nuke
     [PublicAPI]
     public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
     {
-        private string ConfigurationFile => NukeBuild.RootDirectory / "azure-pipelines.nuke.yml";
-
+        public override string ConfigurationFile => NukeBuild.RootDirectory / "azure-pipelines.nuke.yml";
         public override HostType HostType => HostType.AzurePipelines;
         public override IEnumerable<string> GeneratedFiles => new[] { ConfigurationFile };
         public override IEnumerable<string> RelevantTargetNames => InvokedTargets;
@@ -27,7 +26,7 @@ namespace Rocket.Surgery.Nuke
         public string[] InvokedTargets { get; set; } = new string[0];
         public string[] Parameters { get; set; } = new string[0];
 
-        public override CustomFileWriter CreateWriter() => new CustomFileWriter(ConfigurationFile, indentationFactor: 2, commentPrefix: "#");
+        public override CustomFileWriter CreateWriter(StreamWriter writer) => new CustomFileWriter(writer, indentationFactor: 2, commentPrefix: "#");
 
         public override ConfigurationEntity GetConfiguration(
             NukeBuild build,
@@ -68,7 +67,7 @@ namespace Rocket.Surgery.Nuke
 
             var lookupTable = new LookupTable<ExecutableTarget, AzurePipelinesStep>();
             var steps = relevantTargets
-               .Select(x => (ExecutableTarget: x, Job: GetStep(x, lookupTable)))
+               .Select(x => (ExecutableTarget: x, Job: GetStep(x, relevantTargets, lookupTable)))
                .ForEachLazy(x => lookupTable.Add(x.ExecutableTarget, x.Job))
                .Select(x => x.Job).ToArray();
 
@@ -81,10 +80,11 @@ namespace Rocket.Surgery.Nuke
 
         protected virtual AzurePipelinesStep GetStep(
             ExecutableTarget executableTarget,
+            IReadOnlyCollection<ExecutableTarget> relevantTargets,
             LookupTable<ExecutableTarget, AzurePipelinesStep> jobs
         )
         {
-            var chainLinkNames = GetInvokedTargets(executableTarget).ToArray();
+            var chainLinkNames = GetInvokedTargets(executableTarget, relevantTargets).Select(z => z.Name).ToArray();
             return new AzurePipelinesStep
             {
                 Name = executableTarget.Name,

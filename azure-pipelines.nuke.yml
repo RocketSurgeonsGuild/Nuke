@@ -25,7 +25,7 @@ steps:
     displayName: 'Clean'
   - pwsh: ./build.ps1 Build --skip --configuration '${{ parameters.Configuration }}' --artifacts '${{ parameters.Artifacts }}' --coverage '${{ parameters.Coverage }}' --verbosity '${{ parameters.Verbosity }}'
     displayName: '⚙ Build'
-  - pwsh: ./build.ps1 Generate_Code_Coverage_Reports Test --skip --configuration '${{ parameters.Configuration }}' --artifacts '${{ parameters.Artifacts }}' --coverage '${{ parameters.Coverage }}' --verbosity '${{ parameters.Verbosity }}'
+  - pwsh: ./build.ps1 Test Generate_Code_Coverage_Reports --skip --configuration '${{ parameters.Configuration }}' --artifacts '${{ parameters.Artifacts }}' --coverage '${{ parameters.Coverage }}' --verbosity '${{ parameters.Verbosity }}'
     displayName: '🚦 Test'
   - pwsh: ./build.ps1 Pack --skip --configuration '${{ parameters.Configuration }}' --artifacts '${{ parameters.Artifacts }}' --coverage '${{ parameters.Coverage }}' --verbosity '${{ parameters.Verbosity }}'
     displayName: '📦 Pack'
