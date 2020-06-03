@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,39 +24,71 @@ using static Nuke.Common.Tools.ReportGenerator.ReportGeneratorTasks;
 
 namespace Rocket.Surgery.Nuke
 {
+    /// <summary>
+    /// Defines the test target
+    /// </summary>
     public interface IHaveTestTarget
     {
+        /// <summary>
+        /// The Test Target
+        /// </summary>
         public Target Test { get; }
     }
-    
+
+    /// <summary>
+    /// Defines the build target
+    /// </summary>
     public interface IHaveBuildTarget
     {
+        /// <summary>
+        /// The Build Target
+        /// </summary>
         public Target Build { get; }
     }
-    
+
+    /// <summary>
+    /// Defines the pack target
+    /// </summary>
     public interface IHavePackTarget
     {
+        /// <summary>
+        /// The Pack Target
+        /// </summary>
         public Target Pack { get; }
     }
-    
+
+    /// <summary>
+    /// Defines the restore target
+    /// </summary>
     public interface IHaveRestoreTarget
     {
+        /// <summary>
+        /// The Restore Target
+        /// </summary>
         public Target Restore { get; }
     }
-    
+
+    /// <summary>
+    /// Defines a common property for build configuration
+    /// </summary>
     public interface IHaveConfiguration
     {
+        /// <summary>
+        /// The build configuration
+        /// </summary>
         string Configuration { get; }
     }
+
+    /// <summary>
+    /// Adds support for linting the files in a solution or via
+    /// </summary>
     public interface ICanLintMyself : IHaveSolution
     {
         /// <summary>
         /// The files to lint, if not given lints all files
         /// </summary>
         [Parameter("The files to lint, if not given lints all files", Separator = " ")]
-#pragma warning disable CA1819 // Properties should not return arrays
-        public string[] LintFiles => GetInjectionValue(() => LintFiles ?? Array.Empty<string>());
-#pragma warning restore CA1819 // Properties should not return arrays
+        public IEnumerable<string> LintFiles => GetInjectionValue(() => LintFiles ?? Array.Empty<string>());
 
         /// <summary>
         /// The files to lint, if not given lints all files
@@ -81,20 +114,34 @@ namespace Rocket.Surgery.Nuke
             );
     }
 
+    /// <summary>
+    /// Defines use of a git repository
+    /// </summary>
+    /// <remarks>
+    /// This explicitly excludes the attribute so that it can be defined in the consumers build
+    /// </remarks>
     public interface IHaveGitRepository
     {
         /// <summary>
         /// The Git Repository currently being built
         /// </summary>
-        [GitRepository]
-        public GitRepository? GitRepository => GetInjectionValue(() => GitRepository);
+        GitRepository? GitRepository { get; }
     }
 
+    /// <summary>
+    /// Defines use of GitVersion
+    /// </summary>
     public interface IHaveGitVersion : IHaveGitRepository
     {
+        /// <summary>
+        /// The current version as defined by GitVersion 
+        /// </summary>
         GitVersion GitVersion { get; }
     }
 
+    /// <summary>
+    /// A tool to update the readme
+    /// </summary>
     public interface IReadmeUpdater : IHaveSolution, IMayTheForceBeWithYou
     {
         /// <summary>
@@ -120,6 +167,9 @@ namespace Rocket.Surgery.Nuke
             );
     }
 
+    /// <summary>
+    /// Defines the artifacts output directory.
+    /// </summary>
     public interface IHaveArtifacts
     {
         /// <summary>
@@ -131,6 +181,9 @@ namespace Rocket.Surgery.Nuke
          ?? NukeBuild.RootDirectory / "artifacts";
     }
 
+    /// <summary>
+    /// Defines the output directory
+    /// </summary>
     public interface IOutputArtifacts : IHaveArtifacts
     {
         /// <summary>
@@ -139,6 +192,9 @@ namespace Rocket.Surgery.Nuke
         public AbsolutePath OutputDirectory => ArtifactsDirectory / "output";
     }
 
+    /// <summary>
+    /// Defines the publish output directory, this is used to staged published applications and so on.
+    /// </summary>
     public interface IPublishArtifacts : IHaveArtifacts
     {
         /// <summary>
@@ -147,6 +203,9 @@ namespace Rocket.Surgery.Nuke
         public AbsolutePath PublishDirectory => ArtifactsDirectory / "publish";
     }
 
+    /// <summary>
+    /// Defines a logs directory where structured build and other logs can be placed.
+    /// </summary>
     public interface IOutputLogs : IHaveArtifacts
     {
         /// <summary>
@@ -155,6 +214,12 @@ namespace Rocket.Surgery.Nuke
         public AbsolutePath LogsDirectory => ArtifactsDirectory / "logs";
     }
 
+    /// <summary>
+    /// Defines the test result artifacts locations
+    /// </summary>
+    /// <remarks>
+    /// Used for things like xunit test result files for publish to azure devops or otherwise.
+    /// </remarks>
     public interface IOutputTestArtifacts : IHaveArtifacts
     {
         /// <summary>
@@ -163,6 +228,9 @@ namespace Rocket.Surgery.Nuke
         public AbsolutePath TestResultsDirectory => ArtifactsDirectory / "test";
     }
 
+    /// <summary>
+    /// Defines a directory for nuget packages that should be pushed should go into
+    /// </summary>
     public interface IOutputNuGetArtifacts : IHaveArtifacts
     {
         /// <summary>
@@ -171,6 +239,12 @@ namespace Rocket.Surgery.Nuke
         public AbsolutePath NuGetPackageDirectory => ArtifactsDirectory / "nuget";
     }
 
+    /// <summary>
+    /// Adds a code coverage directory
+    /// </summary>
+    /// <remarks>
+    /// This directory is left separate to allow easier integration with editors that might look it's contents to display coverage.
+    /// </remarks>
     public interface IIncludeCodeCoverage : IHaveArtifacts
     {
         /// <summary>
@@ -182,45 +256,99 @@ namespace Rocket.Surgery.Nuke
          ?? NukeBuild.RootDirectory / "coverage";
     }
 
+    /// <summary>
+    /// A common sample directory
+    /// </summary>
     public interface IIncludeSamples
     {
         /// <summary>
         /// The directory where samples will be placed
         /// </summary>
-        public AbsolutePath SampleDirectory => NukeBuild.RootDirectory / "sample";
+        public AbsolutePath SampleDirectory => FilePathExtensions.PickDirectory(
+            NukeBuild.RootDirectory / "sample",
+            NukeBuild.RootDirectory / "samples"
+        );
     }
 
+    public static class FilePathExtensions
+    {
+        private static readonly ConcurrentDictionary<AbsolutePath, AbsolutePath> _cache =
+            new ConcurrentDictionary<AbsolutePath, AbsolutePath>();
+
+        /// <summary>
+        /// Returns the first directory that exists on disk
+        /// </summary>
+        /// <remarks>
+        /// Caches the result for faster lookups later
+        /// </remarks>
+        /// <param name="paths"></param>
+        /// <returns></returns>
+        public static AbsolutePath PickDirectory(params AbsolutePath[] paths)
+        {
+            foreach (var path in paths)
+            {
+                if (_cache.TryGetValue(path, out _))
+                    return path;
+                if (!DirectoryExists(path))
+                {
+                    continue;
+                }
+
+                foreach (var p in paths)
+                    _cache.TryAdd(p, path);
+                return path;
+            }
+
+            return paths.First();
+        }
+    }
+
+    /// <summary>
+    /// The directory where sources should be placed.
+    /// </summary>
     public interface IIncludeSources
     {
         /// <summary>
         /// The directory where samples will be placed
         /// </summary>
-        public AbsolutePath SourceDirectory => NukeBuild.RootDirectory / "src";
+        public AbsolutePath SourceDirectory => FilePathExtensions.PickDirectory(
+            NukeBuild.RootDirectory / "src",
+            NukeBuild.RootDirectory / "source",
+            NukeBuild.RootDirectory / "sources"
+        );
     }
 
+    /// <summary>
+    /// The directory where templates should be placed.
+    /// </summary>
     public interface IIncludeTemplates
     {
         /// <summary>
         /// The directory where templates will be placed
         /// </summary>
-        public AbsolutePath TemplatesDirectory => NukeBuild.RootDirectory / "templates";
+        public AbsolutePath TemplatesDirectory => FilePathExtensions.PickDirectory(
+            NukeBuild.RootDirectory / "template",
+            NukeBuild.RootDirectory / "templates"
+        );
     }
 
+    /// <summary>
+    /// The directory where tests should be placed.
+    /// </summary>
     public interface IIncludeTests
     {
         /// <summary>
         /// The directory where tests will be placed
         /// </summary>
-        public AbsolutePath TestDirectory => DirectoryExists(NukeBuild.RootDirectory / "tests")
-            ? NukeBuild.RootDirectory / "tests"
-            : NukeBuild.RootDirectory / "test";
-
-        /// <summary>
-        /// The directory where tests will be placed
-        /// </summary>
-        public AbsolutePath TestsDirectory => TestDirectory;
+        public AbsolutePath TestsDirectory => FilePathExtensions.PickDirectory(
+            NukeBuild.RootDirectory / "test",
+            NukeBuild.RootDirectory / "tests"
+        );
     }
 
+    /// <summary>
+    /// Includes a force flag that can be used to ensure caches or the disk is cleaned up more than is normally required
+    /// </summary>
     public interface IMayTheForceBeWithYou
     {
         /// <summary>
@@ -249,6 +377,9 @@ namespace Rocket.Surgery.Nuke
             );
     }
 
+    /// <summary>
+    /// Defines a solution
+    /// </summary>
     public interface IHaveSolution
     {
         /// <summary>
@@ -258,11 +389,20 @@ namespace Rocket.Surgery.Nuke
         public Solution Solution => GetInjectionValue(() => Solution);
     }
 
+    /// <summary>
+    /// Defines a clean target
+    /// </summary>
     public interface IHaveCleanTarget
     {
+        /// <summary>
+        /// The Clean Target
+        /// </summary>
         Target Clean { get; }
     }
 
+    /// <summary>
+    /// Defines a target that cleans common directories
+    /// </summary>
     public interface ICanClean : IHaveCleanTarget, IHaveBuildTarget
     {
         /// <summary>
@@ -293,6 +433,7 @@ namespace Rocket.Surgery.Nuke
                         EnsureCleanDirectory(codeCoverage.CoverageDirectory);
                     }
 
+                    // ReSharper disable SuspiciousTypeConversion.Global
                     if (this is IMayTheForceBeWithYou forceBeWithYou && forceBeWithYou.Force)
                     {
                         if (this is IIncludeSamples samples && DirectoryExists(samples.SampleDirectory))
@@ -310,21 +451,33 @@ namespace Rocket.Surgery.Nuke
                             templates.TemplatesDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
                         }
 
-                        if (this is IIncludeTests tests && DirectoryExists(tests.TestDirectory))
+                        if (this is IIncludeTests tests && DirectoryExists(tests.TestsDirectory))
                         {
-                            tests.TestDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+                            tests.TestsDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
                         }
                     }
-                }
+                } // ReSharper restore SuspiciousTypeConversion.Global
             );
     }
 
+    /// <summary>
+    /// Defines a task that generates a code coverage report from a given set of report documents
+    /// </summary>
     public interface IGenerateCodeCoverageReport : ITriggerCodeCoverageReports
     {
+        /// <summary>
+        /// The directory where the report will be places
+        /// </summary>
+        public AbsolutePath CoverageReportDirectory => CoverageDirectory / "report";
+
+        /// <summary>
+        /// Generates a code coverage report got the given set of input reports
+        /// </summary>
         public Target Generate_Code_Coverage_Report => _ => _
            .After(Generate_Code_Coverage_Report_Cobertura)
            .TriggeredBy(Trigger_Code_Coverage_Reports)
            .Unlisted()
+           .OnlyWhenDynamic(() => InputReports.Any())
            .Executes(
                 () => ReportGenerator(
                     s => WithTag(s)
@@ -335,48 +488,87 @@ namespace Rocket.Surgery.Nuke
             );
     }
 
+    /// <summary>
+    /// Generates a code coverage summary
+    /// </summary>
     public interface IGenerateCodeCoverageSummary : ITriggerCodeCoverageReports
     {
+        /// <summary>
+        /// The directory where the summary will be places
+        /// </summary>
+        public AbsolutePath CoverageSummaryDirectory => CoverageDirectory / "summary";
+
+        /// <summary>
+        /// Generate a code coverage summary for the given reports
+        /// </summary>
         public Target Generate_Code_Coverage_Summary => _ => _
            .After(Generate_Code_Coverage_Report_Cobertura)
            .TriggeredBy(Trigger_Code_Coverage_Reports)
            .Unlisted()
-           .Executes(
-                () => ReportGenerator(
-                        s => WithTag(s)
-                            // .SetToolPath(toolPath)
-                           .SetReports(InputReports)
-                           .SetTargetDirectory(CoverageDirectory / "summary")
-                           .SetReportTypes(ReportTypes.HtmlSummary, ReportTypes.TextSummary)
-                    )
-            );
-    }
-
-    public interface IGenerateCodeCoverageBadges : ITriggerCodeCoverageReports
-    {
-        public Target Generate_Code_Coverage_Badges => _ => _
-           .After(Generate_Code_Coverage_Report_Cobertura)
-           .TriggeredBy(Trigger_Code_Coverage_Reports)
-           .Unlisted()
+           .OnlyWhenDynamic(() => InputReports.Any())
            .Executes(
                 () => ReportGenerator(
                     s => WithTag(s)
                         // .SetToolPath(toolPath)
                        .SetReports(InputReports)
-                       .SetTargetDirectory(CoverageDirectory / "badges")
+                       .SetTargetDirectory(CoverageSummaryDirectory)
+                       .SetReportTypes(ReportTypes.HtmlSummary, ReportTypes.TextSummary)
+                )
+            );
+    }
+
+    /// <summary>
+    /// Generates a code coverage badges
+    /// </summary>
+    public interface IGenerateCodeCoverageBadges : ITriggerCodeCoverageReports
+    {
+        /// <summary>
+        /// The directory where the badges will be places
+        /// </summary>
+        public AbsolutePath CoverageBadgeDirectory => CoverageDirectory / "badges";
+
+        /// <summary>
+        /// Generate a code coverage badges for the given reports
+        /// </summary>
+        public Target Generate_Code_Coverage_Badges => _ => _
+           .After(Generate_Code_Coverage_Report_Cobertura)
+           .TriggeredBy(Trigger_Code_Coverage_Reports)
+           .Unlisted()
+           .OnlyWhenDynamic(() => InputReports.Any())
+           .Executes(
+                () => ReportGenerator(
+                    s => WithTag(s)
+                        // .SetToolPath(toolPath)
+                       .SetReports(InputReports)
+                       .SetTargetDirectory(CoverageBadgeDirectory)
                        .SetReportTypes(ReportTypes.Badges)
                 )
             );
     }
 
+    /// <summary>
+    /// Triggers code coverage to happen
+    /// </summary>
+    /// <remarks>
+    /// This causes code coverage to trigger
+    /// </remarks>
     public interface ITriggerCodeCoverageReports : IIncludeCodeCoverage, IHaveTestTarget
     {
-        public AbsolutePath CoverageReportDirectory => CoverageDirectory / "report";
-
+        /// <summary>
+        /// The input reports
+        /// </summary>
+        /// <remarks>
+        /// used to determine if any coverage was emitted, if not the tasks will skip to avoid errors
+        /// </remarks>
         public IEnumerable<string> InputReports => CoverageDirectory
            .GlobFiles("**/*.cobertura.xml")
            .Select(z => z.ToString());
 
+        /// <summary>
+        /// ensures that ReportGenerator is called with the appropriate settings given the current state.
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <returns></returns>
         protected ReportGeneratorSettings WithTag(ReportGeneratorSettings settings)
         {
             settings = settings.SetToolPath(
@@ -386,17 +578,15 @@ namespace Rocket.Surgery.Nuke
                     framework: "netcoreapp3.0"
                 )
             );
-            if (this is IHaveGitVersion gitVersion)
-            {
-                return settings.SetTag(gitVersion.GitVersion.InformationalVersion);
-            }
 
-            if (this is IHaveGitRepository gitRepository)
+            return this switch
             {
-                return settings.SetTag(gitRepository.GitRepository.Head);
-            }
-
-            return settings;
+                IHaveGitVersion gitVersion => settings.SetTag(gitVersion.GitVersion.InformationalVersion),
+                IHaveGitRepository gitRepository when gitRepository.GitRepository != null => settings.SetTag(
+                    gitRepository.GitRepository.Head
+                ),
+                _ => settings
+            };
         }
 
         /// <summary>
@@ -407,7 +597,7 @@ namespace Rocket.Surgery.Nuke
            .After(Test)
            .Description("Generates code coverage reports")
            .Unlisted()
-           .OnlyWhenDynamic(() => CoverageDirectory.GlobFiles("**/*.cobertura.xml").Count > 0);
+           .OnlyWhenDynamic(() => InputReports.Any());
 
         /// <summary>
         /// This will generate code coverage reports from emitted coverage data
@@ -415,7 +605,7 @@ namespace Rocket.Surgery.Nuke
         public Target Generate_Code_Coverage_Report_Cobertura => _ => _
            .TriggeredBy(Trigger_Code_Coverage_Reports)
            .Unlisted()
-           .OnlyWhenDynamic(() => CoverageDirectory.GlobFiles("**/*.cobertura.xml").Count > 0)
+           .OnlyWhenDynamic(() => InputReports.Any())
            .Executes(
                 () =>
                 {

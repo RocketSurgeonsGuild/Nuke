@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using Nuke.Common;
 using Nuke.Common.Execution;
+using Nuke.Common.Git;
 using Nuke.Common.Tools.GitVersion;
 using Rocket.Surgery.Nuke;
 using Rocket.Surgery.Nuke.DotNetCore;
@@ -62,11 +63,14 @@ internal class Solution : RocketBoosterBuild,
        .DependsOn(Clean);
 
     [ComputedGitVersion]
-    public GitVersion GitVersion { get; }
+    public GitVersion GitVersion { get; } = null!;
+
+    [OptionalGitRepository]
+    public GitRepository? GitRepository { get; }
 
     /// <summary>
     /// Configuration to build - Default is 'Debug' (local) or 'Release' (server)
     /// </summary>
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
-    public string Configuration { get; }
+    public string Configuration { get; } = null!;
 }

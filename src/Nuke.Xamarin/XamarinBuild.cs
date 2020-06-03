@@ -10,6 +10,7 @@ using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 using static Nuke.Common.Tools.MSBuild.MSBuildTasks;
 using static Nuke.Common.Tools.NuGet.NuGetTasks;
+#pragma warning disable 1591
 
 namespace Rocket.Surgery.Nuke.Xamarin
 {
@@ -60,7 +61,7 @@ namespace Rocket.Surgery.Nuke.Xamarin
         /// </summary>
         public Target Test => _ => _
            .DependsOn(Build)
-           .OnlyWhenStatic(() => DirectoryExists(TestDirectory))
+           .OnlyWhenStatic(() => DirectoryExists(TestsDirectory))
            .Executes(() =>
             {
                 DotNetTest(settings =>

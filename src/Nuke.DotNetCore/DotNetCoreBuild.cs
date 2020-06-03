@@ -11,6 +11,9 @@ using static Nuke.Common.IO.FileSystemTasks;
 
 namespace Rocket.Surgery.Nuke.DotNetCore
 {
+    /// <summary>
+    /// Adds a task for `dotnet tool restore` and `dotnet restore`
+    /// </summary>
     public interface IRestoreWithDotNetCore : IHaveCleanTarget,
                                               IHaveSolution,
                                               IOutputLogs,
@@ -36,19 +39,19 @@ namespace Rocket.Surgery.Nuke.DotNetCore
            .DependentFor(CoreRestore)
            .DependsOn(DotnetToolRestore)
            .Executes(
-                () =>
-                {
-                    DotNetRestore(
-                        s => s
-                           .SetProjectFile(Solution)
-                           .SetDisableParallel(true)
-                           .SetDefaultLoggers(LogsDirectory / "restore.log")
-                           .SetGitVersionEnvironment(GitVersion)
-                    );
-                }
+                () => DotNetRestore(
+                    s => s
+                       .SetProjectFile(Solution)
+                       .SetDisableParallel(true)
+                       .SetDefaultLoggers(LogsDirectory / "restore.log")
+                       .SetGitVersionEnvironment(GitVersion)
+                )
             );
     }
 
+    /// <summary>
+    /// Adds a task to run `dotnet build` with structured logging and gitversion configuration
+    /// </summary>
     public interface IBuildWithDotNetCore : IHaveRestoreTarget,
                                             IHaveConfiguration,
                                             IHaveBuildTarget,
@@ -64,35 +67,48 @@ namespace Rocket.Surgery.Nuke.DotNetCore
            .DependsOn(Restore)
            .DependentFor(CoreBuild)
            .Executes(
-                () =>
-                {
-                    DotNetBuild(
-                        s => s
-                           .SetProjectFile(Solution)
-                           .SetDefaultLoggers(LogsDirectory / "build.log")
-                           .SetGitVersionEnvironment(GitVersion)
-                           .SetConfiguration(Configuration)
-                           .EnableNoRestore()
-                    );
-                }
+                () => DotNetBuild(
+                    s => s
+                       .SetProjectFile(Solution)
+                       .SetDefaultLoggers(LogsDirectory / "build.log")
+                       .SetGitVersionEnvironment(GitVersion)
+                       .SetConfiguration(Configuration)
+                       .EnableNoRestore()
+                )
             );
     }
 
+    /// <summary>
+    /// Defines `CollectCoverage` as true to utilize the coverlet data collector for code coverage
+    /// </summary>
     public interface IUseDataCollector : IHaveCollectCoverage
     {
         bool IHaveCollectCoverage.CollectCoverage => true;
     }
 
+    /// <summary>
+    /// Defines `CollectCoverage` as flase to utilize the coverlet msbuild collector
+    /// </summary>
     public interface IUseMsBuildCoverage : IHaveCollectCoverage
     {
         bool IHaveCollectCoverage.CollectCoverage => false;
     }
 
+    /// <summary>
+    /// Defines the `CollectCoverage` property
+    /// </summary>
     public interface IHaveCollectCoverage
     {
+        /// <summary>
+        /// Determins if we use a coverage collector or some other coverage mechanism
+        /// </summary>
+        /// <value></value>
         bool CollectCoverage { get; }
     }
 
+    /// <summary>
+    /// Defines a `dotnet test` test run with code coverage via coverlet
+    /// </summary>
     public interface ITestWithDotNetCore : IHaveCollectCoverage,
                                            IHaveBuildTarget,
                                            ITriggerCodeCoverageReports,
@@ -110,8 +126,8 @@ namespace Rocket.Surgery.Nuke.DotNetCore
            .Description("Executes all the unit tests.")
            .DependentFor(CoreTest)
            .After(Build)
-           .OnlyWhenStatic(() => DirectoryExists(TestDirectory))
-           .OnlyWhenDynamic(() => TestDirectory.GlobFiles("**/*.csproj").Count > 0)
+           .OnlyWhenStatic(() => DirectoryExists(TestsDirectory))
+           .OnlyWhenDynamic(() => TestsDirectory.GlobFiles("**/*.csproj").Count > 0)
            .WhenSkipped(DependencyBehavior.Execute)
            .Executes(
                 () =>
@@ -123,7 +139,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                 },
                 async () =>
                 {
-                    var runsettings = TestDirectory / "coverlet.runsettings";
+                    var runsettings = TestsDirectory / "coverlet.runsettings";
                     if (!FileExists(runsettings))
                     {
                         runsettings = NukeBuild.TemporaryDirectory / "default.runsettings";
@@ -182,6 +198,9 @@ namespace Rocket.Surgery.Nuke.DotNetCore
             );
     }
 
+    /// <summary>
+    /// Defines a `dotnet pack` run with logging and configuration output to the nuget package directory
+    /// </summary>
     public interface IPackWithDotNetCore : IHaveBuildTarget,
                                            IOutputNuGetArtifacts,
                                            IHaveTestTarget,

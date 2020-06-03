@@ -12,6 +12,7 @@ using Nuke.Common.Tooling;
 using Nuke.Common.Utilities;
 using System.IO;
 using Rocket.Surgery.Nuke.AzurePipelines;
+#pragma warning disable 1591
 
 namespace Rocket.Surgery.Nuke
 {
@@ -23,8 +24,8 @@ namespace Rocket.Surgery.Nuke
         public override IEnumerable<string> GeneratedFiles => new[] { ConfigurationFile };
         public override IEnumerable<string> RelevantTargetNames => InvokedTargets;
 
-        public string[] InvokedTargets { get; set; } = new string[0];
-        public string[] Parameters { get; set; } = new string[0];
+        public string[] InvokedTargets { get; set; } = Array.Empty<string>();
+        public string[] Parameters { get; set; } = Array.Empty<string>();
 
         public override CustomFileWriter CreateWriter(StreamWriter writer) => new CustomFileWriter(writer, indentationFactor: 2, commentPrefix: "#");
 
@@ -44,7 +45,7 @@ namespace Rocket.Surgery.Nuke
             {
                 if (Parameters.Any(
                     z => z.Equals(parameter.Name, StringComparison.OrdinalIgnoreCase) || z.Equals(
-                        parameter.GetCustomAttribute<ParameterAttribute>().Name,
+                        parameter.GetCustomAttribute<ParameterAttribute>()?.Name,
                         StringComparison.OrdinalIgnoreCase
                     )
                 ))
@@ -58,7 +59,7 @@ namespace Rocket.Surgery.Nuke
                     paramList.Add(
                         new AzurePipelinesParameter()
                         {
-                            Name = parameter.GetCustomAttribute<ParameterAttribute>().Name ?? parameter.Name,
+                            Name = parameter.GetCustomAttribute<ParameterAttribute>()?.Name ?? parameter.Name,
                             Default = value?.ToString() ?? "",
                         }
                     );

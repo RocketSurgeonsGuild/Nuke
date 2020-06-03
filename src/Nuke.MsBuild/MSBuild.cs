@@ -9,12 +9,15 @@ using static Nuke.Common.IO.PathConstruction;
 
 namespace Rocket.Surgery.Nuke.MsBuild
 {
-    public interface IRestoreWithMSBuild : IHaveCleanTarget, IHaveSolution
+    /// <summary>
+    /// Defines a restore task using msbuild
+    /// </summary>
+    public interface IRestoreWithMSBuild : IHaveRestoreTarget, IHaveCleanTarget, IHaveSolution
     {
         /// <summary>
         /// nuget restore
         /// </summary>
-        public Target Restore => _ => _
+        public Target NetRestore => _ => _
            .DependsOn(Clean)
            .Executes(() => NuGetTasks
                .NuGetRestore(
@@ -24,13 +27,18 @@ namespace Rocket.Surgery.Nuke.MsBuild
                            .EnableNoCache()
                 )
             );
+
     }
-    public interface ITestWithXUnit : IHaveBuildTarget, IOutputTestArtifacts, IHaveSolution, IHaveConfiguration, IHaveGitVersion, IOutputLogs
+
+    /// <summary>
+    /// Defines a test task using msbuild
+    /// </summary>
+    public interface ITestWithXUnit : IHaveTestTarget, IHaveBuildTarget, IOutputTestArtifacts, IHaveSolution, IHaveConfiguration, IHaveGitVersion, IOutputLogs
     {
         /// <summary>
         /// xunit test
         /// </summary>
-        public Target Test => _ => _
+        public Target NetTest => _ => _
            .DependsOn(Build)
            .Executes(
                 () =>
@@ -53,14 +61,18 @@ namespace Rocket.Surgery.Nuke.MsBuild
                 }
             );
 
-        
+
     }
-    public interface IBuildWithMSBuild : IHaveRestoreTarget, IHaveSolution, IHaveConfiguration, IOutputLogs, IHaveGitVersion
+
+    /// <summary>
+    /// Defines a build task using msbuild
+    /// </summary>
+    public interface IBuildWithMSBuild : IHaveBuildTarget, IHaveRestoreTarget, IHaveSolution, IHaveConfiguration, IOutputLogs, IHaveGitVersion
     {
         /// <summary>
         /// msbuild
         /// </summary>
-        public Target Build => _ => _
+        public Target NetBuild => _ => _
            .DependsOn(Restore)
            .Executes(
                 () => MSBuildTasks.MSBuild(
@@ -76,17 +88,20 @@ namespace Rocket.Surgery.Nuke.MsBuild
             );
     }
 
+    /// <summary>
+    /// Pack using msbuild
+    /// </summary>
     public interface IPackWithMSBuild : IHavePackTarget, IHaveBuildTarget, IHaveTestTarget, IOutputNuGetArtifacts, IHaveGitVersion, IHaveConfiguration
     {
         /// <summary>
         /// The directory where templates will be placed
         /// </summary>
         public static AbsolutePath NuspecDirectory => NukeBuild.RootDirectory / ".nuspec";
-        
+
         /// <summary>
         /// nuget pack
         /// </summary>
-        public Target Pack => _ => _
+        public Target NetPack => _ => _
            .DependsOn(Build)
            .After(Test)
            .Executes(
@@ -108,6 +123,6 @@ namespace Rocket.Surgery.Nuke.MsBuild
                     }
                 }
             );
-        
+
     }
 }

@@ -1,15 +1,9 @@
-using System;
-using System.Linq.Expressions;
-using System.Xml.Linq;
 using Nuke.Common;
 using Nuke.Common.IO;
-using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
-using Nuke.Common.Utilities;
-using static Nuke.Common.IO.FileSystemTasks;
-using static Nuke.Common.Tools.DotNet.DotNetTasks;
 using static Nuke.Common.Tools.MSBuild.MSBuildTasks;
-using static Nuke.Common.IO.PathConstruction;
+
+#pragma warning disable 1591
 
 
 namespace Rocket.Surgery.Nuke.Xamarin
@@ -26,7 +20,7 @@ namespace Rocket.Surgery.Nuke.Xamarin
         /// Gets the path for the info plist.
         /// </summary>
         public string BaseBundleIdentifier => "com.rocketbooster.nuke";
-        
+
         /// <summary>
         /// msbuild
         /// </summary>
@@ -42,7 +36,7 @@ namespace Rocket.Surgery.Nuke.Xamarin
                        .SetGitVersionEnvironment(GitVersion)
                        .SetAssemblyVersion(GitVersion.AssemblySemVer)
                        .SetPackageVersion(GitVersion.NuGetVersionV2)));
-        
+
 
         /// <summary>
         /// modify info.plist
@@ -72,7 +66,7 @@ namespace Rocket.Surgery.Nuke.Xamarin
 
     public interface IPackXamariniOS : IHavePackTarget, IHaveTestTarget, IHaveXamarinConfiguration, IOutputLogs, IHaveGitVersion, IHaveSolution
     {
-        
+
         /// <summary>
         /// packages a binary for distribution.
         /// </summary>

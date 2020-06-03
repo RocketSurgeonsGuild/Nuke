@@ -1,14 +1,16 @@
+using System;
 using Nuke.Common.CI.AzurePipelines.Configuration;
 using Nuke.Common.Utilities;
+#pragma warning disable 1591
 
 namespace Rocket.Surgery.Nuke.AzurePipelines
 {
     public class AzurePipelinesStep
     {
-        public string Name { get; set; }
-        public string DisplayName { get; set; }
-        public string ScriptPath { get; set; }
-        public string[] InvokedTargets { get; set; }
+        public string Name { get; set; } = null!;
+        public string DisplayName { get; set; } = null!;
+        public string ScriptPath { get; set; } = null!;
+        public string[] InvokedTargets { get; set; } = Array.Empty<string>();
 
         public void Write(CustomFileWriter writer, string parameters)
         {

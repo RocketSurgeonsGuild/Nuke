@@ -1,6 +1,24 @@
 {
   "coverage-gutters.customizable.status-bar-toggler-watchCoverageAndVisibleEditors-enabled": true,
-  "coverage-gutters.coverageFileNames": ["coverage/coverage.info"],
+  "coverage-gutters.coverageFileNames": [
+    "coverage/coverage.info"
+  ],
   "coverage-gutters.showGutterCoverage": true,
-  "coverage-gutters.showRulerCoverage": true
+  "coverage-gutters.showRulerCoverage": true,
+  "peacock.remoteColor": "#1a1a1a",
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#333333",
+    "activityBar.activeBorder": "#787828",
+    "activityBar.background": "#333333",
+    "activityBar.foreground": "#e7e7e7",
+    "activityBar.inactiveForeground": "#e7e7e799",
+    "activityBarBadge.background": "#787828",
+    "activityBarBadge.foreground": "#e7e7e7",
+    "tab.activeBorder": "#333333",
+    "titleBar.activeBackground": "#1a1a1a",
+    "titleBar.activeForeground": "#e7e7e7",
+    "titleBar.border": "#1a1a1a",
+    "titleBar.inactiveBackground": "#1a1a1a99",
+    "titleBar.inactiveForeground": "#e7e7e799"
+  }
 }

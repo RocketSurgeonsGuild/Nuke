@@ -3,13 +3,14 @@ using System.Linq;
 using Nuke.Common.CI;
 using Nuke.Common.CI.AzurePipelines.Configuration;
 using Nuke.Common.Utilities;
+#pragma warning disable 1591
 
 namespace Rocket.Surgery.Nuke.AzurePipelines
 {
     public class AzurePipelinesSteps : ConfigurationEntity
     {
-        public AzurePipelinesParameter[] Parameters { get; set; }
-        public AzurePipelinesStep[] Steps { get; set; }
+        public AzurePipelinesParameter[] Parameters { get; set; } = Array.Empty<AzurePipelinesParameter>();
+        public AzurePipelinesStep[] Steps { get; set; } = Array.Empty<AzurePipelinesStep>();
 
         public override void Write(CustomFileWriter writer)
         {
