@@ -14,96 +14,82 @@ using static Nuke.Common.IO.PathConstruction;
 
 namespace Rocket.Surgery.Nuke.Xamarin
 {
-    /// <summary>
-    /// Base build plan for Xamarin iOS based applications
-    /// </summary>
-    public class XamariniOSBuild : XamarinBuild
+    public interface IBuildXamariniOS : IHaveBuildTarget, IHaveRestoreTarget, IHaveSolution, IHaveXamarinConfiguration, IHaveGitVersion, IOutputLogs
     {
-        /// <summary>
-        /// Gets the target platform.
-        /// </summary>
-        /// <value>The target platform.</value>
-        [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
-        public TargetPlatform TargetPlatform { get; }
 
         /// <summary>
         /// Gets the path for the info plist.
         /// </summary>
-        public virtual AbsolutePath InfoPlist { get; }
+        public AbsolutePath InfoPlist { get; }
 
         /// <summary>
         /// Gets the path for the info plist.
         /// </summary>
-        public virtual string BaseBundleIdentifier { get; } = "com.rocketbooster.nuke";
-
+        public string BaseBundleIdentifier => "com.rocketbooster.nuke";
+        
         /// <summary>
-        /// A value indicated whether the build host is OSX.
+        /// msbuild
         /// </summary>
-        public Expression<Func<bool>> IsOsx = () => EnvironmentInfo.Platform == PlatformFamily.OSX;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XamariniOSBuild"/> class.
-        /// </summary>
-        public XamariniOSBuild() => TargetPlatform = TargetPlatform.iPhone;
+        public Target BuildiPhone => _ => _
+           .DependsOn(Restore)
+           .Executes(
+                () => MSBuild(
+                    settings => settings
+                       .SetSolutionFile(Solution)
+                       .SetProperty("Platform", TargetPlatform.iPhone)
+                       .SetConfiguration(Configuration)
+                       .SetDefaultLoggers(LogsDirectory / "build.log")
+                       .SetGitVersionEnvironment(GitVersion)
+                       .SetAssemblyVersion(GitVersion.AssemblySemVer)
+                       .SetPackageVersion(GitVersion.NuGetVersionV2)));
+        
 
         /// <summary>
         /// modify info.plist
         /// </summary>
-        public static ITargetDefinition ModifyInfoPlist(ITargetDefinition _, IXamariniOSBuild build) => _
-           .DependsOn(build.Restore)
+        public Target ModifyInfoPlist => _ => _
+           .DependsOn(Restore)
            .Executes(() =>
-                {
-                    Logger.Trace($"Info.plist Path: {build.InfoPlist}");
-                    var plist = Plist.Deserialize(build.InfoPlist);
-                    var bundleIdentifier = !Equals(build.Configuration, XamarinConfiguration.Store)
-                        ? build.Configuration
-                        : string.Empty;
+            {
+                Logger.Trace($"Info.plist Path: {InfoPlist}");
+                var plist = Plist.Deserialize(InfoPlist);
+                var bundleIdentifier = !Equals(Configuration, XamarinConfiguration.Store)
+                    ? Configuration
+                    : string.Empty;
 
-                    plist["CFBundleIdentifier"] = $"{build.BaseBundleIdentifier}.{bundleIdentifier?.ToLower()}".TrimEnd('.');
-                    Logger.Info($"CFBundleIdentifier: {plist["CFBundleIdentifier"]}");
+                plist["CFBundleIdentifier"] = $"{BaseBundleIdentifier}.{bundleIdentifier?.ToLower()}".TrimEnd('.');
+                Logger.Info($"CFBundleIdentifier: {plist["CFBundleIdentifier"]}");
 
-                    plist["CFBundleShortVersionString"] = $"{build.GitVersion.Major}.{build.GitVersion.Minor}.{build.GitVersion.Patch}";
-                    Logger.Info($"CFBundleShortVersionString: {plist["CFBundleShortVersionString"]}");
+                plist["CFBundleShortVersionString"] = $"{GitVersion.MajorMinorPatch}";
+                Logger.Info($"CFBundleShortVersionString: {plist["CFBundleShortVersionString"]}");
 
-                    plist["CFBundleVersion"] = $"{build.GitVersion.PreReleaseNumber}";
-                    Logger.Info($"CFBundleVersion: {plist["CFBundleVersion"]}");
+                plist["CFBundleVersion"] = $"{GitVersion.PreReleaseNumber}";
+                Logger.Info($"CFBundleVersion: {plist["CFBundleVersion"]}");
 
-                    Plist.Serialize(build.InfoPlist, plist);
-                });
+                Plist.Serialize(InfoPlist, plist);
+            });
+    }
 
-        /// <summary>
-        /// msbuild
-        /// </summary>
-        public static ITargetDefinition Build(ITargetDefinition _, IXamariniOSBuild build) => _
-           .DependsOn(build.Restore)
-           .Executes(
-                () => MSBuild(
-                    settings => settings
-                       .SetSolutionFile(build.Solution)
-                       .SetProperty("Platform", build.TargetPlatform)
-                       .SetConfiguration(build.Configuration)
-                       .SetDefaultLoggers(build.LogsDirectory / "build.log")
-                       .SetGitVersionEnvironment(build.GitVersion)
-                       .SetAssemblyVersion(build.GitVersion.AssemblySemVer)
-                       .SetPackageVersion(build.GitVersion.NuGetVersionV2)));
-
+    public interface IPackXamariniOS : IHavePackTarget, IHaveTestTarget, IHaveXamarinConfiguration, IOutputLogs, IHaveGitVersion, IHaveSolution
+    {
+        
         /// <summary>
         /// packages a binary for distribution.
         /// </summary>
-        public static ITargetDefinition Package(ITargetDefinition _, IXamariniOSBuild build) => _
-           .DependsOn(build.Test)
-           .OnlyWhenStatic(build.IsOsx)
+        public Target PackiPhone => _ => _
+           .DependsOn(Test)
+           .OnlyWhenStatic(() => EnvironmentInfo.Platform == PlatformFamily.OSX)
            .Executes(
                 () => MSBuild(
                     settings => settings
-                       .SetSolutionFile(build.Solution)
-                       .SetProperty("Platform", build.TargetPlatform)
+                       .SetSolutionFile(Solution)
+                       .SetProperty("Platform", TargetPlatform.iPhone)
                        .SetProperty("BuildIpa", "true")
                        .SetProperty("ArchiveOnBuild", "true")
-                       .SetConfiguration(build.Configuration)
-                       .SetDefaultLoggers(build.LogsDirectory / "package.log")
-                       .SetGitVersionEnvironment(build.GitVersion)
-                       .SetAssemblyVersion(build.GitVersion.AssemblySemVer)
-                       .SetPackageVersion(build.GitVersion.NuGetVersionV2)));
+                       .SetConfiguration(Configuration)
+                       .SetDefaultLoggers(LogsDirectory / "package.log")
+                       .SetGitVersionEnvironment(GitVersion)
+                       .SetAssemblyVersion(GitVersion.AssemblySemVer)
+                       .SetPackageVersion(GitVersion.NuGetVersionV2)));
     }
 }

@@ -72,7 +72,7 @@ namespace Rocket.Surgery.Nuke.Readme
         /// <param name="content"></param>
         /// <param name="build"></param>
         /// <returns></returns>
-        public string Process(string content, IRocketBoosterBuild build)
+        public string Process(string content, IReadmeUpdater build)
         {
             var nukeDataRegex = new Regex(
                 "<!-- nuke-data(.*?)-->",

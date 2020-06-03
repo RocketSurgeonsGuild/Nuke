@@ -10,7 +10,7 @@ namespace Rocket.Surgery.Nuke.Xamarin
     /// Represents xamarin build configuration.
     /// </summary>
     [TypeConverter(typeof(TypeConverter<XamarinConfiguration>))]
-    public class XamarinConfiguration : Configuration
+    public class XamarinConfiguration : Enumeration
     {
         /// <summary>
         /// The debug mock

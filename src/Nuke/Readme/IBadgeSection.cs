@@ -24,6 +24,6 @@ namespace Rocket.Surgery.Nuke.Readme
         /// <param name="references"></param>
         /// <param name="build"></param>
         /// <returns></returns>
-        string Process(IDictionary<object, object> config, IMarkdownReferences references, IRocketBoosterBuild build);
+        string Process(IDictionary<object, object> config, IMarkdownReferences references, IReadmeUpdater build);
     }
 }

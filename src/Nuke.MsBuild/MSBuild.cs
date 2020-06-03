@@ -9,115 +9,105 @@ using static Nuke.Common.IO.PathConstruction;
 
 namespace Rocket.Surgery.Nuke.MsBuild
 {
-    /// <summary>
-    /// Base build plan for .NET Framework based applications
-    /// </summary>
-    public abstract class MSBuild<T> : RocketBoosterBuild<T>
-        where T : Configuration
+    public interface IRestoreWithMSBuild : IHaveCleanTarget, IHaveSolution
     {
-        protected MSBuild(Func<T> configurationDefault)
-            : base(configurationDefault) { }
-
-        /// <summary>
-        /// The directory where templates will be placed
-        /// </summary>
-        public static AbsolutePath NuspecDirectory => RootDirectory / ".nuspec";
-
         /// <summary>
         /// nuget restore
         /// </summary>
-        public static ITargetDefinition Restore(ITargetDefinition _, IMsBuild<T> build) => _
-           .DependsOn(build.Clean)
-           .Executes(
-                () =>
-                {
-                    NuGetTasks
-                       .NuGetRestore(
-                            settings =>
-                                settings
-                                   .SetSolutionDirectory(build.Solution)
-                                   .EnableNoCache()
-                        );
-                }
+        public Target Restore => _ => _
+           .DependsOn(Clean)
+           .Executes(() => NuGetTasks
+               .NuGetRestore(
+                    settings =>
+                        settings
+                           .SetSolutionDirectory(Solution)
+                           .EnableNoCache()
+                )
             );
-
-        /// <summary>
-        /// msbuild
-        /// </summary>
-        public static ITargetDefinition Build(ITargetDefinition _, IMsBuild<T> build) => _
-           .DependsOn(build.Restore)
-           .Executes(
-                () =>
-                {
-                    MSBuildTasks
-                       .MSBuild(
-                            settings =>
-                                settings
-                                   .SetSolutionFile(build.Solution)
-                                   .SetConfiguration(build.Configuration)
-                                   .SetDefaultLoggers(build.LogsDirectory / "build.log")
-                                   .SetGitVersionEnvironment(build.GitVersion)
-                                   .SetAssemblyVersion(build.GitVersion.AssemblySemVer)
-                                   .SetPackageVersion(build.GitVersion.NuGetVersionV2)
-                        );
-                }
-            );
-
+    }
+    public interface ITestWithXUnit : IHaveBuildTarget, IOutputTestArtifacts, IHaveSolution, IHaveConfiguration, IHaveGitVersion, IOutputLogs
+    {
         /// <summary>
         /// xunit test
         /// </summary>
-        public static ITargetDefinition Test(ITargetDefinition _, IMsBuild<T> build) => _
-           .DependsOn(build.Build)
-           .DependentFor(build.Pack)
+        public Target Test => _ => _
+           .DependsOn(Build)
            .Executes(
                 () =>
                 {
-                    foreach (var project in build.Solution.GetTestProjects())
+                    foreach (var project in Solution.GetTestProjects())
                     {
                         DotNetTasks
                            .DotNetTest(
                                 settings =>
                                     settings
                                        .SetProjectFile(project)
-                                       .SetConfiguration(build.Configuration)
-                                       .SetGitVersionEnvironment(build.GitVersion)
-                                       .SetDefaultLoggers(build.LogsDirectory / "test.log")
+                                       .SetConfiguration(Configuration)
+                                       .SetGitVersionEnvironment(GitVersion)
+                                       .SetDefaultLoggers(LogsDirectory / "test.log")
                                        .EnableNoRestore()
                                        .SetLogger("trx")
-                                       .SetProperty("VSTestResultsDirectory", build.TestResultsDirectory)
+                                       .SetProperty("VSTestResultsDirectory", TestResultsDirectory)
                             );
                     }
                 }
             );
 
+        
+    }
+    public interface IBuildWithMSBuild : IHaveRestoreTarget, IHaveSolution, IHaveConfiguration, IOutputLogs, IHaveGitVersion
+    {
+        /// <summary>
+        /// msbuild
+        /// </summary>
+        public Target Build => _ => _
+           .DependsOn(Restore)
+           .Executes(
+                () => MSBuildTasks.MSBuild(
+                        settings =>
+                            settings
+                               .SetSolutionFile(Solution)
+                               .SetConfiguration(Configuration)
+                               .SetDefaultLoggers(LogsDirectory / "build.log")
+                               .SetGitVersionEnvironment(GitVersion)
+                               .SetAssemblyVersion(GitVersion.AssemblySemVer)
+                               .SetPackageVersion(GitVersion.NuGetVersionV2)
+                    )
+            );
+    }
+
+    public interface IPackWithMSBuild : IHavePackTarget, IHaveBuildTarget, IHaveTestTarget, IOutputNuGetArtifacts, IHaveGitVersion, IHaveConfiguration
+    {
+        /// <summary>
+        /// The directory where templates will be placed
+        /// </summary>
+        public static AbsolutePath NuspecDirectory => NukeBuild.RootDirectory / ".nuspec";
+        
         /// <summary>
         /// nuget pack
         /// </summary>
-        public static ITargetDefinition Pack(ITargetDefinition _, IMsBuild<T> build) => _
-           .DependsOn(build.Build)
+        public Target Pack => _ => _
+           .DependsOn(Build)
+           .After(Test)
            .Executes(
                 () =>
                 {
-                    foreach (var project in build.NuspecDirectory.GlobFiles("*.nuspec"))
+                    foreach (var project in NuspecDirectory.GlobFiles("*.nuspec"))
                     {
                         NuGetTasks
                            .NuGetPack(
                                 settings =>
                                     settings
                                        .SetTargetPath(project)
-                                       .SetConfiguration(build.Configuration)
-                                       .SetGitVersionEnvironment(build.GitVersion)
-                                       .SetVersion(build.GitVersion.NuGetVersionV2)
-                                       .SetOutputDirectory(build.NuGetPackageDirectory)
+                                       .SetConfiguration(Configuration)
+                                       .SetGitVersionEnvironment(GitVersion)
+                                       .SetVersion(GitVersion.NuGetVersionV2)
+                                       .SetOutputDirectory(NuGetPackageDirectory)
                                        .SetSymbols(true)
                             );
                     }
                 }
             );
-    }
-
-    public class MSBuild : MSBuild<Configuration>
-    {
-        public MSBuild() : base(() => IsLocalBuild ? Configuration.Debug : Configuration.Release) { }
+        
     }
 }
