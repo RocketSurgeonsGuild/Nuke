@@ -21,6 +21,8 @@ parameters:
 steps:
   - pwsh: ./build.ps1 Clean --skip --configuration '${{ parameters.Configuration }}' --verbosity '${{ parameters.Verbosity }}'
     displayName: 'Clean'
+  - pwsh: ./build.ps1 Restore --skip --configuration '${{ parameters.Configuration }}' --verbosity '${{ parameters.Verbosity }}'
+    displayName: '📪 Restore'
   - pwsh: ./build.ps1 Build --skip --configuration '${{ parameters.Configuration }}' --verbosity '${{ parameters.Verbosity }}'
     displayName: '⚙ Build'
   - pwsh: ./build.ps1 Test Trigger_Code_Coverage_Reports --skip --configuration '${{ parameters.Configuration }}' --verbosity '${{ parameters.Verbosity }}'

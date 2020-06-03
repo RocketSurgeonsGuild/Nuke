@@ -12,12 +12,12 @@ using Rocket.Surgery.Nuke.DotNetCore;
     InvokedTargets = new[] { nameof(Default) },
     NonEntryTargets = new[]
     {
-        nameof(IHaveBuildVersion.BuildVersion), nameof(IDotNetCoreBuild.Trigger_Code_Coverage_Reports), nameof(Default)
+        nameof(IHaveBuildVersion.BuildVersion), nameof(ITestWithDotNetCore.Trigger_Code_Coverage_Reports), nameof(Default)
     },
-    ExcludedTargets = new[] { nameof(IDotNetCoreBuild.Restore), nameof(IDotNetCoreBuild.DotnetToolRestore) },
+    ExcludedTargets = new[] { nameof(IRestoreWithDotNetCore.CoreRestore), nameof(IRestoreWithDotNetCore.DotnetToolRestore) },
     Parameters = new[]
     {
-        nameof(IDotNetCoreBuild.CoverageDirectory), nameof(IOutputArtifacts.ArtifactsDirectory), nameof(Verbosity),
+        nameof(ITestWithDotNetCore.CoverageDirectory), nameof(IOutputArtifacts.ArtifactsDirectory), nameof(Verbosity),
         nameof(Configuration)
     }
 )]
@@ -27,9 +27,11 @@ using Rocket.Surgery.Nuke.DotNetCore;
 [EnsurePackageSourceHasCredentials("RocketSurgeonsGuild")]
 [EnsureGitHooks(GitHook.PreCommit)]
 internal class Solution : RocketBoosterBuild,
-                          IDotNetCoreBuild,
-                          IUseDataCollector,
+                          IRestoreWithDotNetCore,
+                          IBuildWithDotNetCore,
+                          ITestWithDotNetCore,
                           IPackWithDotNetCore,
+                          IUseDataCollector,
                           IHaveBuildVersion,
                           ICanClean,
                           IGenerateCodeCoverageReport,
@@ -53,10 +55,10 @@ internal class Solution : RocketBoosterBuild,
        .DependsOn(Pack);
 
     public Target Clean => _ => _.Inherit<ICanClean>(x => x.Clean);
-    public Target Restore => _ => _.Inherit<IRestoreWithDotNetCore>(x => x.Restore);
-    public Target Build => _ => _.Inherit<IBuildWithDotNetCore>(x => x.Build);
-    public Target Test => _ => _.Inherit<ITestWithDotNetCore>(x => x.Test);
-    public Target Pack => _ => _.Inherit<IPackWithDotNetCore>(x => x.Pack)
+    public Target Restore => _ => _.Inherit<IRestoreWithDotNetCore>(x => x.CoreRestore);
+    public Target Build => _ => _.Inherit<IBuildWithDotNetCore>(x => x.CoreBuild);
+    public Target Test => _ => _.Inherit<ITestWithDotNetCore>(x => x.CoreTest);
+    public Target Pack => _ => _.Inherit<IPackWithDotNetCore>(x => x.CorePack)
        .DependsOn(Clean);
 
     [ComputedGitVersion]

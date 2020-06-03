@@ -11,8 +11,6 @@ using static Nuke.Common.IO.FileSystemTasks;
 
 namespace Rocket.Surgery.Nuke.DotNetCore
 {
-    public interface IDotNetCoreBuild : IRestoreWithDotNetCore, IBuildWithDotNetCore, ITestWithDotNetCore { }
-
     public interface IRestoreWithDotNetCore : IHaveCleanTarget,
                                               IHaveSolution,
                                               IOutputLogs,
@@ -31,11 +29,11 @@ namespace Rocket.Surgery.Nuke.DotNetCore
         /// <summary>
         /// dotnet restore
         /// </summary>
-        public Target Restore => _ => _
+        public Target CoreRestore => _ => _
            .Description("Restores the dependencies.")
            .Unlisted()
            .After(Clean)
-           .DependentFor(Restore)
+           .DependentFor(CoreRestore)
            .DependsOn(DotnetToolRestore)
            .Executes(
                 () =>
@@ -61,10 +59,10 @@ namespace Rocket.Surgery.Nuke.DotNetCore
         /// <summary>
         /// dotnet build
         /// </summary>
-        public Target Build => _ => _
+        public Target CoreBuild => _ => _
            .Description("Builds all the projects.")
            .DependsOn(Restore)
-           .DependentFor(Build)
+           .DependentFor(CoreBuild)
            .Executes(
                 () =>
                 {
@@ -108,9 +106,9 @@ namespace Rocket.Surgery.Nuke.DotNetCore
         /// <summary>
         /// dotnet test
         /// </summary>
-        public Target Test => _ => _
+        public Target CoreTest => _ => _
            .Description("Executes all the unit tests.")
-           .DependentFor(Test)
+           .DependentFor(CoreTest)
            .After(Build)
            .OnlyWhenStatic(() => DirectoryExists(TestDirectory))
            .OnlyWhenDynamic(() => TestDirectory.GlobFiles("**/*.csproj").Count > 0)
@@ -196,10 +194,10 @@ namespace Rocket.Surgery.Nuke.DotNetCore
         /// <summary>
         /// dotnet pack
         /// </summary>
-        public Target Pack => _ => _
+        public Target CorePack => _ => _
            .Description("Packs all the NuGet packages.")
            .DependsOn(Build)
-           .DependentFor(Pack)
+           .DependentFor(CorePack)
            .After(Test)
            .Executes(
                 () => DotNetPack(
