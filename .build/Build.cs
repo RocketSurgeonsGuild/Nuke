@@ -1,3 +1,5 @@
+using System.Linq;
+using System.Reflection;
 using JetBrains.Annotations;
 using Nuke.Common;
 using Nuke.Common.Execution;
@@ -20,8 +22,7 @@ using Rocket.Surgery.Nuke.DotNetCore;
     ExcludedTargets = new[] { nameof(IRestoreWithDotNetCore.CoreRestore), nameof(IRestoreWithDotNetCore.DotnetToolRestore) },
     Parameters = new[]
     {
-        nameof(ITestWithDotNetCore.CoverageDirectory), nameof(IOutputArtifacts.ArtifactsDirectory), nameof(Verbosity),
-        nameof(IHaveConfiguration. Configuration)
+        nameof(IIncludeCodeCoverage.CoverageDirectory), nameof(IOutputArtifacts.ArtifactsDirectory), nameof(Verbosity), nameof(IHaveConfiguration. Configuration)
     }
 )]
 [PackageIcon(
@@ -32,7 +33,7 @@ using Rocket.Surgery.Nuke.DotNetCore;
 [DotNetVerbosityMapping]
 [MSBuildVerbosityMapping]
 [NuGetVerbosityMapping]
-internal class Solution : NukeBuild,
+public class Solution : NukeBuild,
                           IRestoreWithDotNetCore,
                           IBuildWithDotNetCore,
                           ITestWithDotNetCore,
@@ -64,6 +65,14 @@ internal class Solution : NukeBuild,
     public Target BuildVersion => _ => _.Inherit<IHaveBuildVersion>(x => x.BuildVersion)
        .Before(Default)
        .Before(Clean);
+
+    Target info => _ => _
+       .Executes(() =>
+            {
+                Logger.Info(string.Join(", ", typeof(Solution).GetDefaultMembers().Select(z => z.Name).ToArray()));
+                Logger.Info(string.Join(", ", typeof(Solution).GetMembers(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Select(z => z.Name).ToArray()));
+            }
+        );
 
     public Target Clean => _ => _.Inherit<ICanClean>(x => x.Clean);
     public Target Restore => _ => _.Inherit<IRestoreWithDotNetCore>(x => x.CoreRestore);

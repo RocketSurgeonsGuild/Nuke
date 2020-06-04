@@ -36,9 +36,11 @@ namespace Rocket.Surgery.Nuke
         {
             var paramList = new List<AzurePipelinesParameter>();
             var parameters =
-                build.GetType().GetMembers(
-                        BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public |
-                        BindingFlags.FlattenHierarchy
+                build.GetType()
+                   .GetInterfaces()
+                   .SelectMany(x => x.GetMembers())
+                   .Concat(build.GetType()
+                       .GetMembers(BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy)
                     )
                    .Where(x => x.GetCustomAttribute<ParameterAttribute>() != null);
             foreach (var parameter in parameters)
