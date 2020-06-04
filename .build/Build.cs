@@ -4,11 +4,13 @@ using JetBrains.Annotations;
 using Nuke.Common;
 using Nuke.Common.Execution;
 using Nuke.Common.Git;
+using Nuke.Common.IO;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Tools.MSBuild;
 using Rocket.Surgery.Nuke;
 using Rocket.Surgery.Nuke.DotNetCore;
+using Rocket.Surgery.Nuke.MsBuild;
 
 [PublicAPI]
 [CheckBuildProjectConfigurations]
@@ -17,12 +19,12 @@ using Rocket.Surgery.Nuke.DotNetCore;
     InvokeTargets = new[] { nameof(Default) },
     NonEntryTargets = new[]
     {
-        nameof(IHaveBuildVersion.BuildVersion), nameof(ITestWithDotNetCore.Trigger_Code_Coverage_Reports), nameof(Default)
+        nameof(IHaveBuildVersion.BuildVersion), nameof(ICanTestWithDotNetCore.Trigger_Code_Coverage_Reports), nameof(Default)
     },
-    ExcludedTargets = new[] { nameof(IRestoreWithDotNetCore.CoreRestore), nameof(IRestoreWithDotNetCore.DotnetToolRestore) },
+    ExcludedTargets = new[] { nameof(ICanRestoreWithDotNetCore.CoreRestore), nameof(ICanRestoreWithDotNetCore.DotnetToolRestore) },
     Parameters = new[]
     {
-        nameof(IIncludeCodeCoverage.CoverageDirectory), nameof(IOutputArtifacts.ArtifactsDirectory), nameof(Verbosity), nameof(IHaveConfiguration. Configuration)
+        nameof(IHaveCodeCoverage.CoverageDirectory), nameof(IHaveOutputArtifacts.ArtifactsDirectory), nameof(Verbosity), nameof(IHaveConfiguration. Configuration)
     }
 )]
 [PackageIcon(
@@ -34,10 +36,11 @@ using Rocket.Surgery.Nuke.DotNetCore;
 [MSBuildVerbosityMapping]
 [NuGetVerbosityMapping]
 public class Solution : NukeBuild,
-                          IRestoreWithDotNetCore,
-                          IBuildWithDotNetCore,
-                          ITestWithDotNetCore,
-                          IPackWithDotNetCore,
+                          ICanRestoreWithDotNetCore,
+                          ICanBuildWithDotNetCore,
+                          ICanTestWithDotNetCore,
+                          ICanPackWithDotNetCore,
+                          ICanPackWithMsBuild,
                           IUseDataCollector,
                           IHaveBuildVersion,
                           ICanClean,
@@ -66,19 +69,11 @@ public class Solution : NukeBuild,
        .Before(Default)
        .Before(Clean);
 
-    Target info => _ => _
-       .Executes(() =>
-            {
-                Logger.Info(string.Join(", ", typeof(Solution).GetDefaultMembers().Select(z => z.Name).ToArray()));
-                Logger.Info(string.Join(", ", typeof(Solution).GetMembers(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Select(z => z.Name).ToArray()));
-            }
-        );
-
     public Target Clean => _ => _.Inherit<ICanClean>(x => x.Clean);
-    public Target Restore => _ => _.Inherit<IRestoreWithDotNetCore>(x => x.CoreRestore);
-    public Target Build => _ => _.Inherit<IBuildWithDotNetCore>(x => x.CoreBuild);
-    public Target Test => _ => _.Inherit<ITestWithDotNetCore>(x => x.CoreTest);
-    public Target Pack => _ => _.Inherit<IPackWithDotNetCore>(x => x.CorePack)
+    public Target Restore => _ => _.Inherit<ICanRestoreWithDotNetCore>(x => x.CoreRestore);
+    public Target Build => _ => _.Inherit<ICanBuildWithDotNetCore>(x => x.CoreBuild);
+    public Target Test => _ => _.Inherit<ICanTestWithDotNetCore>(x => x.CoreTest);
+    public Target Pack => _ => _.Inherit<ICanPackWithDotNetCore>(x => x.CorePack)
        .DependsOn(Clean);
     
     /// <summary>

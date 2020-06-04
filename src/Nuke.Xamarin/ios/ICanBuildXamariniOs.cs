@@ -1,14 +1,10 @@
-using Nuke.Common;
+﻿using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.Tools.MSBuild;
-using static Nuke.Common.Tools.MSBuild.MSBuildTasks;
-
-#pragma warning disable 1591
-
 
 namespace Rocket.Surgery.Nuke.Xamarin
 {
-    public interface IBuildXamariniOS : IHaveBuildTarget, IHaveRestoreTarget, IHaveSolution, IHaveXamarinConfiguration, IHaveGitVersion, IOutputLogs
+    public interface ICanBuildXamariniOs : IHaveBuildTarget, IHaveRestoreTarget, IHaveSolution, IHaveConfiguration, IHaveGitVersion, IHaveOutputLogs, IHaveiOSTargetPlatform
     {
         /// <summary>
         /// Gets the path for the info plist.
@@ -26,10 +22,9 @@ namespace Rocket.Surgery.Nuke.Xamarin
         public Target BuildiPhone => _ => _
            .DependsOn(Restore)
            .Executes(
-                () => MSBuild(
-                    settings => settings
-                       .SetSolutionFile(Solution)
-                       .SetProperty("Platform", TargetPlatform.iPhone)
+                () => MSBuildTasks.MSBuild(
+                    settings => MSBuildSettingsExtensions.SetSolutionFile((MSBuildSettings)settings, (string)Solution)
+                       .SetProperty("Platform", iOSTargetPlatform)
                        .SetConfiguration(Configuration)
                        .SetDefaultLoggers(LogsDirectory / "build.log")
                        .SetGitVersionEnvironment(GitVersion)
@@ -46,7 +41,7 @@ namespace Rocket.Surgery.Nuke.Xamarin
             {
                 Logger.Trace($"Info.plist Path: {InfoPlist}");
                 var plist = Plist.Deserialize(InfoPlist);
-                var bundleIdentifier = !Equals(Configuration, XamarinConfiguration.Store)
+                var bundleIdentifier = !Equals(Configuration, XamarinConfiguration.Store.ToString())
                     ? Configuration
                     : string.Empty;
 
@@ -61,27 +56,5 @@ namespace Rocket.Surgery.Nuke.Xamarin
 
                 Plist.Serialize(InfoPlist, plist);
             });
-    }
-
-    public interface IPackXamariniOS : IHavePackTarget, IHaveTestTarget, IHaveXamarinConfiguration, IOutputLogs, IHaveGitVersion, IHaveSolution
-    {
-        /// <summary>
-        /// packages a binary for distribution.
-        /// </summary>
-        public Target PackiPhone => _ => _
-           .DependsOn(Test)
-           .OnlyWhenStatic(() => EnvironmentInfo.Platform == PlatformFamily.OSX)
-           .Executes(
-                () => MSBuild(
-                    settings => settings
-                       .SetSolutionFile(Solution)
-                       .SetProperty("Platform", TargetPlatform.iPhone)
-                       .SetProperty("BuildIpa", "true")
-                       .SetProperty("ArchiveOnBuild", "true")
-                       .SetConfiguration(Configuration)
-                       .SetDefaultLoggers(LogsDirectory / "package.log")
-                       .SetGitVersionEnvironment(GitVersion)
-                       .SetAssemblyVersion(GitVersion.AssemblySemVer)
-                       .SetPackageVersion(GitVersion.NuGetVersionV2)));
     }
 }

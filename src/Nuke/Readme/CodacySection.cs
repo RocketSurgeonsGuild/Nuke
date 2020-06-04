@@ -11,7 +11,7 @@ namespace Rocket.Surgery.Nuke.Readme
         public string Process(
             IDictionary<object, object> config,
             IMarkdownReferences references,
-            IReadmeUpdater build
+            ICanUpdateReadme build
         )
         {
             if (!( config.TryGetValue("github", out var githubObj) && config.TryGetValue("codacy", out var codacyObj) ))
