@@ -1,7 +1,9 @@
+using System.ComponentModel;
 using JetBrains.Annotations;
 using Nuke.Common;
 using Nuke.Common.Execution;
 using Nuke.Common.Git;
+using Nuke.Common.Tooling;
 using Nuke.Common.Tools.GitVersion;
 using Rocket.Surgery.Nuke;
 using Rocket.Surgery.Nuke.DotNetCore;
@@ -19,7 +21,7 @@ using Rocket.Surgery.Nuke.DotNetCore;
     Parameters = new[]
     {
         nameof(ITestWithDotNetCore.CoverageDirectory), nameof(IOutputArtifacts.ArtifactsDirectory), nameof(Verbosity),
-        nameof(Configuration)
+        nameof(IHaveConfiguration. Configuration)
     }
 )]
 [PackageIcon(
@@ -37,7 +39,8 @@ internal class Solution : RocketBoosterBuild,
                           ICanClean,
                           IGenerateCodeCoverageReport,
                           IGenerateCodeCoverageSummary,
-                          IGenerateCodeCoverageBadges
+                          IGenerateCodeCoverageBadges,
+                          IHaveConfiguration<Configuration>
 {
     /// <summary>
     /// Support plugins are available for:
@@ -55,6 +58,11 @@ internal class Solution : RocketBoosterBuild,
        .DependsOn(Test)
        .DependsOn(Pack);
 
+    public Target BuildVersion => _ => _.Inherit<IHaveBuildVersion>(x => x.BuildVersion)
+       .Before(Default)
+       .Before(Clean)
+    ;
+
     public Target Clean => _ => _.Inherit<ICanClean>(x => x.Clean);
     public Target Restore => _ => _.Inherit<IRestoreWithDotNetCore>(x => x.CoreRestore);
     public Target Build => _ => _.Inherit<IBuildWithDotNetCore>(x => x.CoreBuild);
@@ -68,9 +76,15 @@ internal class Solution : RocketBoosterBuild,
     [OptionalGitRepository]
     public GitRepository? GitRepository { get; }
 
-    /// <summary>
-    /// Configuration to build - Default is 'Debug' (local) or 'Release' (server)
-    /// </summary>
-    [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
-    public string Configuration { get; } = null!;
+    [Parameter("Configuration to build")]
+    public Configuration Configuration { get; } = IsLocalBuild ? Configuration.Debug : Configuration.Release;
+}
+
+[TypeConverter(typeof(TypeConverter<Configuration>))]
+public class Configuration : Enumeration
+{
+    public static readonly Configuration Debug = new Configuration { Value = nameof(Debug) };
+    public static readonly Configuration Release = new Configuration { Value = nameof(Release) };
+
+    public static implicit operator string(Configuration configuration) => configuration.Value;
 }

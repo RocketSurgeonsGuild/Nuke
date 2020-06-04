@@ -16,7 +16,7 @@
 
 #
 parameters:
-  Configuration: ''
+  Configuration: 'Release'
   Verbosity: 'Normal'
 steps:
   - pwsh: ./build.ps1 Clean --skip --configuration '${{ parameters.Configuration }}' --verbosity '${{ parameters.Verbosity }}'

@@ -80,6 +80,21 @@ namespace Rocket.Surgery.Nuke
     }
 
     /// <summary>
+    /// Defines the configuration as strongly typed enumeration
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public interface IHaveConfiguration<T> : IHaveConfiguration
+        where T : Enumeration
+    {
+        /// <summary>
+        /// The build configuration
+        /// </summary>
+        public new T Configuration { get; }
+
+        string IHaveConfiguration.Configuration => Configuration.ToString();
+    }
+
+    /// <summary>
     /// Adds support for linting the files in a solution or via
     /// </summary>
     public interface ICanLintMyself : IHaveSolution
@@ -270,6 +285,9 @@ namespace Rocket.Surgery.Nuke
         );
     }
 
+    /// <summary>
+    /// Extensions related to file paths
+    /// </summary>
     public static class FilePathExtensions
     {
         private static readonly ConcurrentDictionary<AbsolutePath, AbsolutePath> _cache =
@@ -358,7 +376,10 @@ namespace Rocket.Surgery.Nuke
         public bool Force { get; }
     }
 
-    public interface IHaveBuildVersion : IHaveGitVersion, IHaveSolution
+    /// <summary>
+    /// Defines a build version target
+    /// </summary>
+    public interface IHaveBuildVersion : IHaveGitVersion, IHaveSolution, IHaveConfiguration
     {
         /// <summary>
         /// prints the build information.
@@ -368,9 +389,10 @@ namespace Rocket.Surgery.Nuke
                 () =>
                 {
                     Logger.Info(
-                        "Building version {0} of {1} using version {2} of Nuke.",
+                        "Building version {0} of {1} ({2}) using version {3} of Nuke.",
                         GitVersion?.NuGetVersionV2 ?? GitVersion?.NuGetVersion,
                         Solution.Name,
+                        Configuration,
                         typeof(NukeBuild).Assembly.GetVersionText()
                     );
                 }
