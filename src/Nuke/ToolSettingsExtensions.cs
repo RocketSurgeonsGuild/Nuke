@@ -6,7 +6,6 @@ using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Tools.MSBuild;
-using static Nuke.Common.IO.PathConstruction;
 
 namespace Rocket.Surgery.Nuke
 {
@@ -126,6 +125,8 @@ namespace Rocket.Surgery.Nuke
         public static T SetGitVersionEnvironment<T>(this T settings, GitVersion gitVersion)
             where T : ToolSettings
         {
+            if (gitVersion == null)
+                return settings;
             foreach (var item in JObject.FromObject(gitVersion))
             {
                 var key = $"gitversion_{item.Key}".ToUpperInvariant();
@@ -134,7 +135,7 @@ namespace Rocket.Surgery.Nuke
                     continue;
                 }
 
-                settings = settings.AddEnvironmentVariable(key, item.Value.ToString());
+                settings = settings.AddEnvironmentVariable(key, item.Value?.ToString());
             }
 
             return settings;

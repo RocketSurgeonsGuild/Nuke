@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using Nuke.Common;
-using Nuke.Common.Tools;
 using Nuke.Common.Tools.GitVersion;
 using static Nuke.Common.EnvironmentInfo;
 using Nuke.Common.Execution;
@@ -47,7 +46,7 @@ namespace Rocket.Surgery.Nuke
             => Variables.Keys.Any(z => z.StartsWith("GITVERSION_", StringComparison.OrdinalIgnoreCase));
 
         /// <inheritdoc />
-        public override object GetValue(MemberInfo member, object instance)
+        public override object? GetValue(MemberInfo member, object instance)
         {
             var rootDirectory = FileSystemTasks.FindParentDirectory(NukeBuild.RootDirectory, x => x.GetDirectories(".git").Any());
             if (rootDirectory == null)
@@ -96,7 +95,7 @@ namespace Rocket.Surgery.Nuke
         private class AllWritableContractResolver : DefaultContractResolver
         {
             protected override JsonProperty CreateProperty(
-                [JetBrains.Annotations.NotNull] MemberInfo member,
+                MemberInfo member,
                 MemberSerialization memberSerialization
             )
             {

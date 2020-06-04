@@ -12,7 +12,7 @@ using Rocket.Surgery.Nuke.DotNetCore;
 [CheckBuildProjectConfigurations]
 [UnsetVisualStudioEnvironmentVariables]
 [AzurePipelinesSteps(
-    InvokedTargets = new[] { nameof(Default) },
+    InvokeTargets = new[] { nameof(Default) },
     NonEntryTargets = new[]
     {
         nameof(IHaveBuildVersion.BuildVersion), nameof(ITestWithDotNetCore.Trigger_Code_Coverage_Reports), nameof(Default)

@@ -94,7 +94,7 @@ namespace Rocket.Surgery.Nuke.Readme
             var sections = sectionRegex.Matches(content);
 
             var ranges = new List<(int start, int length, string content)>();
-            foreach (var sectionMatch in sections.OfType<Match>()
+            foreach (var sectionMatch in sections
                .GroupBy(x => x.Groups[1].Value)
                .OrderByDescending(x => x.Key != "generated references")
             )

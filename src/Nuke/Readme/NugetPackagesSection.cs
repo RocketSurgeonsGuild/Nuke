@@ -16,8 +16,8 @@ namespace Rocket.Surgery.Nuke.Readme
         private static string NuGetVersionBadge(string packageName)
             => $"https://img.shields.io/nuget/v/{packageName}.svg?color=004880&logo=nuget&style=flat-square";
 
-        private static string NuGetPrereleaseVersionBadge(string packageName)
-            => $"https://img.shields.io/nuget/vpre/{packageName}.svg?color=004880&logo=nuget&style=flat-square";
+        // private static string NuGetPrereleaseVersionBadge(string packageName)
+        //     => $"https://img.shields.io/nuget/vpre/{packageName}.svg?color=004880&logo=nuget&style=flat-square";
 
         private static string MyGetUrl(string project, string packageName)
             => $"https://www.myget.org/feed/{project}/package/nuget/{packageName}";
@@ -25,8 +25,8 @@ namespace Rocket.Surgery.Nuke.Readme
         private static string MyGetDownloadsBadge(string project, string packageName)
             => $"https://img.shields.io/myget/{project}/dt/{packageName}.svg?color=004880&logo=nuget&style=flat-square";
 
-        private static string MyGetVersionBadge(string project, string packageName)
-            => $"https://img.shields.io/myget/{project}/v/{packageName}.svg?label=myget&color=004880&logo=nuget&style=flat-square";
+        // private static string MyGetVersionBadge(string project, string packageName)
+        //     => $"https://img.shields.io/myget/{project}/v/{packageName}.svg?label=myget&color=004880&logo=nuget&style=flat-square";
 
         private static string MyGetPrereleaseVersionBadge(string project, string packageName)
             => $"https://img.shields.io/myget/{project}/vpre/{packageName}.svg?label=myget&color=004880&logo=nuget&style=flat-square";

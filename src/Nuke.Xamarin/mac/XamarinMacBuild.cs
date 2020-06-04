@@ -21,7 +21,7 @@ namespace Rocket.Surgery.Nuke.Xamarin
         /// <summary>
         /// msbuild
         /// </summary>
-        public Target Build => _ => _
+        public new Target Build => _ => _
            .DependsOn(Restore)
            .Executes(
                 () => MSBuild(

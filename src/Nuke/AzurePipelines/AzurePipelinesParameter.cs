@@ -7,8 +7,8 @@ namespace Rocket.Surgery.Nuke.AzurePipelines
 {
     public class AzurePipelinesParameter : ConfigurationEntity
     {
-        public string Name { get; set; }
-        public string Default { get; set; }
+        public string Name { get; set; } = null!;
+        public string Default { get; set; }= null!;
 
         public override void Write(CustomFileWriter writer)
         {

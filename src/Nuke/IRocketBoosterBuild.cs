@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Nuke.Common;
-using Nuke.Common.Execution;
 using Nuke.Common.Git;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
@@ -14,7 +13,6 @@ using Nuke.Common.Utilities;
 using Nuke.Common.Utilities.Collections;
 using Rocket.Surgery.Nuke.Readme;
 using Temp.CleanupCode;
-using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.EnvironmentInfo;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.Execution.InjectionUtility;
@@ -430,7 +428,7 @@ namespace Rocket.Surgery.Nuke
         /// <summary>
         /// clean all artifact directories
         /// </summary>
-        public Target Clean => _ => _
+        public new Target Clean => _ => _
            .Before(Build)
            .Executes(
                 () =>

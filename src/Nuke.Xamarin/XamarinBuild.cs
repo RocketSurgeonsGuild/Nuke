@@ -1,11 +1,8 @@
-using System;
-using System.Linq.Expressions;
 using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
 using Nuke.Common.Tools.NuGet;
-using Nuke.Common.Utilities;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 using static Nuke.Common.Tools.MSBuild.MSBuildTasks;
@@ -26,7 +23,7 @@ namespace Rocket.Surgery.Nuke.Xamarin
         /// nuget restore
         /// </summary>
         /// <remarks>https://developercommunity.visualstudio.com/content/problem/20550/cant-run-dotnet-restore.html</remarks>
-        public Target Restore => _ => _
+        public new Target Restore => _ => _
            .DependsOn(Clean)
            .Executes(() => NuGetRestore(settings =>
                 settings
@@ -59,7 +56,7 @@ namespace Rocket.Surgery.Nuke.Xamarin
         /// <summary>
         /// test
         /// </summary>
-        public Target Test => _ => _
+        public new Target Test => _ => _
            .DependsOn(Build)
            .OnlyWhenStatic(() => DirectoryExists(TestsDirectory))
            .Executes(() =>

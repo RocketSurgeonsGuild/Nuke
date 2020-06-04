@@ -1,10 +1,7 @@
-using System;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Nuke.Common.Tools.NuGet;
 using Rocket.Surgery.Extensions.Testing;
-using Serilog;
-using Serilog.Events;
 using Xunit;
 using Xunit.Abstractions;
 using static Nuke.Common.EnvironmentInfo;

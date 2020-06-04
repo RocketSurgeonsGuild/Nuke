@@ -12,6 +12,7 @@ using Nuke.Common.Tooling;
 using Nuke.Common.Utilities;
 using Nuke.Common.Utilities.Collections;
 
+// ReSharper disable once CheckNamespace
 namespace Temp.CleanupCode
 {
     public static partial class CleanupCodeTasks

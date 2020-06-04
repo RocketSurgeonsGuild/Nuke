@@ -22,9 +22,9 @@ namespace Rocket.Surgery.Nuke
         public override string ConfigurationFile => NukeBuild.RootDirectory / "azure-pipelines.nuke.yml";
         public override HostType HostType => HostType.AzurePipelines;
         public override IEnumerable<string> GeneratedFiles => new[] { ConfigurationFile };
-        public override IEnumerable<string> RelevantTargetNames => InvokedTargets;
+        public override IEnumerable<string> RelevantTargetNames => InvokeTargets;
 
-        public string[] InvokedTargets { get; set; } = Array.Empty<string>();
+        public string[] InvokeTargets { get; set; } = Array.Empty<string>();
         public string[] Parameters { get; set; } = Array.Empty<string>();
 
         public override CustomFileWriter CreateWriter(StreamWriter writer) => new CustomFileWriter(writer, indentationFactor: 2, commentPrefix: "#");

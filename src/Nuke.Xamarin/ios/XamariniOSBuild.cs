@@ -10,7 +10,6 @@ namespace Rocket.Surgery.Nuke.Xamarin
 {
     public interface IBuildXamariniOS : IHaveBuildTarget, IHaveRestoreTarget, IHaveSolution, IHaveXamarinConfiguration, IHaveGitVersion, IOutputLogs
     {
-
         /// <summary>
         /// Gets the path for the info plist.
         /// </summary>
@@ -66,7 +65,6 @@ namespace Rocket.Surgery.Nuke.Xamarin
 
     public interface IPackXamariniOS : IHavePackTarget, IHaveTestTarget, IHaveXamarinConfiguration, IOutputLogs, IHaveGitVersion, IHaveSolution
     {
-
         /// <summary>
         /// packages a binary for distribution.
         /// </summary>

@@ -15,7 +15,7 @@ namespace Rocket.Surgery.Nuke
     public class OptionalGitRepositoryAttribute : GitRepositoryAttribute
     {
         /// <inheritdoc />
-        public override object GetValue(MemberInfo member, object instance)
+        public override object? GetValue(MemberInfo member, object instance)
         {
             var rootDirectory = FileSystemTasks.FindParentDirectory(
                 NukeBuild.RootDirectory,
