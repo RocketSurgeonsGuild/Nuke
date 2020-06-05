@@ -43,6 +43,8 @@ namespace Rocket.Surgery.Nuke
         public static IEnumerable<Project> GetTestProjects(
             this Solution solution,
             string testProjectNameSchema = "Tests"
-        ) => solution.AllProjects.Where(x => x.Name.Contains(testProjectNameSchema, StringComparison.OrdinalIgnoreCase));
+        ) => solution.AllProjects.Where(
+            x => x.Name.Contains(testProjectNameSchema, StringComparison.OrdinalIgnoreCase)
+        );
     }
 }

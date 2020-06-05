@@ -7,11 +7,11 @@ namespace Rocket.Surgery.Nuke.DotNetCore
     /// Adds a task to run `dotnet build` with structured logging and gitversion configuration
     /// </summary>
     public interface ICanBuildWithDotNetCore : IHaveRestoreTarget,
-                                            IHaveConfiguration,
-                                            IHaveBuildTarget,
-                                            IHaveSolution,
-                                            IHaveOutputLogs,
-                                            IHaveGitVersion
+                                               IHaveConfiguration,
+                                               IHaveBuildTarget,
+                                               IHaveSolution,
+                                               IHaveOutputLogs,
+                                               IHaveGitVersion
     {
         /// <summary>
         /// dotnet build
@@ -21,7 +21,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
            .DependsOn(Restore)
            .Executes(
                 () => DotNetTasks.DotNetBuild(
-                    s => DotNetBuildSettingsExtensions.SetProjectFile<DotNetBuildSettings>(s, (string)Solution)
+                    s => s.SetProjectFile(Solution)
                        .SetDefaultLoggers(LogsDirectory / "build.log")
                        .SetGitVersionEnvironment(GitVersion)
                        .SetConfiguration(Configuration)

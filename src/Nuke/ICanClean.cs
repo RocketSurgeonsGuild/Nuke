@@ -20,43 +20,57 @@ namespace Rocket.Surgery.Nuke
                 {
                     if (this is IHaveArtifacts artifacts)
                     {
-                        FileSystemTasks.EnsureCleanDirectory(artifacts.ArtifactsDirectory);
+                        EnsureCleanDirectory(artifacts.ArtifactsDirectory);
                         if (artifacts is IHaveOutputLogs logs)
-                            FileSystemTasks.EnsureExistingDirectory(logs.LogsDirectory);
+                        {
+                            EnsureExistingDirectory(logs.LogsDirectory);
+                        }
+
                         if (artifacts is IHaveTestArtifacts testArtifacts)
-                            FileSystemTasks.EnsureExistingDirectory(testArtifacts.TestResultsDirectory);
+                        {
+                            EnsureExistingDirectory(testArtifacts.TestResultsDirectory);
+                        }
+
                         if (artifacts is IHaveNuGetPackages nuGetArtifacts)
-                            FileSystemTasks.EnsureExistingDirectory(nuGetArtifacts.NuGetPackageDirectory);
+                        {
+                            EnsureExistingDirectory(nuGetArtifacts.NuGetPackageDirectory);
+                        }
+
                         if (artifacts is IHavePublishArtifacts publishArtifacts)
-                            FileSystemTasks.EnsureExistingDirectory(publishArtifacts.PublishDirectory);
+                        {
+                            EnsureExistingDirectory(publishArtifacts.PublishDirectory);
+                        }
+
                         if (artifacts is IHaveOutputArtifacts outputArtifacts)
-                            FileSystemTasks.EnsureExistingDirectory(outputArtifacts.OutputArtifactsDirectory);
+                        {
+                            EnsureExistingDirectory(outputArtifacts.OutputArtifactsDirectory);
+                        }
                     }
 
                     if (this is IHaveCodeCoverage codeCoverage)
                     {
-                        FileSystemTasks.EnsureCleanDirectory(codeCoverage.CoverageDirectory);
+                        EnsureCleanDirectory(codeCoverage.CoverageDirectory);
                     }
 
                     // ReSharper disable SuspiciousTypeConversion.Global
                     if (this is IMayTheForceBeWithYou forceBeWithYou && forceBeWithYou.Force)
                     {
-                        if (this is IComprehendSamples samples && FileSystemTasks.DirectoryExists(samples.SampleDirectory))
+                        if (this is IComprehendSamples samples && DirectoryExists(samples.SampleDirectory))
                         {
                             samples.SampleDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
                         }
 
-                        if (this is IComprehendSources sources && FileSystemTasks.DirectoryExists(sources.SourceDirectory))
+                        if (this is IComprehendSources sources && DirectoryExists(sources.SourceDirectory))
                         {
                             sources.SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
                         }
 
-                        if (this is IComprehendTemplates templates && FileSystemTasks.DirectoryExists(templates.TemplatesDirectory))
+                        if (this is IComprehendTemplates templates && DirectoryExists(templates.TemplatesDirectory))
                         {
                             templates.TemplatesDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
                         }
 
-                        if (this is IComprehendTests tests && FileSystemTasks.DirectoryExists(tests.TestsDirectory))
+                        if (this is IComprehendTests tests && DirectoryExists(tests.TestsDirectory))
                         {
                             tests.TestsDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
                         }

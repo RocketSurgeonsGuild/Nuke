@@ -12,7 +12,7 @@ namespace Rocket.Surgery.Nuke
         /// </summary>
         string Configuration { get; }
     }
-    
+
     /// <summary>
     /// Defines the configuration as strongly typed enumeration
     /// </summary>

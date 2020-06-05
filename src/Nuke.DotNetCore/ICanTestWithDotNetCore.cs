@@ -14,14 +14,14 @@ namespace Rocket.Surgery.Nuke.DotNetCore
     /// Defines a `dotnet test` test run with code coverage via coverlet
     /// </summary>
     public interface ICanTestWithDotNetCore : IHaveCollectCoverage,
-                                           IHaveBuildTarget,
-                                           ITriggerCodeCoverageReports,
-                                           IComprehendTests,
-                                           IHaveTestArtifacts,
-                                           IHaveGitVersion,
-                                           IHaveSolution,
-                                           IHaveConfiguration,
-                                           IHaveOutputLogs
+                                              IHaveBuildTarget,
+                                              ITriggerCodeCoverageReports,
+                                              IComprehendTests,
+                                              IHaveTestArtifacts,
+                                              IHaveGitVersion,
+                                              IHaveSolution,
+                                              IHaveConfiguration,
+                                              IHaveOutputLogs
     {
         /// <summary>
         /// dotnet test
@@ -57,7 +57,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                     }
 
                     DotNetTasks.DotNetTest(
-                        s => DotNetTestSettingsExtensions.SetProjectFile<DotNetTestSettings>(s, (string)Solution)
+                        s => s.SetProjectFile(Solution)
                            .SetDefaultLoggers(LogsDirectory / "test.log")
                            .SetGitVersionEnvironment(GitVersion)
                            .SetConfiguration("Debug")
@@ -68,7 +68,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                            .SetResultsDirectory(TestResultsDirectory)
                            .When(
                                 !CollectCoverage,
-                                x => DotNetTestSettingsExtensions.SetProperty<DotNetTestSettings>(x, (string)"CollectCoverage", (object)"true")
+                                x => x.SetProperty((string)"CollectCoverage", "true")
                                    .SetProperty("CoverageDirectory", CoverageDirectory)
                             )
                            .When(

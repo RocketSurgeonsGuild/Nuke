@@ -23,8 +23,6 @@ namespace Rocket.Surgery.Nuke.Tests
 
     public class MiscTests : AutoFakeTest
     {
-        public MiscTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
-
         [Fact]
         public void Test1()
         {
@@ -41,5 +39,7 @@ namespace Rocket.Surgery.Nuke.Tests
             attr.Normal.Should().Be(nameof(NuGetVerbosity.Normal));
             attr.Verbose.Should().Be(nameof(NuGetVerbosity.Detailed));
         }
+
+        public MiscTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
     }
 }

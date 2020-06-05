@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Nuke.Common.CI.AzurePipelines.Configuration;
 using Nuke.Common.Utilities;
+
 #pragma warning disable 1591
 
 namespace Rocket.Surgery.Nuke.AzurePipelines
@@ -15,7 +16,9 @@ namespace Rocket.Surgery.Nuke.AzurePipelines
 
         public void Write(CustomFileWriter writer, string parameters)
         {
-            using (writer.WriteBlock($"- pwsh: ./{ScriptPath} {InvokedTargets.JoinSpace()} --skip {parameters}".TrimEnd()))
+            using (writer.WriteBlock(
+                $"- pwsh: ./{ScriptPath} {InvokedTargets.JoinSpace()} --skip {parameters}".TrimEnd()
+            ))
             {
                 writer.WriteLine($"displayName: {DisplayName.SingleQuote()}");
             }

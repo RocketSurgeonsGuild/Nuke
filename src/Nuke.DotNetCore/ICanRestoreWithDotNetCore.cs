@@ -9,10 +9,10 @@ namespace Rocket.Surgery.Nuke.DotNetCore
     /// Adds a task for `dotnet tool restore` and `dotnet restore`
     /// </summary>
     public interface ICanRestoreWithDotNetCore : IHaveCleanTarget,
-                                              IHaveSolution,
-                                              IHaveOutputLogs,
-                                              IHaveGitVersion,
-                                              IHaveRestoreTarget
+                                                 IHaveSolution,
+                                                 IHaveOutputLogs,
+                                                 IHaveGitVersion,
+                                                 IHaveRestoreTarget
     {
         /// <summary>
         /// This will ensure that all local dotnet tools are installed

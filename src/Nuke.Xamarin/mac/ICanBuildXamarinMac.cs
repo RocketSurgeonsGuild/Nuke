@@ -3,16 +3,17 @@ using Nuke.Common.IO;
 using Nuke.Common.Tools.MSBuild;
 using static Nuke.Common.Tools.MSBuild.MSBuildTasks;
 
-#pragma warning disable 1591
-
 namespace Rocket.Surgery.Nuke.Xamarin
 {
+    /// <summary>
+    /// Xamarin mac build
+    /// </summary>
     public interface ICanBuildXamarinMac : IHaveBuildTarget,
-                                        IHaveRestoreTarget,
-                                        IHaveSolution,
-                                        IHaveConfiguration,
-                                        IHaveGitVersion,
-                                        IHaveOutputLogs
+                                           IHaveRestoreTarget,
+                                           IHaveSolution,
+                                           IHaveConfiguration,
+                                           IHaveGitVersion,
+                                           IHaveOutputLogs
     {
         /// <summary>
         /// Gets the path for the info plist.

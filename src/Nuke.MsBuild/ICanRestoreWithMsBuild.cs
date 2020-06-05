@@ -15,14 +15,14 @@ namespace Rocket.Surgery.Nuke.MsBuild
         /// </summary>
         public Target NetRestore => _ => _
            .DependsOn(Clean)
-           .Executes(() => NuGetTasks
-               .NuGetRestore(
-                    settings =>
-                        settings
-                           .SetSolutionDirectory(Solution)
-                           .EnableNoCache()
-                )
+           .Executes(
+                () => NuGetTasks
+                   .NuGetRestore(
+                        settings =>
+                            settings
+                               .SetSolutionDirectory(Solution)
+                               .EnableNoCache()
+                    )
             );
-
     }
 }

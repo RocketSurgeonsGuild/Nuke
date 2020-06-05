@@ -8,7 +8,7 @@ namespace Rocket.Surgery.Nuke
     public interface IHaveGitVersion
     {
         /// <summary>
-        /// The current version as defined by GitVersion 
+        /// The current version as defined by GitVersion
         /// </summary>
         GitVersion GitVersion { get; }
     }

@@ -7,13 +7,13 @@ namespace Rocket.Surgery.Nuke.DotNetCore
     /// Defines a `dotnet pack` run with logging and configuration output to the nuget package directory
     /// </summary>
     public interface ICanPackWithDotNetCore : IHaveBuildTarget,
-                                           IHaveNuGetPackages,
-                                           IHaveTestTarget,
-                                           IHavePackTarget,
-                                           IHaveSolution,
-                                           IHaveOutputLogs,
-                                           IHaveGitVersion,
-                                           IHaveConfiguration
+                                              IHaveNuGetPackages,
+                                              IHaveTestTarget,
+                                              IHavePackTarget,
+                                              IHaveSolution,
+                                              IHaveOutputLogs,
+                                              IHaveGitVersion,
+                                              IHaveConfiguration
     {
         /// <summary>
         /// dotnet pack
@@ -24,7 +24,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
            .After(Test)
            .Executes(
                 () => DotNetTasks.DotNetPack(
-                    s => DotNetPackSettingsExtensions.SetProject<DotNetPackSettings>(s, (string)Solution)
+                    s => s.SetProject(Solution)
                        .SetDefaultLoggers(LogsDirectory / "pack.log")
                        .SetGitVersionEnvironment(GitVersion)
                        .SetConfiguration(Configuration)

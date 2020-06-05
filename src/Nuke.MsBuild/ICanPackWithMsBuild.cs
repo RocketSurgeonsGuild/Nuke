@@ -7,7 +7,12 @@ namespace Rocket.Surgery.Nuke.MsBuild
     /// <summary>
     /// Pack using msbuild
     /// </summary>
-    public interface ICanPackWithMsBuild : IHavePackTarget, IHaveBuildTarget, IHaveTestTarget, IHaveNuGetPackages, IHaveGitVersion, IHaveConfiguration
+    public interface ICanPackWithMsBuild : IHavePackTarget,
+                                           IHaveBuildTarget,
+                                           IHaveTestTarget,
+                                           IHaveNuGetPackages,
+                                           IHaveGitVersion,
+                                           IHaveConfiguration
     {
         /// <summary>
         /// The directory where templates will be placed
@@ -39,6 +44,5 @@ namespace Rocket.Surgery.Nuke.MsBuild
                     }
                 }
             );
-
     }
 }

@@ -126,7 +126,10 @@ namespace Rocket.Surgery.Nuke
             where T : ToolSettings
         {
             if (gitVersion == null)
+            {
                 return settings;
+            }
+
             foreach (var item in JObject.FromObject(gitVersion))
             {
                 var key = $"gitversion_{item.Key}".ToUpperInvariant();

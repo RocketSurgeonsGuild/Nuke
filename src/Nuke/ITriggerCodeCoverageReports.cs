@@ -26,31 +26,6 @@ namespace Rocket.Surgery.Nuke
            .Select(z => z.ToString());
 
         /// <summary>
-        /// ensures that ReportGenerator is called with the appropriate settings given the current state.
-        /// </summary>
-        /// <param name="settings"></param>
-        /// <returns></returns>
-        protected ReportGeneratorSettings WithTag(ReportGeneratorSettings settings)
-        {
-            settings = settings.SetToolPath(
-                ToolPathResolver.GetPackageExecutable(
-                    "ReportGenerator",
-                    "ReportGenerator.dll",
-                    framework: "netcoreapp3.0"
-                )
-            );
-
-            return this switch
-            {
-                IHaveGitVersion gitVersion => settings.SetTag(gitVersion.GitVersion.InformationalVersion),
-                IHaveGitRepository gitRepository when gitRepository.GitRepository != null => settings.SetTag(
-                    gitRepository.GitRepository.Head
-                ),
-                _ => settings
-            };
-        }
-
-        /// <summary>
         /// This will generate code coverage reports from emitted coverage data
         /// </summary>
         public Target Trigger_Code_Coverage_Reports => _ => _
@@ -96,5 +71,30 @@ namespace Rocket.Surgery.Nuke
                     );
                 }
             );
+
+        /// <summary>
+        /// ensures that ReportGenerator is called with the appropriate settings given the current state.
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        protected ReportGeneratorSettings WithTag(ReportGeneratorSettings settings)
+        {
+            settings = settings.SetToolPath(
+                ToolPathResolver.GetPackageExecutable(
+                    "ReportGenerator",
+                    "ReportGenerator.dll",
+                    framework: "netcoreapp3.0"
+                )
+            );
+
+            return this switch
+            {
+                IHaveGitVersion gitVersion => settings.SetTag(gitVersion.GitVersion.InformationalVersion),
+                IHaveGitRepository gitRepository when gitRepository.GitRepository != null => settings.SetTag(
+                    gitRepository.GitRepository.Head
+                ),
+                var _ => settings
+            };
+        }
     }
 }

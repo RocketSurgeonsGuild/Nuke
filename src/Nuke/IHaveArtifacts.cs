@@ -13,9 +13,8 @@ namespace Rocket.Surgery.Nuke
         /// The directory where artifacts are to be dropped
         /// </summary>
         [Parameter("The directory where artifacts are to be dropped", Name = "Artifacts")]
-        public AbsolutePath ArtifactsDirectory => 
-            EnvironmentInfo.GetVariable<AbsolutePath>("Artifacts")
-             ?? InjectionUtility.GetInjectionValue(() => ArtifactsDirectory)
-             ?? NukeBuild.RootDirectory / "artifacts";
+        public AbsolutePath ArtifactsDirectory => EnvironmentInfo.GetVariable<AbsolutePath>("Artifacts")
+         ?? InjectionUtility.GetInjectionValue(() => ArtifactsDirectory)
+         ?? NukeBuild.RootDirectory / "artifacts";
     }
 }

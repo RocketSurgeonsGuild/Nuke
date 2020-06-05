@@ -7,16 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using Nuke.Common.IO;
-using Array = System.Array;
-using Convert = System.Convert;
-using DateTime = System.DateTime;
 
 namespace Rocket.Surgery.Nuke.Xamarin
 {
     /// <summary>
     /// Taken from https://github.com/cake-contrib/Cake.Plist/blob/develop/src/Cake.Plist/PlistConverter.cs
     /// </summary>
-    internal class Plist
+    internal static class Plist
     {
         /// <summary>
         /// Deserializes the .plist file provided.
@@ -71,7 +68,14 @@ namespace Rocket.Surgery.Nuke.Xamarin
         private static XDocument SerializeDocument(object item)
         {
             var doc = new XDocument(new XDeclaration("1.0", "UTF-8", "yes"));
-            doc.AddFirst(new XDocumentType("plist", "-//Apple//DTD PLIST 1.0//EN", "http://www.apple.com/DTDs/PropertyList-1.0.dtd", null));
+            doc.AddFirst(
+                new XDocumentType(
+                    "plist",
+                    "-//Apple//DTD PLIST 1.0//EN",
+                    "http://www.apple.com/DTDs/PropertyList-1.0.dtd",
+                    null
+                )
+            );
 
             var plist = new XElement("plist");
             plist.SetAttributeValue("version", "1.0");
@@ -113,14 +117,14 @@ namespace Rocket.Surgery.Nuke.Xamarin
                 return new XElement("false");
             }
 
-            if (item is DateTime)
+            if (item is DateTime time)
             {
-                return new XElement("date", ((DateTime) item).ToString("yyyy-MM-ddTHH:mm:ss.fffZ"));
+                return new XElement("date", time.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"));
             }
 
-            if (item is DateTimeOffset)
+            if (item is DateTimeOffset offset)
             {
-                return new XElement("date", ((DateTimeOffset)item).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ"));
+                return new XElement("date", offset.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ"));
             }
 
             if (item is byte[] bytes)
@@ -189,7 +193,9 @@ namespace Rocket.Surgery.Nuke.Xamarin
 
                     var type = rawArray[0].GetType();
                     if (rawArray.Any(val => val.GetType() != type))
+                    {
                         return rawArray;
+                    }
 
                     var typedArray = Array.CreateInstance(type, rawArray.Length);
                     rawArray.CopyTo(typedArray, 0);

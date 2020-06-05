@@ -9,9 +9,6 @@ namespace Rocket.Surgery.Nuke
     /// </summary>
     public static class FilePathExtensions
     {
-        private static readonly ConcurrentDictionary<AbsolutePath, AbsolutePath> _cache =
-            new ConcurrentDictionary<AbsolutePath, AbsolutePath>();
-
         /// <summary>
         /// Returns the first directory that exists on disk
         /// </summary>
@@ -24,19 +21,28 @@ namespace Rocket.Surgery.Nuke
         {
             foreach (var path in paths)
             {
-                if (_cache.TryGetValue(path, out _))
+                if (_cache.TryGetValue(path, out var _))
+                {
                     return path;
+                }
+
                 if (!FileSystemTasks.DirectoryExists(path))
                 {
                     continue;
                 }
 
                 foreach (var p in paths)
+                {
                     _cache.TryAdd(p, path);
+                }
+
                 return path;
             }
 
             return paths.First();
         }
+
+        private static readonly ConcurrentDictionary<AbsolutePath, AbsolutePath> _cache =
+            new ConcurrentDictionary<AbsolutePath, AbsolutePath>();
     }
 }

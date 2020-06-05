@@ -1,14 +1,18 @@
 ﻿using Nuke.Common;
 using Nuke.Common.Tools.MSBuild;
+using static Nuke.Common.Tools.MSBuild.MSBuildTasks;
 
 namespace Rocket.Surgery.Nuke.Xamarin
 {
+    /// <summary>
+    /// Xamarin mac build
+    /// </summary>
     public interface IHavePackXamarinMac : IHavePackTarget,
-                                       IHaveTestTarget,
-                                       IHaveConfiguration,
-                                       IHaveOutputLogs,
-                                       IHaveGitVersion,
-                                       IHaveSolution
+                                           IHaveTestTarget,
+                                           IHaveConfiguration,
+                                           IHaveOutputLogs,
+                                           IHaveGitVersion,
+                                           IHaveSolution
     {
         /// <summary>
         /// packages a binary for distribution.
@@ -17,8 +21,8 @@ namespace Rocket.Surgery.Nuke.Xamarin
            .DependsOn(Test)
            .OnlyWhenStatic(() => EnvironmentInfo.Platform == PlatformFamily.OSX)
            .Executes(
-                () => MSBuildTasks.MSBuild(
-                    settings => MSBuildSettingsExtensions.SetSolutionFile((MSBuildSettings)settings, (string)Solution)
+                () => MSBuild(
+                    settings => settings.SetSolutionFile(Solution)
                        .SetProperty("Platform", TargetPlatform.AnyCPU)
                        .SetProperty("BuildIpa", "true")
                        .SetProperty("ArchiveOnBuild", "true")

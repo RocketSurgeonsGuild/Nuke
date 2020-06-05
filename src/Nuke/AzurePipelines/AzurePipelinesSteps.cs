@@ -3,6 +3,7 @@ using System.Linq;
 using Nuke.Common.CI;
 using Nuke.Common.CI.AzurePipelines.Configuration;
 using Nuke.Common.Utilities;
+
 #pragma warning disable 1591
 
 namespace Rocket.Surgery.Nuke.AzurePipelines
@@ -17,7 +18,7 @@ namespace Rocket.Surgery.Nuke.AzurePipelines
             writer.WriteLine("#");
             if (Parameters.Length > 0)
             {
-                using (writer.WriteBlock($"parameters:"))
+                using (writer.WriteBlock("parameters:"))
                 {
                     foreach (var item in Parameters)
                     {
@@ -26,10 +27,11 @@ namespace Rocket.Surgery.Nuke.AzurePipelines
                 }
             }
 
-            using (writer.WriteBlock($"steps:"))
+            using (writer.WriteBlock("steps:"))
             {
 #pragma warning disable CA1308
-                var parameters = Parameters.Select(z => $"--{z.Name.ToLowerInvariant()} '${{{{ parameters.{z.Name} }}}}'")
+                var parameters = Parameters
+                   .Select(z => $"--{z.Name.ToLowerInvariant()} '${{{{ parameters.{z.Name} }}}}'")
                    .ToArray()
                    .JoinSpace();
 #pragma warning restore CA1308

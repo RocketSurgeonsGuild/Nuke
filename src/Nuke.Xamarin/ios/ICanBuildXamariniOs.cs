@@ -1,10 +1,20 @@
 ﻿using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.Tools.MSBuild;
+using static Nuke.Common.Tools.MSBuild.MSBuildTasks;
 
 namespace Rocket.Surgery.Nuke.Xamarin
 {
-    public interface ICanBuildXamariniOs : IHaveBuildTarget, IHaveRestoreTarget, IHaveSolution, IHaveConfiguration, IHaveGitVersion, IHaveOutputLogs, IHaveiOSTargetPlatform
+    /// <summary>
+    /// Xamarin iOS build
+    /// </summary>
+    public interface ICanBuildXamariniOs : IHaveBuildTarget,
+                                           IHaveRestoreTarget,
+                                           IHaveSolution,
+                                           IHaveConfiguration,
+                                           IHaveGitVersion,
+                                           IHaveOutputLogs,
+                                           IHaveiOSTargetPlatform
     {
         /// <summary>
         /// Gets the path for the info plist.
@@ -22,14 +32,16 @@ namespace Rocket.Surgery.Nuke.Xamarin
         public Target BuildiPhone => _ => _
            .DependsOn(Restore)
            .Executes(
-                () => MSBuildTasks.MSBuild(
-                    settings => MSBuildSettingsExtensions.SetSolutionFile((MSBuildSettings)settings, (string)Solution)
+                () => MSBuild(
+                    settings => settings.SetSolutionFile(Solution)
                        .SetProperty("Platform", iOSTargetPlatform)
                        .SetConfiguration(Configuration)
                        .SetDefaultLoggers(LogsDirectory / "build.log")
                        .SetGitVersionEnvironment(GitVersion)
                        .SetAssemblyVersion(GitVersion.AssemblySemVer)
-                       .SetPackageVersion(GitVersion.NuGetVersionV2)));
+                       .SetPackageVersion(GitVersion.NuGetVersionV2)
+                )
+            );
 
 
         /// <summary>
@@ -37,24 +49,26 @@ namespace Rocket.Surgery.Nuke.Xamarin
         /// </summary>
         public Target ModifyInfoPlist => _ => _
            .DependsOn(Restore)
-           .Executes(() =>
-            {
-                Logger.Trace($"Info.plist Path: {InfoPlist}");
-                var plist = Plist.Deserialize(InfoPlist);
-                var bundleIdentifier = !Equals(Configuration, XamarinConfiguration.Store.ToString())
-                    ? Configuration
-                    : string.Empty;
+           .Executes(
+                () =>
+                {
+                    Logger.Trace($"Info.plist Path: {InfoPlist}");
+                    var plist = Plist.Deserialize(InfoPlist);
+                    var bundleIdentifier = !Equals(Configuration, XamarinConfiguration.Store.ToString())
+                        ? Configuration
+                        : string.Empty;
 
-                plist["CFBundleIdentifier"] = $"{BaseBundleIdentifier}.{bundleIdentifier?.ToLower()}".TrimEnd('.');
-                Logger.Info($"CFBundleIdentifier: {plist["CFBundleIdentifier"]}");
+                    plist["CFBundleIdentifier"] = $"{BaseBundleIdentifier}.{bundleIdentifier?.ToLower()}".TrimEnd('.');
+                    Logger.Info($"CFBundleIdentifier: {plist["CFBundleIdentifier"]}");
 
-                plist["CFBundleShortVersionString"] = $"{GitVersion.MajorMinorPatch}";
-                Logger.Info($"CFBundleShortVersionString: {plist["CFBundleShortVersionString"]}");
+                    plist["CFBundleShortVersionString"] = $"{GitVersion.MajorMinorPatch}";
+                    Logger.Info($"CFBundleShortVersionString: {plist["CFBundleShortVersionString"]}");
 
-                plist["CFBundleVersion"] = $"{GitVersion.PreReleaseNumber}";
-                Logger.Info($"CFBundleVersion: {plist["CFBundleVersion"]}");
+                    plist["CFBundleVersion"] = $"{GitVersion.PreReleaseNumber}";
+                    Logger.Info($"CFBundleVersion: {plist["CFBundleVersion"]}");
 
-                Plist.Serialize(InfoPlist, plist);
-            });
+                    Plist.Serialize(InfoPlist, plist);
+                }
+            );
     }
 }
