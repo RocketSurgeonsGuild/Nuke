@@ -15,32 +15,7 @@ namespace Rocket.Surgery.Nuke.ContinuousIntegration
     [PublicAPI]
     [UsedImplicitly(ImplicitUseKindFlags.Default)]
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
-    public class CICheckAttribute : Attribute, IOnAfterLogo
-    {
-        /// <inheritdoc />
-        public void OnAfterLogo(
-            NukeBuild build,
-            IReadOnlyCollection<ExecutableTarget> executableTargets,
-            IReadOnlyCollection<ExecutableTarget> executionPlan
-        )
-        {
-            global::Nuke.Common.CI.AzurePipelines.AzurePipelines.Instance?.WriteCommand(
-                "task.setvariable",
-                "true",
-                x => x.AddPair("variable", "Nuke.Built")
-            );
-            global::Nuke.Common.CI.GitHubActions.GitHubActions.Instance?.WriteCommand(
-                "set-env",
-                "true",
-                x => x.AddPair("Name", "NUKE_BUILT")
-            );
-        }
-    }
-
-    [PublicAPI]
-    [UsedImplicitly(ImplicitUseKindFlags.Default)]
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
-    public class BuildVersionAttribute : Attribute, IOnAfterLogo
+    public class PrintBuildVersionAttribute : Attribute, IOnAfterLogo
     {
         /// <inheritdoc />
         public void OnAfterLogo(
@@ -107,16 +82,20 @@ namespace Rocket.Surgery.Nuke.ContinuousIntegration
         {
             if (NukeBuild.IsLocalBuild)
                 return;
-            Info("CI: {0}", GetVariable<string>("CI"));
 
-            foreach (var variable in WellKnownEnvironmentVariablePrefixes.Concat(_additionalPrefixes)
-               .SelectMany(
-                    prefix => Variables.Keys.Where(
-                        key => key.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)
-                    )
-                ))
+            using (Block("CI Environment"))
             {
-                Info($"{variable}: {Variables[variable]}");
+                Info("CI: {0}", GetVariable<string>("CI"));
+
+                foreach (var variable in WellKnownEnvironmentVariablePrefixes.Concat(_additionalPrefixes)
+                   .SelectMany(
+                        prefix => Variables.Keys.Where(
+                            key => key.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)
+                        )
+                    ))
+                {
+                    Info($"{variable}: {Variables[variable]}");
+                }
             }
         }
     }
@@ -124,7 +103,7 @@ namespace Rocket.Surgery.Nuke.ContinuousIntegration
     /// <summary>
     /// Dumps ci state for debug purposes
     /// </summary>
-    public interface IPrintCIEnvironment : IHaveBuildVersion
+    public interface ICIEnvironment : IHaveBuildVersion
     {
         /// <summary>
         /// Well know environment variables
@@ -142,7 +121,7 @@ namespace Rocket.Surgery.Nuke.ContinuousIntegration
         /// <summary>
         /// Prints CI environment state for debug purposes
         /// </summary>
-        public Target PrintCIEnvironment => _ => _
+        public Target CIEnvironment => _ => _
            .TriggeredBy(BuildVersion)
            .OnlyWhenStatic(() => NukeBuild.IsServerBuild)
            .Executes(

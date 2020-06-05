@@ -65,7 +65,5 @@ else {
 
 Write-Output "Microsoft (R) .NET Core SDK version $(& $env:DOTNET_EXE --version)"
 
-if (-not ($ENV:NUKE_BUILT)) {
-    ExecSafe { & $env:DOTNET_EXE build $BuildProjectFile /nodeReuse:false }
-}
+ExecSafe { & $env:DOTNET_EXE build $BuildProjectFile /nodeReuse:false }
 ExecSafe { & $env:DOTNET_EXE run --project $BuildProjectFile --no-build -- $BuildArguments }

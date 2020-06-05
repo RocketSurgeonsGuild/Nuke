@@ -17,7 +17,7 @@ using Rocket.Surgery.Nuke.MsBuild;
     InvokeTargets = new[] { nameof(Default) },
     NonEntryTargets = new[]
     {
-        nameof(IPrintCIEnvironment.PrintCIEnvironment),
+        nameof(ICIEnvironment.CIEnvironment),
         nameof(ITriggerCodeCoverageReports.Trigger_Code_Coverage_Reports),
         nameof(ITriggerCodeCoverageReports.Generate_Code_Coverage_Report_Cobertura),
         nameof(IGenerateCodeCoverageBadges.Generate_Code_Coverage_Badges),
@@ -41,9 +41,7 @@ using Rocket.Surgery.Nuke.MsBuild;
 [DotNetVerbosityMapping]
 [MSBuildVerbosityMapping]
 [NuGetVerbosityMapping]
-[PrintCIEnvironment]
-[BuildVersion]
-[CICheck]
+[PrintBuildVersion, PrintCIEnvironment]
 public class Solution : NukeBuild,
                         ICanRestoreWithDotNetCore,
                         ICanBuildWithDotNetCore,
