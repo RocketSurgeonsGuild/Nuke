@@ -41,6 +41,9 @@ using Rocket.Surgery.Nuke.MsBuild;
 [DotNetVerbosityMapping]
 [MSBuildVerbosityMapping]
 [NuGetVerbosityMapping]
+[PrintCIEnvironment]
+[BuildVersion]
+[CICheck]
 public class Solution : NukeBuild,
                         ICanRestoreWithDotNetCore,
                         ICanBuildWithDotNetCore,
@@ -48,14 +51,12 @@ public class Solution : NukeBuild,
                         ICanPackWithDotNetCore,
                         ICanPackWithMsBuild,
                         IUseDataCollector,
-                        IHaveBuildVersion,
                         ICanClean,
                         IGenerateCodeCoverageReport,
                         IGenerateCodeCoverageSummary,
                         IGenerateCodeCoverageBadges,
                         IHaveConfiguration<Configuration>,
-                        ICanLint,
-                        IPrintCIEnvironment
+                        ICanLint
 {
     /// <summary>
     /// Support plugins are available for:
@@ -70,7 +71,6 @@ public class Solution : NukeBuild,
     public GitRepository? GitRepository { get; }
 
     private Target Default => _ => _
-       .DependsOn<IHaveBuildVersion>(x => x.BuildVersion)
        .DependsOn(Restore)
        .DependsOn(Build)
        .DependsOn(Test)

@@ -21,8 +21,6 @@ parameters:
   Configuration: 'Release'
   Verbosity: 'Normal'
 steps:
-  - pwsh: ./build.ps1 BuildVersion PrintCIEnvironment --skip --artifacts '${{ parameters.Artifacts }}' --coverage '${{ parameters.Coverage }}' --configuration '${{ parameters.Configuration }}' --verbosity '${{ parameters.Verbosity }}'
-    displayName: 'BuildVersion'
   - pwsh: ./build.ps1 Clean --skip --artifacts '${{ parameters.Artifacts }}' --coverage '${{ parameters.Coverage }}' --configuration '${{ parameters.Configuration }}' --verbosity '${{ parameters.Verbosity }}'
     displayName: 'Clean'
   - pwsh: ./build.ps1 Build --skip --artifacts '${{ parameters.Artifacts }}' --coverage '${{ parameters.Coverage }}' --configuration '${{ parameters.Configuration }}' --verbosity '${{ parameters.Verbosity }}'
