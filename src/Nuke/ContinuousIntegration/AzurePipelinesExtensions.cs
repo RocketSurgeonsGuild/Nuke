@@ -57,7 +57,6 @@ namespace Rocket.Surgery.Nuke.ContinuousIntegration
             string name,
             int order,
             AzurePipelinesTaskState? state = null,
-            DateTimeOffset? starttime = default,
             int? progress = null,
             AzurePipelinesTask? parent = null,
             string message = null
@@ -74,7 +73,6 @@ namespace Rocket.Surgery.Nuke.ContinuousIntegration
                    .AddPairWhenValueNotNull(nameof(name), name)
                    .AddPairWhenValueNotNull(nameof(order), Math.Max(1, order))
                    .AddPairWhenValueNotNull(nameof(state), state?.ToString())
-                   .AddPairWhenValueNotNull(nameof(starttime), (starttime ?? DateTimeOffset.Now).ToString("O"))
                    .AddPairWhenValueNotNull(nameof(progress), progress)
             );
             return task;
