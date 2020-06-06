@@ -64,7 +64,7 @@ namespace Rocket.Surgery.Nuke.ContinuousIntegration
         {
             var task = new AzurePipelinesTask();
             self.WriteCommand(
-                "task.detail",
+                "task.logdetail",
                 message,
                 o => o
                    .AddPair("id", task.Id)
@@ -87,7 +87,7 @@ namespace Rocket.Surgery.Nuke.ContinuousIntegration
         )
         {
             self.WriteCommand(
-                "task.detail",
+                "task.logdetail",
                 message,
                 o => o
                    .AddPair("id", task.Id)
