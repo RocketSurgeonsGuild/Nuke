@@ -44,7 +44,7 @@ using Rocket.Surgery.Nuke.MsBuild;
 [DotNetVerbosityMapping]
 [MSBuildVerbosityMapping]
 [NuGetVerbosityMapping]
-[PrintBuildVersion, PrintCIEnvironment]
+[PrintBuildVersion, PrintCIEnvironment, UploadLogs]
 public class Solution : NukeBuild,
                         ICanRestoreWithDotNetCore,
                         ICanBuildWithDotNetCore,
@@ -101,20 +101,11 @@ public class Solution : NukeBuild,
        .Executes(async 
         () =>
         {
-            var task = AzurePipelines?.CreateTask("mytype", "mytask", 1);
             for (var i = 0; i < 10; i++)
             {
                 await Task.Delay(100);
-                AzurePipelines?.UpdateTask(task, i * 10, AzurePipelinesTaskState.InProgress);
-                var childTask = AzurePipelines?.CreateTask("child", "mychildtask" + (i+1), i+1, parent: task);
-                for (var j = 0; i < 10; i++)
-                {
-                    AzurePipelines?.UpdateTask(childTask, j * 10, AzurePipelinesTaskState.InProgress);
-                    await Task.Delay(100);
-                }
-                AzurePipelines?.CompleteTask(childTask, AzurePipelinesTaskResult.Succeeded);
+                AzurePipelines?.SetProgress((i+1)*10);
             }
-            AzurePipelines?.CompleteTask(task, AzurePipelinesTaskResult.SucceededWithIssues);
         }
     );
 

@@ -5,7 +5,9 @@ using System.Net;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Nuke.Common;
+using Nuke.Common.CI.AzurePipelines;
 using Nuke.Common.Execution;
+using Nuke.Common.IO;
 using Nuke.Common.Utilities;
 using static Nuke.Common.Logger;
 
@@ -35,6 +37,25 @@ namespace Rocket.Surgery.Nuke.ContinuousIntegration
                         configuration.Configuration,
                         typeof(NukeBuild).Assembly.GetVersionText()
                     );
+                }
+            }
+        }
+    }
+    
+    [PublicAPI]
+    [UsedImplicitly(ImplicitUseKindFlags.Default)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
+    public class UploadLogsAttribute : Attribute, IOnBuildFinished
+    {
+        /// <inheritdoc />
+        public void OnBuildFinished(NukeBuild build)
+        {
+            if (build is IHaveOutputLogs logs)
+            {
+                foreach (var item in logs.LogsDirectory.GlobFiles("**/*"))
+                {
+                    Info(item);
+                    AzurePipelines.Instance?.UploadFile(item);
                 }
             }
         }
