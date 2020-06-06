@@ -105,9 +105,12 @@ namespace Rocket.Surgery.Nuke.ContinuousIntegration
         )
         {
             self.WriteCommand(
-                "task.complete",
+                "task.logdetail",
                 message,
-                o => o.AddPairWhenValueNotNull(nameof(result), result?.ToString())
+                o => o
+                   .AddPair("id", task.Id)
+                   .AddPairWhenValueNotNull("progress", 100)
+                   .AddPairWhenValueNotNull(nameof(result), result?.ToString())
             );
             return task;
         }
