@@ -11,7 +11,7 @@ using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Utilities;
 using Nuke.Common.Utilities.Collections;
-using Rocket.Surgery.Nuke.AzurePipelines;
+using Rocket.Surgery.Nuke.Azp;
 
 #pragma warning disable 1591
 

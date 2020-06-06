@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using Nuke.Common.CI.AzurePipelines.Configuration;
 using Nuke.Common.Utilities;
 
-#pragma warning disable 1591
-
-namespace Rocket.Surgery.Nuke.AzurePipelines
+namespace Rocket.Surgery.Nuke.Azp
 {
     public class AzurePipelinesStep
     {

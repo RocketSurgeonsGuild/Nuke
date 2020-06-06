@@ -1,5 +1,8 @@
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Nuke.Common;
+using Nuke.Common.CI;
+using Nuke.Common.CI.AzurePipelines;
 using Nuke.Common.Execution;
 using Nuke.Common.Git;
 using Nuke.Common.Tools.DotNet;
@@ -89,6 +92,31 @@ public class Solution : NukeBuild,
     public Target BuildVersion => _ => _.Inherit<IHaveBuildVersion>(x => x.BuildVersion)
        .Before(Default)
        .Before(Clean);
+
+
+    [CI] public AzurePipelines? AzurePipelines { get; }
+    public Target CIPlayground => _ => _
+       .DependentFor(Default)
+       .OnlyWhenStatic(() => IsServerBuild)
+       .Executes(async 
+        () =>
+        {
+            var task = AzurePipelines?.CreateTask("mytype", "mytask", 1);
+            for (var i = 0; i < 10; i++)
+            {
+                await Task.Delay(100);
+                AzurePipelines?.UpdateTask(task, i * 10, AzurePipelinesTaskState.InProgress);
+                var childTask = AzurePipelines?.CreateTask("child", "mychildtask" + (i+1), i+1, parent: task);
+                for (var j = 0; i < 10; i++)
+                {
+                    AzurePipelines?.UpdateTask(childTask, j * 10, AzurePipelinesTaskState.InProgress);
+                    await Task.Delay(100);
+                }
+                AzurePipelines?.CompleteTask(childTask, AzurePipelinesTaskResult.Succeeded);
+            }
+            AzurePipelines?.CompleteTask(task, AzurePipelinesTaskResult.SucceededWithIssues);
+        }
+    );
 
     [Parameter("Configuration to build")]
     public Configuration Configuration { get; } = IsLocalBuild ? Configuration.Debug : Configuration.Release;
