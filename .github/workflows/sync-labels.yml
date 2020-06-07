@@ -23,8 +23,15 @@ jobs:
       - name: merge files
         shell: pwsh
         run: |
+          echo (Get-Content -Raw ".github/labels.yml")
+          echo (Get-Content -Raw ".rsg/.github/labels.yml")
+
           Add-Content -Path ".rsg/.github/labels.yml" -Value ("`n")
           Add-Content -Path ".rsg/.github/labels.yml" -Value (Get-Content -Raw ".github/labels.yml")
+
+          echo (Get-Content -Raw ".github/labels.yml")
+          echo (Get-Content -Raw ".rsg/.github/labels.yml")
+
       - name: Run Labeler
         if: success()
         uses: crazy-max/ghaction-github-labeler@v2
