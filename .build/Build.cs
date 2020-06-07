@@ -93,22 +93,6 @@ public class Solution : NukeBuild,
        .Before(Default)
        .Before(Clean);
 
-
-    [CI] public AzurePipelines? AzurePipelines { get; }
-    public Target CIPlayground => _ => _
-       .DependentFor(Default)
-       .OnlyWhenStatic(() => IsServerBuild)
-       .Executes(async 
-        () =>
-        {
-            for (var i = 0; i < 10; i++)
-            {
-                await Task.Delay(100);
-                AzurePipelines?.SetProgress((i+1)*10);
-            }
-        }
-    );
-
     [Parameter("Configuration to build")]
     public Configuration Configuration { get; } = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 }

@@ -54,10 +54,14 @@ namespace Rocket.Surgery.Nuke.ContinuousIntegration
             {
                 foreach (var item in logs.LogsDirectory.GlobFiles("**/*"))
                 {
-                    Info(item);
-                    AzurePipelines.Instance?.UploadFile(item);
+                    UploadFile(item);
                 }
             }
+        }
+
+        void UploadFile(AbsolutePath path)
+        {
+            AzurePipelines.Instance?.WriteCommand("task.uploadfile", path);
         }
     }
 }
