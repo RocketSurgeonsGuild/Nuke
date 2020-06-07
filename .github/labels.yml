@@ -1,0 +1,4 @@
+- name: ':grey_question: question'
+  color: 'cccccc'
+  description: 'Further information is requested'
+  from_name: question
