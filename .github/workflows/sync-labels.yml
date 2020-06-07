@@ -26,7 +26,6 @@ jobs:
           echo (Get-Content -Raw ".github/labels.yml")
           echo (Get-Content -Raw ".rsg/.github/labels.yml")
 
-          Add-Content -Path ".rsg/.github/labels.yml" -Value ("`n")
           Add-Content -Path ".rsg/.github/labels.yml" -Value (Get-Content -Raw ".github/labels.yml")
 
           echo (Get-Content -Raw ".github/labels.yml")
