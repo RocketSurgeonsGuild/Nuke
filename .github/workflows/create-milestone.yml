@@ -1,4 +1,4 @@
-name: Milestone
+name: Create Milestone
 on:
   push:
     branches:

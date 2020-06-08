@@ -1,0 +1,15 @@
+name: Close Milestone
+on:
+  release:
+    types:
+      - created
+      - published
+jobs:
+  milestone:
+    steps:
+      - name: Close Milestone
+        uses: adlerhsieh/prepare-release@v0.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_OWNER: ''
+          REPO: ''
