@@ -11,6 +11,9 @@ jobs:
         uses: actions/checkout@v2
       - name: Fetch all history for all tags and branches
         run: git fetch --prune --unshallow
+      - name: nuget source
+        shell: pwsh
+        run: dotnet nuget update source RocketSurgeonsGuild -u 'anything' -p ${{ secrets.RSG_PACKAGES_TOKEN }} --store-password-in-clear-text
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v0.9.3
         with:
