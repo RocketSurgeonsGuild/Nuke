@@ -21,16 +21,10 @@ jobs:
           path: .rsg
 
       - name: merge files
-        shell: pwsh
-        run: |
-          echo (Get-Content -Raw ".github/labels.yml")
-          echo (Get-Content -Raw ".rsg/.github/labels.yml")
-
-          # Add-Content -Path ".rsg/.github/labels.yml" -Value (Get-Content -Raw ".github/labels.yml")
-          Add-Content -Path ".github/labels.yml" -Value (Get-Content -Raw ".rsg/.github/labels.yml")
-
-          echo (Get-Content -Raw ".github/labels.yml")
-          echo (Get-Content -Raw ".rsg/.github/labels.yml")
+        uses: RocketSurgeonsGuild/actions/merge-labels
+        with:
+          files: '.rsg/.github/labels.yml,.github/labels.yml'
+          output: .github/labels.yml
 
       - name: Run Labeler
         if: success()
