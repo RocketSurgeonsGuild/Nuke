@@ -1,0 +1,20 @@
+name: Update Milestone
+on:
+  pull_request:
+    types:
+      - closed
+      - opened
+      - reopened
+
+jobs:
+  Update Milestone:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: sync milestones
+        uses: ./sync-milestone/
+        with:
+          default-label: ':sparkles: mysterious'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
