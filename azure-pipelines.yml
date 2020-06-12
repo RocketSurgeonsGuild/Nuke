@@ -55,8 +55,8 @@ jobs:
   - template: jobs/gitversion.yml@rsg
   - template: jobs/publish-release.yml@rsg
     parameters:
-      EnableReleaseNotes: true
-      GitHub: true
+      EnableReleaseNotes: false
+      GitHub: false
       GitHubPackages: true
       GitHubAuthVariableGroup: rsg-bot
       PublishNuGetPackagesFromArtifact: 'NuGet - Windows'
@@ -68,8 +68,6 @@ jobs:
 
   - job: Build
     dependsOn:
-      - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/tags/v') }}:
-          - GitHub_Draft_Release
     variables:
       - group: rsg-bot
     strategy:

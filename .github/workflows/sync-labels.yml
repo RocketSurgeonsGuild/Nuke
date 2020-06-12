@@ -6,6 +6,8 @@ on:
     paths:
       - .github/workflows/sync-labels.yml
       - .github/labels.yml
+  schedule:
+    - cron: '0 0 * * *'
 
 jobs:
   sync-labels:
