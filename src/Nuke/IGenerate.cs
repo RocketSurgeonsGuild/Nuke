@@ -1,9 +1,9 @@
 namespace Rocket.Surgery.Nuke
 {
     /// <summary>
-    /// Defines ownership of a responsibility.
+    /// Defines an artifact.
     /// </summary>
-    public interface IHave
+    public interface IGenerate
     {
     }
 }
