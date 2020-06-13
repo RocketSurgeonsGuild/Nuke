@@ -6,7 +6,7 @@ on:
     paths-ignore:
       - '**/*.md'
 jobs:
-  Create Milestone and Draft Release:
+  create_milestone_and_draft_release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
