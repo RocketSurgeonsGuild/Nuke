@@ -6,9 +6,11 @@ on:
     paths:
       - .github/workflows/sync-labels.yml
       - .github/labels.yml
+  schedule:
+    - cron: '0 0 * * *'
 
 jobs:
-  sync-labels:
+  Sync Labels:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
