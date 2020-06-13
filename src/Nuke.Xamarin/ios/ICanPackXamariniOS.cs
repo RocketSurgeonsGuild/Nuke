@@ -13,7 +13,8 @@ namespace Rocket.Surgery.Nuke.Xamarin
                                           IHaveOutputLogs,
                                           IHaveGitVersion,
                                           IHaveSolution,
-                                          IHaveiOSTargetPlatform
+                                          IHaveiOSTargetPlatform,
+                                          ICan
     {
         /// <summary>
         /// packages a binary for distribution.

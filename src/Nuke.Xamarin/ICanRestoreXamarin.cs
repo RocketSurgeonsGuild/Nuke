@@ -6,7 +6,7 @@ using static Nuke.Common.Tools.NuGet.NuGetTasks;
 
 namespace Rocket.Surgery.Nuke.Xamarin
 {
-    public interface ICanRestoreXamarin : IHaveGitVersion, IHaveSolution, IHaveCleanTarget, IHaveRestoreTarget
+    public interface ICanRestoreXamarin : IHaveGitVersion, IHaveSolution, IHaveCleanTarget, IHaveRestoreTarget, ICan
     {
         /// <summary>
         /// nuget restore

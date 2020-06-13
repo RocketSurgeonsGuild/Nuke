@@ -15,7 +15,8 @@ namespace Rocket.Surgery.Nuke.Xamarin
                                        IHaveOutputLogs,
                                        IHaveConfiguration,
                                        IHaveGitVersion,
-                                       IHaveSolution
+                                       IHaveSolution,
+                                       ICan
     {
         /// <summary>
         /// test

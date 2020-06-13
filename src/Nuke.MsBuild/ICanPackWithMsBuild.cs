@@ -12,7 +12,8 @@ namespace Rocket.Surgery.Nuke.MsBuild
                                            IHaveTestTarget,
                                            IHaveNuGetPackages,
                                            IHaveGitVersion,
-                                           IHaveConfiguration
+                                           IHaveConfiguration,
+                                           ICan
     {
         /// <summary>
         /// The directory where templates will be placed

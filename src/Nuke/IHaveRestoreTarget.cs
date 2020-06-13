@@ -5,7 +5,7 @@ namespace Rocket.Surgery.Nuke
     /// <summary>
     /// Defines the restore target
     /// </summary>
-    public interface IHaveRestoreTarget
+    public interface IHaveRestoreTarget : IHave
     {
         /// <summary>
         /// The Restore Target

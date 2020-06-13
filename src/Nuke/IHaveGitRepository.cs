@@ -8,7 +8,7 @@ namespace Rocket.Surgery.Nuke
     /// <remarks>
     /// This explicitly excludes the attribute so that it can be defined in the consumers build
     /// </remarks>
-    public interface IHaveGitRepository
+    public interface IHaveGitRepository : IHave
     {
         /// <summary>
         /// The Git Repository currently being built

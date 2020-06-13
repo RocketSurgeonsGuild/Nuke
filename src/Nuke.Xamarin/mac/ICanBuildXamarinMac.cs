@@ -13,7 +13,8 @@ namespace Rocket.Surgery.Nuke.Xamarin
                                            IHaveSolution,
                                            IHaveConfiguration,
                                            IHaveGitVersion,
-                                           IHaveOutputLogs
+                                           IHaveOutputLogs,
+                                           ICan
     {
         /// <summary>
         /// Gets the path for the info plist.

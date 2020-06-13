@@ -6,7 +6,7 @@ namespace Rocket.Surgery.Nuke
     /// <summary>
     /// A common sample directory
     /// </summary>
-    public interface IComprehendSamples
+    public interface IComprehendSamples : IComprehend
     {
         /// <summary>
         /// The directory where samples will be placed

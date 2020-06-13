@@ -6,7 +6,7 @@ namespace Rocket.Surgery.Nuke
     /// <summary>
     /// The directory where templates should be placed.
     /// </summary>
-    public interface IComprehendTemplates
+    public interface IComprehendTemplates : IComprehend
     {
         /// <summary>
         /// The directory where templates will be placed

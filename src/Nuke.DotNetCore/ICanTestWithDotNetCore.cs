@@ -21,7 +21,8 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                                               IHaveGitVersion,
                                               IHaveSolution,
                                               IHaveConfiguration,
-                                              IHaveOutputLogs
+                                              IHaveOutputLogs,
+                                              ICan
     {
         /// <summary>
         /// dotnet test

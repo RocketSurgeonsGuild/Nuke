@@ -5,7 +5,7 @@ using Nuke.Common;
 
 namespace Rocket.Surgery.Nuke.Xamarin
 {
-    public interface IHaveiOSTargetPlatform
+    public interface IHaveiOSTargetPlatform : IHave
     {
         /// <summary>
         /// Gets the target platform.

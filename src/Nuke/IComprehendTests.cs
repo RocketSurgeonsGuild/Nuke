@@ -6,7 +6,7 @@ namespace Rocket.Surgery.Nuke
     /// <summary>
     /// The directory where tests should be placed.
     /// </summary>
-    public interface IComprehendTests
+    public interface IComprehendTests : IComprehend
     {
         /// <summary>
         /// The directory where tests will be placed

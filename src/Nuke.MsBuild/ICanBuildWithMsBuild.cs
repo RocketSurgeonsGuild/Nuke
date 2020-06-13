@@ -11,7 +11,8 @@ namespace Rocket.Surgery.Nuke.MsBuild
                                             IHaveSolution,
                                             IHaveConfiguration,
                                             IHaveOutputLogs,
-                                            IHaveGitVersion
+                                            IHaveGitVersion,
+                                            ICan
     {
         /// <summary>
         /// msbuild

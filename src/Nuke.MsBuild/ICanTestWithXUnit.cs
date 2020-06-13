@@ -12,7 +12,8 @@ namespace Rocket.Surgery.Nuke.MsBuild
                                          IHaveSolution,
                                          IHaveConfiguration,
                                          IHaveGitVersion,
-                                         IHaveOutputLogs
+                                         IHaveOutputLogs,
+                                         ICan
     {
         /// <summary>
         /// xunit test

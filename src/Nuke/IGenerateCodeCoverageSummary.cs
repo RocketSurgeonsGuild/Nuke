@@ -8,7 +8,7 @@ namespace Rocket.Surgery.Nuke
     /// <summary>
     /// Generates a code coverage summary
     /// </summary>
-    public interface IGenerateCodeCoverageSummary : ITriggerCodeCoverageReports
+    public interface IGenerateCodeCoverageSummary : ITriggerCodeCoverageReports, IGenerate
     {
         /// <summary>
         /// The directory where the summary will be places

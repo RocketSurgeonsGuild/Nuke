@@ -13,7 +13,7 @@ namespace Rocket.Surgery.Nuke
     /// <remarks>
     /// This causes code coverage to trigger
     /// </remarks>
-    public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarget
+    public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarget, ITrigger
     {
         /// <summary>
         /// The input reports

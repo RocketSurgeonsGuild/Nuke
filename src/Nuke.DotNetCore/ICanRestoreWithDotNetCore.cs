@@ -12,7 +12,8 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                                                  IHaveSolution,
                                                  IHaveOutputLogs,
                                                  IHaveGitVersion,
-                                                 IHaveRestoreTarget
+                                                 IHaveRestoreTarget,
+                                                 ICan
     {
         /// <summary>
         /// This will ensure that all local dotnet tools are installed

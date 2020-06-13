@@ -13,7 +13,8 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                                               IHaveSolution,
                                               IHaveOutputLogs,
                                               IHaveGitVersion,
-                                              IHaveConfiguration
+                                              IHaveConfiguration,
+                                              ICan
     {
         /// <summary>
         /// dotnet pack

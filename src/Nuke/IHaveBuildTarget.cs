@@ -5,7 +5,7 @@ namespace Rocket.Surgery.Nuke
     /// <summary>
     /// Defines the build target
     /// </summary>
-    public interface IHaveBuildTarget
+    public interface IHaveBuildTarget : IHave
     {
         /// <summary>
         /// The Build Target

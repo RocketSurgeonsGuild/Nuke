@@ -5,7 +5,7 @@ namespace Rocket.Surgery.Nuke
     /// <summary>
     /// Defines a common property for build configuration
     /// </summary>
-    public interface IHaveConfiguration
+    public interface IHaveConfiguration : IHave
     {
         /// <summary>
         /// The build configuration

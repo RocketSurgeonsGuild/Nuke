@@ -11,7 +11,8 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                                                IHaveBuildTarget,
                                                IHaveSolution,
                                                IHaveOutputLogs,
-                                               IHaveGitVersion
+                                               IHaveGitVersion,
+                                               ICan
     {
         /// <summary>
         /// dotnet build

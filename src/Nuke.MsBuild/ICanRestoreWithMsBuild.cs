@@ -8,7 +8,7 @@ namespace Rocket.Surgery.Nuke.MsBuild
     /// <summary>
     /// Defines a restore task using msbuild
     /// </summary>
-    public interface ICanRestoreWithMsBuild : IHaveRestoreTarget, IHaveCleanTarget, IHaveSolution
+    public interface ICanRestoreWithMsBuild : IHaveRestoreTarget, IHaveCleanTarget, IHaveSolution, ICan
     {
         /// <summary>
         /// nuget restore
