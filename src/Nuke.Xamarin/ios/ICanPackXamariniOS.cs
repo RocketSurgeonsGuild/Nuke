@@ -7,7 +7,7 @@ namespace Rocket.Surgery.Nuke.Xamarin
     /// <summary>
     /// Xamarin iOS Pack
     /// </summary>
-    public interface ICanPackXamariniOs : IHavePackTarget,
+    public interface ICanPackXamariniOS : IHavePackTarget,
                                           IHaveTestTarget,
                                           IHaveConfiguration,
                                           IHaveOutputLogs,

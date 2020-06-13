@@ -3,7 +3,7 @@
     /// <summary>
     /// Defines `CollectCoverage` as flase to utilize the coverlet msbuild collector
     /// </summary>
-    public interface IUseMsBuildCoverage : IHaveCollectCoverage
+    public interface IHaveMsBuildCoverage : IHaveCollectCoverage
     {
         bool IHaveCollectCoverage.CollectCoverage => false;
     }

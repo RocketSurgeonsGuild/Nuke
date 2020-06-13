@@ -8,7 +8,7 @@ namespace Rocket.Surgery.Nuke.Xamarin
     /// <summary>
     /// Xamarin iOS build
     /// </summary>
-    public interface ICanBuildXamariniOs : IHaveBuildTarget,
+    public interface ICanBuildXamariniOS : IHaveBuildTarget,
                                            IHaveRestoreTarget,
                                            IHaveSolution,
                                            IHaveConfiguration,
