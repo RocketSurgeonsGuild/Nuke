@@ -7,6 +7,15 @@ updates:
     assignees:
       - 'david-driscoll'
     open-pull-requests-limit: 100
+
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'daily'
+    assignees:
+      - 'david-driscoll'
+    open-pull-requests-limit: 100
+
   - package-ecosystem: 'nuget'
     directory: '/'
     schedule:
@@ -14,32 +23,6 @@ updates:
     assignees:
       - 'david-driscoll'
     ignore:
-      - dependency-name: Microsoft.Extensions.*
-      - dependency-name: Microsoft.AspNetCore.*
+      - dependency_name: Microsoft.Extensions.*
+      - dependency_name: Microsoft.AspNetCore.*
     open-pull-requests-limit: 100
-# update_configs:
-#   - package_manager: 'dotnet:nuget'
-#     directory: '/'
-#     update_schedule: 'live'
-#     target_branch: master
-#     default_labels:
-#       - ':package: dependencies'
-#     default_assignees:
-#       - 'david-driscoll'
-#     # default_reviewers:
-#     #   - "david-driscoll"
-#     automerged_updates:
-#       - match:
-#           dependency_name: 'Rocket.Surgery.*'
-#           update_type: 'semver:minor'
-#       - match:
-#           dependency_name: 'JetBrains.ReSharper.CommandLineTools'
-#           update_type: 'all'
-#       - match:
-#           dependency_name: 'ReportGenerator'
-#           update_type: 'semver:minor'
-#     ignored_updates:
-#       - match:
-#           dependency_name: Microsoft.Extensions.*
-#       - match:
-#           dependency_name: Microsoft.AspNetCore.*
