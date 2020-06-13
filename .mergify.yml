@@ -39,6 +39,22 @@ pull_request_rules:
       label:
         add:
           - ':shipit: merge'
+  - name: automatic merge for Nuke.Common pull requests
+    conditions:
+      - title~=^Bump Nuke\.Common.*$
+      - author~=^dependabot(|-preview)\[bot\]$
+    actions:
+      label:
+        add:
+          - ':shipit: merge'
+  - name: automatic merge for GitVersion.Tool pull requests
+    conditions:
+      - title~=^Bump GitVersion\.Tool.*$
+      - author~=^dependabot(|-preview)\[bot\]$
+    actions:
+      label:
+        add:
+          - ':shipit: merge'
   - name: automatic merge for Bogus pull requests
     conditions:
       - title~=^Bump Bogus.*$
