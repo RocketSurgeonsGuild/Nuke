@@ -1,7 +1,9 @@
 name: Nukeeper Update
+
 on:
   schedule:
     - cron: '*/5 * * * *'
+
 defaults:
   run:
     shell: pwsh
@@ -11,6 +13,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        ref: 'master'
 
       - name: nuget source
         shell: pwsh
@@ -20,6 +23,6 @@ jobs:
         run: |
           dotnet tool install -g nukeeper
 
-      - name: nukeeper inspect
+      - name: nukeeper repo
         run: |
-          nukeeper inspect
+          nukeeper repo https://github.com/${{ github.repository }} ${{ github.token }}
