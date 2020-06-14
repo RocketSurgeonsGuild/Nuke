@@ -10,6 +10,7 @@ using static Nuke.Common.IO.FileSystemTasks;
 
 namespace Rocket.Surgery.Nuke
 {
+
     /// <summary>
     /// Injects the path to the downloaded package icon.
     /// </summary>
