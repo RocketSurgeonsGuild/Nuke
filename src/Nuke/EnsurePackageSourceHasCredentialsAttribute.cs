@@ -4,7 +4,6 @@ using System.Linq;
 using JetBrains.Annotations;
 using NuGet.Configuration;
 using Nuke.Common;
-using Nuke.Common.CI.AzurePipelines;
 using Nuke.Common.Execution;
 
 namespace Rocket.Surgery.Nuke
