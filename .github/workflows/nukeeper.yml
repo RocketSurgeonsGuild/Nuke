@@ -15,4 +15,4 @@ jobs:
         id: nukeeper
         uses: nukeeperdotnet/nukeeper-action@0.1
         with:
-          token: '${{ secrets.RSG_PACKAGES_TOKEN }}'
+          token: '${{ secrets.RSG_BOT_TOKEN }}'
