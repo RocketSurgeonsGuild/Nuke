@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using Nuke.Common;
 using static Nuke.Common.Logger;
 using static Nuke.Common.EnvironmentInfo;
+
 #pragma warning disable CA1822
 
 namespace Rocket.Surgery.Nuke.AzurePipelines
@@ -25,7 +26,7 @@ namespace Rocket.Surgery.Nuke.AzurePipelines
                 {
                     Info("AGENT_ID: {0}", GetVariable<string>("AGENT_ID"));
                     Info("AGENT_NAME: {0}", GetVariable<string>("AGENT_NAME"));
-                    Info("AGENT_VERSION: {0}", GetVariable<string>("AGENT_VERSION"));
+                    Info("AGENT_VERSION: {0}", GetVariable<string>(" "));
                     Info("AGENT_JOBNAME: {0}", GetVariable<string>("AGENT_JOBNAME"));
                     Info("AGENT_JOBSTATUS: {0}", GetVariable<string>("AGENT_JOBSTATUS"));
                     Info("AGENT_MACHINE_NAME: {0}", GetVariable<string>("AGENT_MACHINE_NAME"));

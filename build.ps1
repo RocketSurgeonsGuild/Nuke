@@ -1,6 +1,6 @@
 [CmdletBinding()]
 Param(
-    [Parameter(Position=0,Mandatory=$false,ValueFromRemainingArguments=$true)]
+    [Parameter(Position = 0, Mandatory = $false, ValueFromRemainingArguments = $true)]
     [string[]]$BuildArguments
 )
 
@@ -42,7 +42,7 @@ if (Test-Path $DotNetGlobalFile) {
 
 # If dotnet is installed locally, and expected version is not set or installation matches the expected version
 if ((Get-Command "dotnet" -ErrorAction SilentlyContinue) -ne $null -and `
-     (!(Test-Path variable:DotNetVersion) -or $(& dotnet --version) -eq $DotNetVersion)) {
+    (!(Test-Path variable:DotNetVersion) -or $(& dotnet --version) -eq $DotNetVersion)) {
     $env:DOTNET_EXE = (Get-Command "dotnet").Path
 }
 else {
@@ -57,7 +57,8 @@ else {
     # Install by channel or version
     if (!(Test-Path variable:DotNetVersion)) {
         ExecSafe { & $DotNetInstallFile -InstallDir $DotNetDirectory -Channel $DotNetChannel -NoPath }
-    } else {
+    }
+    else {
         ExecSafe { & $DotNetInstallFile -InstallDir $DotNetDirectory -Version $DotNetVersion -NoPath }
     }
 }
