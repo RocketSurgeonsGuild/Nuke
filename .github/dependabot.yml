@@ -23,6 +23,6 @@ updates:
     assignees:
       - 'david-driscoll'
     ignore:
-      - dependency_name: Microsoft.Extensions.*
-      - dependency_name: Microsoft.AspNetCore.*
+      - dependency-name: Microsoft.Extensions.*
+      - dependency-name: Microsoft.AspNetCore.*
     open-pull-requests-limit: 100
