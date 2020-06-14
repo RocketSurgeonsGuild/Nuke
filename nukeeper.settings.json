@@ -1,5 +1,5 @@
 {
     "age": "0",
-    "label": ":package: dependencies",
+    "label": [":package: dependencies"],
     "exclude": "^(Microsoft.AspNetCore.*|Microsoft.Extensions.*)"
 }
