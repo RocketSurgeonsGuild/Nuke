@@ -30,7 +30,6 @@ namespace Rocket.Surgery.Nuke.DotNetCore
         public Target CoreTest => _ => _
            .Description("Executes all the unit tests.")
            .After(Build)
-           .OnlyWhenStatic(() => DirectoryExists(TestsDirectory))
            .OnlyWhenDynamic(() => TestsDirectory.GlobFiles("**/*.csproj").Count > 0)
            .WhenSkipped(DependencyBehavior.Execute)
            .Executes(
@@ -64,7 +63,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                            .SetConfiguration("Debug")
                            .EnableNoRestore()
                            .SetLogger("trx")
-                            // DeterministicSourcePaths being true breaks coverlet!
+                           // DeterministicSourcePaths being true breaks coverlet!
                            .SetProperty("DeterministicSourcePaths", "false")
                            .SetResultsDirectory(TestResultsDirectory)
                            .When(
