@@ -39,7 +39,8 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                     CoverageDirectory.GlobFiles("*.cobertura.xml", "*.opencover.xml", "*.json", "*.info")
                        .Where(x => Guid.TryParse(Path.GetFileName(x)?.Split('.')[0], out var _))
                        .ForEach(DeleteFile);
-                },
+                })
+                .Executes(
                 async () =>
                 {
                     var runsettings = TestsDirectory / "coverlet.runsettings";
