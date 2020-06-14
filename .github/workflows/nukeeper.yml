@@ -1,7 +1,7 @@
 name: Nukeeper Update
 on:
   schedule:
-    - '*/5 * * * *'
+    - cron: '*/5 * * * *'
 defaults:
   run:
     shell: pwsh
