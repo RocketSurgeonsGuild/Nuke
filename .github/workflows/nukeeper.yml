@@ -26,4 +26,4 @@ jobs:
 
       - name: nukeeper repo
         run: |
-          nukeeper repo https://github.com/${{ github.repository }} ${{ github.token }}
+          nukeeper repo https://github.com/${{ github.repository }} ${{ secrets.RSG_BOT_TOKEN }}
