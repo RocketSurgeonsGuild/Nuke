@@ -11,7 +11,7 @@ namespace Rocket.Surgery.Nuke.Readme
         public (string badge, string history) Process(
             IDictionary<object, object> config,
             IMarkdownReferences references,
-            IRocketBoosterBuild build
+            ICanUpdateReadme build
         )
         {
             var url = references.AddReference(

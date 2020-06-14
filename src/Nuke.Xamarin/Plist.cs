@@ -6,19 +6,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
-using Nuke.Common;
 using Nuke.Common.IO;
-using Array = System.Array;
-using Convert = System.Convert;
-using DateTime = System.DateTime;
-using static Nuke.Common.IO.PathConstruction;
 
 namespace Rocket.Surgery.Nuke.Xamarin
 {
     /// <summary>
     /// Taken from https://github.com/cake-contrib/Cake.Plist/blob/develop/src/Cake.Plist/PlistConverter.cs
     /// </summary>
-    internal class Plist
+    internal static class Plist
     {
         /// <summary>
         /// Deserializes the .plist file provided.
@@ -73,7 +68,14 @@ namespace Rocket.Surgery.Nuke.Xamarin
         private static XDocument SerializeDocument(object item)
         {
             var doc = new XDocument(new XDeclaration("1.0", "UTF-8", "yes"));
-            doc.AddFirst(new XDocumentType("plist", "-//Apple//DTD PLIST 1.0//EN", "http://www.apple.com/DTDs/PropertyList-1.0.dtd", null));
+            doc.AddFirst(
+                new XDocumentType(
+                    "plist",
+                    "-//Apple//DTD PLIST 1.0//EN",
+                    "http://www.apple.com/DTDs/PropertyList-1.0.dtd",
+                    null
+                )
+            );
 
             var plist = new XElement("plist");
             plist.SetAttributeValue("version", "1.0");
@@ -88,7 +90,7 @@ namespace Rocket.Surgery.Nuke.Xamarin
         /// </summary>
         /// <param name="item">The plist object</param>
         /// <returns>The xml element</returns>
-        private static XElement SerializeObject(object item)
+        private static XElement? SerializeObject(object item)
         {
             if (item is string)
             {
@@ -105,34 +107,32 @@ namespace Rocket.Surgery.Nuke.Xamarin
                 return new XElement("integer", Convert.ToString(item, CultureInfo.InvariantCulture));
             }
 
-            if (item is bool && (item as bool?) == true)
+            if (item is bool && item as bool? == true)
             {
                 return new XElement("true");
             }
 
-            if (item is bool && (item as bool?) == false)
+            if (item is bool && item as bool? == false)
             {
                 return new XElement("false");
             }
 
-            if (item is DateTime)
+            if (item is DateTime time)
             {
-                return new XElement("date", ((DateTime) item).ToString("yyyy-MM-ddTHH:mm:ss.fffZ"));
+                return new XElement("date", time.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"));
             }
 
-            if (item is DateTimeOffset)
+            if (item is DateTimeOffset offset)
             {
-                return new XElement("date", ((DateTimeOffset)item).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ"));
+                return new XElement("date", offset.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ"));
             }
 
-            var bytes = item as byte[];
-            if (bytes != null)
+            if (item is byte[] bytes)
             {
                 return new XElement("data", Convert.ToBase64String(bytes));
             }
 
-            var dictionary = item as IDictionary;
-            if (dictionary != null)
+            if (item is IDictionary dictionary)
             {
                 var dict = new XElement("dict");
 
@@ -141,20 +141,19 @@ namespace Rocket.Surgery.Nuke.Xamarin
                 while (enumerator.MoveNext())
                 {
                     dict.Add(new XElement("key", enumerator.Key));
-                    dict.Add(SerializeObject(enumerator.Value));
+                    dict.Add(SerializeObject(enumerator.Value!));
                 }
 
                 return dict;
             }
 
-            var enumerable = item as IEnumerable;
-            if (enumerable != null)
+            if (item is IEnumerable enumerable)
             {
                 var array = new XElement("array");
 
                 foreach (var itm in enumerable)
                 {
-                    array.Add(SerializeObject(itm));
+                    array.Add(SerializeObject(itm!));
                 }
 
                 return array;
@@ -194,7 +193,9 @@ namespace Rocket.Surgery.Nuke.Xamarin
 
                     var type = rawArray[0].GetType();
                     if (rawArray.Any(val => val.GetType() != type))
+                    {
                         return rawArray;
+                    }
 
                     var typedArray = Array.CreateInstance(type, rawArray.Length);
                     rawArray.CopyTo(typedArray, 0);
@@ -222,7 +223,7 @@ namespace Rocket.Surgery.Nuke.Xamarin
                     return dictionary;
                 }
                 default:
-                    return null;
+                    return null!;
             }
         }
     }

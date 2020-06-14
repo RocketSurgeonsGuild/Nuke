@@ -40,7 +40,7 @@ namespace Rocket.Surgery.Nuke.Readme
         public string Process(
             IDictionary<string, object> config,
             IMarkdownReferences references,
-            IRocketBoosterBuild build
+            ICanUpdateReadme build
         )
         {
             var sb = new StringBuilder();

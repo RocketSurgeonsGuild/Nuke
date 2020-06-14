@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using Nuke.Common;
 using Nuke.Common.Tooling;
 
 #pragma warning disable CA2211 // Non-constant fields should not be visible
@@ -10,7 +9,7 @@ namespace Rocket.Surgery.Nuke.Xamarin
     /// Represents xamarin build configuration.
     /// </summary>
     [TypeConverter(typeof(TypeConverter<XamarinConfiguration>))]
-    public class XamarinConfiguration : Configuration
+    public class XamarinConfiguration : Enumeration
     {
         /// <summary>
         /// The debug mock
