@@ -54,9 +54,9 @@ jobs:
       - name: 🪓 **DOTNET HACK** 🪓
         shell: pwsh
         run: |
-          $directories = GCI $ENV:DOTNET_ROOT | sort -Descending;
+          $directories = Get-ChildItem $ENV:DOTNET_ROOT | Sort-Object -Descending;
           $target = $directories[0];
-          foreach ($dir in $directories | select -Skip 1) {
+          foreach ($dir in $directories | Select-Object -Skip 1) {
           gci $dir | Copy-Item -Recurse $target;
           }
       - name: nuget source

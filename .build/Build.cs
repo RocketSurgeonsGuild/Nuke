@@ -137,10 +137,14 @@ public class Solution : NukeBuild,
             },
             new RunStep("🪓 **DOTNET HACK** 🪓") {
                 Shell = GithubActionShell.Pwsh,
-                Run = @"$directories = GCI $ENV:DOTNET_ROOT | Sort-Object -Descending;
-                        $target = $directories[0];
-                        foreach ($dir in $directories | Select-Object -Skip 1) {
-                            gci $dir | Copy-Item -Recurse $target;
+                Run = @"$version = Split-Path (Split-Path $ENV:DOTNET_ROOT -Parent) -Leaf;
+                        $root = Split-Path (Split-Path $ENV:DOTNET_ROOT -Parent) -Parent;
+                        $directories = Get-ChildItem $ENV:DOTNET_ROOT | Where-Object { $_.Name -ne $version };
+                        foreach ($dir in $directories) {
+                            $from = $dir.FullName;
+                            $to = ""$root/$version/$($dir.Name)"";
+                            Write-Host Copying from $from to $to;
+                            Get-ChildItem $from | Copy-Item -Recurse $to;
                         }"
             },
             new RunStep("nuget source") {
