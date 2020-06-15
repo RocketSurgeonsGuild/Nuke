@@ -41,43 +41,54 @@ jobs:
         with:
           clean: 'false'
       - name: Fetch all history for all tags and branches
-        run: git fetch --prune --unshallow
+        run: |
+          git fetch --prune --unshallow
       - name: 🔨 Use .NET Core 2.1 SDK
-        uses: david-driscoll/setup-dotnet@sxs-with-fallback
+        uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '2.1.x'
       - name: 🔨 Use .NET Core 3.1 SDK
-        uses: david-driscoll/setup-dotnet@sxs-with-fallback
+        uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '3.1.x'
-      - name: 🪓 **DOTNET HACK** 🪓
-        shell: pwsh
-        run: |
-          $directories = GCI $ENV:DOTNET_ROOT | sort -Descending;
-          $target = $directories[0];
-          foreach ($dir in $directories | select -Skip 1) {
-            gci $dir | Copy-Item -Recurse $target;
-          }
       - name: nuget source
         shell: pwsh
-        run: dotnet nuget update source RocketSurgeonsGuild -u 'anything' -p ${{ secrets.RSG_PACKAGES_TOKEN }} --store-password-in-clear-text
+        run: |
+          dotnet nuget update source RocketSurgeonsGuild -u 'anything' -p ${{ secrets.RSG_PACKAGES_TOKEN }} --store-password-in-clear-text
       - name: 📲 Install GitVersion
-        uses: david-driscoll/gittools-actions/gitversion/setup@feature/export-environment-github
+        uses: gittools/actions/gitversion/setup@master
         with:
           versionSpec: '5.1.x'
       - name: 🔨 Use GitVersion
         id: gitversion
-        uses: david-driscoll/gittools-actions/gitversion/execute@feature/export-environment-github
+        uses: gittools/actions/gitversion/execute@master
+      - name: 🪓 **DOTNET HACK** 🪓
+        shell: pwsh
+        run: |
+          $directories = GCI $ENV:DOTNET_ROOT | sort -Descending;
+
+          $target = $directories[0];
+
+          foreach ($dir in $directories | select -Skip 1) {
+
+          gci $dir | Copy-Item -Recurse $target;
+
+          }
       - name: 🎁 dotnet tool restore
-        run: dotnet tool restore
+        run: |
+          dotnet tool restore
       - name: 🎁 Restore
-        run: dotnet nuke Restore --skip
+        run: |
+          dotnet nuke Restore --skip
       - name: ⚙ Build
-        run: dotnet nuke Build --skip
+        run: |
+          dotnet nuke Build --skip
       - name: 🚦 Test
-        run: dotnet nuke Test Trigger_Code_Coverage_Reports Generate_Code_Coverage_Report_Cobertura Generate_Code_Coverage_Badges Generate_Code_Coverage_Summary Generate_Code_Coverage_Report --skip
+        run: |
+          dotnet nuke Test Trigger_Code_Coverage_Reports Generate_Code_Coverage_Report_Cobertura Generate_Code_Coverage_Badges Generate_Code_Coverage_Summary Generate_Code_Coverage_Report --skip
       - name: 📦 Pack
-        run: dotnet nuke Pack --skip
+        run: |
+          dotnet nuke Pack --skip
       - name: 🐿 Publish Coverage
         uses: codecov/codecov-action@v1
         with:
@@ -99,7 +110,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v1
         with:
-          name: 'coverage'
+          name: 'test data'
           path: 'artifacts/test/'
       - name: 🏺 Publish NuGet Packages
         if: always()

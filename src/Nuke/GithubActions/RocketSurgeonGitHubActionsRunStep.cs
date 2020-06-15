@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Nuke.Common.CI.GitHubActions.Configuration;
 using Nuke.Common.Utilities;
 using Nuke.Common.Utilities.Collections;
@@ -25,9 +26,9 @@ namespace Rocket.Surgery.Nuke.GithubActions
                 writer.WriteLine($"run: |");
                 using (writer.Indent())
                 {
-                    foreach (var line in Run.Split('\n'))
+                    foreach (var line in Run.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries))
                     {
-                        writer.WriteLine(line.TrimStart());
+                        writer.WriteLine(line.Trim());
                     }
                 }
             }
