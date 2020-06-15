@@ -51,6 +51,14 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '3.1.x'
+      - name: 🪓 **DOTNET HACK** 🪓
+        shell: pwsh
+        run: |
+          $directories = GCI $ENV:DOTNET_ROOT | sort -Descending;
+          $target = $directories[0];
+          foreach ($dir in $directories | select -Skip 1) {
+          gci $dir | Copy-Item -Recurse $target;
+          }
       - name: nuget source
         shell: pwsh
         run: |
@@ -62,14 +70,6 @@ jobs:
       - name: 🔨 Use GitVersion
         id: gitversion
         uses: gittools/actions/gitversion/execute@master
-      - name: 🪓 **DOTNET HACK** 🪓
-        shell: pwsh
-        run: |
-          $directories = GCI $ENV:DOTNET_ROOT | sort -Descending;
-          $target = $directories[0];
-          foreach ($dir in $directories | select -Skip 1) {
-          gci $dir | Copy-Item -Recurse $target;
-          }
       - name: 🎁 dotnet tool restore
         run: |
           dotnet tool restore

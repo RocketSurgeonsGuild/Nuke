@@ -137,9 +137,9 @@ public class Solution : NukeBuild,
             },
             new RunStep("🪓 **DOTNET HACK** 🪓") {
                 Shell = GithubActionShell.Pwsh,
-                Run = @"$directories = GCI $ENV:DOTNET_ROOT | sort -Descending;
+                Run = @"$directories = GCI $ENV:DOTNET_ROOT | Sort-Object -Descending;
                         $target = $directories[0];
-                        foreach ($dir in $directories | select -Skip 1) {
+                        foreach ($dir in $directories | Select-Object -Skip 1) {
                             gci $dir | Copy-Item -Recurse $target;
                         }"
             },
