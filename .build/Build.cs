@@ -135,6 +135,14 @@ public class Solution : NukeBuild,
             new SetupDotNetStep("Use .NET Core 3.1 SDK") {
                 DotNetVersion = "3.1.x"
             },
+            new RunStep("🪓 **DOTNET HACK** 🪓") {
+                Shell = GithubActionShell.Pwsh,
+                Run = @"$directories = GCI $ENV:DOTNET_ROOT | sort -Descending;
+                        $target = $directories[0];
+                        foreach ($dir in $directories | select -Skip 1) {
+                            gci $dir | Copy-Item -Recurse $target;
+                        }"
+            },
             new RunStep("nuget source") {
                 Shell = GithubActionShell.Pwsh,
                 Run = "dotnet nuget update source RocketSurgeonsGuild -u 'anything' -p ${{ secrets.RSG_PACKAGES_TOKEN }} --store-password-in-clear-text",
@@ -151,14 +159,6 @@ public class Solution : NukeBuild,
             {
                 Id = "gitversion",
                 Uses = "gittools/actions/gitversion/execute@master"
-            },
-            new RunStep("🪓 **DOTNET HACK** 🪓") {
-                Shell = GithubActionShell.Pwsh,
-                Run = @"$directories = GCI $ENV:DOTNET_ROOT | sort -Descending;
-                        $target = $directories[0];
-                        foreach ($dir in $directories | select -Skip 1) {
-                            gci $dir | Copy-Item -Recurse $target;
-                        }"
             }
         });
 

@@ -66,13 +66,9 @@ jobs:
         shell: pwsh
         run: |
           $directories = GCI $ENV:DOTNET_ROOT | sort -Descending;
-
           $target = $directories[0];
-
           foreach ($dir in $directories | select -Skip 1) {
-
           gci $dir | Copy-Item -Recurse $target;
-
           }
       - name: 🎁 dotnet tool restore
         run: |
