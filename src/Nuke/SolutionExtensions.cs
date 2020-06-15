@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Buildalyzer;
@@ -42,8 +43,8 @@ namespace Rocket.Surgery.Nuke
         public static IEnumerable<Project> GetTestProjects(
             this Solution solution,
             string testProjectNameSchema = "Tests"
-#pragma warning disable CA1307 // Specify StringComparison
-        ) => solution.AllProjects.Where(x => x.Name.Contains(testProjectNameSchema));
-#pragma warning restore CA1307 // Specify StringComparison
+        ) => solution.AllProjects.Where(
+            x => x.Name.Contains(testProjectNameSchema, StringComparison.OrdinalIgnoreCase)
+        );
     }
 }

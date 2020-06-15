@@ -1,0 +1,29 @@
+name: Nukeeper Update
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+defaults:
+  run:
+    shell: pwsh
+jobs:
+  nukeeper:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: 'master'
+
+      - name: nuget source
+        shell: pwsh
+        run: dotnet nuget update source RocketSurgeonsGuild -u 'anything' -p ${{ secrets.RSG_PACKAGES_TOKEN }} --store-password-in-clear-text
+
+      - name: install nukeeper
+        run: |
+          dotnet tool install -g nukeeper
+
+      - name: nukeeper repo
+        run: |
+          nukeeper repo https://github.com/${{ github.repository }} ${{ secrets.RSG_BOT_TOKEN }}

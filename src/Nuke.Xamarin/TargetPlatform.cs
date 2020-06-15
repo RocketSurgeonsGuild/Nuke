@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel;
-using Nuke.Common.Tooling;
 using JetBrains.Annotations;
+using Nuke.Common.Tooling;
 
 namespace Rocket.Surgery.Nuke.Xamarin
 {
@@ -16,17 +16,17 @@ namespace Rocket.Surgery.Nuke.Xamarin
         /// <summary>
         /// iPhone Target
         /// </summary>
-        public static TargetPlatform iPhone = new TargetPlatform { Value =  nameof(iPhone) };
+        public static readonly TargetPlatform iPhone = new TargetPlatform { Value = nameof(iPhone) };
 
         /// <summary>
         /// iPhone Simulator Target
         /// </summary>
-        public static TargetPlatform iPhoneSimulator = new TargetPlatform { Value =  nameof(iPhoneSimulator) };
+        public static readonly TargetPlatform iPhoneSimulator = new TargetPlatform { Value = nameof(iPhoneSimulator) };
 
         /// <summary>
         /// Any CPU Target
         /// </summary>
-        public static TargetPlatform AnyCPU = new TargetPlatform { Value = "Any CPU" };
+        public static readonly TargetPlatform AnyCPU = new TargetPlatform { Value = "Any CPU" };
 
         /// <summary>
         /// Performs an implicit conversion from <see cref="XamarinConfiguration" /> to <see cref="System.String" />.

@@ -1,10 +1,7 @@
-using System;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Nuke.Common.Tools.NuGet;
 using Rocket.Surgery.Extensions.Testing;
-using Serilog;
-using Serilog.Events;
 using Xunit;
 using Xunit.Abstractions;
 using static Nuke.Common.EnvironmentInfo;
@@ -26,8 +23,6 @@ namespace Rocket.Surgery.Nuke.Tests
 
     public class MiscTests : AutoFakeTest
     {
-        public MiscTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
-
         [Fact]
         public void Test1()
         {
@@ -44,5 +39,7 @@ namespace Rocket.Surgery.Nuke.Tests
             attr.Normal.Should().Be(nameof(NuGetVerbosity.Normal));
             attr.Verbose.Should().Be(nameof(NuGetVerbosity.Detailed));
         }
+
+        public MiscTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
     }
 }
