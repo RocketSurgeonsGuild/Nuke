@@ -22,7 +22,14 @@ namespace Rocket.Surgery.Nuke.GithubActions
             {
                 if (!string.IsNullOrWhiteSpace(Shell))
                     writer.WriteLine($"shell: {Shell}");
-                writer.WriteLine($"run: {Run}");
+                writer.WriteLine($"run: |");
+                using (writer.Indent())
+                {
+                    foreach (var line in Run.Split('\n'))
+                    {
+                        writer.WriteLine(line.TrimStart());
+                    }
+                }
             }
         }
     }

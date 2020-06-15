@@ -130,10 +130,10 @@ public class Solution : NukeBuild,
                 Run = "git fetch --prune --unshallow"
             },
             new SetupDotNetStep("Use .NET Core 2.1 SDK") {
-                DotNetVersion = "2.1.805"
+                DotNetVersion = "2.1.x"
             },
             new SetupDotNetStep("Use .NET Core 3.1 SDK") {
-                DotNetVersion = "3.1.201"
+                DotNetVersion = "3.1.x"
             },
             new RunStep("nuget source") {
                 Shell = GithubActionShell.Pwsh,
@@ -141,7 +141,7 @@ public class Solution : NukeBuild,
             },
             new UsingStep("Install GitVersion")
             {
-                Uses = "david-driscoll/gittools-actions/gitversion/setup@feature/export-environment-github",
+                Uses = "gittools/actions/gitversion/setup@master",
                 With = {
                     ["versionSpec"] = "5.1.x",
                 }
@@ -150,8 +150,16 @@ public class Solution : NukeBuild,
             new UsingStep("Use GitVersion")
             {
                 Id = "gitversion",
-                Uses = "david-driscoll/gittools-actions/gitversion/execute@feature/export-environment-github"
+                Uses = "gittools/actions/gitversion/execute@master"
             },
+            new RunStep("🪓 **DOTNET HACK** 🪓") {
+                Shell = GithubActionShell.Pwsh,
+                Run = @"$directories = GCI $ENV:DOTNET_ROOT | sort -Descending;
+                        $target = $directories[0];
+                        foreach ($dir in $directories | select -Skip 1) {
+                            gci $dir | Copy-Item -Recurse $target;
+                        }"
+            }
         });
 
         buildJob.Steps.Add(new UsingStep("Publish Coverage")
@@ -180,7 +188,7 @@ public class Solution : NukeBuild,
 
         buildJob.Steps.Add(new UploadArtifactStep("Publish test data")
         {
-            Name = "coverage",
+            Name = "test data",
             Path = "artifacts/test/",
             If = "always()"
         });

@@ -45,11 +45,19 @@ jobs:
       - name: 🔨 Use .NET Core 2.1 SDK
         uses: david-driscoll/setup-dotnet@sxs-with-fallback
         with:
-          dotnet-version: '2.1.805'
+          dotnet-version: '2.1.x'
       - name: 🔨 Use .NET Core 3.1 SDK
         uses: david-driscoll/setup-dotnet@sxs-with-fallback
         with:
-          dotnet-version: '3.1.201'
+          dotnet-version: '3.1.x'
+      - name: 🪓 **DOTNET HACK** 🪓
+        shell: pwsh
+        run: |
+          $directories = GCI $ENV:DOTNET_ROOT | sort -Descending;
+          $target = $directories[0];
+          foreach ($dir in $directories | select -Skip 1) {
+            gci $dir | Copy-Item -Recurse $target;
+          }
       - name: nuget source
         shell: pwsh
         run: dotnet nuget update source RocketSurgeonsGuild -u 'anything' -p ${{ secrets.RSG_PACKAGES_TOKEN }} --store-password-in-clear-text
