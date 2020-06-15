@@ -2,7 +2,7 @@ name: Nukeeper Update
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '0 0 * * *'
 
 defaults:
   run:
