@@ -34,7 +34,7 @@ namespace Rocket.Surgery.Nuke.GithubActions
             _images = new[] { image }.Concat(images).ToArray();
         }
 
-        private string ConfigurationFile => NukeBuild.RootDirectory / ".github" / "workflows" / $"{_name}.yml";
+        public override string ConfigurationFile => NukeBuild.RootDirectory / ".github" / "workflows" / $"{_name}.yml";
 
         public string[] InvokedTargets { get; set; } = new string[0];
         public string[] Parameters { get; set; } = new string[0];
@@ -61,10 +61,7 @@ namespace Rocket.Surgery.Nuke.GithubActions
 
         public string[] Enhancements { get; set; }
 
-        public override CustomFileWriter CreateWriter()
-        {
-            return new CustomFileWriter(ConfigurationFile, indentationFactor: 2, commentPrefix: "#");
-        }
+        public override CustomFileWriter CreateWriter(StreamWriter writer) => new CustomFileWriter(writer, 2, "#");
 
         public override ConfigurationEntity GetConfiguration(
             NukeBuild build,
@@ -107,15 +104,15 @@ namespace Rocket.Surgery.Nuke.GithubActions
                .ToArray()
                .JoinSpace();
 
-            var lookupTable = new LookupTable<ExecutableTarget, string[]>();
+            var lookupTable = new LookupTable<ExecutableTarget, ExecutableTarget[]>();
             foreach (var (execute, targets) in relevantTargets
-                .Select(x => (ExecutableTarget: x, Targets: GetInvokedTargets(x).ToArray()))
-                .ForEachLazy(x => lookupTable.Add(x.ExecutableTarget, x.Targets))
+                .Select(x => (ExecutableTarget: x, Targets: GetInvokedTargets(x, relevantTargets).ToArray()))
+                .ForEachLazy(x => lookupTable.Add(x.ExecutableTarget, x.Targets.ToArray()))
             )
             {
                 steps.Add(new RunStep(execute.Name.Humanize(LetterCasing.Title))
                 {
-                    Run = $"{( localTool ? "dotnet nuke" : "nuke" )} {targets.JoinSpace()} --skip {stepParameters}".TrimEnd()
+                    Run = $"{( localTool ? "dotnet nuke" : "nuke" )} {targets.Select(z => z.Name).JoinSpace()} --skip {stepParameters}".TrimEnd()
                 });
             }
 
