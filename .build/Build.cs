@@ -146,7 +146,7 @@ public class Solution : NukeBuild,
                             Write-Host Copying from $from to $to;
                             foreach ($i in Get-ChildItem $from)
                             {
-                                Copy-Item $from $to -Recurse;
+                                Copy-Item $from $to -Recurse -Force;
                             }
                         }"
             },
