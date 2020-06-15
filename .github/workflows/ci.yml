@@ -61,7 +61,10 @@ jobs:
           $from = $dir.FullName;
           $to = "$root/$version/$($dir.Name)";
           Write-Host Copying from $from to $to;
-          Get-ChildItem $from | Copy-Item -Recurse $to;
+          foreach ($i in Get-ChildItem $from)
+          {
+          Copy-Item $from $to -Recurse;
+          }
           }
       - name: nuget source
         shell: pwsh

@@ -144,7 +144,10 @@ public class Solution : NukeBuild,
                             $from = $dir.FullName;
                             $to = ""$root/$version/$($dir.Name)"";
                             Write-Host Copying from $from to $to;
-                            Get-ChildItem $from | Copy-Item -Recurse $to;
+                            foreach ($i in Get-ChildItem $from)
+                            {
+                                Copy-Item $from $to -Recurse;
+                            }
                         }"
             },
             new RunStep("nuget source") {
