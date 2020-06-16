@@ -5,6 +5,7 @@ on:
       - closed
       - opened
       - reopened
+      - synchronize
 
 jobs:
   update_milestone:
