@@ -43,8 +43,8 @@ using Rocket.Surgery.Nuke.MsBuild;
 [GitHubActionsSteps("ci", GitHubActionsImage.MacOsLatest, GitHubActionsImage.WindowsLatest, GitHubActionsImage.UbuntuLatest,
     On = new[] { GitHubActionsTrigger.Push },
     OnPushTags = new[] { "v*" },
-    OnPushBranches = new[] { "master", "du-fuk" },
-    OnPullRequestBranches = new[] { "master", "du-fuk" },
+    OnPushBranches = new[] { "master" },
+    OnPullRequestBranches = new[] { "master" },
     InvokedTargets = new[] { nameof(Default) },
     NonEntryTargets = new[]
     {

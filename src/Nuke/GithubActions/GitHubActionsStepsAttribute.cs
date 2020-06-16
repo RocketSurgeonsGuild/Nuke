@@ -36,8 +36,8 @@ namespace Rocket.Surgery.Nuke.GithubActions
 
         public override string ConfigurationFile => NukeBuild.RootDirectory / ".github" / "workflows" / $"{_name}.yml";
 
-        public string[] InvokedTargets { get; set; } = new string[0];
-        public string[] Parameters { get; set; } = new string[0];
+        public string[] InvokedTargets { get; set; } = Array.Empty<string>();
+        public string[] Parameters { get; set; } = Array.Empty<string>();
 
         public override string IdPostfix => _name;
         public override HostType HostType => HostType.GitHubActions;
@@ -45,15 +45,15 @@ namespace Rocket.Surgery.Nuke.GithubActions
         public override IEnumerable<string> RelevantTargetNames => InvokedTargets;
         // public override IEnumerable<string> IrrelevantTargetNames => new string[0];
 
-        public GitHubActionsTrigger[] On { get; set; } = new GitHubActionsTrigger[0];
-        public string[] OnPushBranches { get; set; } = new string[0];
-        public string[] OnPushTags { get; set; } = new string[0];
-        public string[] OnPushIncludePaths { get; set; } = new string[0];
-        public string[] OnPushExcludePaths { get; set; } = new string[0];
-        public string[] OnPullRequestBranches { get; set; } = new string[0];
-        public string[] OnPullRequestTags { get; set; } = new string[0];
-        public string[] OnPullRequestIncludePaths { get; set; } = new string[0];
-        public string[] OnPullRequestExcludePaths { get; set; } = new string[0];
+        public GitHubActionsTrigger[] On { get; set; } = Array.Empty<GitHubActionsTrigger>();
+        public string[] OnPushBranches { get; set; } = Array.Empty<string>();
+        public string[] OnPushTags { get; set; } = Array.Empty<string>();
+        public string[] OnPushIncludePaths { get; set; } = Array.Empty<string>();
+        public string[] OnPushExcludePaths { get; set; } = Array.Empty<string>();
+        public string[] OnPullRequestBranches { get; set; } = Array.Empty<string>();
+        public string[] OnPullRequestTags { get; set; } = Array.Empty<string>();
+        public string[] OnPullRequestIncludePaths { get; set; } = Array.Empty<string>();
+        public string[] OnPullRequestExcludePaths { get; set; } = Array.Empty<string>();
         public string OnCronSchedule { get; set; }
 
         public string[] ImportSecrets { get; set; } = new string[0];
