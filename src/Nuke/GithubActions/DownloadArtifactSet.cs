@@ -1,14 +1,13 @@
-using Nuke.Common.CI.GitHubActions.Configuration;
 using Nuke.Common.Utilities;
 using Humanizer;
 
 namespace Rocket.Surgery.Nuke.GithubActions
 {
-    public class UploadArtifactStep : UsingStep
+    public class DownloadArtifactSet : UsingStep
     {
-        public UploadArtifactStep(string name) : base(name)
+        public DownloadArtifactSet(string name) : base(name)
         {
-            Uses = "actions/upload-artifact@v1";
+            Uses = "actions/download-artifact@v1";
         }
 
         public string Name { get; set; }
@@ -22,7 +21,7 @@ namespace Rocket.Surgery.Nuke.GithubActions
 
         protected override string GetStepName(string name)
         {
-            return $"🏺 {name}";
+            return $"🚀 {name}";
         }
     }
 }
