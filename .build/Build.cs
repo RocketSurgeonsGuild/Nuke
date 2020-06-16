@@ -1,8 +1,11 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Nuke.Common;
 using Nuke.Common.CI;
 using Nuke.Common.CI.AzurePipelines;
+using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
 using Nuke.Common.Git;
 using Nuke.Common.Tools.DotNet;
@@ -11,41 +14,18 @@ using Nuke.Common.Tools.MSBuild;
 using Rocket.Surgery.Nuke;
 using Rocket.Surgery.Nuke.ContinuousIntegration;
 using Rocket.Surgery.Nuke.DotNetCore;
+using Rocket.Surgery.Nuke.GithubActions;
 using Rocket.Surgery.Nuke.MsBuild;
 
 [PublicAPI]
 [CheckBuildProjectConfigurations]
 [UnsetVisualStudioEnvironmentVariables]
-[AzurePipelinesSteps(
-    InvokeTargets = new[] { nameof(Default) },
-    NonEntryTargets = new[]
-    {
-        nameof(ICIEnvironment.CIEnvironment),
-        nameof(ITriggerCodeCoverageReports.Trigger_Code_Coverage_Reports),
-        nameof(ITriggerCodeCoverageReports.Generate_Code_Coverage_Report_Cobertura),
-        nameof(IGenerateCodeCoverageBadges.Generate_Code_Coverage_Badges),
-        nameof(IGenerateCodeCoverageReport.Generate_Code_Coverage_Report),
-        nameof(IGenerateCodeCoverageSummary.Generate_Code_Coverage_Summary),
-        nameof(Default)
-    },
-    ExcludedTargets = new[]
-        { nameof(ICanRestoreWithDotNetCore.Restore), nameof(ICanRestoreWithDotNetCore.DotnetToolRestore) },
-    Parameters = new[]
-    {
-        nameof(IHaveCodeCoverage.CoverageDirectory), nameof(IHaveOutputArtifacts.ArtifactsDirectory), nameof(Verbosity),
-        nameof(IHaveConfiguration.Configuration)
-    }
-)]
-[PackageIcon(
-    "https://raw.githubusercontent.com/RocketSurgeonsGuild/graphics/master/png/social-square-thrust-rounded.png"
-)]
-[EnsurePackageSourceHasCredentials("RocketSurgeonsGuild")]
+[PackageIcon("https://raw.githubusercontent.com/RocketSurgeonsGuild/graphics/master/png/social-square-thrust-rounded.png")]
 [EnsureGitHooks(GitHook.PreCommit)]
 [DotNetVerbosityMapping]
 [MSBuildVerbosityMapping]
 [NuGetVerbosityMapping]
-[PrintBuildVersion, PrintCIEnvironment, UploadLogs]
-public class Solution : NukeBuild,
+public partial class Solution : NukeBuild,
                         ICanRestoreWithDotNetCore,
                         ICanBuildWithDotNetCore,
                         ICanTestWithDotNetCore,
