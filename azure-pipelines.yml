@@ -60,11 +60,6 @@ jobs:
       GitHubPackages: true
       GitHubAuthVariableGroup: rsg-bot
       PublishNuGetPackagesFromArtifact: 'NuGet - Windows'
-      AuthNuGetFeeds:
-        - name: RocketSurgeonsGuild
-          source: https://nuget.pkg.github.com/RocketSurgeonsGuild/index.json
-          username: $(GitHub.UserName)
-          password: $(GitHub.Token)
 
   - job: Build
     dependsOn:
@@ -92,11 +87,6 @@ jobs:
           DotNetSdk:
             - '2.x'
             - '3.x'
-          AuthNuGetFeeds:
-            - name: RocketSurgeonsGuild
-              source: https://nuget.pkg.github.com/RocketSurgeonsGuild/index.json
-              username: $(GitHub.UserName)
-              password: $(GitHub.Token)
       - template: support/gitversion-hack.yml@rsg
 
       - task: DotNetCoreCLI@2

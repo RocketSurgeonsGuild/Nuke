@@ -62,7 +62,6 @@ using Rocket.Surgery.Nuke.MsBuild;
 [PackageIcon(
     "https://raw.githubusercontent.com/RocketSurgeonsGuild/graphics/master/png/social-square-thrust-rounded.png"
 )]
-[EnsurePackageSourceHasCredentials("RocketSurgeonsGuild")]
 [EnsureGitHooks(GitHook.PreCommit)]
 [DotNetVerbosityMapping]
 [MSBuildVerbosityMapping]
@@ -146,10 +145,6 @@ public class Solution : NukeBuild,
                             Write-Host Copying from $from to $to;
                             Copy-Item $from $to -Recurse -Force;
                         }"
-            },
-            new RunStep("nuget source") {
-                Shell = GithubActionShell.Pwsh,
-                Run = "dotnet nuget update source RocketSurgeonsGuild -u 'anything' -p ${{ secrets.RSG_PACKAGES_TOKEN }} --store-password-in-clear-text",
             },
             new UsingStep("Install GitVersion")
             {
