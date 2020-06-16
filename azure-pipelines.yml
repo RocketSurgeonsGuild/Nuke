@@ -79,8 +79,8 @@ jobs:
       vmImage: $(ImageName)
     steps:
       - template: support/mono.yml@rsg
-      - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/tags/v') }}:
-          - template: support/download-release-notes.yml@rsg
+      # - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/tags/v') }}:
+      #   - template: support/download-release-notes.yml@rsg
       - template: support/install-dotnet.yml@rsg
         parameters:
           DotNetSdk:
