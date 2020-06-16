@@ -20,9 +20,7 @@ using Rocket.Surgery.Nuke.MsBuild;
 [PublicAPI]
 [CheckBuildProjectConfigurations]
 [UnsetVisualStudioEnvironmentVariables]
-[PackageIcon(
-    "https://raw.githubusercontent.com/RocketSurgeonsGuild/graphics/master/png/social-square-thrust-rounded.png"
-)]
+[PackageIcon("https://raw.githubusercontent.com/RocketSurgeonsGuild/graphics/master/png/social-square-thrust-rounded.png")]
 [EnsureGitHooks(GitHook.PreCommit)]
 [DotNetVerbosityMapping]
 [MSBuildVerbosityMapping]
