@@ -86,7 +86,6 @@ jobs:
           DotNetSdk:
             - '2.x'
             - '3.x'
-      - template: support/gitversion-hack.yml@rsg
 
       - task: DotNetCoreCLI@2
         displayName: 'dotnet tool restore'
