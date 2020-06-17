@@ -7,6 +7,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using Nuke.Common;
+using Nuke.Common.CI.AppVeyor;
+using Nuke.Common.CI.AzurePipelines;
+using Nuke.Common.CI.TeamCity;
 using Nuke.Common.Execution;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
@@ -68,6 +71,17 @@ namespace Rocket.Surgery.Nuke
                 return new GitVersion();
             }
 
+            var gitVersion = GetGitVersion();
+
+            AzurePipelines.Instance?.UpdateBuildNumber(gitVersion.FullSemVer);
+            TeamCity.Instance?.SetBuildNumber(gitVersion.FullSemVer);
+            AppVeyor.Instance?.UpdateBuildNumber($"{gitVersion.FullSemVer}.build.{AppVeyor.Instance.BuildNumber}");
+
+            return gitVersion;
+        }
+
+        private GitVersion GetGitVersion()
+        {
             if (!HasGitVer())
             {
                 return GitVersionTasks.GitVersion(
@@ -75,6 +89,11 @@ namespace Rocket.Surgery.Nuke
                            .SetFramework(_frameworkVersion)
                            .DisableLogOutput()
                            .SetUpdateAssemblyInfo(UpdateAssemblyInfo)
+                           .SetToolPath(ToolPathResolver.GetPackageExecutable(
+                                packageId: "GitVersion.Tool|GitVersion.CommandLine",
+                                packageExecutable: "gitversion.dll|gitversion.exe",
+                                framework: "netcoreapp3.1")
+                            )
                     )
                    .Result;
             }

@@ -45,7 +45,7 @@ jobs:
       - name: Get Repo and Owner
         shell: pwsh
         id: repository
-        if: ${{ steps.gitversion.outputs.preReleaseTag == '' }}
+        if: ${{ !github.event.release.prerelease && steps.gitversion.outputs.preReleaseTag == '' }}
         run: |
           $parts = $ENV:GITHUB_REPOSITORY.Split('/')
           echo "::set-output name=owner::$($parts[0])"
@@ -53,7 +53,7 @@ jobs:
 
       - name: Close Milestone
         shell: pwsh
-        if: ${{ steps.gitversion.outputs.preReleaseTag == '' }}
+        if: ${{ !github.event.release.prerelease && steps.gitversion.outputs.preReleaseTag == '' }}
         run: |
           dotnet gitreleasemanager close `
             -o "${{ steps.repository.outputs.owner }}" `
