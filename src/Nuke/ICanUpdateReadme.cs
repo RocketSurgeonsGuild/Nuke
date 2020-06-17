@@ -8,7 +8,7 @@ namespace Rocket.Surgery.Nuke
     /// <summary>
     /// A tool to update the readme
     /// </summary>
-    public interface ICanUpdateReadme : IHaveSolution, IMayTheForceBeWithYou
+    public interface ICanUpdateReadme : IHaveSolution
     {
         /// <summary>
         /// The readme updater that ensures that all the badges are in sync.

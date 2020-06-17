@@ -73,22 +73,10 @@ public partial class Solution
                             $from = $dir.FullName;
                             $to = ""$root/$version"";
                             Write-Host Copying from $from to $to;
-                            Copy-Item $from $to -Recurse -Force;
-                        }"
+                            Copy-Item ""$from\*"" $to -Recurse -Force;
+                        }
+                        "
             },
-            // new UsingStep("Install GitVersion")
-            // {
-            //     Uses = "gittools/actions/gitversion/setup@master",
-            //     With = {
-            //         ["versionSpec"] = "5.1.x",
-            //     }
-
-            // },
-            // new UsingStep("Use GitVersion")
-            // {
-            //     Id = "gitversion",
-            //     Uses = "gittools/actions/gitversion/execute@master"
-            // }
         });
 
         buildJob.Steps.Add(new UsingStep("Publish Coverage")
