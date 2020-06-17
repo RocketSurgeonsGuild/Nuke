@@ -7,6 +7,7 @@ using Rocket.Surgery.Nuke.DotNetCore;
 using Rocket.Surgery.Nuke.GithubActions;
 
 [AzurePipelinesSteps(
+    AutoGenerate = false,
     InvokeTargets = new[] { nameof(Default) },
     NonEntryTargets = new[]
     {
@@ -27,6 +28,7 @@ using Rocket.Surgery.Nuke.GithubActions;
     }
 )]
 [GitHubActionsSteps("ci", GitHubActionsImage.MacOsLatest, GitHubActionsImage.WindowsLatest, GitHubActionsImage.UbuntuLatest,
+    AutoGenerate = false,
     On = new[] { GitHubActionsTrigger.Push },
     OnPushTags = new[] { "v*" },
     OnPushBranches = new[] { "master", "next" },
