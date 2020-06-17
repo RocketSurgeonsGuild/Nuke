@@ -1,21 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using JetBrains.Annotations;
-using Nuke.Common;
-using Nuke.Common.CI;
-using Nuke.Common.CI.AzurePipelines;
 using Nuke.Common.CI.GitHubActions;
-using Nuke.Common.Execution;
-using Nuke.Common.Git;
-using Nuke.Common.Tools.DotNet;
-using Nuke.Common.Tools.GitVersion;
-using Nuke.Common.Tools.MSBuild;
 using Rocket.Surgery.Nuke;
 using Rocket.Surgery.Nuke.ContinuousIntegration;
 using Rocket.Surgery.Nuke.DotNetCore;
 using Rocket.Surgery.Nuke.GithubActions;
-using Rocket.Surgery.Nuke.MsBuild;
 
 [AzurePipelinesSteps(
     InvokeTargets = new[] { nameof(Default) },
@@ -40,8 +29,8 @@ using Rocket.Surgery.Nuke.MsBuild;
 [GitHubActionsSteps("ci", GitHubActionsImage.MacOsLatest, GitHubActionsImage.WindowsLatest, GitHubActionsImage.UbuntuLatest,
     On = new[] { GitHubActionsTrigger.Push },
     OnPushTags = new[] { "v*" },
-    OnPushBranches = new[] { "master" },
-    OnPullRequestBranches = new[] { "master" },
+    OnPushBranches = new[] { "master", "next" },
+    OnPullRequestBranches = new[] { "master", "next" },
     InvokedTargets = new[] { nameof(Default) },
     NonEntryTargets = new[]
     {
@@ -79,27 +68,27 @@ public partial class Solution
                 Shell = GithubActionShell.Pwsh,
                 Run = @"$version = Split-Path (Split-Path $ENV:DOTNET_ROOT -Parent) -Leaf;
                         $root = Split-Path (Split-Path $ENV:DOTNET_ROOT -Parent) -Parent;
-                        $directories = Get-ChildItem $ENV:DOTNET_ROOT | Where-Object { $_.Name -ne $version };
+                        $directories = Get-ChildItem $root | Where-Object { $_.Name -ne $version };
                         foreach ($dir in $directories) {
                             $from = $dir.FullName;
-                            $to = ""$root/$version/$($dir.Name)"";
+                            $to = ""$root/$version"";
                             Write-Host Copying from $from to $to;
                             Copy-Item $from $to -Recurse -Force;
                         }"
             },
-            new UsingStep("Install GitVersion")
-            {
-                Uses = "gittools/actions/gitversion/setup@master",
-                With = {
-                    ["versionSpec"] = "5.1.x",
-                }
+            // new UsingStep("Install GitVersion")
+            // {
+            //     Uses = "gittools/actions/gitversion/setup@master",
+            //     With = {
+            //         ["versionSpec"] = "5.1.x",
+            //     }
 
-            },
-            new UsingStep("Use GitVersion")
-            {
-                Id = "gitversion",
-                Uses = "gittools/actions/gitversion/execute@master"
-            }
+            // },
+            // new UsingStep("Use GitVersion")
+            // {
+            //     Id = "gitversion",
+            //     Uses = "gittools/actions/gitversion/execute@master"
+            // }
         });
 
         buildJob.Steps.Add(new UsingStep("Publish Coverage")

@@ -3,6 +3,7 @@ trigger:
   branches:
     include:
       - master
+      - next
       - refs/tags/*
   paths:
     exclude:
@@ -22,13 +23,14 @@ pr:
   branches:
     include:
       - master
+      - next
 
 resources:
   repositories:
     - repository: rsg
       type: github
       name: RocketSurgeonsGuild/AzureDevopsTemplates
-      ref: refs/tags/v0.12.0
+      ref: refs/tags/v0.13.0
       endpoint: github
 
 variables:
@@ -45,17 +47,10 @@ variables:
   - name: CodeCovToken
     value: 'c93f6719-da50-4d00-ba2b-b73fd95239e0'
   - group: rsg-bot
-  # Fixes the github package repo warnings on restore
-  - name: EmitAssetsLogMessages
-    value: false
-  - name: HideWarningsAndErrors
-    value: true
 
 jobs:
   - template: jobs/publish-release.yml@rsg
     parameters:
-      EnableReleaseNotes: false
-      GitHub: false
       GitHubPackages: true
       GitHubAuthVariableGroup: rsg-bot
       PublishNuGetPackagesFromArtifact: 'NuGet - Windows'
