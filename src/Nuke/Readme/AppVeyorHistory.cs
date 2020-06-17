@@ -33,7 +33,7 @@ namespace Rocket.Surgery.Nuke.Readme
                 "AppVeyor History"
             );
 
-            return ( $"[!{badge}]{url}", $"[!{historyBadge}]{historyUrl}" );
+            return ($"[!{badge}]{url}", $"[!{historyBadge}]{historyUrl}");
         }
     }
 }

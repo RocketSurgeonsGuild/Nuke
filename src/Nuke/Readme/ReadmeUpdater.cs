@@ -32,6 +32,7 @@ namespace Rocket.Surgery.Nuke.Readme
             Sections.Add(new NugetPackagesSection());
             History
                .Add(new AzurePipelinesHistory())
+               .Add(new GitHubActionsHistory())
                .Add(new AppVeyorHistory())
                 ;
             Badges
@@ -81,7 +82,7 @@ namespace Rocket.Surgery.Nuke.Readme
             var match = nukeDataRegex.Match(content);
             var yaml = string.Join("\n", match.Groups.Cast<Group>().Skip(1).Select(x => x.Value));
             var d = new DeserializerBuilder()
-                // .WithNamingConvention(new CamelCaseNamingConvention())
+               // .WithNamingConvention(new CamelCaseNamingConvention())
                .Build();
             using var reader = new StringReader(yaml.Trim('\n'));
             var config = d.Deserialize<ExpandoObject>(reader);
@@ -109,8 +110,8 @@ namespace Rocket.Surgery.Nuke.Readme
                 var sectionEnd = sectionMatch.Last().Captures[0];
                 var newSectionContent = section.Process(config, References, build);
                 ranges.Add(
-                    ( sectionStart.Index + sectionStart.Length,
-                      sectionEnd.Index - ( sectionStart.Index + sectionStart.Length ), newSectionContent )
+                    (sectionStart.Index + sectionStart.Length,
+                      sectionEnd.Index - ( sectionStart.Index + sectionStart.Length ), newSectionContent)
                 );
             }
 
