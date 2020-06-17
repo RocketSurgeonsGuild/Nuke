@@ -11,8 +11,8 @@ Every good Rocket Surgeon needs multiple choices of build systems to pick from t
 <!-- badges -->
 
 <!-- history badges -->
-| Azure Pipelines | GitHubActions |
-| --------------- | ------------- |
+| Azure Pipelines | GitHub Actions |
+| --------------- | -------------- |
 | [![azurepipelines-badge]][azurepipelines] | [![github-badge]][github] |
 | [![azurepipelines-history-badge]][azurepipelines-history] | [![github-history-badge]][github] |
 <!-- history badges -->
@@ -39,7 +39,7 @@ Every good Rocket Surgeon needs multiple choices of build systems to pick from t
 [azurepipelines-history]: https://rocketsurgeonsguild.visualstudio.com/Libraries/_build?definitionId=31&branchName=master
 [azurepipelines-history-badge]: https://buildstats.info/azurepipelines/chart/rocketsurgeonsguild/Libraries/31?includeBuildsFromPullRequest=false "Azure Pipelines History"
 [github]: https://github.com/RocketSurgeonsGuild/Nuke/actions?query=workflow%3Aci
-[github-badge]: https://img.shields.io/appveyor/ci/RocketSurgeonsGuild/Nuke.svg?label=github&logo=github&color=b845fc&logoColor=b845fc&style=flat "GitHub Actions Status"
+[github-badge]: https://img.shields.io/github/workflow/status/RocketSurgeonsGuild/Nuke/ci.svg?label=github&logo=github&color=b845fc&logoColor=b845fc&style=flat "GitHub Actions Status"
 [github-history-badge]: https://buildstats.info/github/chart/RocketSurgeonsGuild/Nuke?includeBuildsFromPullRequest=false "GitHub Actions History"
 [nuget-6plqb7nwtdoa]: https://www.nuget.org/packages/Rocket.Surgery.Nuke/
 [nuget-version-6plqb7nwtdoa-badge]: https://img.shields.io/nuget/v/Rocket.Surgery.Nuke.svg?color=004880&logo=nuget&style=flat-square "NuGet Version"
