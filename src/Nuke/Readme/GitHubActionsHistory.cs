@@ -20,7 +20,7 @@ namespace Rocket.Surgery.Nuke.Readme
             );
             var badge = references.AddReference(
                 "github-badge",
-                $"https://img.shields.io/github/ci/{config["owner"]}/{config["repository"]}.svg?label=github&logo=github&color=b845fc&logoColor=b845fc&style=flat",
+                $"https://img.shields.io/github/workflow/status/{config["owner"]}/{config["repository"]}/ci.svg?label=github&logo=github&color=b845fc&logoColor=b845fc&style=flat",
                 "GitHub Actions Status"
             );
             var historyBadge = references.AddReference(
