@@ -6,7 +6,7 @@ using static Nuke.Common.EnvironmentInfo;
 
 #pragma warning disable CA1822
 
-namespace Rocket.Surgery.Nuke.AzurePipelines
+namespace Rocket.Surgery.Nuke.Azp
 {
     /// <summary>
     /// Base pipeline build task

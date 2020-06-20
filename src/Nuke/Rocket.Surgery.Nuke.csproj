@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
         <NoWarn>$(NoWarn);CS0436</NoWarn>
     </PropertyGroup>
     <ItemGroup>
@@ -16,5 +16,8 @@
     </ItemGroup>
     <ItemGroup>
       <Folder Include="SyncPackages" />
+    </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Include="default.runsettings" />
     </ItemGroup>
 </Project>
