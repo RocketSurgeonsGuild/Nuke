@@ -8,7 +8,7 @@ namespace Rocket.Surgery.Nuke.GithubActions
     {
         public UploadArtifactStep(string name) : base(name)
         {
-            Uses = "actions/upload-artifact@v1";
+            Uses = "actions/upload-artifact@v2";
         }
 
         public string Name { get; set; }
