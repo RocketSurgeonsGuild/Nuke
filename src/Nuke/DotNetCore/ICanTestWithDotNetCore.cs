@@ -51,7 +51,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                         {
                             using var tempFile = File.Open(runsettings, FileMode.CreateNew);
                             await typeof(ICanTestWithDotNetCore).Assembly
-                                   .GetManifestResourceStream("Rocket.Surgery.Nuke.DotNetCore.default.runsettings")!
+                                   .GetManifestResourceStream("Rocket.Surgery.Nuke.default.runsettings")!
                                .CopyToAsync(tempFile)
                                .ConfigureAwait(false);
                         }
