@@ -14,7 +14,7 @@ namespace Rocket.Surgery.Nuke.ContinuousIntegration
     [PublicAPI]
     [UsedImplicitly(ImplicitUseKindFlags.Default)]
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
-    public class PrintCIEnvironmentAttribute : Attribute, IOnAfterLogo
+    public class PrintCIEnvironmentAttribute : BuildExtensionAttributeBase, IOnAfterLogo
     {
         private readonly string[] _additionalPrefixes;
 

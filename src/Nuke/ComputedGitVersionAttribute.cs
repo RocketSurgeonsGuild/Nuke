@@ -14,6 +14,7 @@ using Nuke.Common.Execution;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.GitVersion;
+using Nuke.Common.ValueInjection;
 using static Nuke.Common.EnvironmentInfo;
 
 namespace Rocket.Surgery.Nuke
@@ -24,7 +25,7 @@ namespace Rocket.Surgery.Nuke
     [PublicAPI]
     [UsedImplicitly(ImplicitUseKindFlags.Default)]
     [ExcludeFromCodeCoverage]
-    public class ComputedGitVersionAttribute : InjectionAttributeBase
+    public class ComputedGitVersionAttribute : ValueInjectionAttributeBase
     {
         /// <summary>
         /// Returns if GitVersion data is available
@@ -75,7 +76,7 @@ namespace Rocket.Surgery.Nuke
 
             AzurePipelines.Instance?.UpdateBuildNumber(gitVersion.FullSemVer);
             TeamCity.Instance?.SetBuildNumber(gitVersion.FullSemVer);
-            AppVeyor.Instance?.UpdateBuildNumber($"{gitVersion.FullSemVer}.build.{AppVeyor.Instance.BuildNumber}");
+            AppVeyor.Instance?.UpdateBuildVersion($"{gitVersion.FullSemVer}.build.{AppVeyor.Instance.BuildNumber}");
 
             return gitVersion;
         }
@@ -89,10 +90,12 @@ namespace Rocket.Surgery.Nuke
                            .SetFramework(_frameworkVersion)
                            .DisableLogOutput()
                            .SetUpdateAssemblyInfo(UpdateAssemblyInfo)
-                           .SetToolPath(ToolPathResolver.GetPackageExecutable(
-                                packageId: "GitVersion.Tool|GitVersion.CommandLine",
-                                packageExecutable: "gitversion.dll|gitversion.exe",
-                                framework: "netcoreapp3.1")
+                           .SetToolPath(
+                                ToolPathResolver.GetPackageExecutable(
+                                    packageId: "GitVersion.Tool|GitVersion.CommandLine",
+                                    packageExecutable: "gitversion.dll|gitversion.exe",
+                                    framework: "netcoreapp3.1"
+                                )
                             )
                     )
                    .Result;

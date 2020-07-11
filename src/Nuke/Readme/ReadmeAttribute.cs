@@ -1,6 +1,7 @@
 using System.Reflection;
 using JetBrains.Annotations;
 using Nuke.Common.Execution;
+using Nuke.Common.ValueInjection;
 
 namespace Rocket.Surgery.Nuke.Readme
 {
@@ -9,7 +10,7 @@ namespace Rocket.Surgery.Nuke.Readme
     /// </summary>
     [PublicAPI]
     [UsedImplicitly(ImplicitUseKindFlags.Default)]
-    internal class ReadmeAttribute : InjectionAttributeBase
+    internal class ReadmeAttribute : ValueInjectionAttributeBase
     {
         /// <inheritdoc />
         public override object GetValue(MemberInfo member, object instance) => new ReadmeUpdater();

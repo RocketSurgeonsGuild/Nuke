@@ -17,7 +17,7 @@ namespace Rocket.Surgery.Nuke
     [PublicAPI]
     [UsedImplicitly(ImplicitUseKindFlags.Default)]
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
-    public class DownloadFileAttribute : Attribute, IOnAfterLogo
+    public class DownloadFileAttribute : BuildExtensionAttributeBase, IOnAfterLogo
     {
         private readonly string _url;
         private readonly AbsolutePath _filePath;

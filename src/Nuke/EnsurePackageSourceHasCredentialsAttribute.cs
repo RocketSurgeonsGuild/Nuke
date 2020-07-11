@@ -15,7 +15,7 @@ namespace Rocket.Surgery.Nuke
     [PublicAPI]
     [UsedImplicitly(ImplicitUseKindFlags.Default)]
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
-    public class EnsurePackageSourceHasCredentialsAttribute : Attribute, IOnBeforeLogo
+    public class EnsurePackageSourceHasCredentialsAttribute : BuildExtensionAttributeBase, IOnBeforeLogo
     {
         /// <summary>
         /// Ensures that the package source name has credentials set

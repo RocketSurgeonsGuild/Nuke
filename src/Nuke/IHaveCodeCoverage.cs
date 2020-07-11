@@ -1,6 +1,7 @@
 ﻿using Nuke.Common;
 using Nuke.Common.Execution;
 using Nuke.Common.IO;
+using Nuke.Common.ValueInjection;
 
 namespace Rocket.Surgery.Nuke
 {
@@ -18,7 +19,7 @@ namespace Rocket.Surgery.Nuke
         /// </summary>
         [Parameter("The directory where coverage artifacts are to be dropped", Name = "Coverage")]
         public AbsolutePath CoverageDirectory => EnvironmentInfo.GetVariable<AbsolutePath>("Coverage")
-         ?? InjectionUtility.GetInjectionValue(() => CoverageDirectory)
+         ?? ValueInjectionUtility.TryGetValue(() => CoverageDirectory)
          ?? NukeBuild.RootDirectory / "coverage";
     }
 }

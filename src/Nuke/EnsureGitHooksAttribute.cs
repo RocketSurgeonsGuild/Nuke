@@ -13,7 +13,7 @@ namespace Rocket.Surgery.Nuke
     /// Ensures that the given git hooks are defined in the .git directory
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
-    public class EnsureGitHooksAttribute : Attribute, IOnBeforeLogo
+    public class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBeforeLogo
     {
         /// <summary>
         /// Ensures that the given git hooks are defined in the .git directory
