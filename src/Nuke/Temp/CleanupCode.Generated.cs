@@ -40,7 +40,7 @@ namespace Temp.CleanupCode
                               /// </summary>
         public static IReadOnlyCollection<Output> CleanupCode(string arguments, string workingDirectory = null, IReadOnlyDictionary<string, string> environmentVariables = null, int? timeout = null, bool? logOutput = null, bool? logInvocation = null, Func<string, string> outputFilter = null)
         {
-            var process = ProcessTasks.StartProcess(CleanupCodePath, arguments, workingDirectory, environmentVariables, timeout, logOutput, logInvocation, CleanupCodeLogger, outputFilter);
+            var process = ProcessTasks.StartProcess(CleanupCodePath, arguments, workingDirectory, environmentVariables, timeout, logOutput, logInvocation, customLogger: CleanupCodeLogger, outputFilter: outputFilter);
             process.AssertZeroExitCode();
             return process.Output;
         }

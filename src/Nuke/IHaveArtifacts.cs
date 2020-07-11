@@ -1,6 +1,7 @@
 ﻿using Nuke.Common;
 using Nuke.Common.Execution;
 using Nuke.Common.IO;
+using Nuke.Common.ValueInjection;
 
 namespace Rocket.Surgery.Nuke
 {
@@ -14,7 +15,7 @@ namespace Rocket.Surgery.Nuke
         /// </summary>
         [Parameter("The directory where artifacts are to be dropped", Name = "Artifacts")]
         public AbsolutePath ArtifactsDirectory => EnvironmentInfo.GetVariable<AbsolutePath>("Artifacts")
-         ?? InjectionUtility.GetInjectionValue(() => ArtifactsDirectory)
+         ?? ValueInjectionUtility.TryGetValue(() => ArtifactsDirectory)
          ?? NukeBuild.RootDirectory / "artifacts";
     }
 }

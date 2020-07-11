@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Nuke.Common;
 using Nuke.Common.Execution;
+using Nuke.Common.ValueInjection;
 using Rocket.Surgery.Nuke.Readme;
 
 namespace Rocket.Surgery.Nuke
@@ -14,7 +15,7 @@ namespace Rocket.Surgery.Nuke
         /// The readme updater that ensures that all the badges are in sync.
         /// </summary>
         [Readme]
-        public ReadmeUpdater Readme => InjectionUtility.GetInjectionValue(() => Readme);
+        public ReadmeUpdater Readme => ValueInjectionUtility.TryGetValue(() => Readme);
 
         /// <summary>
         /// Loops through the Readme to update sections that are automated to give nuget packages, build histories and more, while

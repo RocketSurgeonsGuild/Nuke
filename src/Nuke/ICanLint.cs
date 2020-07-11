@@ -1,6 +1,7 @@
 ﻿using System;
 using Nuke.Common;
 using Nuke.Common.Execution;
+using Nuke.Common.ValueInjection;
 using Temp.CleanupCode;
 
 namespace Rocket.Surgery.Nuke
@@ -14,13 +15,13 @@ namespace Rocket.Surgery.Nuke
         /// The files to lint, if not given lints all files
         /// </summary>
         [Parameter("The files to lint, if not given lints all files", Separator = " ")]
-        public string[] LintFiles => InjectionUtility.GetInjectionValue(() => LintFiles) ?? Array.Empty<string>();
+        public string[] LintFiles => ValueInjectionUtility.TryGetValue(() => LintFiles) ?? Array.Empty<string>();
 
         /// <summary>
         /// The files to lint, if not given lints all files
         /// </summary>
         [Parameter("The profile to use for linting")]
-        public string LintProfile => InjectionUtility.GetInjectionValue(() => LintProfile) ?? "Full Cleanup";
+        public string LintProfile => ValueInjectionUtility.TryGetValue(() => LintProfile) ?? "Full Cleanup";
 
         /// <summary>
         /// Applies code cleanup tasks

@@ -1,5 +1,6 @@
 ﻿using Nuke.Common.Execution;
 using Nuke.Common.ProjectModel;
+using Nuke.Common.ValueInjection;
 
 namespace Rocket.Surgery.Nuke
 {
@@ -12,6 +13,6 @@ namespace Rocket.Surgery.Nuke
         /// The solution currently being build
         /// </summary>
         [Solution]
-        public Solution Solution => InjectionUtility.GetInjectionValue(() => Solution);
+        public Solution Solution => ValueInjectionUtility.TryGetValue(() => Solution);
     }
 }
