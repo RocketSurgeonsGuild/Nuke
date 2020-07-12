@@ -17,22 +17,7 @@ namespace Rocket.Surgery.Nuke
         /// <param name="solution">The solution.</param>
         /// <returns>An enumerable of projects.</returns>
         public static IEnumerable<Project> WherePackable(this Solution solution)
-        {
-            var am = new AnalyzerManager(solution.Path.ToString(), new AnalyzerManagerOptions());
-
-            return solution.AllProjects
-               .Where(
-                    x =>
-                    {
-                        var projectResults = am.GetProject(x.Path.ToString()).Build().First();
-                        return bool.TryParse(
-                            projectResults.GetProperty("IsPackable") ?? "false",
-                            out var b
-                        ) && b;
-                    }
-                )
-               .ToArray();
-        }
+            => solution.AllProjects.Where(z => z.GetProperty<bool>("IsPackable"));
 
         /// <summary>
         /// Gets the test projects.
@@ -43,8 +28,6 @@ namespace Rocket.Surgery.Nuke
         public static IEnumerable<Project> GetTestProjects(
             this Solution solution,
             string testProjectNameSchema = "Tests"
-        ) => solution.AllProjects.Where(
-            x => x.Name.Contains(testProjectNameSchema, StringComparison.OrdinalIgnoreCase)
-        );
+        ) => solution.AllProjects.Where(z => z.GetProperty<bool>("IsTestProject"));
     }
 }

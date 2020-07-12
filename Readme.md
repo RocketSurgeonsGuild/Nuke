@@ -21,10 +21,6 @@ Every good Rocket Surgeon needs multiple choices of build systems to pick from t
 | Package | NuGet |
 | ------- | ----- |
 | Rocket.Surgery.Nuke | [![nuget-version-6plqb7nwtdoa-badge]![nuget-downloads-6plqb7nwtdoa-badge]][nuget-6plqb7nwtdoa] |
-| Rocket.Surgery.Nuke.DotNetCore | [![nuget-version-75gp65y/nhyw-badge]![nuget-downloads-75gp65y/nhyw-badge]][nuget-75gp65y/nhyw] |
-| Rocket.Surgery.Nuke.MsBuild | [![nuget-version-bditm9/fry3g-badge]![nuget-downloads-bditm9/fry3g-badge]][nuget-bditm9/fry3g] |
-| Rocket.Surgery.Nuke.AzureDevOps | [![nuget-version-qjmvatyuqudw-badge]![nuget-downloads-qjmvatyuqudw-badge]][nuget-qjmvatyuqudw] |
-| Rocket.Surgery.Nuke.Xamarin | [![nuget-version-c3wuwup6kqiw-badge]![nuget-downloads-c3wuwup6kqiw-badge]][nuget-c3wuwup6kqiw] |
 <!-- nuget packages -->
 
 <!-- generated references -->
@@ -44,18 +40,6 @@ Every good Rocket Surgeon needs multiple choices of build systems to pick from t
 [nuget-6plqb7nwtdoa]: https://www.nuget.org/packages/Rocket.Surgery.Nuke/
 [nuget-version-6plqb7nwtdoa-badge]: https://img.shields.io/nuget/v/Rocket.Surgery.Nuke.svg?color=004880&logo=nuget&style=flat-square "NuGet Version"
 [nuget-downloads-6plqb7nwtdoa-badge]: https://img.shields.io/nuget/dt/Rocket.Surgery.Nuke.svg?color=004880&logo=nuget&style=flat-square "NuGet Downloads"
-[nuget-75gp65y/nhyw]: https://www.nuget.org/packages/Rocket.Surgery.Nuke.DotNetCore/
-[nuget-version-75gp65y/nhyw-badge]: https://img.shields.io/nuget/v/Rocket.Surgery.Nuke.DotNetCore.svg?color=004880&logo=nuget&style=flat-square "NuGet Version"
-[nuget-downloads-75gp65y/nhyw-badge]: https://img.shields.io/nuget/dt/Rocket.Surgery.Nuke.DotNetCore.svg?color=004880&logo=nuget&style=flat-square "NuGet Downloads"
-[nuget-bditm9/fry3g]: https://www.nuget.org/packages/Rocket.Surgery.Nuke.MsBuild/
-[nuget-version-bditm9/fry3g-badge]: https://img.shields.io/nuget/v/Rocket.Surgery.Nuke.MsBuild.svg?color=004880&logo=nuget&style=flat-square "NuGet Version"
-[nuget-downloads-bditm9/fry3g-badge]: https://img.shields.io/nuget/dt/Rocket.Surgery.Nuke.MsBuild.svg?color=004880&logo=nuget&style=flat-square "NuGet Downloads"
-[nuget-qjmvatyuqudw]: https://www.nuget.org/packages/Rocket.Surgery.Nuke.AzureDevOps/
-[nuget-version-qjmvatyuqudw-badge]: https://img.shields.io/nuget/v/Rocket.Surgery.Nuke.AzureDevOps.svg?color=004880&logo=nuget&style=flat-square "NuGet Version"
-[nuget-downloads-qjmvatyuqudw-badge]: https://img.shields.io/nuget/dt/Rocket.Surgery.Nuke.AzureDevOps.svg?color=004880&logo=nuget&style=flat-square "NuGet Downloads"
-[nuget-c3wuwup6kqiw]: https://www.nuget.org/packages/Rocket.Surgery.Nuke.Xamarin/
-[nuget-version-c3wuwup6kqiw-badge]: https://img.shields.io/nuget/v/Rocket.Surgery.Nuke.Xamarin.svg?color=004880&logo=nuget&style=flat-square "NuGet Version"
-[nuget-downloads-c3wuwup6kqiw-badge]: https://img.shields.io/nuget/dt/Rocket.Surgery.Nuke.Xamarin.svg?color=004880&logo=nuget&style=flat-square "NuGet Downloads"
 <!-- generated references -->
 
 <!-- nuke-data
