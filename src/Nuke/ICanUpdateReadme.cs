@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using Nuke.Common;
-using Nuke.Common.Execution;
 using Nuke.Common.ValueInjection;
 using Rocket.Surgery.Nuke.Readme;
 
@@ -9,7 +8,7 @@ namespace Rocket.Surgery.Nuke
     /// <summary>
     /// A tool to update the readme
     /// </summary>
-    public interface ICanUpdateReadme : IHaveSolution
+    public interface ICanUpdateReadme : IHaveSolution, INukeBuild
     {
         /// <summary>
         /// The readme updater that ensures that all the badges are in sync.

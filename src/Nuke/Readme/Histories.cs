@@ -34,7 +34,7 @@ namespace Rocket.Surgery.Nuke.Readme
         public string Process(
             IDictionary<string, object> config,
             IMarkdownReferences references,
-            ICanUpdateReadme build
+            IHaveSolution build
         )
         {
             var results = new List<(string name, string badge, string history)>();

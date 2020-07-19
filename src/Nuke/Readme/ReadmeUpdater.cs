@@ -73,18 +73,18 @@ namespace Rocket.Surgery.Nuke.Readme
         /// <param name="content"></param>
         /// <param name="build"></param>
         /// <returns></returns>
-        public string Process(string content, ICanUpdateReadme build)
+        public string Process(string content, IHaveSolution build)
         {
             var nukeDataRegex = new Regex(
                 "<!-- nuke-data(.*?)-->",
                 RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase
             );
             var match = nukeDataRegex.Match(content);
-            var yaml = string.Join("\n", match.Groups.Cast<Group>().Skip(1).Select(x => x.Value));
+            var yaml = string.Join(Environment.NewLine, match.Groups.Cast<Group>().Skip(1).Select(x => x.Value));
             var d = new DeserializerBuilder()
                // .WithNamingConvention(new CamelCaseNamingConvention())
                .Build();
-            using var reader = new StringReader(yaml.Trim('\n'));
+            using var reader = new StringReader(yaml.Trim('\n','\r'));
             var config = d.Deserialize<ExpandoObject>(reader);
 
             var sectionRegex = new Regex(
@@ -118,7 +118,7 @@ namespace Rocket.Surgery.Nuke.Readme
             foreach (var range in ranges.OrderByDescending(x => x.start))
             {
                 content = content.Substring(0, range.start)
-                  + "\n" + range.content + content.Substring(range.start + range.length);
+                  + Environment.NewLine + range.content + content.Substring(range.start + range.length);
             }
 
             return content;
