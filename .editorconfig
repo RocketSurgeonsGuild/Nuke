@@ -4,6 +4,7 @@ root=true
 charset=utf-8
 indent_style=space
 indent_size=4
+max_line_length = 160
 insert_final_newline=true
 
 [*.{js,ts,vue}]
@@ -18,6 +19,7 @@ insert_final_newline=true
 
 [*]
 insert_final_newline=false
+max_line_length=160
 
 #### .NET Coding Conventions ####
 
@@ -240,28 +242,28 @@ dotnet_naming_symbols.const_field.required_modifiers=const
 
 dotnet_naming_style.pascal_case.required_prefix=
 dotnet_naming_style.pascal_case.required_suffix=
-dotnet_naming_style.pascal_case.word_separator=
-dotnet_naming_style.pascal_case.capitalization=pascal_case
+                   dotnet_naming_style.pascal_case.word_separator=
+                                      dotnet_naming_style.pascal_case.capitalization=pascal_case
 
 dotnet_naming_style.camel_case.required_prefix=
 dotnet_naming_style.camel_case.required_suffix=
-dotnet_naming_style.camel_case.word_separator=
-dotnet_naming_style.camel_case.capitalization=camel_case
+                   dotnet_naming_style.camel_case.word_separator=
+                                      dotnet_naming_style.camel_case.capitalization=camel_case
 
 dotnet_naming_style._camel_case.required_prefix=_
 dotnet_naming_style._camel_case.required_suffix=
 dotnet_naming_style._camel_case.word_separator=
-dotnet_naming_style._camel_case.capitalization=camel_case
+                   dotnet_naming_style._camel_case.capitalization=camel_case
 
 dotnet_naming_style.begins_with_i.required_prefix=I
 dotnet_naming_style.begins_with_i.required_suffix=
 dotnet_naming_style.begins_with_i.word_separator=
-dotnet_naming_style.begins_with_i.capitalization=pascal_case
+                   dotnet_naming_style.begins_with_i.capitalization=pascal_case
 
 dotnet_naming_style.begins_with_t.required_prefix=T
 dotnet_naming_style.begins_with_t.required_suffix=
 dotnet_naming_style.begins_with_t.word_separator=
-dotnet_naming_style.begins_with_t.capitalization=pascal_case
+                   dotnet_naming_style.begins_with_t.capitalization=pascal_case
 
 dotnet_diagnostic.IDE0058.severity = none
 
@@ -363,7 +365,7 @@ dotnet_diagnostic.IDE0058.severity = none
 # dotnet_diagnostic.CA1061.severity = warning
 
 # CA1062: Validate arguments of public methods
-# dotnet_diagnostic.CA1062.severity = none
+dotnet_diagnostic.CA1062.severity = none
 
 # CA1063: Implement IDisposable Correctly
 # dotnet_diagnostic.CA1063.severity = none
@@ -477,7 +479,7 @@ dotnet_diagnostic.IDE0058.severity = none
 # dotnet_diagnostic.CA1823.severity = warning
 
 # CA2007: Consider calling ConfigureAwait on the awaited task
-# dotnet_diagnostic.CA2007.severity = warning
+dotnet_diagnostic.CA2007.severity = none
 
 # CA2119: Seal methods that satisfy private interfaces
 # dotnet_diagnostic.CA2119.severity = warning
@@ -928,7 +930,7 @@ resharper_continuous_indent_multiplier=1
 resharper_csharp_align_multiline_argument=false
 resharper_csharp_align_multiline_expression=false
 resharper_csharp_blank_lines_inside_region=0
-resharper_csharp_max_line_length=120
+resharper_csharp_max_line_length=160
 resharper_csharp_stick_comment=false
 resharper_csharp_wrap_arguments_style=chop_if_long
 resharper_csharp_wrap_extends_list_style=chop_if_long
@@ -993,7 +995,7 @@ resharper_wrap_verbatim_interpolated_strings=chop_if_long
 resharper_xmldoc_attribute_style=on_single_line
 resharper_xmldoc_indent_child_elements=ZeroIndent
 resharper_xmldoc_indent_text=ZeroIndent
-resharper_xmldoc_max_line_length=120
+resharper_xmldoc_max_line_length=160
 resharper_xmldoc_pi_attribute_style=on_single_line
 resharper_xmldoc_space_before_self_closing=true
 

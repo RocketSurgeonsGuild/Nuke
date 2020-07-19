@@ -16,18 +16,13 @@ namespace Rocket.Surgery.Nuke
         /// </summary>
         /// <param name="solution">The solution.</param>
         /// <returns>An enumerable of projects.</returns>
-        public static IEnumerable<Project> WherePackable(this Solution solution)
-            => solution.AllProjects.Where(z => z.GetProperty<bool>("IsPackable"));
+        public static IEnumerable<Project> WherePackable(this Solution solution) => solution.AllProjects.Where(z => z.GetProperty<bool>("IsPackable"));
 
         /// <summary>
         /// Gets the test projects.
         /// </summary>
         /// <param name="solution">The solution.</param>
-        /// <param name="testProjectNameSchema">The test project name schema.</param>
         /// <returns></returns>
-        public static IEnumerable<Project> GetTestProjects(
-            this Solution solution,
-            string testProjectNameSchema = "Tests"
-        ) => solution.AllProjects.Where(z => z.GetProperty<bool>("IsTestProject"));
+        public static IEnumerable<Project> GetTestProjects(this Solution solution) => solution.AllProjects.Where(z => z.GetProperty<bool>("IsTestProject"));
     }
 }
