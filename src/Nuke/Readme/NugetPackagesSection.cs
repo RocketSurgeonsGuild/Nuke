@@ -105,7 +105,7 @@ namespace Rocket.Surgery.Nuke.Readme
                 sb.AppendLine("| ------- | ----- |");
             }
 
-            foreach (var package in packageNames)
+            foreach (var package in packageNames.OrderBy(z => z))
             {
                 sb.AppendLine(GetResult(config, references, package));
             }
