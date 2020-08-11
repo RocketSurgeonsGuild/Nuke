@@ -1,3 +1,4 @@
+using Nuke.Common.ProjectModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -90,7 +91,7 @@ namespace Rocket.Surgery.Nuke.Readme
             IHaveSolution build
         )
         {
-            var packageNames = build.Solution.WherePackable().Select(x => x.Name);
+            var packageNames = build.Solution.WherePackable().Select(x => x.GetProperty<string>("PackageId") ?? x.Name);
 
             var sb = new StringBuilder();
             if (config.ContainsKey("myget"))
