@@ -13,15 +13,27 @@ namespace Rocket.Surgery.Nuke
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
     public class EnsureReadmeIsUpdatedAttribute : BuildExtensionAttributeBase, IOnAfterLogo
     {
+        public EnsureReadmeIsUpdatedAttribute(string fileName)
+        {
+            ReadmeFilePath = fileName;
+        }
+
+        public EnsureReadmeIsUpdatedAttribute()
+        {
+            ReadmeFilePath = "Readme.md";
+        }
+
+        public string ReadmeFilePath { get; set; }
+
         public void OnAfterLogo(NukeBuild build, IReadOnlyCollection<ExecutableTarget> executableTargets, IReadOnlyCollection<ExecutableTarget> executionPlan)
         {
             if (NukeBuild.IsLocalBuild && build is IHaveSolution buildSolution)
             {
                 using var block = Logger.Block("Update Readme");
-                
-                var readmeContent = File.ReadAllText(NukeBuild.RootDirectory / "Readme.md");
+
+                var readmeContent = File.ReadAllText(NukeBuild.RootDirectory / ReadmeFilePath);
                 readmeContent = new ReadmeUpdater().Process(readmeContent, buildSolution);
-                File.WriteAllText(NukeBuild.RootDirectory / "Readme.md", readmeContent);
+                File.WriteAllText(NukeBuild.RootDirectory / ReadmeFilePath, readmeContent);
             }
         }
     }
