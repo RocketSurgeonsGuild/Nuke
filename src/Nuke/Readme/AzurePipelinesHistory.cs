@@ -16,7 +16,7 @@ namespace Rocket.Surgery.Nuke.Readme
         {
             var url = references.AddReference(
                 "azurepipelines",
-                $"https://{config["account"]}.visualstudio.com/{config["teamproject"]}/_build/latest?definitionId={config["builddefinition"]}&branchName=master"
+                $"https://dev.azure.com/{config["account"]}/{config["teamproject"]}/_build/latest?definitionId={config["builddefinition"]}&branchName=master"
             );
             var badge = references.AddReference(
                 "azurepipelines-badge",
@@ -25,7 +25,7 @@ namespace Rocket.Surgery.Nuke.Readme
             );
             var historyUrl = references.AddReference(
                 "azurepipelines-history",
-                $"https://{config["account"]}.visualstudio.com/{config["teamproject"]}/_build?definitionId={config["builddefinition"]}&branchName=master"
+                $"https://dev.azure.com/{config["account"]}/{config["teamproject"]}/_build?definitionId={config["builddefinition"]}&branchName=master"
             );
             var historyBadge = references.AddReference(
                 "azurepipelines-history-badge",
@@ -33,7 +33,7 @@ namespace Rocket.Surgery.Nuke.Readme
                 "Azure Pipelines History"
             );
 
-            return ( $"[!{badge}]{url}", $"[!{historyBadge}]{historyUrl}" );
+            return ($"[!{badge}]{url}", $"[!{historyBadge}]{historyUrl}");
         }
     }
 }
