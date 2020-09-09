@@ -103,17 +103,24 @@ namespace Rocket.Surgery.Nuke
         )
         {
             var chainLinkNames = GetInvokedTargets(executableTarget, relevantTargets).Select(z => z.Name).ToArray();
+
+
+            var dotnetTools = Path.Combine(NukeBuild.RootDirectory, ".config/dotnet-tools.json");
+            var localTool = false;
+            if (!File.ReadAllText(dotnetTools).Contains("\"nuke.globaltool\": {"))
+            {
+            }
+            else
+            {
+                localTool = true;
+            }
+
+            var tool = localTool ? "dotnet nuke" : "nuke";
             return new AzurePipelinesStep
             {
                 Name = executableTarget.Name,
                 DisplayName = GetStepName(executableTarget.Name),
-                ScriptPath = Path.ChangeExtension(
-                    NukeBuild.RootDirectory.GlobFiles("build.ps1", "build.sh")
-                       .Select(x => NukeBuild.RootDirectory.GetUnixRelativePathTo(x))
-                       .FirstOrDefault()
-                       .NotNull("Must have a build script of build.ps1 or build.sh"),
-                    ".ps1"
-                ),
+                ScriptPath = tool,
                 InvokedTargets = chainLinkNames,
             };
         }

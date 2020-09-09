@@ -15,7 +15,7 @@ namespace Rocket.Surgery.Nuke.Azp
         public void Write(CustomFileWriter writer, string parameters)
         {
             using (writer.WriteBlock(
-                $"- pwsh: ./{ScriptPath} {InvokedTargets.JoinSpace()} --skip {parameters}".TrimEnd()
+                $"- pwsh: {ScriptPath} {InvokedTargets.JoinSpace()} --skip {parameters}".TrimEnd()
             ))
             {
                 writer.WriteLine($"displayName: {DisplayName.SingleQuote()}");
