@@ -4,7 +4,5 @@
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\src\Nuke\Rocket.Surgery.Nuke.csproj" />
-        <ProjectReference Include="..\..\src\Nuke.DotNetCore\Rocket.Surgery.Nuke.csproj" />
-        <ProjectReference Include="..\..\src\Nuke.MsBuild\Rocket.Surgery.Nuke.MsBuild.csproj" />
     </ItemGroup>
 </Project>

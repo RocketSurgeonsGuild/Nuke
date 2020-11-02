@@ -63,8 +63,8 @@ namespace Rocket.Surgery.Nuke
         public static T SetBinaryLogger<T>(this T settings, AbsolutePath path)
             where T : ToolSettings
         {
-            var existingArgs = settings.ArgumentConfigurator;
-            return settings.SetArgumentConfigurator(
+            var existingArgs = settings.ProcessArgumentConfigurator;
+            return settings.SetProcessArgumentConfigurator(
                 args =>
                     existingArgs(args).Add(
                         $"/bl:\"{path}\";ProjectImports={( NukeBuild.IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed )}"
@@ -81,8 +81,8 @@ namespace Rocket.Surgery.Nuke
         public static T SetBinaryLogger<T>(this T settings, AbsolutePath path, MSBuildBinaryLogImports imports)
             where T : ToolSettings
         {
-            var existingArgs = settings.ArgumentConfigurator;
-            return settings.SetArgumentConfigurator(
+            var existingArgs = settings.ProcessArgumentConfigurator;
+            return settings.SetProcessArgumentConfigurator(
                 args =>
                     existingArgs(args).Add($"/bl:\"{path}\";ProjectImports={imports}")
             );
@@ -96,7 +96,7 @@ namespace Rocket.Surgery.Nuke
         public static T SetFileLogger<T>(this T settings, AbsolutePath path)
             where T : ToolSettings
         {
-            var existingArgs = settings.ArgumentConfigurator;
+            var existingArgs = settings.ProcessArgumentConfigurator;
             var verbosity = MSBuildVerbosity.Normal;
             if (VerbosityMapping.Mappings.Contains(typeof(MSBuildVerbosity)))
             {
@@ -109,7 +109,7 @@ namespace Rocket.Surgery.Nuke
                 }
             }
 
-            return settings.SetArgumentConfigurator(
+            return settings.SetProcessArgumentConfigurator(
                 args =>
                     existingArgs(args).Add(
                         $"/fileLogger /fileloggerparameters:ShowTimestamp;Verbosity={verbosity};LogFile=\"{path}\""
@@ -133,12 +133,12 @@ namespace Rocket.Surgery.Nuke
             foreach (var item in JObject.FromObject(gitVersion))
             {
                 var key = $"gitversion_{item.Key}".ToUpperInvariant();
-                if (settings.EnvironmentVariables.TryGetValue(key, out var _))
+                if (settings.ProcessEnvironmentVariables.TryGetValue(key, out var _))
                 {
                     continue;
                 }
 
-                settings = settings.AddEnvironmentVariable(key, item.Value?.ToString());
+                settings = settings.AddProcessEnvironmentVariable(key, item.Value?.ToString());
             }
 
             return settings;
