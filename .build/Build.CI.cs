@@ -66,6 +66,9 @@ public partial class Solution
             new SetupDotNetStep("Use .NET Core 3.1 SDK") {
                 DotNetVersion = "3.1.x"
             },
+            new SetupDotNetStep("Use .NET Core 5.0 SDK") {
+                DotNetVersion = "5.0.100-rc.2.20479.15"
+            },
         });
 
         buildJob.Steps.Add(new UsingStep("Publish Coverage")
