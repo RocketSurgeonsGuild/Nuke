@@ -59,7 +59,6 @@ public partial class Solution : NukeBuild,
        .DependsOn(Pack);
 
     public Target Build => _ => _.Inherit<ICanBuildWithDotNetCore>(x => x.CoreBuild);
-
     public Target Pack => _ => _.Inherit<ICanPackWithDotNetCore>(x => x.CorePack)
        .DependsOn(Clean);
 
