@@ -33,14 +33,29 @@ namespace Rocket.Surgery.Nuke.DotNetCore
            .After(Build)
            .OnlyWhenDynamic(() => TestsDirectory.GlobFiles("**/*.csproj").Count > 0)
            .WhenSkipped(DependencyBehavior.Execute)
-           .Executes(() =>
+           .Executes(
+                () => MSBuildTasks.MSBuild(
+                    settings =>
+                        settings
+                           .SetSolutionFile(Solution)
+                           .SetConfiguration(Configuration)
+                           .SetDefaultLoggers(LogsDirectory / "test.build.log")
+                           .SetGitVersionEnvironment(GitVersion)
+                           .SetAssemblyVersion(GitVersion.AssemblySemVer)
+                           .SetPackageVersion(GitVersion.NuGetVersionV2)
+                )
+            )
+           .Executes(
+                () =>
                 {
                     EnsureCleanDirectory(TestResultsDirectory);
                     CoverageDirectory.GlobFiles("*.cobertura.xml", "*.opencover.xml", "*.json", "*.info")
                        .Where(x => Guid.TryParse(Path.GetFileName(x).Split('.')[0], out var _))
                        .ForEach(DeleteFile);
-                })
-           .Executes(() =>
+                }
+            )
+           .Executes(
+                () =>
                 {
                     var runSettings = TestsDirectory / "coverlet.runsettings";
                     if (!FileExists(runSettings))
@@ -54,16 +69,6 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                                .GetManifestResourceStream("Rocket.Surgery.Nuke.default.runsettings")!.CopyTo(tempFile);
                         }
                     }
-
-                    MSBuildTasks.MSBuild(
-                        settings =>
-                            settings
-                               .SetSolutionFile(Solution)
-                               .SetConfiguration(Configuration)
-                               .SetDefaultLoggers(LogsDirectory / "test.build.log")
-                               .SetGitVersionEnvironment(GitVersion)
-                               .SetAssemblyVersion(GitVersion.AssemblySemVer)
-                               .SetPackageVersion(GitVersion.NuGetVersionV2));
 
                     DotNetTasks.DotNetTest(
                         s => s.SetProjectFile(Solution)
@@ -79,13 +84,16 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                            .When(
                                 !CollectCoverage,
                                 x => x.SetProperty((string)"CollectCoverage", "true")
-                                   .SetProperty("CoverageDirectory", CoverageDirectory))
+                                   .SetProperty("CoverageDirectory", CoverageDirectory)
+                            )
                            .When(
                                 CollectCoverage,
                                 x => x
                                    .SetProperty("CollectCoverage", "false")
                                    .SetDataCollector("XPlat Code Coverage")
-                                   .SetSettingsFile(runSettings)));
+                                   .SetSettingsFile(runSettings)
+                            )
+                    );
 
                     // Ensure anything that has been dropped in the test results from a collector is
                     // into the coverage directory
@@ -99,7 +107,8 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                         CopyFile(
                             file,
                             CoverageDirectory / $"{folderName}.{extensionPart}",
-                            FileExistsPolicy.OverwriteIfNewer);
+                            FileExistsPolicy.OverwriteIfNewer
+                        );
                     }
                 }
             );

@@ -33,14 +33,25 @@ namespace Rocket.Surgery.Nuke.DotNetCore
            .OnlyWhenDynamic(() => TestsDirectory.GlobFiles("**/*.csproj").Count > 0)
            .WhenSkipped(DependencyBehavior.Execute)
            .Executes(
+                () => DotNetTasks.DotNetBuild(
+                    s => s
+                       .SetProjectFile(Solution)
+                       .SetDefaultLoggers(LogsDirectory / "test.build.log")
+                       .SetGitVersionEnvironment(GitVersion)
+                       .SetConfiguration("Debug")
+                       .EnableNoRestore()
+                )
+            )
+           .Executes(
                 () =>
                 {
                     EnsureCleanDirectory(TestResultsDirectory);
                     CoverageDirectory.GlobFiles("*.cobertura.xml", "*.opencover.xml", "*.json", "*.info")
                        .Where(x => Guid.TryParse(Path.GetFileName(x)?.Split('.')[0], out var _))
                        .ForEach(DeleteFile);
-                })
-                .Executes(
+                }
+            )
+           .Executes(
                 async () =>
                 {
                     var runsettings = TestsDirectory / "coverlet.runsettings";
@@ -58,13 +69,15 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                     }
 
                     DotNetTasks.DotNetTest(
-                        s => s.SetProjectFile(Solution)
+                        s => s
+                           .SetProjectFile(Solution)
                            .SetDefaultLoggers(LogsDirectory / "test.log")
                            .SetGitVersionEnvironment(GitVersion)
                            .SetConfiguration("Debug")
                            .EnableNoRestore()
+                           .EnableNoBuild()
                            .SetLogger("trx")
-                           // DeterministicSourcePaths being true breaks coverlet!
+                            // DeterministicSourcePaths being true breaks coverlet!
                            .SetProperty("DeterministicSourcePaths", "false")
                            .SetResultsDirectory(TestResultsDirectory)
                            .When(
