@@ -88,9 +88,9 @@ namespace Rocket.Surgery.Nuke
                 return GitVersionTasks.GitVersion(
                         s => s
                            .SetFramework(_frameworkVersion)
-                           .DisableLogOutput()
+                           .DisableProcessLogOutput()
                            .SetUpdateAssemblyInfo(UpdateAssemblyInfo)
-                           .SetToolPath(
+                           .SetProcessToolPath(
                                 ToolPathResolver.GetPackageExecutable(
                                     packageId: "GitVersion.Tool|GitVersion.CommandLine",
                                     packageExecutable: "gitversion.dll|gitversion.exe",

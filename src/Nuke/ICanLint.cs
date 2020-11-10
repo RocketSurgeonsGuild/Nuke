@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using Nuke.Common;
 using Nuke.Common.Execution;
+using Nuke.Common.Tooling;
+using Nuke.Common.Tools.ReSharper;
 using Nuke.Common.ValueInjection;
-using Temp.CleanupCode;
+using static Nuke.Common.Tools.ReSharper.ReSharperTasks;
 
 namespace Rocket.Surgery.Nuke
 {
@@ -31,8 +34,10 @@ namespace Rocket.Surgery.Nuke
            .Executes(
                 () =>
                 {
-                    CleanupCodeTasks.CleanupCode(
+                    Logger.Info(string.Join(", ", LintFiles));
+                    ReSharperCleanupCode(
                         x => x.SetTargetPath(Solution.Path)
+                           .SetProcessToolPath(ToolPathResolver.GetPackageExecutable("JetBrains.ReSharper.GlobalTools", "JetBrains.CommandLine.Products.dll"))
                            .SetProfile(LintProfile)
                            .AddInclude(LintFiles)
                     );

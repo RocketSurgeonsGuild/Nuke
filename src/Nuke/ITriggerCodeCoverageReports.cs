@@ -79,7 +79,7 @@ namespace Rocket.Surgery.Nuke
         /// <returns></returns>
         protected ReportGeneratorSettings WithTag(ReportGeneratorSettings settings)
         {
-            settings = settings.SetToolPath(
+            settings = settings.SetProcessToolPath(
                 ToolPathResolver.GetPackageExecutable(
                     "ReportGenerator",
                     "ReportGenerator.dll",

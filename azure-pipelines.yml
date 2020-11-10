@@ -85,6 +85,7 @@ jobs:
           DotNetSdk:
             - '2.x'
             - '3.x'
+            - '5.0.100-rc.2.20479.15'
 
       - task: DotNetCoreCLI@2
         displayName: 'dotnet tool restore'
