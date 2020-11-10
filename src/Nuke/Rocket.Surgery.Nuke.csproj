@@ -1,23 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-        <NoWarn>$(NoWarn);CS0436</NoWarn>
-    </PropertyGroup>
-    <ItemGroup>
-        <InternalsVisibleTo Include="Rocket.Surgery.Nuke.Tests" />
-        <PackageReference Include="Nuke.Common" />
-        <PackageReference Include="YamlDotNet" />
-        <PackageReference Include="Buildalyzer" />
-        <PackageReference Include="Humanizer.Core" />
-    </ItemGroup>
-    <ItemGroup>
-        <None Include="build/*.*" Pack="true" PackagePath="build" />
-        <None Include="buildMultiTargeting/*.*" Pack="true" PackagePath="buildMultiTargeting" />
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="SyncPackages" />
-    </ItemGroup>
-    <ItemGroup>
-      <EmbeddedResource Include="default.runsettings" />
-    </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <NoWarn>$(NoWarn);CS0436</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Rocket.Surgery.Nuke.Tests" />
+    <PackageReference Include="Nuke.Common" />
+    <PackageReference Include="YamlDotNet" />
+    <PackageReference Include="Buildalyzer" />
+    <PackageReference Include="Humanizer.Core" />
+    <PackageReference Include="Microsoft.Build" />
+    <PackageReference Include="Microsoft.Build.Framework" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="build/*.*" Pack="true" PackagePath="build" />
+    <None Include="buildMultiTargeting/*.*" Pack="true" PackagePath="buildMultiTargeting" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SyncPackages" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="default.runsettings" />
+  </ItemGroup>
 </Project>
