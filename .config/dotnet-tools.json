@@ -7,19 +7,19 @@
             "commands": ["dotnet-outdated"]
         },
         "gitversion.tool": {
-            "version": "5.3.7",
+            "version": "5.5.1",
             "commands": ["dotnet-gitversion"]
         },
         "dotnet-reportgenerator-globaltool": {
-            "version": "4.6.1",
+            "version": "4.8.1",
             "commands": ["reportgenerator"]
         },
         "nuke.globaltool": {
-            "version": "0.24.11",
+            "version": "5.0.0",
             "commands": ["nuke"]
         },
         "codecov.tool": {
-            "version": "1.12.1",
+            "version": "1.12.3",
             "commands": ["codecov"]
         }
     }
