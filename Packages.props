@@ -18,7 +18,7 @@
     <PackageReference Update="Nuke.Common" Version="5.0.2" />
     <PackageReference Update="ReportGenerator" Version="4.8.2" />
     <PackageReference Update="YamlDotNet" Version="9.1.0" />
-    <PackageReference Update="JetBrains.ReSharper.GlobalTools" Version="2020.2.4" />
+    <PackageReference Update="JetBrains.ReSharper.GlobalTools" Version="2020.3.0" />
     <!--        <PackageReference Update="JetBrains.ReSharper.GlobalTools" Version="2020.3.0-eap05"/>-->
     <PackageReference Update="Microsoft.Build" Version="16.8.0" />
     <PackageReference Update="Microsoft.Build.Framework" Version="16.8.0" />
