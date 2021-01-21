@@ -4,15 +4,12 @@ using Nuke.Common.Tools.DocFX;
 using Nuke.Common.ValueInjection;
 using System.IO;
 using System.Threading.Tasks;
+using Nuke.Common.Tooling;
 
 namespace Rocket.Surgery.Nuke
 {
-    public interface IGenerateDocFx : IHaveArtifacts
+    public interface IGenerateDocFx : IHaveDocs
     {
-        public AbsolutePath DocumentationDirectory => NukeBuild.RootDirectory / "docs";
-
-        public AbsolutePath DocumentationsOutputDirectory => ArtifactsDirectory / "docs";
-
         [Parameter("serve the docs")]
         public bool? Serve => EnvironmentInfo.GetVariable<bool?>("Serve")
          ?? ValueInjectionUtility.TryGetValue(() => Serve)
@@ -25,10 +22,10 @@ namespace Rocket.Surgery.Nuke
                 () =>
                 {
                     DocFXTasks.DocFXMetadata(
-                        z => global::Nuke.Common.Tooling.ToolSettingsExtensions.SetProcessWorkingDirectory<DocFXMetadataSettings>(z, (string)DocumentationDirectory)
+                        z => z.SetProcessWorkingDirectory(DocumentationDirectory)
                     );
                     DocFXTasks.DocFXBuild(
-                        z => global::Nuke.Common.Tooling.ToolSettingsExtensions.SetProcessWorkingDirectory<DocFXBuildSettings>(z, (string)DocumentationDirectory)
+                        z => z.SetProcessWorkingDirectory(DocumentationDirectory)
                            .SetOutputFolder(ArtifactsDirectory)
                     );
 
@@ -37,7 +34,7 @@ namespace Rocket.Surgery.Nuke
                         Task.Run(
                             () =>
                                 DocFXTasks.DocFXServe(
-                                    z => global::Nuke.Common.Tooling.ToolSettingsExtensions.SetProcessWorkingDirectory<DocFXServeSettings>(z, (string)DocumentationDirectory)
+                                    z => z.SetProcessWorkingDirectory(DocumentationDirectory)
                                        .SetFolder(DocumentationsOutputDirectory)
                                 )
                         );
@@ -47,7 +44,7 @@ namespace Rocket.Surgery.Nuke
                         {
                             watcher.WaitForChanged(WatcherChangeTypes.All);
                             DocFXTasks.DocFXBuild(
-                                z => global::Nuke.Common.Tooling.ToolSettingsExtensions.SetProcessWorkingDirectory<DocFXBuildSettings>(z, (string)DocumentationDirectory)
+                                z => z.SetProcessWorkingDirectory(DocumentationDirectory)
                                    .SetOutputFolder(ArtifactsDirectory)
                             );
                         }
