@@ -1,6 +1,7 @@
 using System;
 using System.Linq.Expressions;
 using Nuke.Common;
+using Nuke.Common.CI.AzurePipelines;
 using static Nuke.Common.Logger;
 using static Nuke.Common.EnvironmentInfo;
 
@@ -17,7 +18,7 @@ namespace Rocket.Surgery.Nuke.Azp
         /// Gets a value that determines if the build is running on Azure DevOps.
         /// </summary>
         public static Expression<Func<bool>> IsRunningOnAzurePipelines => () =>
-            NukeBuild.Host == HostType.AzurePipelines || Environment.GetEnvironmentVariable("LOGNAME") == "vsts";
+            NukeBuild.Host is AzurePipelines || Environment.GetEnvironmentVariable("LOGNAME") == "vsts";
 
         private Target PrintAzurePipelinesEnvironment => _ => _
            .OnlyWhenStatic(IsRunningOnAzurePipelines)

@@ -11,7 +11,7 @@ namespace Rocket.Surgery.Nuke
     /// Ensures that the given git hooks are defined in the .git directory
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
-    public class EnsureReadmeIsUpdatedAttribute : BuildExtensionAttributeBase, IOnAfterLogo
+    public class EnsureReadmeIsUpdatedAttribute : BuildExtensionAttributeBase, IOnBuildInitialized
     {
         public EnsureReadmeIsUpdatedAttribute(string fileName)
         {
@@ -25,7 +25,7 @@ namespace Rocket.Surgery.Nuke
 
         public string ReadmeFilePath { get; set; }
 
-        public void OnAfterLogo(NukeBuild build, IReadOnlyCollection<ExecutableTarget> executableTargets, IReadOnlyCollection<ExecutableTarget> executionPlan)
+        public void OnBuildInitialized(NukeBuild build, IReadOnlyCollection<ExecutableTarget> executableTargets, IReadOnlyCollection<ExecutableTarget> executionPlan)
         {
             if (NukeBuild.IsLocalBuild && build is IHaveSolution buildSolution)
             {

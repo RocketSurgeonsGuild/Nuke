@@ -17,7 +17,7 @@ namespace Rocket.Surgery.Nuke
     [PublicAPI]
     [UsedImplicitly(ImplicitUseKindFlags.Default)]
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
-    public class DownloadFileAttribute : BuildExtensionAttributeBase, IOnAfterLogo
+    public class DownloadFileAttribute : BuildExtensionAttributeBase, IOnBuildInitialized
     {
         private readonly string _url;
         private readonly AbsolutePath _filePath;
@@ -41,7 +41,7 @@ namespace Rocket.Surgery.Nuke
         public string Type { get; set; } = "File";
 
         /// <inheritdoc />
-        public void OnAfterLogo(
+        public void OnBuildInitialized(
             NukeBuild build,
             IReadOnlyCollection<ExecutableTarget> executableTargets,
             IReadOnlyCollection<ExecutableTarget> executionPlan

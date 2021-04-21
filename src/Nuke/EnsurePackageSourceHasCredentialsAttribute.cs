@@ -15,7 +15,7 @@ namespace Rocket.Surgery.Nuke
     [PublicAPI]
     [UsedImplicitly(ImplicitUseKindFlags.Default)]
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
-    public class EnsurePackageSourceHasCredentialsAttribute : BuildExtensionAttributeBase, IOnBeforeLogo
+    public class EnsurePackageSourceHasCredentialsAttribute : BuildExtensionAttributeBase, IOnBuildCreated
     {
         /// <summary>
         /// Ensures that the package source name has credentials set
@@ -29,7 +29,7 @@ namespace Rocket.Surgery.Nuke
         public string SourceName { get; }
 
         /// <inheritdoc />
-        public void OnBeforeLogo(NukeBuild build, IReadOnlyCollection<ExecutableTarget> executableTargets)
+        public void OnBuildCreated(NukeBuild build, IReadOnlyCollection<ExecutableTarget> executableTargets)
         {
             var settings = Settings.LoadDefaultSettings(NukeBuild.RootDirectory);
             var packageSourceProvider = new PackageSourceProvider(settings);

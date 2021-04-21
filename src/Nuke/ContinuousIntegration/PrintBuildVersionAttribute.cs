@@ -14,10 +14,10 @@ namespace Rocket.Surgery.Nuke.ContinuousIntegration
     [PublicAPI]
     [UsedImplicitly(ImplicitUseKindFlags.Default)]
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
-    public class PrintBuildVersionAttribute : BuildExtensionAttributeBase, IOnAfterLogo
+    public class PrintBuildVersionAttribute : BuildExtensionAttributeBase, IOnBuildInitialized
     {
         /// <inheritdoc />
-        public void OnAfterLogo(
+        public void OnBuildInitialized(
             NukeBuild build,
             IReadOnlyCollection<ExecutableTarget> executableTargets,
             IReadOnlyCollection<ExecutableTarget> executionPlan

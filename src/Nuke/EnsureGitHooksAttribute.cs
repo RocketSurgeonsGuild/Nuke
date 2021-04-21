@@ -13,7 +13,7 @@ namespace Rocket.Surgery.Nuke
     /// Ensures that the given git hooks are defined in the .git directory
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
-    public class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBeforeLogo
+    public class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBuildCreated
     {
         /// <summary>
         /// Ensures that the given git hooks are defined in the .git directory
@@ -32,7 +32,7 @@ namespace Rocket.Surgery.Nuke
         public string[] HookNames { get; }
 
         /// <inheritdoc />
-        public void OnBeforeLogo(NukeBuild build, IReadOnlyCollection<ExecutableTarget> executableTargets)
+        public void OnBuildCreated(NukeBuild build, IReadOnlyCollection<ExecutableTarget> executableTargets)
         {
             if (!NukeBuild.IsLocalBuild)
             {

@@ -34,13 +34,13 @@ namespace Rocket.Surgery.Nuke.GithubActions
             _images = new[] { image }.Concat(images).ToArray();
         }
 
+        public override Type HostType { get; } = typeof(GitHubActions);
         public override string ConfigurationFile => NukeBuild.RootDirectory / ".github" / "workflows" / $"{_name}.yml";
 
         public string[] InvokedTargets { get; set; } = Array.Empty<string>();
         public string[] Parameters { get; set; } = Array.Empty<string>();
 
         public override string IdPostfix => _name;
-        public override HostType HostType => HostType.GitHubActions;
         public override IEnumerable<string> GeneratedFiles => new[] { ConfigurationFile };
         public override IEnumerable<string> RelevantTargetNames => InvokedTargets;
         // public override IEnumerable<string> IrrelevantTargetNames => new string[0];
