@@ -12,7 +12,7 @@ namespace Rocket.Surgery.Nuke
     {
         [Parameter("serve the docs")]
         public bool? Serve => EnvironmentInfo.GetVariable<bool?>("Serve")
-         ?? ValueInjectionUtility.TryGetValue(() => Serve)
+         // ?? ValueInjectionUtility.TryGetValue(() => Serve)
          ?? false;
 
         public Target CoreDocs => _ => _

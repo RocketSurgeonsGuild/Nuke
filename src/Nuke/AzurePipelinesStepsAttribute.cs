@@ -6,6 +6,7 @@ using System.Reflection;
 using JetBrains.Annotations;
 using Nuke.Common;
 using Nuke.Common.CI;
+using Nuke.Common.CI.AzurePipelines;
 using Nuke.Common.Execution;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
@@ -31,7 +32,7 @@ namespace Rocket.Surgery.Nuke
         };
 
         public override string ConfigurationFile => NukeBuild.RootDirectory / "azure-pipelines.nuke.yml";
-        public override HostType HostType => HostType.AzurePipelines;
+        public override Type HostType => typeof(AzurePipelines);
         public override IEnumerable<string> GeneratedFiles => new[] { ConfigurationFile };
         public override IEnumerable<string> RelevantTargetNames => InvokeTargets;
 
