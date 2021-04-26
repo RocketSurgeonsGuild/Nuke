@@ -16,7 +16,7 @@
     <PackageReference Update="GitVersion.Tool" Version="5.6.8" />
     <PackageReference Update="Humanizer.Core" Version="2.8.26" />
     <PackageReference Update="Nuke.Common" Version="5.1.1" />
-    <PackageReference Update="ReportGenerator" Version="4.8.7" />
+    <PackageReference Update="ReportGenerator" Version="4.8.8" />
     <PackageReference Update="YamlDotNet" Version="9.1.4" />
     <PackageReference Update="JetBrains.ReSharper.GlobalTools" Version="2021.1.1" />
     <!--        <PackageReference Update="JetBrains.ReSharper.GlobalTools" Version="2020.3.0-eap05"/>-->
