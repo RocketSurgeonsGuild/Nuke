@@ -31,5 +31,11 @@
     <Folder Include="Properties\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="..\.config\dotnet-tools.json">
+      <Link>dotnet-tools.json</Link>
+    </Content>
+  </ItemGroup>
+
   <Import Project="../src/Nuke/build/Rocket.Surgery.Nuke.targets" />
 </Project>
