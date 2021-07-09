@@ -8,6 +8,7 @@
     <RootNamespace></RootNamespace>
     <IsPackable>False</IsPackable>
     <NoWarn>CS0649;CS0169</NoWarn>
+    <NukeTelemetryVersion>1</NukeTelemetryVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,6 +29,12 @@
 
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\.config\dotnet-tools.json">
+      <Link>dotnet-tools.json</Link>
+    </Content>
   </ItemGroup>
 
   <Import Project="../src/Nuke/build/Rocket.Surgery.Nuke.targets" />

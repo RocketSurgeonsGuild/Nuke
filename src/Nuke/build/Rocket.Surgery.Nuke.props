@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-        <_NukeRoot>$([MSBuild]::GetDirectoryNameOfFileAbove('$(MSBuildProjectFullPath)', '.nuke'))</_NukeRoot>
+        <_NukeRoot>$([MSBuild]::GetDirectoryNameOfFileAbove('$(MSBuildProjectFullPath)', 'Nuke.sln'))</_NukeRoot>
         <_CiFiles Condition="'$(_CiFiles)' == ''"></_CiFiles>
         <_CiFiles Condition="Exists('$(_NukeRoot)\.azure-pipelines.yml')">$(_CiFiles);$(_NukeRoot)\.azure-pipelines.yml</_CiFiles>
         <_CiFiles Condition="Exists('$(_NukeRoot)\azure-pipelines.yml')">$(_CiFiles);$(_NukeRoot)\azure-pipelines.yml</_CiFiles>
