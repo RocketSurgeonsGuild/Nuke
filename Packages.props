@@ -23,7 +23,7 @@
     <PackageReference Update="Microsoft.Build" Version="16.10.0" />
     <PackageReference Update="Microsoft.Build.Framework" Version="16.10.0" />
     <PackageReference Update="Microsoft.Build.Tasks.Core" Version="16.9.0" />
-    <PackageReference Update="Microsoft.Build.Utilities.Core" Version="16.9.0" />
+    <PackageReference Update="Microsoft.Build.Utilities.Core" Version="16.10.0" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Bogus" Version="33.0.2" />
