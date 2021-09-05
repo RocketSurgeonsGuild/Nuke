@@ -1,6 +1,8 @@
 <Project>
     <PropertyGroup>
-        <_NukeRoot>$([MSBuild]::GetDirectoryNameOfFileAbove('$(MSBuildProjectFullPath)', 'Nuke.sln'))</_NukeRoot>
+        <_NukeRoot Condition="'$(_NukeRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove('$(MSBuildProjectFullPath)', 'build.cmd'))</_NukeRoot>
+        <_NukeRoot Condition="'$(_NukeRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove('$(MSBuildProjectFullPath)', 'build.sh'))</_NukeRoot>
+        <_NukeRoot Condition="'$(_NukeRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove('$(MSBuildProjectFullPath)', 'build.ps1'))</_NukeRoot>
         <_CiFiles Condition="'$(_CiFiles)' == ''"></_CiFiles>
         <_CiFiles Condition="Exists('$(_NukeRoot)\.azure-pipelines.yml')">$(_CiFiles);$(_NukeRoot)\.azure-pipelines.yml</_CiFiles>
         <_CiFiles Condition="Exists('$(_NukeRoot)\azure-pipelines.yml')">$(_CiFiles);$(_NukeRoot)\azure-pipelines.yml</_CiFiles>
@@ -29,6 +31,6 @@
         <!--<_GitFiles Condition="Exists('$(_NukeRoot)\')">$(_GitFiles);$(_NukeRoot)\</_GitFiles>-->
 
         <_NukeFiles Condition="'$(_NukeFiles)' == ''"></_NukeFiles>
-        <_NukeFiles>$(_NukeFiles);$(_NukeRoot)\build.ps1;$(_NukeRoot)\build.sh;$(_NukeRoot)\.nuke</_NukeFiles>
+        <_NukeFiles Condition="Exists('$(_NukeRoot)')">$(_NukeFiles);$(_NukeRoot)\build.ps1;$(_NukeRoot)\build.sh;$(_NukeRoot)\.nuke</_NukeFiles>
     </PropertyGroup>
 </Project>
