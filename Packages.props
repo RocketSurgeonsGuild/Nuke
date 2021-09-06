@@ -12,10 +12,10 @@
     <GlobalPackageReference Include="Roslynator.Analyzers" Version="3.2.2" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="Buildalyzer" Version="3.2.1" />
+    <PackageReference Update="Buildalyzer" Version="3.2.3" />
     <PackageReference Update="GitVersion.Tool" Version="5.7.0" />
     <PackageReference Update="Humanizer.Core" Version="2.11.10" />
-    <PackageReference Update="Nuke.Common" Version="5.2.1" />
+    <PackageReference Update="Nuke.Common" Version="5.3.0" />
     <PackageReference Update="ReportGenerator" Version="4.8.12" />
     <PackageReference Update="YamlDotNet" Version="11.2.1" />
     <PackageReference Update="JetBrains.ReSharper.GlobalTools" Version="2021.2.1" />

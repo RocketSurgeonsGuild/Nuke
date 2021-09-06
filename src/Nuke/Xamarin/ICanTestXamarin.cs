@@ -34,7 +34,7 @@ namespace Rocket.Surgery.Nuke.Xamarin
                                .SetGitVersionEnvironment(GitVersion)
                                .SetConfiguration(Configuration)
                                .EnableNoRestore()
-                               .SetLogger("trx")
+                               .SetLoggers("trx")
                                .SetProperty("CollectCoverage", "true")
                                .SetProperty(
                                     "DeterministicSourcePaths",
