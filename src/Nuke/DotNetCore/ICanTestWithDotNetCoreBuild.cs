@@ -75,7 +75,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                            .SetDefaultLoggers(LogsDirectory / "test.log")
                            .SetGitVersionEnvironment(GitVersion)
                            .EnableNoRestore()
-                           .SetLogger("trx")
+                           .SetLoggers("trx")
                            .SetConfiguration(Configuration)
                            .SetNoBuild(true)
                             // DeterministicSourcePaths being true breaks coverlet!

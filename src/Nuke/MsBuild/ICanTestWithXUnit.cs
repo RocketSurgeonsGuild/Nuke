@@ -34,7 +34,7 @@ namespace Rocket.Surgery.Nuke.MsBuild
                                        .SetGitVersionEnvironment(GitVersion)
                                        .SetDefaultLoggers(LogsDirectory / "test.log")
                                        .EnableNoRestore()
-                                       .SetLogger("trx")
+                                       .SetLoggers("trx")
                                        .SetProperty("VSTestResultsDirectory", TestResultsDirectory)
                             );
                     }

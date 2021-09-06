@@ -76,7 +76,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                            .SetConfiguration("Debug")
                            .EnableNoRestore()
                            .EnableNoBuild()
-                           .SetLogger("trx")
+                           .SetLoggers("trx")
                             // DeterministicSourcePaths being true breaks coverlet!
                            .SetProperty("DeterministicSourcePaths", "false")
                            .SetResultsDirectory(TestResultsDirectory)
