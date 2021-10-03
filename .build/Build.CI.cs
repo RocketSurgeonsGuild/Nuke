@@ -49,6 +49,9 @@ public partial class Solution
             new SetupDotNetStep("Use .NET Core 5.0 SDK") {
                 DotNetVersion = "5.0.x"
             },
+            new SetupDotNetStep("Use .NET Core 6.0 SDK") {
+                DotNetVersion = "6.0.x"
+            },
         });
 
         buildJob.Steps.Add(new UsingStep("Publish Coverage")
@@ -88,24 +91,6 @@ public partial class Solution
             If = "always()"
         });
 
-
-        /*
-
-  - publish: "${{ parameters.Artifacts }}/logs/"
-    displayName: Publish Logs
-    artifact: "Logs${{ parameters.Postfix }}"
-    condition: always()
-
-  - publish: ${{ parameters.Coverage }}
-    displayName: Publish Coverage
-    artifact: "Coverage${{ parameters.Postfix }}"
-    condition: always()
-
-  - publish: "${{ parameters.Artifacts }}/nuget/"
-    displayName: Publish NuGet Artifacts
-    artifact: "NuGet${{ parameters.Postfix }}"
-    condition: always()
-        */
         return configuration;
     }
 }

@@ -34,11 +34,11 @@ function ExecSafe([scriptblock] $cmd) {
 }
 
 # If dotnet CLI is installed globally and it matches requested version, use for execution
-if ($null -ne (Get-Command "dotnet" -ErrorAction SilentlyContinue) -and `
-     $(dotnet --version) -and $LASTEXITCODE -eq 0) {
-    $env:DOTNET_EXE = (Get-Command "dotnet").Path
-}
-else {
+#if ($null -ne (Get-Command "dotnet" -ErrorAction SilentlyContinue) -and `
+#     $(dotnet --version) -and $LASTEXITCODE -eq 0) {
+#    $env:DOTNET_EXE = (Get-Command "dotnet").Path
+#}
+#else {
     # Download install script
     $DotNetInstallFile = "$TempDirectory\dotnet-install.ps1"
     New-Item -ItemType Directory -Path $TempDirectory -Force | Out-Null
@@ -50,6 +50,9 @@ else {
         $DotNetGlobal = $(Get-Content $DotNetGlobalFile | Out-String | ConvertFrom-Json)
         if ($DotNetGlobal.PSObject.Properties["sdk"] -and $DotNetGlobal.sdk.PSObject.Properties["version"]) {
             $DotNetVersion = $DotNetGlobal.sdk.version
+            if ($DotNetVersion -match '-') {
+                $DotNetVersion = $DotNetVersion.Substring(0, $DotNetVersion.IndexOf('-'))
+            }
         }
     }
 
@@ -61,7 +64,7 @@ else {
         ExecSafe { & $DotNetInstallFile -InstallDir $DotNetDirectory -Version $DotNetVersion -NoPath }
     }
     $env:DOTNET_EXE = "$DotNetDirectory\dotnet.exe"
-}
+#}
 
 Write-Output "Microsoft (R) .NET Core SDK version $(& $env:DOTNET_EXE --version)"
 
