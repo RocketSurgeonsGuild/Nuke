@@ -11,11 +11,6 @@ namespace Rocket.Surgery.Nuke.Xamarin
         /// </summary>
         public new Target Match => _ => _
            .DependsOn(Clean)
-           .Executes(() => ProcessTasks.StartProcess("", "", "", new Dictionary<string, string>()));
-    }
-
-    public interface ICanFastlane : ICan
-    {
-        
+           .Executes(() => ProcessTasks.StartProcess("fastlane", "", "", new Dictionary<string, string>()));
     }
 }
