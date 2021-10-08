@@ -28,7 +28,7 @@ using Rocket.Surgery.Nuke.GithubActions;
     Enhancements = new[] { nameof(Middleware) }
 )]
 [PrintBuildVersion, PrintCIEnvironment, UploadLogs]
-public partial class Solution
+public partial class NukeSolution
 {
     public static RocketSurgeonGitHubActionsConfiguration Middleware(RocketSurgeonGitHubActionsConfiguration configuration)
     {

@@ -26,7 +26,7 @@ using Rocket.Surgery.Nuke.MsBuild;
 [DotNetVerbosityMapping]
 [MSBuildVerbosityMapping]
 [NuGetVerbosityMapping]
-public partial class Solution : NukeBuild,
+public partial class NukeSolution : NukeBuild,
                         ICanRestoreWithDotNetCore,
                         ICanBuildWithDotNetCore,
                         ICanTestWithDotNetCore,
@@ -47,7 +47,7 @@ public partial class Solution : NukeBuild,
     /// - Microsoft VisualStudio     https://nuke.build/visualstudio
     /// - Microsoft VSCode           https://nuke.build/vscode
     /// </summary>
-    public static int Main() => Execute<Solution>(x => x.Default);
+    public static int Main() => Execute<NukeSolution>(x => x.Default);
 
     [OptionalGitRepository]
     public GitRepository? GitRepository { get; }

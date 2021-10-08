@@ -15,11 +15,16 @@
         <PackageReference Include="GitVersion.Tool" ExcludeAssets="All"/>
         <PackageReference Include="ReportGenerator" ExcludeAssets="All"/>
         <PackageReference Include="JetBrains.ReSharper.GlobalTools" ExcludeAssets="All"/>
-        <ProjectReference Include="../src/Nuke/Rocket.Surgery.Nuke.csproj"/>
-        <PackageReference Include="Microsoft.Build"/>
-        <PackageReference Include="Microsoft.Build.Framework"/>
-        <PackageReference Include="Microsoft.Build.Tasks.Core"/>
-        <PackageReference Include="Microsoft.Build.Utilities.Core"/>
+<!--        <ProjectReference Include="../src/Nuke/Rocket.Surgery.Nuke.csproj"/>-->
+        <Compile Include="../src/Nuke/**/*.cs" Exclude="../src/Nuke/bin/**;../src/Nuke/obj/**" />
+        <PackageReference Include="Nuke.Common" />
+        <PackageReference Include="YamlDotNet" />
+        <PackageReference Include="Buildalyzer" />
+        <PackageReference Include="Humanizer.Core" />
+        <PackageReference Include="Microsoft.Build" />
+        <PackageReference Include="Microsoft.Build.Framework" />
+        <PackageReference Include="Microsoft.Build.Tasks.Core" />
+        <PackageReference Include="Microsoft.Build.Utilities.Core" />
     </ItemGroup>
 
     <ItemGroup>
