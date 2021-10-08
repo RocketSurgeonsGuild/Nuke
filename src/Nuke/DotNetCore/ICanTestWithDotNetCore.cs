@@ -58,14 +58,11 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                     if (!FileExists(runsettings))
                     {
                         runsettings = NukeBuild.TemporaryDirectory / "default.runsettings";
-                        if (!FileExists(runsettings))
-                        {
-                            using var tempFile = File.Open(runsettings, FileMode.CreateNew);
-                            await typeof(ICanTestWithDotNetCore).Assembly
-                                   .GetManifestResourceStream("Rocket.Surgery.Nuke.default.runsettings")!
-                               .CopyToAsync(tempFile)
-                               .ConfigureAwait(false);
-                        }
+                        using var tempFile = File.Open(runsettings, FileMode.CreateNew);
+                        await typeof(ICanTestWithDotNetCore).Assembly
+                                .GetManifestResourceStream("Rocket.Surgery.Nuke.default.runsettings")!
+                            .CopyToAsync(tempFile)
+                            .ConfigureAwait(false);
                     }
 
                     DotNetTasks.DotNetTest(

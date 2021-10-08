@@ -1,22 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <Import Project="../src/Nuke/build/Rocket.Surgery.Nuke.props"/>
+    <Import Project="../src/Nuke/build/Rocket.Surgery.Nuke.props" />
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
-        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <RootNamespace></RootNamespace>
         <IsPackable>False</IsPackable>
         <NoWarn>CS0649;CS0169</NoWarn>
-        <NukeTelemetryVersion>1</NukeTelemetryVersion>
+        <!-- <NukeTelemetryVersion>1</NukeTelemetryVersion> -->
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="GitVersion.Tool" ExcludeAssets="All"/>
-        <PackageReference Include="ReportGenerator" ExcludeAssets="All"/>
-        <PackageReference Include="JetBrains.ReSharper.GlobalTools" ExcludeAssets="All"/>
-<!--        <ProjectReference Include="../src/Nuke/Rocket.Surgery.Nuke.csproj"/>-->
-        <Compile Include="../src/Nuke/**/*.cs" Exclude="../src/Nuke/bin/**;../src/Nuke/obj/**" />
+        <PackageReference Include="GitVersion.Tool" ExcludeAssets="All" />
+        <PackageReference Include="ReportGenerator" ExcludeAssets="All" />
+        <PackageReference Include="JetBrains.ReSharper.GlobalTools" ExcludeAssets="All" />
+        <ProjectReference Include="../src/Nuke/Rocket.Surgery.Nuke.csproj" />
+        <!-- <Compile Include="../src/Nuke/**/*.cs" Exclude="../src/Nuke/bin/**;../src/Nuke/obj/**" /> -->
         <PackageReference Include="Nuke.Common" />
         <PackageReference Include="YamlDotNet" />
         <PackageReference Include="Buildalyzer" />
@@ -28,13 +27,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <NukeSpecificationFiles Include="**\*.json" Exclude="bin\**;obj\**"/>
-        <NukeExternalFiles Include="**\*.*.ext" Exclude="bin\**;obj\**"/>
-        <None Remove="*.csproj.DotSettings;*.ref.*.txt"/>
+        <NukeSpecificationFiles Include="**\*.json" Exclude="bin\**;obj\**" />
+        <NukeExternalFiles Include="**\*.*.ext" Exclude="bin\**;obj\**" />
+        <None Remove="*.csproj.DotSettings;*.ref.*.txt" />
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Properties\"/>
+        <Folder Include="Properties\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -43,5 +42,5 @@
         </Content>
     </ItemGroup>
 
-    <Import Project="../src/Nuke/build/Rocket.Surgery.Nuke.targets"/>
+    <Import Project="../src/Nuke/build/Rocket.Surgery.Nuke.targets" />
 </Project>
