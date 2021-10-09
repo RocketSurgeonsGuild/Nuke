@@ -1,17 +1,3 @@
-/*{
-    "*.cs": [
-        "dotnet format --include",
-        "dotnet jb cleanupcode -p \"Full Cleanup\" --include"
-    ],
-    "*.vb": [
-        "dotnet jb cleanupcode -p \"Full Cleanup\" --include"
-    ],
-    "*.{js,ts,jsx,tsx,json,yml,yaml}": [
-        "prettier --write"
-    ]
-}
- */
-
 function forEachChunk(chunks, callback, chunkSize = 50) {
     var mappedFiles = [];
     var files = chunks.concat();

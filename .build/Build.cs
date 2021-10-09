@@ -17,19 +17,19 @@ using Rocket.Surgery.Nuke.DotNetCore;
 [DotNetVerbosityMapping]
 [MSBuildVerbosityMapping]
 [NuGetVerbosityMapping]
-public partial class NukeSolution : NukeBuild,
-                                    ICanRestoreWithDotNetCore,
-                                    ICanBuildWithDotNetCore,
-                                    ICanTestWithDotNetCore,
-                                    ICanPackWithDotNetCore,
-                                    IHaveDataCollector,
-                                    ICanClean,
-                                    ICanUpdateReadme,
-                                    IGenerateCodeCoverageReport,
-                                    IGenerateCodeCoverageSummary,
-                                    IGenerateCodeCoverageBadges,
-                                    IHaveConfiguration<Configuration>,
-                                    ICanLint
+public partial class Solution : NukeBuild,
+                                ICanRestoreWithDotNetCore,
+                                ICanBuildWithDotNetCore,
+                                ICanTestWithDotNetCore,
+                                ICanPackWithDotNetCore,
+                                IHaveDataCollector,
+                                ICanClean,
+                                ICanUpdateReadme,
+                                IGenerateCodeCoverageReport,
+                                IGenerateCodeCoverageSummary,
+                                IGenerateCodeCoverageBadges,
+                                IHaveConfiguration<Configuration>,
+                                ICanLint
 {
     /// <summary>
     /// Support plugins are available for:
@@ -38,7 +38,7 @@ public partial class NukeSolution : NukeBuild,
     /// - Microsoft VisualStudio     https://nuke.build/visualstudio
     /// - Microsoft VSCode           https://nuke.build/vscode
     /// </summary>
-    public static int Main() => Execute<NukecleanSolution>(x => x.Default);
+    public static int Main() => Execute<Solution>(x => x.Default);
 
     [OptionalGitRepository]
     public GitRepository? GitRepository { get; }
