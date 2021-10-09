@@ -1,21 +1,12 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Nuke.Common;
-using Nuke.Common.CI;
-using Nuke.Common.CI.AzurePipelines;
-using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
 using Nuke.Common.Git;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Tools.MSBuild;
 using Rocket.Surgery.Nuke;
-using Rocket.Surgery.Nuke.ContinuousIntegration;
 using Rocket.Surgery.Nuke.DotNetCore;
-using Rocket.Surgery.Nuke.GithubActions;
-using Rocket.Surgery.Nuke.MsBuild;
 
 [PublicAPI]
 [CheckBuildProjectConfigurations]
@@ -27,18 +18,18 @@ using Rocket.Surgery.Nuke.MsBuild;
 [MSBuildVerbosityMapping]
 [NuGetVerbosityMapping]
 public partial class NukeSolution : NukeBuild,
-                        ICanRestoreWithDotNetCore,
-                        ICanBuildWithDotNetCore,
-                        ICanTestWithDotNetCore,
-                        ICanPackWithDotNetCore,
-                        IHaveDataCollector,
-                        ICanClean,
-                        ICanUpdateReadme,
-                        IGenerateCodeCoverageReport,
-                        IGenerateCodeCoverageSummary,
-                        IGenerateCodeCoverageBadges,
-                        IHaveConfiguration<Configuration>,
-                        ICanLint
+                                    ICanRestoreWithDotNetCore,
+                                    ICanBuildWithDotNetCore,
+                                    ICanTestWithDotNetCore,
+                                    ICanPackWithDotNetCore,
+                                    IHaveDataCollector,
+                                    ICanClean,
+                                    ICanUpdateReadme,
+                                    IGenerateCodeCoverageReport,
+                                    IGenerateCodeCoverageSummary,
+                                    IGenerateCodeCoverageBadges,
+                                    IHaveConfiguration<Configuration>,
+                                    ICanLint
 {
     /// <summary>
     /// Support plugins are available for:
@@ -47,7 +38,7 @@ public partial class NukeSolution : NukeBuild,
     /// - Microsoft VisualStudio     https://nuke.build/visualstudio
     /// - Microsoft VSCode           https://nuke.build/vscode
     /// </summary>
-    public static int Main() => Execute<NukeSolution>(x => x.Default);
+    public static int Main() => Execute<NukecleanSolution>(x => x.Default);
 
     [OptionalGitRepository]
     public GitRepository? GitRepository { get; }
@@ -59,6 +50,7 @@ public partial class NukeSolution : NukeBuild,
        .DependsOn(Pack);
 
     public Target Build => _ => _.Inherit<ICanBuildWithDotNetCore>(x => x.CoreBuild);
+
     public Target Pack => _ => _.Inherit<ICanPackWithDotNetCore>(x => x.CorePack)
        .DependsOn(Clean);
 
