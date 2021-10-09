@@ -15,27 +15,22 @@ jobs:
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
-
         run: echo "$GITHUB_CONTEXT"
       - name: Dump job context
         env:
           JOB_CONTEXT: ${{ toJson(job) }}
         run: echo "$JOB_CONTEXT"
-
       - name: Dump steps context
         env:
           STEPS_CONTEXT: ${{ toJson(steps) }}
         run: echo "$STEPS_CONTEXT"
-
       - name: Dump runner context
         env:
           RUNNER_CONTEXT: ${{ toJson(runner) }}
         run: echo "$RUNNER_CONTEXT"
-
       - uses: actions/checkout@v2.3.4
         with:
           ref: master
-
       - name: Dependabot Commenter
         if: |
             (
@@ -66,6 +61,7 @@ jobs:
                   || startsWith(github.event.pull_request.title, 'Bump FluentAssertions')
                   || startsWith(github.event.pull_request.title, 'Bump xunit')
                   || startsWith(github.event.pull_request.title, 'Bump Microsoft.NET.Test.Sdk')
+                )
               )
             ) && (
                  github.event.pull_request.user.login == 'dependabot[bot]'
