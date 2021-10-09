@@ -21,7 +21,8 @@ module.exports = {
     '*.cs': filenames => {
         return [`echo "'${filenames.join(`' '`)}'" | dotnet format --include -`].concat(cleanupcode(filenames));
     },
-    '*.{vb,csproj,targets,props}': cleanupcode,
+    '*.{csproj,targets,props,xml}': filenames =>
+        forEachChunk(filenames, chunk => [`prettier --write '${chunk.join(`' '`)}'`]),
     '*.{js,ts,jsx,tsx,json,yml,yaml}': filenames =>
         forEachChunk(filenames, chunk => [`prettier --write '${chunk.join(`' '`)}'`]),
 };
