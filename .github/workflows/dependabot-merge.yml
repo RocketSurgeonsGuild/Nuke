@@ -15,29 +15,34 @@ jobs:
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
+
         run: echo "$GITHUB_CONTEXT"
       - name: Dump job context
         env:
           JOB_CONTEXT: ${{ toJson(job) }}
         run: echo "$JOB_CONTEXT"
+
       - name: Dump steps context
         env:
           STEPS_CONTEXT: ${{ toJson(steps) }}
         run: echo "$STEPS_CONTEXT"
+
       - name: Dump runner context
         env:
           RUNNER_CONTEXT: ${{ toJson(runner) }}
         run: echo "$RUNNER_CONTEXT"
+
       - uses: actions/checkout@v2.3.4
         with:
           ref: master
+
       - name: Dependabot Commenter
         if: |
             (
               (
                 github.event.action == 'labeled'
                 && (
-                        github.event.label.name, ':shipit: merge')
+                        contains(github.event.label.name, ':shipit: merge')
                      || contains(github.event.label.name, 'javascript')
                      || contains(github.event.label.name, 'github-actions')
                    )
@@ -70,6 +75,7 @@ jobs:
         with:
           github_token: ${{ secrets.RSG_BOT_TOKEN }}
           config_file: .github/label-commenter-dependabot.yml
+
       - name: GitHub Automerge
         if: |
           (
@@ -82,6 +88,7 @@ jobs:
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           merge-method: "SQUASH"
+
       - name: GitHub Remove Labels
         if: |
           github.event.action == 'closed'
