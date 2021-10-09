@@ -53,7 +53,7 @@ jobs:
                 (
                   (
                         contains(github.event.pull_request.labels.*.name, ':shipit: merge')
-                     || contains(github.event.pull_request.labels.*.name, ''javascript'')
+                     || contains(github.event.pull_request.labels.*.name, 'javascript')
                      || contains(github.event.pull_request.labels.*.name, 'github-actions')
                   )
                   || startsWith(github.event.pull_request.title, 'Bump JetBrains.ReSharper.CommandLineTools')
