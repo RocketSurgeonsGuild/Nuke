@@ -22,18 +22,20 @@ function forEachChunk(chunks, callback, chunkSize = 50) {
     return mappedFiles;
 }
 
+function cleanupcode(filenames) {
+    var sln = require('./.nuke/parameters.json').Solution;
+    return forEachChunk(filenames, chunk => [
+        `dotnet jb cleanupcode ${sln} "--profile=Full Cleanup" "--disable-settings-layers=GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal" "--include=${chunk.join(
+            ';'
+        )}"`,
+    ]);
+}
+
 module.exports = {
     '*.cs': filenames => {
-        return [`echo "'${filenames.join(`' '`)}'" | dotnet format --include -`];
+        return [`echo "'${filenames.join(`' '`)}'" | dotnet format --include -`].concat(cleanupcode(filenames));
     },
-    '*.{cs,vb,csproj,targets,props}': filenames => {
-        var sln = require('./.nuke/parameters.json').Solution;
-        return forEachChunk(filenames, chunk => [
-            `dotnet jb cleanupcode ${sln} "--profile=Full Cleanup" "--disable-settings-layers=GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal" "--include=${chunk.join(
-                ';'
-            )}"`,
-        ]);
-    },
+    '*.{vb,csproj,targets,props}': cleanupcode,
     '*.{js,ts,jsx,tsx,json,yml,yaml}': filenames =>
         forEachChunk(filenames, chunk => [`prettier --write '${chunk.join(`' '`)}'`]),
 };
