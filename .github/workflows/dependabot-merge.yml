@@ -70,7 +70,7 @@ jobs:
         with:
           github_token: ${{ secrets.RSG_BOT_TOKEN }}
           config_file: .github/label-commenter-dependabot.yml
-      - name: Github Automerge
+      - name: GitHub Automerge
         if: |
           (
             github.event.label.name == ':shipit: merge'
@@ -82,3 +82,13 @@ jobs:
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           merge-method: "SQUASH"
+      - name: GitHub Remove Labels
+        if: |
+          github.event.action == 'closed'
+        uses: actions-ecosystem/action-remove-labels@v1
+        with:
+          labels: |
+              :shipit: merge
+              github-actions
+              javascript
+              .NET
