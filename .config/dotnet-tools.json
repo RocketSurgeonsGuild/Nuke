@@ -21,6 +21,14 @@
         "codecov.tool": {
             "version": "1.13.0",
             "commands": ["codecov"]
+        },
+        "jetbrains.resharper.globaltools": {
+            "version": "2021.3.0-eap02",
+            "commands": ["jb"]
+        },
+        "dotnet-format": {
+            "version": "5.1.225507",
+            "commands": ["dotnet-format"]
         }
     }
 }

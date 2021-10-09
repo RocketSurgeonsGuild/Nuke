@@ -1,11 +1,11 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using Nuke.Common;
+﻿using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Utilities.Collections;
+using System;
+using System.IO;
+using System.Linq;
 using static Nuke.Common.IO.FileSystemTasks;
 
 namespace Rocket.Surgery.Nuke.DotNetCore
@@ -58,14 +58,11 @@ namespace Rocket.Surgery.Nuke.DotNetCore
                     if (!FileExists(runsettings))
                     {
                         runsettings = NukeBuild.TemporaryDirectory / "default.runsettings";
-                        if (!FileExists(runsettings))
-                        {
-                            using var tempFile = File.Open(runsettings, FileMode.CreateNew);
-                            await typeof(ICanTestWithDotNetCore).Assembly
-                                   .GetManifestResourceStream("Rocket.Surgery.Nuke.default.runsettings")!
-                               .CopyToAsync(tempFile)
-                               .ConfigureAwait(false);
-                        }
+                        using var tempFile = File.Open(runsettings, FileMode.OpenOrCreate);
+                        await typeof(ICanTestWithDotNetCore).Assembly
+                           .GetManifestResourceStream("Rocket.Surgery.Nuke.default.runsettings")!
+                           .CopyToAsync(tempFile)
+                           .ConfigureAwait(false);
                     }
 
                     DotNetTasks.DotNetTest(

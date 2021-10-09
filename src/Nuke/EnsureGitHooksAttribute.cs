@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Humanizer;
 using Nuke.Common;
 using Nuke.Common.Execution;
 using Nuke.Common.Tooling;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using static Nuke.Common.IO.FileSystemTasks;
 
 namespace Rocket.Surgery.Nuke
@@ -21,7 +21,8 @@ namespace Rocket.Surgery.Nuke
         public EnsureGitHooksAttribute(params GitHook[] hookNames)
         {
 #pragma warning disable CA1307, CA1308
-            HookNames = hookNames.Select(x => x.ToString().Humanize().Replace(" ", "_").Dasherize().ToLowerInvariant())
+            HookNames = hookNames
+               .Select(x => x.ToString().Humanize().Replace(" ", "_").Dasherize().ToLowerInvariant())
                .ToArray();
 #pragma warning restore CA1307, CA1308
         }
@@ -40,7 +41,8 @@ namespace Rocket.Surgery.Nuke
             }
             // We only care on local machines
 
-            if (HookNames.Any(hook => !FileExists(NukeBuild.RootDirectory / $".git/hooks/{hook}")))
+            if (HookNames.Any(hook => !FileExists(NukeBuild.RootDirectory / $".git/hooks/{hook}"))
+             || !DirectoryExists(NukeBuild.RootDirectory / "node_modules"))
             {
                 Logger.Info("Git hooks not found...");
 
