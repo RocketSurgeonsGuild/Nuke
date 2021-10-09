@@ -16,12 +16,6 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
 
-      - name: 🔨 Use .NET Core SDK
-        uses: actions/setup-dotnet@v1.8.2
-        with:
-          dotnet-version: '6.0.x'
-          include-prerelease: true
-
       - uses: nuget/setup-nuget@v1
         with:
           nuget-version: '5.x'
