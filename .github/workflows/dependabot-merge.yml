@@ -36,11 +36,11 @@ jobs:
             (
               (
                 github.event.action == 'labeled'
-                && contains([
-                    ':shipit: merge',
-                    'javascript',
-                    'github-actions',
-                  ], github.event.label.name)
+                && (
+                        github.event.label.name, ':shipit: merge')
+                     || contains(github.event.label.name, 'javascript')
+                     || contains(github.event.label.name, 'github-actions')
+                   )
               )
               ||
               (
