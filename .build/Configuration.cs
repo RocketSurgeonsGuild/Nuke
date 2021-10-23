@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using Nuke.Common.Tooling;
 
-#pragma warning disable CA1050, CA2225
+#pragma warning disable CA1050, CA1724, CA2225
 
 [TypeConverter(typeof(TypeConverter<Configuration>))]
 public class Configuration : Enumeration
