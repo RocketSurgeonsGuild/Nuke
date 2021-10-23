@@ -1,36 +1,40 @@
-﻿using System.Linq;
-using Nuke.Common;
-using Nuke.Common.IO;
+﻿using Nuke.Common.IO;
 using Nuke.Common.Tools.ReportGenerator;
 
-namespace Rocket.Surgery.Nuke
+namespace Rocket.Surgery.Nuke;
+
+/// <summary>
+///     Generates a code coverage badges
+/// </summary>
+public interface IGenerateCodeCoverageBadges : ITriggerCodeCoverageReports, IGenerate
 {
     /// <summary>
-    /// Generates a code coverage badges
+    ///     The directory where the badges will be places
     /// </summary>
-    public interface IGenerateCodeCoverageBadges : ITriggerCodeCoverageReports, IGenerate
-    {
-        /// <summary>
-        /// The directory where the badges will be places
-        /// </summary>
-        public AbsolutePath CoverageBadgeDirectory => CoverageDirectory / "badges";
+    public AbsolutePath CoverageBadgeDirectory => CoverageDirectory / "badges";
 
-        /// <summary>
-        /// Generate a code coverage badges for the given reports
-        /// </summary>
-        public Target Generate_Code_Coverage_Badges => _ => _
-           .After(Generate_Code_Coverage_Report_Cobertura)
-           .TriggeredBy(Trigger_Code_Coverage_Reports)
-           .Unlisted()
-           .OnlyWhenDynamic(() => InputReports.Any())
-           .Executes(
-                () => ReportGeneratorTasks.ReportGenerator(
-                    s => WithTag(s)
-                        // .SetToolPath(toolPath)
-                       .SetReports(InputReports)
-                       .SetTargetDirectory(CoverageBadgeDirectory)
-                       .SetReportTypes(ReportTypes.Badges)
-                )
-            );
-    }
+    [Obsolete("Legacy target has been renamed to GenerateCodeCoverageBadges")]
+    // ReSharper disable once InconsistentNaming
+#pragma warning disable CS1591, CA1707
+    public Target Generate_Code_Coverage_Badges =>
+        _ => _.DependsOn(GenerateCodeCoverageBadges).Unlisted();
+#pragma warning restore CS1591, CA1707
+
+    /// <summary>
+    ///     Generate a code coverage badges for the given reports
+    /// </summary>
+    public Target GenerateCodeCoverageBadges => _ => _
+                                                    .After(GenerateCodeCoverageReportCobertura)
+                                                    .TriggeredBy(TriggerCodeCoverageReports)
+                                                    .Unlisted()
+                                                    .OnlyWhenDynamic(() => InputReports.Any())
+                                                    .Executes(
+                                                         () => ReportGeneratorTasks.ReportGenerator(
+                                                             s => WithTag(s)
+                                                                  // .SetToolPath(toolPath)
+                                                                 .SetReports(InputReports)
+                                                                 .SetTargetDirectory(CoverageBadgeDirectory)
+                                                                 .SetReportTypes(ReportTypes.Badges)
+                                                         )
+                                                     );
 }

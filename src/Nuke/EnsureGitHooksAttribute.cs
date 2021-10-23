@@ -1,65 +1,59 @@
-using Humanizer;
-using Nuke.Common;
 using Nuke.Common.Execution;
 using Nuke.Common.Tooling;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using static Nuke.Common.IO.FileSystemTasks;
 
-namespace Rocket.Surgery.Nuke
+#pragma warning disable CA1019
+#pragma warning disable CA1308
+namespace Rocket.Surgery.Nuke;
+
+/// <summary>
+///     Ensures that the given git hooks are defined in the .git directory
+/// </summary>
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
+public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBuildCreated
 {
     /// <summary>
-    /// Ensures that the given git hooks are defined in the .git directory
+    ///     Ensures that the given git hooks are defined in the .git directory
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
-    public class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBuildCreated
+    public EnsureGitHooksAttribute(params GitHook[] hookNames)
     {
-        /// <summary>
-        /// Ensures that the given git hooks are defined in the .git directory
-        /// </summary>
-        public EnsureGitHooksAttribute(params GitHook[] hookNames)
+        HookNames = hookNames
+                   .Select(x => x.ToString().Humanize().Replace(" ", "_", StringComparison.Ordinal).Dasherize().ToLowerInvariant())
+                   .ToArray();
+    }
+
+    /// <summary>
+    ///     The hooks that were asked for.
+    /// </summary>
+    public string[] HookNames { get; }
+
+    /// <inheritdoc />
+    public void OnBuildCreated(NukeBuild build, IReadOnlyCollection<ExecutableTarget> executableTargets)
+    {
+        if (!NukeBuild.IsLocalBuild)
         {
-#pragma warning disable CA1307, CA1308
-            HookNames = hookNames
-               .Select(x => x.ToString().Humanize().Replace(" ", "_").Dasherize().ToLowerInvariant())
-               .ToArray();
-#pragma warning restore CA1307, CA1308
+            return;
+        }
+        // We only care on local machines
+
+        if (HookNames.Any(hook => !FileExists(NukeBuild.RootDirectory / $".git/hooks/{hook}"))
+         || !DirectoryExists(NukeBuild.RootDirectory / "node_modules"))
+        {
+            Logger.Info("Git hooks not found...");
+
+            if (FileExists(NukeBuild.RootDirectory / "package.json"))
+            {
+                Logger.Info("package.json found running npm install to see if that installs any hooks");
+                ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npm"), "install").AssertWaitForExit()
+                            .AssertZeroExitCode();
+            }
         }
 
-        /// <summary>
-        /// The hookes that were asked for.
-        /// </summary>
-        public string[] HookNames { get; }
-
-        /// <inheritdoc />
-        public void OnBuildCreated(NukeBuild build, IReadOnlyCollection<ExecutableTarget> executableTargets)
+        foreach (var hook in HookNames)
         {
-            if (!NukeBuild.IsLocalBuild)
+            if (!FileExists(NukeBuild.RootDirectory / $".git/hooks/{hook}"))
             {
-                return;
-            }
-            // We only care on local machines
-
-            if (HookNames.Any(hook => !FileExists(NukeBuild.RootDirectory / $".git/hooks/{hook}"))
-             || !DirectoryExists(NukeBuild.RootDirectory / "node_modules"))
-            {
-                Logger.Info("Git hooks not found...");
-
-                if (FileExists(NukeBuild.RootDirectory / "package.json"))
-                {
-                    Logger.Info("package.json found running npm install to see if that installs any hooks");
-                    ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npm"), "install").AssertWaitForExit()
-                       .AssertZeroExitCode();
-                }
-            }
-
-            foreach (var hook in HookNames)
-            {
-                if (!FileExists(NukeBuild.RootDirectory / $".git/hooks/{hook}"))
-                {
-                    Logger.Info($"Was unable to install {hook} hook.");
-                }
+                Logger.Info($"Was unable to install {hook} hook.");
             }
         }
     }

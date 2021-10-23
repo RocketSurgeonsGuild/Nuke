@@ -1,10 +1,9 @@
-using System.Collections.Generic;
-using System.Linq;
 using Nuke.Common.CI.GitHubActions;
-using Rocket.Surgery.Nuke;
 using Rocket.Surgery.Nuke.ContinuousIntegration;
 using Rocket.Surgery.Nuke.DotNetCore;
 using Rocket.Surgery.Nuke.GithubActions;
+
+#pragma warning disable CA1050
 
 [GitHubActionsSteps(
     "ci",
@@ -20,11 +19,11 @@ using Rocket.Surgery.Nuke.GithubActions;
     NonEntryTargets = new[]
     {
         nameof(ICIEnvironment.CIEnvironment),
-        nameof(ITriggerCodeCoverageReports.Trigger_Code_Coverage_Reports),
-        nameof(ITriggerCodeCoverageReports.Generate_Code_Coverage_Report_Cobertura),
-        nameof(IGenerateCodeCoverageBadges.Generate_Code_Coverage_Badges),
-        nameof(IGenerateCodeCoverageReport.Generate_Code_Coverage_Report),
-        nameof(IGenerateCodeCoverageSummary.Generate_Code_Coverage_Summary),
+        nameof(ITriggerCodeCoverageReports.TriggerCodeCoverageReports),
+        nameof(ITriggerCodeCoverageReports.GenerateCodeCoverageReportCobertura),
+        nameof(IGenerateCodeCoverageBadges.GenerateCodeCoverageBadges),
+        nameof(IGenerateCodeCoverageReport.GenerateCodeCoverageReport),
+        nameof(IGenerateCodeCoverageSummary.GenerateCodeCoverageSummary),
         nameof(Default)
     },
     ExcludedTargets = new[] { nameof(ICanClean.Clean), nameof(ICanRestoreWithDotNetCore.DotnetToolRestore) },

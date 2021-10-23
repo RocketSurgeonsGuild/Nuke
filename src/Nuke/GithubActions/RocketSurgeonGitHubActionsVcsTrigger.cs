@@ -1,51 +1,73 @@
 ﻿using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
 using Nuke.Common.Tooling;
-using Nuke.Common.Utilities;
 using Nuke.Common.Utilities.Collections;
 
-namespace Rocket.Surgery.Nuke.GithubActions
+#pragma warning disable CA1819
+namespace Rocket.Surgery.Nuke.GithubActions;
+
+/// <summary>
+///     A detailed trigger for version control
+/// </summary>
+public class RocketSurgeonGitHubActionsVcsTrigger : GitHubActionsDetailedTrigger
 {
-    public class RocketSurgeonGitHubActionsVcsTrigger : GitHubActionsDetailedTrigger
+    /// <summary>
+    ///     The kind of the trigger
+    /// </summary>
+    public GitHubActionsTrigger Kind { get; set; }
+
+    /// <summary>
+    ///     The branches
+    /// </summary>
+    public string[] Branches { get; set; } = Array.Empty<string>();
+
+    /// <summary>
+    ///     The Tags
+    /// </summary>
+    public string[] Tags { get; set; } = Array.Empty<string>();
+
+    /// <summary>
+    ///     The included paths
+    /// </summary>
+    public string[] IncludePaths { get; set; } = Array.Empty<string>();
+
+    /// <summary>
+    ///     The excluded paths
+    /// </summary>
+    public string[] ExcludePaths { get; set; } = Array.Empty<string>();
+
+    /// <inheritdoc />
+    public override void Write(CustomFileWriter writer)
     {
-        public GitHubActionsTrigger Kind { get; set; }
-        public string[] Branches { get; set; }
-        public string[] Tags { get; set; }
-        public string[] IncludePaths { get; set; }
-        public string[] ExcludePaths { get; set; }
+        writer.WriteLine(Kind.GetValue() + ":");
 
-        public override void Write(CustomFileWriter writer)
+        using (writer.Indent())
         {
-            writer.WriteLine(Kind.GetValue() + ":");
-
-            using (writer.Indent())
+            if (Branches.Length > 0)
             {
-                if (Branches.Length > 0)
+                writer.WriteLine("branches:");
+                using (writer.Indent())
                 {
-                    writer.WriteLine("branches:");
-                    using (writer.Indent())
-                    {
-                        Branches.ForEach(x => writer.WriteLine($"- {x}"));
-                    }
+                    Branches.ForEach(x => writer.WriteLine($"- {x}"));
                 }
+            }
 
-                if (Tags.Length > 0)
+            if (Tags.Length > 0)
+            {
+                writer.WriteLine("tags:");
+                using (writer.Indent())
                 {
-                    writer.WriteLine("tags:");
-                    using (writer.Indent())
-                    {
-                        Tags.ForEach(x => writer.WriteLine($"- {x}"));
-                    }
+                    Tags.ForEach(x => writer.WriteLine($"- {x}"));
                 }
+            }
 
-                if (IncludePaths.Length > 0 || ExcludePaths.Length > 0)
+            if (IncludePaths.Length > 0 || ExcludePaths.Length > 0)
+            {
+                writer.WriteLine("paths:");
+                using (writer.Indent())
                 {
-                    writer.WriteLine("paths:");
-                    using (writer.Indent())
-                    {
-                        IncludePaths.ForEach(x => writer.WriteLine($"- {x}"));
-                        ExcludePaths.ForEach(x => writer.WriteLine($"- !{x}"));
-                    }
+                    IncludePaths.ForEach(x => writer.WriteLine($"- {x}"));
+                    ExcludePaths.ForEach(x => writer.WriteLine($"- !{x}"));
                 }
             }
         }

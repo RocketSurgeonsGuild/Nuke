@@ -1,57 +1,74 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using Humanizer;
-using Nuke.Common.CI.GitHubActions.Configuration;
-using Nuke.Common.Utilities;
+﻿using System.Reflection;
 using Nuke.Common.Utilities.Collections;
 
-namespace Rocket.Surgery.Nuke.GithubActions
+// ReSharper disable MemberCanBeProtected.Global
+#pragma warning disable CA1308
+#pragma warning disable CA2227
+namespace Rocket.Surgery.Nuke.GithubActions;
+
+/// <summary>
+///     A step that runs a given action
+/// </summary>
+public class UsingStep : BaseGitHubActionsStep
 {
-    public class UsingStep : BaseGitHubActionsStep
+    /// <summary>
+    ///     The constructor with the display name
+    /// </summary>
+    /// <param name="name"></param>
+    public UsingStep(string name) : base(name)
     {
-        public UsingStep(string name) : base(name)
+    }
+
+    /// <summary>
+    ///     The action to use.
+    /// </summary>
+    public string? Uses { get; set; }
+
+    /// <summary>
+    ///     The properties to use with the action
+    /// </summary>
+    public Dictionary<string, string> With { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>
+    ///     Defines the properties to include with the step
+    /// </summary>
+    /// <param name="transformName"></param>
+    protected void WithProperties(Func<string, string> transformName)
+    {
+        foreach (var property in GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                                          .Where(z => z.CanRead && z.CanWrite && z.DeclaringType == GetType()))
         {
-        }
+            var value = property.GetValue(this);
+            if (value == null) continue;
 
-        public string Uses { get; set; }
-        public Dictionary<string, string> With { get; set; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-        protected void WithProperties(Func<string, string> transformName)
-        {
-            foreach (var property in GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
-               .Where(z => z.CanRead && z.CanWrite && z.DeclaringType == GetType()))
-            {
-                var value = property.GetValue(this);
-                if (value == null) continue;
-
-                With.Add(transformName(property.Name), value switch
+            With?.Add(
+                transformName(property.Name), value switch
                 {
-                    null => "",
-                    bool b => b.ToString().ToLowerInvariant(),
+                    null     => "",
+                    bool b   => b.ToString().ToLowerInvariant(),
                     string s => s,
-                    _ => value.ToString()
-                });
-            }
+                    _        => value.ToString() ?? ""
+                }
+            );
         }
+    }
 
 
-        public override void Write(CustomFileWriter writer)
+    /// <inheritdoc />
+    public override void Write(CustomFileWriter writer)
+    {
+        base.Write(writer);
+
+        using (writer.Indent())
         {
-            base.Write(writer);
+            writer.WriteLine($"uses: {Uses}");
 
-            using (writer.Indent())
+            if (With.Any())
             {
-                writer.WriteLine($"uses: {Uses}");
-
-                if (With?.Any() == true)
+                writer.WriteLine("with:");
+                using (writer.Indent())
                 {
-                    writer.WriteLine("with:");
-                    using (writer.Indent())
-                    {
-                        With.ForEach(x => writer.WriteLine($"{x.Key}: '{x.Value}'"));
-                    }
+                    With.ForEach(x => writer.WriteLine($"{x.Key}: '{x.Value}'"));
                 }
             }
         }

@@ -1,17 +1,17 @@
-using Nuke.Common;
+// ReSharper disable once CheckNamespace
+// ReSharper disable InconsistentNaming
 
-#pragma warning disable 1591
+namespace Rocket.Surgery.Nuke.Xamarin;
 
-
-namespace Rocket.Surgery.Nuke.Xamarin
+/// <summary>
+///     Targeting an ios platform
+/// </summary>
+public interface IHaveiOSTargetPlatform : IHave
 {
-    public interface IHaveiOSTargetPlatform : IHave
-    {
-        /// <summary>
-        /// Gets the target platform.
-        /// </summary>
-        /// <value>The target platform.</value>
-        [Parameter("The target platform for iOS")]
-        public TargetPlatform iOSTargetPlatform { get; }
-    }
+    /// <summary>
+    ///     Gets the target platform.
+    /// </summary>
+    /// <value>The target platform.</value>
+    [Parameter("The target platform for iOS")]
+    public TargetPlatform iOSTargetPlatform { get; }
 }

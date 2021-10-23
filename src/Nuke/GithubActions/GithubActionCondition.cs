@@ -1,27 +1,69 @@
-namespace Rocket.Surgery.Nuke.GithubActions
+#pragma warning disable CA2225
+namespace Rocket.Surgery.Nuke.GithubActions;
+
+/// <summary>
+///     Defines an action condition
+/// </summary>
+[PublicAPI]
+public class GithubActionCondition
 {
-    public class GithubActionCondition
+    /// <summary>
+    ///     The default constructor
+    /// </summary>
+    /// <param name="condition"></param>
+    public GithubActionCondition(string condition)
     {
-        public GithubActionCondition(string condition)
-        {
-            Condition = condition;
-        }
-        public string Condition { get; }
-        public static implicit operator string(GithubActionCondition condition)
-        {
-            return condition?.Condition;
-        }
+        Condition = condition;
+    }
 
-        public static implicit operator GithubActionCondition(string condition)
-        {
-            return new GithubActionCondition(condition);
-        }
+    /// <summary>
+    ///     The condition expression
+    /// </summary>
+    public string? Condition { get; }
 
-        public static GithubActionCondition Success = new GithubActionCondition("success()");
-        public static GithubActionCondition Always = new GithubActionCondition("always()");
-        public static GithubActionCondition Cancelled = new GithubActionCondition("cancelled()");
-        public static GithubActionCondition Failure = new GithubActionCondition("failure()");
+    /// <summary>
+    ///     Convert the condition expression to a string.
+    /// </summary>
+    /// <param name="condition"></param>
+    /// <returns></returns>
+    public static implicit operator string?(GithubActionCondition? condition)
+    {
+        return condition?.Condition;
+    }
 
-        public override string ToString() => Condition;
+    /// <summary>
+    ///     Convert an expression string into a GithubActionCondition
+    /// </summary>
+    /// <param name="condition"></param>
+    /// <returns></returns>
+    public static implicit operator GithubActionCondition(string condition)
+    {
+        return new GithubActionCondition(condition);
+    }
+
+    /// <summary>
+    ///     The success condition
+    /// </summary>
+    public static GithubActionCondition Success { get; } = new("success()");
+
+    /// <summary>
+    ///     The always condition
+    /// </summary>
+    public static GithubActionCondition Always { get; } = new("always()");
+
+    /// <summary>
+    ///     The cancelled condition
+    /// </summary>
+    public static GithubActionCondition Cancelled { get; } = new("cancelled()");
+
+    /// <summary>
+    ///     The failure condition
+    /// </summary>
+    public static GithubActionCondition Failure { get; } = new("failure()");
+
+    /// <inheritdoc />
+    public override string? ToString()
+    {
+        return Condition;
     }
 }

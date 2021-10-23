@@ -1,19 +1,26 @@
 using Nuke.Common.CI;
 using Nuke.Common.CI.AzurePipelines.Configuration;
-using Nuke.Common.Utilities;
 
-#pragma warning disable 1591
+namespace Rocket.Surgery.Nuke.Azp;
 
-namespace Rocket.Surgery.Nuke.Azp
+/// <summary>
+///     The azure pipelines parameter name
+/// </summary>
+public class AzurePipelinesParameter : ConfigurationEntity
 {
-    public class AzurePipelinesParameter : ConfigurationEntity
-    {
-        public string Name { get; set; } = null!;
-        public string Default { get; set; } = null!;
+    /// <summary>
+    ///     The parameter name
+    /// </summary>
+    public string Name { get; set; } = null!;
 
-        public override void Write(CustomFileWriter writer)
-        {
-            using var a = writer.WriteBlock($"{Name}: '{Default}'");
-        }
+    /// <summary>
+    ///     The default name
+    /// </summary>
+    public string Default { get; set; } = null!;
+
+    /// <inheritdoc />
+    public override void Write(CustomFileWriter writer)
+    {
+        using var a = writer.WriteBlock($"{Name}: '{Default}'");
     }
 }

@@ -2,8 +2,8 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
     <NoWarn>$(NoWarn);CS0436</NoWarn>
-    <!-- This has to be turned on because in Nuke.Common.props it is turned off to false, which causes build failures when writing to the same dll multiple times with cross targeting -->
-    <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+      <!-- This has to be turned on because in Nuke.Common.props it is turned off to false, which causes build failures when writing to the same dll multiple times with cross targeting -->
+      <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="Rocket.Surgery.Nuke.Tests" />
@@ -21,9 +21,10 @@
     <None Include="buildMultiTargeting/*.*" Pack="true" PackagePath="buildMultiTargeting" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="SyncPackages" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="default.runsettings" />
+    <Using Include="JetBrains.Annotations" />
+    <Using Include="Humanizer" />
+    <Using Include="Nuke.Common" />
+    <Using Include="Nuke.Common.Utilities" />
   </ItemGroup>
 </Project>

@@ -1,32 +1,33 @@
-using System;
-using JetBrains.Annotations;
-using Nuke.Common;
 using Nuke.Common.CI.AzurePipelines;
 using Nuke.Common.Execution;
 using Nuke.Common.IO;
 
-namespace Rocket.Surgery.Nuke.ContinuousIntegration
+// ReSharper disable SuspiciousTypeConversion.Global
+
+namespace Rocket.Surgery.Nuke.ContinuousIntegration;
+
+/// <summary>
+///     Automagically upload logs in supported environments
+/// </summary>
+[PublicAPI]
+[UsedImplicitly(ImplicitUseKindFlags.Default)]
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
+public sealed class UploadLogsAttribute : BuildExtensionAttributeBase, IOnBuildFinished
 {
-    [PublicAPI]
-    [UsedImplicitly(ImplicitUseKindFlags.Default)]
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
-    public class UploadLogsAttribute : BuildExtensionAttributeBase, IOnBuildFinished
+    /// <inheritdoc />
+    public void OnBuildFinished(NukeBuild build)
     {
-        /// <inheritdoc />
-        public void OnBuildFinished(NukeBuild build)
+        if (build is IHaveOutputLogs logs)
         {
-            if (build is IHaveOutputLogs logs)
+            foreach (var item in logs.LogsDirectory.GlobFiles("**/*"))
             {
-                foreach (var item in logs.LogsDirectory.GlobFiles("**/*"))
-                {
-                    UploadFile(item);
-                }
+                UploadFile(item);
             }
         }
+    }
 
-        void UploadFile(AbsolutePath path)
-        {
-            AzurePipelines.Instance?.WriteCommand("task.uploadfile", path);
-        }
+    private static void UploadFile(AbsolutePath path)
+    {
+        AzurePipelines.Instance?.WriteCommand("task.uploadfile", path);
     }
 }

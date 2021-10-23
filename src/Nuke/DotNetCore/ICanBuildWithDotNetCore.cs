@@ -1,33 +1,31 @@
-﻿using Nuke.Common;
-using Nuke.Common.Tools.DotNet;
+﻿using Nuke.Common.Tools.DotNet;
 
-namespace Rocket.Surgery.Nuke.DotNetCore
+namespace Rocket.Surgery.Nuke.DotNetCore;
+
+/// <summary>
+///     Adds a task to run `dotnet build` with structured logging and gitversion configuration
+/// </summary>
+public interface ICanBuildWithDotNetCore : IHaveRestoreTarget,
+                                           IHaveConfiguration,
+                                           IHaveBuildTarget,
+                                           IHaveSolution,
+                                           IHaveOutputLogs,
+                                           IHaveGitVersion,
+                                           ICan
 {
     /// <summary>
-    /// Adds a task to run `dotnet build` with structured logging and gitversion configuration
+    ///     dotnet build
     /// </summary>
-    public interface ICanBuildWithDotNetCore : IHaveRestoreTarget,
-                                               IHaveConfiguration,
-                                               IHaveBuildTarget,
-                                               IHaveSolution,
-                                               IHaveOutputLogs,
-                                               IHaveGitVersion,
-                                               ICan
-    {
-        /// <summary>
-        /// dotnet build
-        /// </summary>
-        public Target CoreBuild => _ => _
-           .Description("Builds all the projects.")
-           .DependsOn(Restore)
-           .Executes(
-                () => DotNetTasks.DotNetBuild(
-                    s => s.SetProjectFile(Solution)
-                       .SetDefaultLoggers(LogsDirectory / "build.log")
-                       .SetGitVersionEnvironment(GitVersion)
-                       .SetConfiguration(Configuration)
-                       .EnableNoRestore()
-                )
-            );
-    }
+    public Target CoreBuild => _ => _
+                                   .Description("Builds all the projects.")
+                                   .DependsOn(Restore)
+                                   .Executes(
+                                        () => DotNetTasks.DotNetBuild(
+                                            s => s.SetProjectFile(Solution)
+                                                  .SetDefaultLoggers(LogsDirectory / "build.log")
+                                                  .SetGitVersionEnvironment(GitVersion)
+                                                  .SetConfiguration(Configuration)
+                                                  .EnableNoRestore()
+                                        )
+                                    );
 }

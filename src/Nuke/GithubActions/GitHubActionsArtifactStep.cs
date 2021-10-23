@@ -1,28 +1,41 @@
-using Nuke.Common.CI.GitHubActions.Configuration;
-using Nuke.Common.Utilities;
-using Humanizer;
+namespace Rocket.Surgery.Nuke.GithubActions;
 
-namespace Rocket.Surgery.Nuke.GithubActions
+/// <summary>
+///     The upload artifact step
+/// </summary>
+public class UploadArtifactStep : UsingStep
 {
-    public class UploadArtifactStep : UsingStep
+    /// <summary>
+    ///     The default constructor
+    /// </summary>
+    /// <param name="name"></param>
+    public UploadArtifactStep(string name) : base(name)
     {
-        public UploadArtifactStep(string name) : base(name)
-        {
-            Uses = "actions/upload-artifact@v2";
-        }
+        Uses = "actions/upload-artifact@v2";
+    }
 
-        public string Name { get; set; }
-        public string Path { get; set; }
+    /// <summary>
+    ///     The name of artifact to upload
+    /// </summary>
+    public string? Name { get; set; }
 
-        public override void Write(CustomFileWriter writer)
-        {
-            WithProperties(x => x.Underscore().Camelize().ToLowerInvariant());
-            base.Write(writer);
-        }
+    /// <summary>
+    ///     The path of the artifact to upload
+    /// </summary>
+    public string? Path { get; set; }
 
-        protected override string GetStepName(string name)
-        {
-            return $"🏺 {name}";
-        }
+    /// <inheritdoc />
+    public override void Write(CustomFileWriter writer)
+    {
+#pragma warning disable CA1308
+        WithProperties(x => x.Underscore().Camelize().ToLowerInvariant());
+#pragma warning restore CA1308
+        base.Write(writer);
+    }
+
+    /// <inheritdoc />
+    protected override string ComputeStepName(string name)
+    {
+        return $"🏺 {name}";
     }
 }

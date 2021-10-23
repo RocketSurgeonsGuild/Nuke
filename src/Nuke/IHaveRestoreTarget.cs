@@ -1,15 +1,12 @@
-﻿using Nuke.Common;
+﻿namespace Rocket.Surgery.Nuke;
 
-namespace Rocket.Surgery.Nuke
+/// <summary>
+///     Defines the restore target
+/// </summary>
+public interface IHaveRestoreTarget : IHave
 {
     /// <summary>
-    /// Defines the restore target
+    ///     The Restore Target
     /// </summary>
-    public interface IHaveRestoreTarget : IHave
-    {
-        /// <summary>
-        /// The Restore Target
-        /// </summary>
-        Target Restore { get; }
-    }
+    Target Restore { get; }
 }
