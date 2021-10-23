@@ -1,15 +1,14 @@
 ﻿using Nuke.Common.IO;
 
-namespace Rocket.Surgery.Nuke
+namespace Rocket.Surgery.Nuke;
+
+/// <summary>
+///     Defines a logs directory where structured build and other logs can be placed.
+/// </summary>
+public interface IHaveOutputLogs : IHaveArtifacts
 {
     /// <summary>
-    /// Defines a logs directory where structured build and other logs can be placed.
+    ///     The directory where logs will be placed
     /// </summary>
-    public interface IHaveOutputLogs : IHaveArtifacts
-    {
-        /// <summary>
-        /// The directory where logs will be placed
-        /// </summary>
-        public AbsolutePath LogsDirectory => ArtifactsDirectory / "logs";
-    }
+    public AbsolutePath LogsDirectory => ArtifactsDirectory / "logs";
 }

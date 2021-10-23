@@ -1,15 +1,12 @@
-﻿using Nuke.Common;
+﻿namespace Rocket.Surgery.Nuke;
 
-namespace Rocket.Surgery.Nuke
+/// <summary>
+///     Defines the build target
+/// </summary>
+public interface IHaveBuildTarget : IHave
 {
     /// <summary>
-    /// Defines the build target
+    ///     The Build Target
     /// </summary>
-    public interface IHaveBuildTarget : IHave
-    {
-        /// <summary>
-        /// The Build Target
-        /// </summary>
-        Target Build { get; }
-    }
+    Target Build { get; }
 }

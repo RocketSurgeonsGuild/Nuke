@@ -1,15 +1,12 @@
-﻿using Nuke.Common;
+﻿namespace Rocket.Surgery.Nuke;
 
-namespace Rocket.Surgery.Nuke
+/// <summary>
+///     Defines the test target
+/// </summary>
+public interface IHaveTestTarget : IHave
 {
     /// <summary>
-    /// Defines the test target
+    ///     The Test Target
     /// </summary>
-    public interface IHaveTestTarget : IHave
-    {
-        /// <summary>
-        /// The Test Target
-        /// </summary>
-        Target Test { get; }
-    }
+    Target Test { get; }
 }

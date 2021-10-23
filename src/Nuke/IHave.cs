@@ -1,9 +1,8 @@
-namespace Rocket.Surgery.Nuke
+namespace Rocket.Surgery.Nuke;
+
+/// <summary>
+///     Defines ownership of a responsibility.
+/// </summary>
+public interface IHave : INukeBuild
 {
-    /// <summary>
-    /// Defines ownership of a responsibility.
-    /// </summary>
-    public interface IHave
-    {
-    }
 }

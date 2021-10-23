@@ -1,27 +1,41 @@
-using Nuke.Common.Utilities;
-using Humanizer;
+namespace Rocket.Surgery.Nuke.GithubActions;
 
-namespace Rocket.Surgery.Nuke.GithubActions
+/// <summary>
+///     Download a given artifact
+/// </summary>
+public class DownloadArtifactSet : UsingStep
 {
-    public class DownloadArtifactSet : UsingStep
+    /// <summary>
+    ///     The default constructor
+    /// </summary>
+    /// <param name="name"></param>
+    public DownloadArtifactSet(string name) : base(name)
     {
-        public DownloadArtifactSet(string name) : base(name)
-        {
-            Uses = "actions/download-artifact@v1";
-        }
+        Uses = "actions/download-artifact@v1";
+    }
 
-        public string Name { get; set; }
-        public string Path { get; set; }
+    /// <summary>
+    ///     The artifact name to download
+    /// </summary>
+    public string? Name { get; set; }
 
-        public override void Write(CustomFileWriter writer)
-        {
-            WithProperties(x => x.Underscore().Camelize().ToLowerInvariant());
-            base.Write(writer);
-        }
+    /// <summary>
+    ///     The path of the artifact to download
+    /// </summary>
+    public string? Path { get; set; }
 
-        protected override string GetStepName(string name)
-        {
-            return $"🚀 {name}";
-        }
+    /// <inheritdoc />
+    public override void Write(CustomFileWriter writer)
+    {
+#pragma warning disable CA1308
+        WithProperties(x => x.Underscore().Camelize().ToLowerInvariant());
+#pragma warning restore CA1308
+        base.Write(writer);
+    }
+
+    /// <inheritdoc />
+    protected override string ComputeStepName(string name)
+    {
+        return $"🚀 {name}";
     }
 }

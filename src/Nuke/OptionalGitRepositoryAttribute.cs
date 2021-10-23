@@ -1,33 +1,29 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reflection;
-using JetBrains.Annotations;
-using Nuke.Common;
 using Nuke.Common.Git;
 using Nuke.Common.IO;
 
-namespace Rocket.Surgery.Nuke
+namespace Rocket.Surgery.Nuke;
+
+/// <inheritdoc />
+[PublicAPI]
+[UsedImplicitly(ImplicitUseKindFlags.Default)]
+[ExcludeFromCodeCoverage]
+public sealed class OptionalGitRepositoryAttribute : GitRepositoryAttribute
 {
     /// <inheritdoc />
-    [PublicAPI]
-    [UsedImplicitly(ImplicitUseKindFlags.Default)]
-    [ExcludeFromCodeCoverage]
-    public class OptionalGitRepositoryAttribute : GitRepositoryAttribute
+    public override object? GetValue(MemberInfo member, object instance)
     {
-        /// <inheritdoc />
-        public override object? GetValue(MemberInfo member, object instance)
+        var rootDirectory = FileSystemTasks.FindParentDirectory(
+            NukeBuild.RootDirectory,
+            x => x.GetDirectories(".git").Any()
+        );
+        if (rootDirectory != null)
         {
-            var rootDirectory = FileSystemTasks.FindParentDirectory(
-                NukeBuild.RootDirectory,
-                x => x.GetDirectories(".git").Any()
-            );
-            if (rootDirectory != null)
-            {
-                return base.GetValue(member, instance);
-            }
-
-            Logger.Warn("No git repository found, GitRepository will not be available.");
-            return null;
+            return base.GetValue(member, instance);
         }
+
+        Logger.Warn("No git repository found, GitRepository will not be available.");
+        return null;
     }
 }

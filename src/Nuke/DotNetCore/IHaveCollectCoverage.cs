@@ -1,14 +1,13 @@
-﻿namespace Rocket.Surgery.Nuke.DotNetCore
+﻿namespace Rocket.Surgery.Nuke.DotNetCore;
+
+/// <summary>
+///     Defines the `CollectCoverage` property
+/// </summary>
+public interface IHaveCollectCoverage : IHave
 {
     /// <summary>
-    /// Defines the `CollectCoverage` property
+    ///     Determines if we use a coverage collector or some other coverage mechanism
     /// </summary>
-    public interface IHaveCollectCoverage : IHave
-    {
-        /// <summary>
-        /// Determines if we use a coverage collector or some other coverage mechanism
-        /// </summary>
-        /// <value></value>
-        bool CollectCoverage { get; }
-    }
+    /// <value></value>
+    bool CollectCoverage { get; }
 }

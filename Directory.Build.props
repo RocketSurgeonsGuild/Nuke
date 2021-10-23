@@ -13,6 +13,7 @@
             Description
             Tags
         -->
+        <NoWarn>$(NoWarn);NU1701</NoWarn>
         <LangVersion>preview</LangVersion>
         <Features>strict</Features>
         <Nullable>enable</Nullable>
@@ -20,9 +21,16 @@
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
         <NukeTelemetryVersion>1</NukeTelemetryVersion>
         <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+        <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
     <ItemGroup>
-        <None Include="$(MSBuildThisFileDirectory)/.nuke/temp/packageicon.png" Condition="Exists('$(MSBuildThisFileDirectory)/.nuke/temp/packageicon.png')" Pack="true" PackagePath="/images/" Visible="false" />
+        <None
+            Include="$(MSBuildThisFileDirectory)/.nuke/temp/packageicon.png"
+            Condition="Exists('$(MSBuildThisFileDirectory)/.nuke/temp/packageicon.png')"
+            Pack="true"
+            PackagePath="/images/"
+            Visible="false"
+        />
         <None Include="$(MSBuildThisFileDirectory)/LICENSE" Pack="true" PackagePath="/" Visible="false" />
     </ItemGroup>
     <ItemGroup>

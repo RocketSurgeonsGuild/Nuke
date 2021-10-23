@@ -1,15 +1,12 @@
-﻿using Nuke.Common;
+﻿namespace Rocket.Surgery.Nuke;
 
-namespace Rocket.Surgery.Nuke
+/// <summary>
+///     Defines a clean target
+/// </summary>
+public interface IHaveCleanTarget : IHave
 {
     /// <summary>
-    /// Defines a clean target
+    ///     The Clean Target
     /// </summary>
-    public interface IHaveCleanTarget : IHave
-    {
-        /// <summary>
-        /// The Clean Target
-        /// </summary>
-        Target Clean { get; }
-    }
+    Target Clean { get; }
 }

@@ -1,10 +1,10 @@
-﻿namespace Rocket.Surgery.Nuke.DotNetCore
+﻿#pragma warning disable CA1033
+namespace Rocket.Surgery.Nuke.DotNetCore;
+
+/// <summary>
+///     Defines `CollectCoverage` as true to utilize the coverlet data collector for code coverage
+/// </summary>
+public interface IHaveDataCollector : IHaveCollectCoverage
 {
-    /// <summary>
-    /// Defines `CollectCoverage` as true to utilize the coverlet data collector for code coverage
-    /// </summary>
-    public interface IHaveDataCollector : IHaveCollectCoverage
-    {
-        bool IHaveCollectCoverage.CollectCoverage => true;
-    }
+    bool IHaveCollectCoverage.CollectCoverage => true;
 }

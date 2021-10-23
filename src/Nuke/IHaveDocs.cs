@@ -1,12 +1,19 @@
-﻿using Nuke.Common;
-using Nuke.Common.IO;
+﻿using Nuke.Common.IO;
 
-namespace Rocket.Surgery.Nuke
+namespace Rocket.Surgery.Nuke;
+
+/// <summary>
+///     Interface for a build that has documentation generation
+/// </summary>
+public interface IHaveDocs : IHaveArtifacts
 {
-    public interface IHaveDocs : IHaveArtifacts
-    {
-        public AbsolutePath DocumentationDirectory => NukeBuild.RootDirectory / "docs";
+    /// <summary>
+    ///     Where the docs are stored
+    /// </summary>
+    public AbsolutePath DocumentationDirectory => NukeBuild.RootDirectory / "docs";
 
-        public AbsolutePath DocumentationsOutputDirectory => ArtifactsDirectory / "docs";
-    }
+    /// <summary>
+    ///     Where the docs are output
+    /// </summary>
+    public AbsolutePath DocumentationsOutputDirectory => ArtifactsDirectory / "docs";
 }

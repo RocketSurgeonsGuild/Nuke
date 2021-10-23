@@ -1,35 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using Nuke.Common.CI.GitHubActions.Configuration;
-using Nuke.Common.Utilities;
-using Nuke.Common.Utilities.Collections;
+﻿namespace Rocket.Surgery.Nuke.GithubActions;
 
-namespace Rocket.Surgery.Nuke.GithubActions
+/// <summary>
+///     Defines an step that runs code in the given shell
+/// </summary>
+[PublicAPI]
+public class RunStep : BaseGitHubActionsStep
 {
-
-    public class RunStep : BaseGitHubActionsStep
+    /// <summary>
+    ///     The default constructor
+    /// </summary>
+    /// <param name="name"></param>
+    public RunStep(string name) : base(name)
     {
-        public RunStep(string name) : base(name)
-        {
-        }
+    }
 
-        public string Run { get; set; }
-        public GithubActionShell Shell { get; set; }
+    /// <summary>
+    ///     The script to run
+    /// </summary>
+    public string Run { get; set; } = null!;
 
-        public override void Write(CustomFileWriter writer)
+    /// <summary>
+    ///     The shell to run with
+    /// </summary>
+    public GithubActionShell? Shell { get; set; }
+
+    /// <inheritdoc />
+    public override void Write(CustomFileWriter writer)
+    {
+        base.Write(writer);
+        using (writer.Indent())
         {
-            base.Write(writer);
+            if (!string.IsNullOrWhiteSpace(Shell?.ToString()))
+                writer.WriteLine($"shell: {Shell}");
+            writer.WriteLine("run: |");
             using (writer.Indent())
             {
-                if (!string.IsNullOrWhiteSpace(Shell))
-                    writer.WriteLine($"shell: {Shell}");
-                writer.WriteLine($"run: |");
-                using (writer.Indent())
+                foreach (var line in Run.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    foreach (var line in Run.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries))
-                    {
-                        writer.WriteLine(line.Trim());
-                    }
+                    writer.WriteLine(line.Trim());
                 }
             }
         }
