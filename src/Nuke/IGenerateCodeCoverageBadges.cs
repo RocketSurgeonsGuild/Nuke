@@ -32,6 +32,7 @@ public interface IGenerateCodeCoverageBadges : ITriggerCodeCoverageReports, IGen
                                                          () => ReportGeneratorTasks.ReportGenerator(
                                                              s => WithTag(s)
                                                                   // .SetToolPath(toolPath)
+                                                                 .SetFramework("netcoreapp3.1")
                                                                  .SetReports(InputReports)
                                                                  .SetTargetDirectory(CoverageBadgeDirectory)
                                                                  .SetReportTypes(ReportTypes.Badges)

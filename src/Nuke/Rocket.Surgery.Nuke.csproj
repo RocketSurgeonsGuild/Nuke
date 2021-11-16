@@ -23,6 +23,7 @@
   <ItemGroup>
     <EmbeddedResource Include="default.runsettings" />
     <Using Include="JetBrains.Annotations" />
+    <Using Include="System.Diagnostics.CodeAnalysis" />
     <Using Include="Humanizer" />
     <Using Include="Nuke.Common" />
     <Using Include="Nuke.Common.Utilities" />

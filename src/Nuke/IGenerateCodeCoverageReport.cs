@@ -29,11 +29,17 @@ public interface IGenerateCodeCoverageReport : ITriggerCodeCoverageReports, IGen
                                                     .Unlisted()
                                                     .OnlyWhenDynamic(() => InputReports.Any())
                                                     .Executes(
-                                                         () => ReportGeneratorTasks.ReportGenerator(
-                                                             s => WithTag(s)
-                                                                 .SetReports(InputReports)
-                                                                 .SetTargetDirectory(CoverageReportDirectory)
-                                                                 .SetReportTypes(ReportTypes.HtmlInline_AzurePipelines_Dark)
-                                                         )
+                                                         () =>
+                                                         {
+                                                             return ReportGeneratorTasks.ReportGenerator(
+                                                                 s => WithTag(s)
+                                                                     .SetFramework("netcoreapp3.1")
+                                                                     .SetReports(InputReports)
+                                                                     .SetTargetDirectory(CoverageReportDirectory)
+                                                                     .SetReportTypes(
+                                                                          ReportTypes.HtmlInline_AzurePipelines_Dark
+                                                                      )
+                                                             );
+                                                         }
                                                      );
 }
