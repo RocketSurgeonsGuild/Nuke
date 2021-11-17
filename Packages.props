@@ -18,7 +18,7 @@
   <ItemGroup>
     <PackageReference Update="Buildalyzer" Version="3.2.3" />
     <PackageReference Update="GitVersion.Tool" Version="5.8.1" />
-    <PackageReference Update="Humanizer.Core" Version="2.11.10" />
+    <PackageReference Update="Humanizer.Core" Version="2.13.14" />
     <PackageReference Update="Nuke.Common" Version="5.3.0" />
     <PackageReference Update="ReportGenerator" Version="5.0.0" />
     <PackageReference Update="YamlDotNet" Version="11.2.1" />
