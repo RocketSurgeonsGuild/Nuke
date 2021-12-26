@@ -33,7 +33,7 @@ public interface IGenerateCodeCoverageReport : ITriggerCodeCoverageReports, IGen
                                                          {
                                                              return ReportGeneratorTasks.ReportGenerator(
                                                                  s => WithTag(s)
-                                                                     .SetFramework("netcoreapp3.1")
+                                                                     .SetFramework(Constants.ReportGeneratorFramework)
                                                                      .SetReports(InputReports)
                                                                      .SetTargetDirectory(CoverageReportDirectory)
                                                                      .SetReportTypes(

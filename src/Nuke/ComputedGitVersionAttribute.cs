@@ -39,7 +39,7 @@ public class ComputedGitVersionAttribute : ValueInjectionAttributeBase
     ///     Computes the GitVersion for the repository.
     /// </summary>
     public ComputedGitVersionAttribute()
-        : this("netcoreapp3.1")
+        : this(Constants.GitVersionFramework)
     {
     }
 

@@ -32,7 +32,7 @@ public interface IGenerateCodeCoverageSummary : ITriggerCodeCoverageReports, IGe
                                                      .Executes(
                                                           () => ReportGeneratorTasks.ReportGenerator(
                                                               s => WithTag(s)
-                                                                  .SetFramework("netcoreapp3.1")
+                                                                  .SetFramework(Constants.ReportGeneratorFramework)
                                                                    // .SetToolPath(toolPath)
                                                                   .SetReports(InputReports)
                                                                   .SetTargetDirectory(CoverageSummaryDirectory)

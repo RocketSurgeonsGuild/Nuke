@@ -62,7 +62,7 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                                       ReportGeneratorTasks.ReportGenerator(
                                                                           s => WithTag(s)
                                                                                // .SetToolPath(toolPath)
-                                                                              .SetFramework("netcoreapp3.1")
+                                                                              .SetFramework(Constants.ReportGeneratorFramework)
                                                                               .SetReports(InputReports)
                                                                               .SetTargetDirectory(CoverageDirectory)
                                                                               .SetReportTypes(ReportTypes.Cobertura)
