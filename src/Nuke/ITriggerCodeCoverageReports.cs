@@ -62,7 +62,9 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                                       ReportGeneratorTasks.ReportGenerator(
                                                                           s => WithTag(s)
                                                                                // .SetToolPath(toolPath)
-                                                                              .SetFramework(Constants.ReportGeneratorFramework)
+                                                                              .SetFramework(
+                                                                                   Constants.ReportGeneratorFramework
+                                                                               )
                                                                               .SetReports(InputReports)
                                                                               .SetTargetDirectory(CoverageDirectory)
                                                                               .SetReportTypes(ReportTypes.Cobertura)
@@ -93,21 +95,13 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
     /// <returns></returns>
     protected ReportGeneratorSettings WithTag(ReportGeneratorSettings settings)
     {
-        settings = settings.SetProcessToolPath(
-            ToolPathResolver.GetPackageExecutable(
-                "ReportGenerator",
-                "ReportGenerator.dll",
-                framework: "netcoreapp3.0"
-            )
-        );
-
-        return this switch
+        return ( this switch
         {
             IHaveGitVersion gitVersion => settings.SetTag(gitVersion.GitVersion?.InformationalVersion),
             IHaveGitRepository { GitRepository: { } } gitRepository => settings.SetTag(
                 gitRepository.GitRepository.Head
             ),
             _ => settings
-        };
+        } ).SetFramework(Constants.ReportGeneratorFramework);
     }
 }
