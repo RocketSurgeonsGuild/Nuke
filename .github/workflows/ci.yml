@@ -104,7 +104,7 @@ jobs:
           name: 'nuget'
           path: 'artifacts/nuget/'
   Publish:
-    uses: RocketSurgeonsGuild/actions/dotnet/workflows/publish-nuget.yml@v0.2.5
+    uses: RocketSurgeonsGuild/actions/.github/workflows/dotnet/publish-nuget.yml@v0.2.5
     secrets:
       nuget_apikey: '${{ secrets.RSG_NUGET_API_KEY }}'
       ado_apikey: '${{ secrets.RSG_AZURE_DEVOPS }}'
