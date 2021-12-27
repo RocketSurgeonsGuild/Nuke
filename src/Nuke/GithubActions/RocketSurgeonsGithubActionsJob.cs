@@ -10,7 +10,41 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 
 public abstract class RocketSurgeonsGithubActionsJobBase : ConfigurationEntity
 {
+    protected RocketSurgeonsGithubActionsJobBase(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
+        Name = name;
+    }
 
+    /// <summary>
+    ///     The name of the job
+    /// </summary>
+    public string Name { get; }
+
+    /// <summary>
+    /// The dependencies of this job
+    /// </summary>
+    public List<string> Needs { get; set; } = new List<string>();
+
+    /// <inheritdoc />
+    public override void Write(CustomFileWriter writer)
+    {
+        writer.WriteLine($"{Name}:");
+        using (writer.Indent())
+        {
+            if (Needs.Any())
+            {
+                writer.WriteLine("needs:");
+                using (writer.Indent())
+                {
+                    foreach (var need in Needs)
+                    {
+                        writer.WriteLine($"- {need}");
+                    }
+                }
+            }
+        }
+    }
 }
 
 /// <summary>
@@ -24,16 +58,7 @@ public class RocketSurgeonsGithubActionsJob : RocketSurgeonsGithubActionsJobBase
     /// </summary>
     /// <param name="name"></param>
     /// <exception cref="ArgumentNullException"></exception>
-    public RocketSurgeonsGithubActionsJob(string name)
-    {
-        if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
-        Name = name;
-    }
-
-    /// <summary>
-    ///     The name of the job
-    /// </summary>
-    public string Name { get; }
+    public RocketSurgeonsGithubActionsJob(string name) : base(name) { }
 
     /// <summary>
     ///     The images to use (for docker)
@@ -53,7 +78,7 @@ public class RocketSurgeonsGithubActionsJob : RocketSurgeonsGithubActionsJobBase
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
-        writer.WriteLine($"{Name}:");
+        base.Write(writer);
 
         using (writer.Indent())
         {
@@ -96,16 +121,9 @@ public class RocketSurgeonsGithubWorkflowJob : RocketSurgeonsGithubActionsJobBas
     /// </summary>
     /// <param name="name"></param>
     /// <exception cref="ArgumentNullException"></exception>
-    public RocketSurgeonsGithubWorkflowJob(string name)
+    public RocketSurgeonsGithubWorkflowJob(string name) : base(name)
     {
-        if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
-        Name = name;
     }
-
-    /// <summary>
-    ///     The name of the job
-    /// </summary>
-    public string Name { get; }
 
     /// <summary>
     ///     The action to use.
@@ -125,7 +143,7 @@ public class RocketSurgeonsGithubWorkflowJob : RocketSurgeonsGithubActionsJobBas
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
-        writer.WriteLine($"{Name}:");
+        base.Write(writer);
 
         using (writer.Indent())
         {

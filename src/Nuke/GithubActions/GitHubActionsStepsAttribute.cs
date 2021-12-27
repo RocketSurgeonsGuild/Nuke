@@ -334,6 +334,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                 },
                 new RocketSurgeonsGithubWorkflowJob("Publish")
                 {
+                    Needs = { "Build" },
                     Uses = "RocketSurgeonsGuild/actions/.github/workflows/publish-nuget.yml@v0.2.5",
                     Secrets = new Dictionary<string, string>()
                     {
