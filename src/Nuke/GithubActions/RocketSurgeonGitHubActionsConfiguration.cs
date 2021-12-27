@@ -33,7 +33,7 @@ public class RocketSurgeonGitHubActionsConfiguration : ConfigurationEntity
     /// <summary>
     ///     The jobs
     /// </summary>
-    public List<RocketSurgeonsGithubActionsJob> Jobs { get; set; } = new();
+    public List<RocketSurgeonsGithubActionsJobBase> Jobs { get; set; } = new();
 
     /// <summary>
     ///     The environment

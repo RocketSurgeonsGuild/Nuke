@@ -2,23 +2,15 @@
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
 using Nuke.Common.Tooling;
+using Nuke.Common.Utilities.Collections;
 
 #pragma warning disable CA1002
 #pragma warning disable CA2227
 namespace Rocket.Surgery.Nuke.GithubActions;
 
-/// <summary>
-///     Define a job with github actions
-/// </summary>
-[PublicAPI]
-public class RocketSurgeonsGithubActionsJob : ConfigurationEntity
+public abstract class RocketSurgeonsGithubActionsJobBase : ConfigurationEntity
 {
-    /// <summary>
-    ///     The default constructor
-    /// </summary>
-    /// <param name="name"></param>
-    /// <exception cref="ArgumentNullException"></exception>
-    public RocketSurgeonsGithubActionsJob(string name)
+    protected RocketSurgeonsGithubActionsJobBase(string name)
     {
         if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
         Name = name;
@@ -28,6 +20,45 @@ public class RocketSurgeonsGithubActionsJob : ConfigurationEntity
     ///     The name of the job
     /// </summary>
     public string Name { get; }
+
+    /// <summary>
+    /// The dependencies of this job
+    /// </summary>
+    public List<string> Needs { get; set; } = new List<string>();
+
+    /// <inheritdoc />
+    public override void Write(CustomFileWriter writer)
+    {
+        writer.WriteLine($"{Name}:");
+        using (writer.Indent())
+        {
+            if (Needs.Any())
+            {
+                writer.WriteLine("needs:");
+                using (writer.Indent())
+                {
+                    foreach (var need in Needs)
+                    {
+                        writer.WriteLine($"- {need}");
+                    }
+                }
+            }
+        }
+    }
+}
+
+/// <summary>
+///     Define a job with github actions
+/// </summary>
+[PublicAPI]
+public class RocketSurgeonsGithubActionsJob : RocketSurgeonsGithubActionsJobBase
+{
+    /// <summary>
+    ///     The default constructor
+    /// </summary>
+    /// <param name="name"></param>
+    /// <exception cref="ArgumentNullException"></exception>
+    public RocketSurgeonsGithubActionsJob(string name) : base(name) { }
 
     /// <summary>
     ///     The images to use (for docker)
@@ -47,7 +78,7 @@ public class RocketSurgeonsGithubActionsJob : ConfigurationEntity
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
-        writer.WriteLine($"{Name}:");
+        base.Write(writer);
 
         using (writer.Indent())
         {
@@ -73,6 +104,66 @@ public class RocketSurgeonsGithubActionsJob : ConfigurationEntity
                 foreach (var step in Steps)
                 {
                     step.Write(writer);
+                }
+            }
+        }
+    }
+}
+
+/// <summary>
+///     Define a job with github actions
+/// </summary>
+[PublicAPI]
+public class RocketSurgeonsGithubWorkflowJob : RocketSurgeonsGithubActionsJobBase
+{
+    /// <summary>
+    ///     The default constructor
+    /// </summary>
+    /// <param name="name"></param>
+    /// <exception cref="ArgumentNullException"></exception>
+    public RocketSurgeonsGithubWorkflowJob(string name) : base(name)
+    {
+    }
+
+    /// <summary>
+    ///     The action to use.
+    /// </summary>
+    public string? Uses { get; set; }
+
+    /// <summary>
+    ///     The properties to use with the action
+    /// </summary>
+    public Dictionary<string, string> With { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>
+    ///     The properties to use with the action
+    /// </summary>
+    public Dictionary<string, string> Secrets { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <inheritdoc />
+    public override void Write(CustomFileWriter writer)
+    {
+        base.Write(writer);
+
+        using (writer.Indent())
+        {
+            writer.WriteLine($"uses: {Uses}");
+
+            if (With.Any())
+            {
+                writer.WriteLine("with:");
+                using (writer.Indent())
+                {
+                    With.ForEach(x => writer.WriteLine($"{x.Key}: '{x.Value}'"));
+                }
+            }
+
+            if (Secrets.Any())
+            {
+                writer.WriteLine("secrets:");
+                using (writer.Indent())
+                {
+                    Secrets.ForEach(x => writer.WriteLine($"{x.Key}: '{x.Value}'"));
                 }
             }
         }
