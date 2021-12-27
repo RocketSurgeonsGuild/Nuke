@@ -71,7 +71,7 @@ jobs:
           dotnet nuke Build --skip
       - name: 🚦 Test
         run: |
-          dotnet nuke Test Trigger_Code_Coverage_Reports Generate_Code_Coverage_Report_Cobertura Generate_Code_Coverage_Badges Generate_Code_Coverage_Summary Generate_Code_Coverage_Report --skip
+          dotnet nuke Test TriggerCodeCoverageReports GenerateCodeCoverageReportCobertura GenerateCodeCoverageBadges GenerateCodeCoverageSummary GenerateCodeCoverageReport --skip
       - name: 📦 Pack
         run: |
           dotnet nuke Pack --skip
@@ -103,3 +103,8 @@ jobs:
         with:
           name: 'nuget'
           path: 'artifacts/nuget/'
+  Publish:
+    uses: RocketSurgeonsGuild/actions/dotnet/workflows/publish-nuget.yml@v0.2.5
+    secrets:
+      nuget_apikey: '${{ secrets.RSG_NUGET_API_KEY }}'
+      ado_apikey: '${{ secrets.RSG_AZURE_DEVOPS }}'

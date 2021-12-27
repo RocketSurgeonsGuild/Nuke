@@ -2,6 +2,7 @@ using Nuke.Common.CI.GitHubActions;
 using Rocket.Surgery.Nuke.ContinuousIntegration;
 using Rocket.Surgery.Nuke.DotNetCore;
 using Rocket.Surgery.Nuke.GithubActions;
+using YamlDotNet.Core;
 
 #pragma warning disable CA1050
 
@@ -10,7 +11,6 @@ using Rocket.Surgery.Nuke.GithubActions;
     GitHubActionsImage.MacOsLatest,
     GitHubActionsImage.WindowsLatest,
     GitHubActionsImage.UbuntuLatest,
-    AutoGenerate = false,
     On = new[] { GitHubActionsTrigger.Push },
     OnPushTags = new[] { "v*" },
     OnPushBranches = new[] { "master", "next" },
@@ -36,7 +36,7 @@ public partial class Solution
 {
     public static RocketSurgeonGitHubActionsConfiguration Middleware(RocketSurgeonGitHubActionsConfiguration configuration)
     {
-        var buildJob = configuration.Jobs.First(z => z.Name == "Build");
+        var buildJob = configuration.Jobs.OfType<RocketSurgeonsGithubActionsJob>().First(z => z.Name == "Build");
         var checkoutStep = buildJob.Steps.OfType<CheckoutStep>().Single();
         // For fetch all
         checkoutStep.FetchDepth = 0;
