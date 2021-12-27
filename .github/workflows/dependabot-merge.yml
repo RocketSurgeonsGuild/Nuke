@@ -12,5 +12,4 @@ jobs:
   comment:
     uses: RocketSurgeonsGuild/actions/.github/workflows/dependabot-merge.yml@v0.2.5
     secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       RSG_BOT_TOKEN: ${{ secrets.RSG_BOT_TOKEN }}

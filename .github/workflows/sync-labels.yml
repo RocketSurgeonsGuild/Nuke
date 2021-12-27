@@ -12,5 +12,3 @@ on:
 jobs:
   sync_labels:
     uses: RocketSurgeonsGuild/actions/.github/workflows/sync-labels.yml@v0.2.5
-    secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

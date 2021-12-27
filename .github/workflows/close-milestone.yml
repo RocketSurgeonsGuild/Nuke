@@ -7,5 +7,4 @@ jobs:
   close_milestone:
     uses: RocketSurgeonsGuild/actions/.github/workflows/close-milestone.yml@v0.2.5
     secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       RSG_BOT_TOKEN: ${{ secrets.RSG_BOT_TOKEN }}
