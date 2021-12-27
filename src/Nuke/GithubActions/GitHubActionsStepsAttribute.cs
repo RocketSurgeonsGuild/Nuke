@@ -337,8 +337,8 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                     Uses = "RocketSurgeonsGuild/actions/.github/workflows/publish-nuget.yml@v0.2.5",
                     Secrets = new Dictionary<string, string>()
                     {
-                        ["nuget_apikey"] = "${{ secrets.RSG_NUGET_API_KEY }}",
-                        ["ado_apikey"] = "${{ secrets.RSG_AZURE_DEVOPS }}",
+                        ["RSG_NUGET_API_KEY"] = "${{ secrets.RSG_NUGET_API_KEY }}",
+                        ["RSG_AZURE_DEVOPS"] = "${{ secrets.RSG_AZURE_DEVOPS }}",
                     }
                 }
             }
