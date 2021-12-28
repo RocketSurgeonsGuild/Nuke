@@ -135,6 +135,11 @@ public class RocketSurgeonsGithubActionsJob : RocketSurgeonsGithubActionsJobBase
                 writer.WriteLine("runs-on: ${{ matrix.os }}");
             }
 
+            if (!string.IsNullOrWhiteSpace(If?.ToString()))
+            {
+                writer.WriteLine($"if: {If}");
+            }
+
             writer.WriteLine("steps:");
             using (writer.Indent())
             {

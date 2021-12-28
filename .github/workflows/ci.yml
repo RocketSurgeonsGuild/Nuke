@@ -39,6 +39,7 @@ jobs:
       matrix:
         os: [macOS-latest, windows-latest, ubuntu-latest]
     runs-on: ${{ matrix.os }}
+    if: ${{ needs.check_ignore_paths.outputs.should_skip != 'true' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2.4.0
