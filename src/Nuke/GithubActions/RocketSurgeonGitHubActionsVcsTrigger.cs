@@ -48,7 +48,7 @@ public class RocketSurgeonGitHubActionsVcsTrigger : GitHubActionsDetailedTrigger
                 writer.WriteLine("branches:");
                 using (writer.Indent())
                 {
-                    Branches.ForEach(x => writer.WriteLine($"- {x}"));
+                    Branches.ForEach(x => writer.WriteLine($"- '{x}'"));
                 }
             }
 
@@ -57,7 +57,7 @@ public class RocketSurgeonGitHubActionsVcsTrigger : GitHubActionsDetailedTrigger
                 writer.WriteLine("tags:");
                 using (writer.Indent())
                 {
-                    Tags.ForEach(x => writer.WriteLine($"- {x}"));
+                    Tags.ForEach(x => writer.WriteLine($"- '{x}'"));
                 }
             }
 
@@ -66,8 +66,8 @@ public class RocketSurgeonGitHubActionsVcsTrigger : GitHubActionsDetailedTrigger
                 writer.WriteLine("paths:");
                 using (writer.Indent())
                 {
-                    IncludePaths.ForEach(x => writer.WriteLine($"- {x}"));
-                    ExcludePaths.ForEach(x => writer.WriteLine($"- !{x}"));
+                    IncludePaths.ForEach(x => writer.WriteLine($"- '{x}'"));
+                    ExcludePaths.ForEach(x => writer.WriteLine($"- '!{x}'"));
                 }
             }
         }
