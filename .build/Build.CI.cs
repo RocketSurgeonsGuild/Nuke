@@ -8,6 +8,37 @@ using YamlDotNet.Core;
 
 #pragma warning disable CA1050
 
+class LocalConstants
+{
+    public static string[] PathsIgnore =
+    {
+        ".codecov.yml",
+        ".editorconfig",
+        ".gitattributes",
+        ".gitignore",
+        ".gitmodules",
+        ".lintstagedrc.js",
+        ".prettierignore",
+        ".prettierrc",
+        "LICENSE",
+        "nukeeper.settings.json",
+        "omnisharp.json",
+        "package-lock.json",
+        "package.json",
+        "Readme.md"
+    };
+}
+
+[GitHubActionsSteps(
+    "ci-ignore",
+    GitHubActionsImage.WindowsLatest,
+    GitHubActionsImage.UbuntuLatest,
+    On = new[] { GitHubActionsTrigger.Push },
+    OnPushTags = new[] { "v*" },
+    OnPushBranches = new[] { "master", "main", "next" },
+    OnPullRequestBranches = new[] { "master", "main", "next" },
+    Enhancements = new[] { nameof(CiIgnoreMiddleware) }
+)]
 [GitHubActionsSteps(
     "ci",
     GitHubActionsImage.MacOsLatest,
@@ -29,66 +60,45 @@ using YamlDotNet.Core;
         nameof(Default)
     },
     ExcludedTargets = new[] { nameof(ICanClean.Clean), nameof(ICanRestoreWithDotNetCore.DotnetToolRestore) },
-    Enhancements = new[] { nameof(Middleware) }
+    Enhancements = new[] { nameof(CiMiddleware) }
 )]
 [PrintBuildVersion]
 [PrintCIEnvironment]
 [UploadLogs]
 public partial class Solution
 {
-    public static RocketSurgeonGitHubActionsConfiguration Middleware(
+    public static RocketSurgeonGitHubActionsConfiguration CiIgnoreMiddleware(
         RocketSurgeonGitHubActionsConfiguration configuration
     )
     {
-        configuration.Jobs.Add(new RocketSurgeonsGithubActionsJob("check_ignore_paths")
-            {
-                Images = new[] { GitHubActionsImage.UbuntuLatest },
-                Outputs =
-                {
-                    ["should_skip"] = "${{ steps.skip_check.outputs.should_skip }}",
-                    ["cancel_others"] = "true",
-                },
-                Steps = new List<GitHubActionsStep>()
-                {
-                    new UsingStep("Check ignore-paths")
-                    {
-                        Id = "skip_check",
-                        Uses = "fkirc/skip-duplicate-actions@v3.4.1",
-                        With =
-                        {
-                            ["paths_ignore"] = JsonConvert.SerializeObject(new[]
-                                {
-                                    ".codecov.yml",
-                                    ".editorconfig",
-                                    ".gitattributes",
-                                    ".gitignore",
-                                    ".gitmodules",
-                                    ".lintstagedrc.js",
-                                    ".prettierignore",
-                                    ".prettierrc",
-                                    "LICENSE",
-                                    "nukeeper.settings.json",
-                                    "omnisharp.json",
-                                    "package-lock.json",
-                                    "package.json",
-                                    "Readme.md"
-                                }
-                            ),
-                        }
-                    }
-                }
-            }
-        );
-        /*
-         - name: Skip Duplicate Actions
-  uses: fkirc/skip-duplicate-actions@v3.4.1
+        foreach (var item in configuration.DetailedTriggers.OfType<RocketSurgeonGitHubActionsVcsTrigger>())
+        {
+            item.IncludePaths = LocalConstants.PathsIgnore;
+        }
 
-         */
-        // paths_ignore: '["**/README.md", "**/docs/**"]'
+        configuration.Jobs.RemoveAt(1);
+        ( (RocketSurgeonsGithubActionsJob)configuration.Jobs[0] ).Steps = new List<GitHubActionsStep>()
+        {
+            new RunStep("N/A")
+            {
+                Run = "echo \"No build required\""
+            }
+        };
+
+        return configuration;
+    }
+
+    public static RocketSurgeonGitHubActionsConfiguration CiMiddleware(
+        RocketSurgeonGitHubActionsConfiguration configuration
+    )
+    {
+        foreach (var item in configuration.DetailedTriggers.OfType<RocketSurgeonGitHubActionsVcsTrigger>())
+        {
+            item.ExcludePaths = LocalConstants.PathsIgnore;
+        }
+
         var buildJob = configuration.Jobs.OfType<RocketSurgeonsGithubActionsJob>().First(z => z.Name == "Build");
-        buildJob.Needs.Add("check_ignore_paths");
         buildJob.FailFast = false;
-        buildJob.If = "${{ needs.check_ignore_paths.outputs.should_skip != 'true' }}";
         var checkoutStep = buildJob.Steps.OfType<CheckoutStep>().Single();
         // For fetch all
         checkoutStep.FetchDepth = 0;
