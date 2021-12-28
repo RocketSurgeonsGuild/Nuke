@@ -51,6 +51,7 @@ public partial class Solution
                 {
                     new UsingStep("Check ignore-paths")
                     {
+                        Id = "skip_check",
                         Uses = "fkirc/skip-duplicate-actions@v3.4.1",
                         With =
                         {

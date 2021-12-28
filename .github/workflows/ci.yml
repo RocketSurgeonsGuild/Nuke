@@ -120,6 +120,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check ignore-paths
+        id: skip_check
         uses: fkirc/skip-duplicate-actions@v3.4.1
         with:
           paths_ignore: '[".codecov.yml",".editorconfig",".gitattributes",".gitignore",".gitmodules",".lintstagedrc.js",".prettierignore",".prettierrc","LICENSE","nukeeper.settings.json","omnisharp.json","package-lock.json","package.json","Readme.md"]'
