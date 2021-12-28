@@ -1,4 +1,6 @@
+using Newtonsoft.Json;
 using Nuke.Common.CI.GitHubActions;
+using Nuke.Common.CI.GitHubActions.Configuration;
 using Rocket.Surgery.Nuke.ContinuousIntegration;
 using Rocket.Surgery.Nuke.DotNetCore;
 using Rocket.Surgery.Nuke.GithubActions;
@@ -14,41 +16,7 @@ using YamlDotNet.Core;
     On = new[] { GitHubActionsTrigger.Push },
     OnPushTags = new[] { "v*" },
     OnPushBranches = new[] { "master", "main", "next" },
-    OnPushExcludePaths = new[]
-    {
-        ".codecov.yml",
-        ".editorconfig",
-        ".gitattributes",
-        ".gitignore",
-        ".gitmodules",
-        ".lintstagedrc.js",
-        ".prettierignore",
-        ".prettierrc",
-        "LICENSE",
-        "nukeeper.settings.json",
-        "omnisharp.json",
-        "package-lock.json",
-        "package.json",
-        "Readme.md"
-    },
     OnPullRequestBranches = new[] { "master", "main", "next" },
-    OnPullRequestExcludePaths = new[]
-    {
-        ".codecov.yml",
-        ".editorconfig",
-        ".gitattributes",
-        ".gitignore",
-        ".gitmodules",
-        ".lintstagedrc.js",
-        ".prettierignore",
-        ".prettierrc",
-        "LICENSE",
-        "nukeeper.settings.json",
-        "omnisharp.json",
-        "package-lock.json",
-        "package.json",
-        "Readme.md"
-    },
     InvokedTargets = new[] { nameof(Default) },
     NonEntryTargets = new[]
     {
@@ -72,7 +40,53 @@ public partial class Solution
         RocketSurgeonGitHubActionsConfiguration configuration
     )
     {
+        configuration.Jobs.Add(new RocketSurgeonsGithubActionsJob("check_ignore_paths")
+            {
+                Images = new[] { GitHubActionsImage.UbuntuLatest },
+                Outputs =
+                {
+                    ["should_skip"] = "${{ steps.skip_check.outputs.should_skip }}",
+                },
+                Steps = new List<GitHubActionsStep>()
+                {
+                    new UsingStep("Check ignore-paths")
+                    {
+                        Uses = "fkirc/skip-duplicate-actions@v3.4.1",
+                        With =
+                        {
+                            ["paths_ignore"] = JsonConvert.SerializeObject(new[]
+                                {
+                                    ".codecov.yml",
+                                    ".editorconfig",
+                                    ".gitattributes",
+                                    ".gitignore",
+                                    ".gitmodules",
+                                    ".lintstagedrc.js",
+                                    ".prettierignore",
+                                    ".prettierrc",
+                                    "LICENSE",
+                                    "nukeeper.settings.json",
+                                    "omnisharp.json",
+                                    "package-lock.json",
+                                    "package.json",
+                                    "Readme.md"
+                                }
+                            ),
+                        }
+                    }
+                }
+            }
+        );
+        /*
+         - name: Skip Duplicate Actions
+  uses: fkirc/skip-duplicate-actions@v3.4.1
+
+         */
+        // paths_ignore: '["**/README.md", "**/docs/**"]'
         var buildJob = configuration.Jobs.OfType<RocketSurgeonsGithubActionsJob>().First(z => z.Name == "Build");
+        buildJob.Needs.Add("check_ignore_paths");
+        buildJob.FailFast = false;
+        buildJob.If = "${{ needs.check_ignore_paths.outputs.should_skip != 'true' }}";
         var checkoutStep = buildJob.Steps.OfType<CheckoutStep>().Single();
         // For fetch all
         checkoutStep.FetchDepth = 0;

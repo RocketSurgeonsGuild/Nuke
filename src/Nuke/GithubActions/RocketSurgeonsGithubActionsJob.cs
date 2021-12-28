@@ -24,7 +24,12 @@ public abstract class RocketSurgeonsGithubActionsJobBase : ConfigurationEntity
     /// <summary>
     /// The dependencies of this job
     /// </summary>
-    public List<string> Needs { get; set; } = new List<string>();
+    public Dictionary<string, string> Outputs { get; set; } = new();
+
+    /// <summary>
+    /// The dependencies of this job
+    /// </summary>
+    public List<string> Needs { get; set; } = new();
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
@@ -43,6 +48,15 @@ public abstract class RocketSurgeonsGithubActionsJobBase : ConfigurationEntity
                     }
                 }
             }
+
+            if (Outputs.Any())
+            {
+                writer.WriteLine("outputs:");
+                using (writer.Indent())
+                {
+                    Outputs.ForEach(x => writer.WriteLine($"{x.Key}: '{x.Value}'"));
+                }
+            }
         }
     }
 }
@@ -58,7 +72,9 @@ public class RocketSurgeonsGithubActionsJob : RocketSurgeonsGithubActionsJobBase
     /// </summary>
     /// <param name="name"></param>
     /// <exception cref="ArgumentNullException"></exception>
-    public RocketSurgeonsGithubActionsJob(string name) : base(name) { }
+    public RocketSurgeonsGithubActionsJob(string name) : base(name)
+    {
+    }
 
     /// <summary>
     ///     The images to use (for docker)
@@ -75,6 +91,8 @@ public class RocketSurgeonsGithubActionsJob : RocketSurgeonsGithubActionsJobBase
     /// </summary>
     public List<GitHubActionsStep> Steps { get; set; } = new();
 
+    public bool FailFast { get; set; } = true;
+
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
@@ -82,22 +100,41 @@ public class RocketSurgeonsGithubActionsJob : RocketSurgeonsGithubActionsJobBase
 
         using (writer.Indent())
         {
-            writer.WriteLine("strategy:");
+            if (Images.Count() > 1 || !FailFast)
+            {
+                writer.WriteLine("strategy:");
+            }
+
             using (writer.Indent())
             {
-                writer.WriteLine("fail-fast: false");
-                writer.WriteLine("matrix:");
-
-                using (writer.Indent())
+                if (!FailFast)
                 {
-                    var images = string.Join(
-                        ", ", Images.Select(image => image.GetValue().Replace(".", "_", StringComparison.Ordinal))
-                    );
-                    writer.WriteLine($"os: [{images}]");
+                    writer.WriteLine("fail-fast: false");
+                }
+
+                if (Images.Count() > 1)
+                {
+                    writer.WriteLine("matrix:");
+
+                    using (writer.Indent())
+                    {
+                        var images = string.Join(
+                            ", ", Images.Select(image => image.GetValue().Replace(".", "_", StringComparison.Ordinal))
+                        );
+                        writer.WriteLine($"os: [{images}]");
+                    }
                 }
             }
 
-            writer.WriteLine("runs-on: ${{ matrix.os }}");
+            if (Images.Count() == 1)
+            {
+                writer.WriteLine($"runs-on: {Images.First().GetValue().Replace(".", "_", StringComparison.Ordinal)}");
+            }
+            else if (Images.Count() > 1)
+            {
+                writer.WriteLine("runs-on: ${{ matrix.os }}");
+            }
+
             writer.WriteLine("steps:");
             using (writer.Indent())
             {

@@ -52,7 +52,7 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
     /// <inheritdoc />
     public override CustomFileWriter CreateWriter(StreamWriter streamWriter)
     {
-        return new(streamWriter, 2, "#");
+        return new CustomFileWriter(streamWriter, 2, "#");
     }
 
     /// <inheritdoc />
