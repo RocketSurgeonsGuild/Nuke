@@ -158,7 +158,7 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     /// <inheritdoc />
     public override CustomFileWriter CreateWriter(StreamWriter streamWriter)
     {
-        return new(streamWriter, 2, "#");
+        return new CustomFileWriter(streamWriter, 2, "#");
     }
 
     /// <summary>
@@ -325,7 +325,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         {
             Name = _name,
             DetailedTriggers = GetTriggers().ToList(),
-            Jobs = new()
+            Jobs = new List<RocketSurgeonsGithubActionsJobBase>
             {
                 new RocketSurgeonsGithubActionsJob("Build")
                 {

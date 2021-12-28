@@ -19,49 +19,21 @@ name: ci
 on:
   push:
     branches:
-      - master
-      - main
-      - next
+      - 'master'
+      - 'main'
+      - 'next'
     tags:
-      - v*
-    paths:
-      - !.codecov.yml
-      - !.editorconfig
-      - !.gitattributes
-      - !.gitignore
-      - !.gitmodules
-      - !.lintstagedrc.js
-      - !.prettierignore
-      - !.prettierrc
-      - !LICENSE
-      - !nukeeper.settings.json
-      - !omnisharp.json
-      - !package-lock.json
-      - !package.json
-      - !Readme.md
+      - 'v*'
   pull_request:
     branches:
-      - master
-      - main
-      - next
-    paths:
-      - !.codecov.yml
-      - !.editorconfig
-      - !.gitattributes
-      - !.gitignore
-      - !.gitmodules
-      - !.lintstagedrc.js
-      - !.prettierignore
-      - !.prettierrc
-      - !LICENSE
-      - !nukeeper.settings.json
-      - !omnisharp.json
-      - !package-lock.json
-      - !package.json
-      - !Readme.md
+      - 'master'
+      - 'main'
+      - 'next'
 
 jobs:
   Build:
+    needs:
+      - check_ignore_paths
     strategy:
       fail-fast: false
       matrix:
@@ -142,3 +114,12 @@ jobs:
     secrets:
       RSG_NUGET_API_KEY: '${{ secrets.RSG_NUGET_API_KEY }}'
       RSG_AZURE_DEVOPS: '${{ secrets.RSG_AZURE_DEVOPS }}'
+  check_ignore_paths:
+    outputs:
+      should_skip: '${{ steps.skip_check.outputs.should_skip }}'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check ignore-paths
+        uses: fkirc/skip-duplicate-actions@v3.4.1
+        with:
+          paths_ignore: '[".codecov.yml",".editorconfig",".gitattributes",".gitignore",".gitmodules",".lintstagedrc.js",".prettierignore",".prettierrc","LICENSE","nukeeper.settings.json","omnisharp.json","package-lock.json","package.json","Readme.md"]'
