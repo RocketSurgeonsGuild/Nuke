@@ -46,6 +46,7 @@ public partial class Solution
                 Outputs =
                 {
                     ["should_skip"] = "${{ steps.skip_check.outputs.should_skip }}",
+                    ["cancel_others"] = "true",
                 },
                 Steps = new List<GitHubActionsStep>()
                 {

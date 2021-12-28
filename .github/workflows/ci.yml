@@ -118,6 +118,7 @@ jobs:
   check_ignore_paths:
     outputs:
       should_skip: '${{ steps.skip_check.outputs.should_skip }}'
+      cancel_others: 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Check ignore-paths
