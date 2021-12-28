@@ -61,7 +61,23 @@ public class RocketSurgeonGitHubActionsVcsTrigger : GitHubActionsDetailedTrigger
                 }
             }
 
-            if (IncludePaths.Length > 0 || ExcludePaths.Length > 0)
+            if (IncludePaths.Length == 0 && ExcludePaths.Length > 0)
+            {
+                writer.WriteLine("paths-ignore:");
+                using (writer.Indent())
+                {
+                    ExcludePaths.ForEach(x => writer.WriteLine($"- '{x}'"));
+                }
+            }
+            else if (IncludePaths.Length > 0 && ExcludePaths.Length == 0)
+            {
+                writer.WriteLine("paths:");
+                using (writer.Indent())
+                {
+                    IncludePaths.ForEach(x => writer.WriteLine($"- '{x}'"));
+                }
+            }
+            else if (IncludePaths.Length > 0 || ExcludePaths.Length > 0)
             {
                 writer.WriteLine("paths:");
                 using (writer.Indent())
