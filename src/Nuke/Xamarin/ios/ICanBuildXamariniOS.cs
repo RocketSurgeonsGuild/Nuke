@@ -55,20 +55,20 @@ public interface ICanBuildXamariniOS : IHaveBuildTarget,
                                          .Executes(
                                               () =>
                                               {
-                                                  Logger.Trace($"Info.plist Path: {InfoPlist}");
+                                                  Serilog.Log.Verbose("Info.plist Path: {InfoPlist}", InfoPlist);
                                                   var plist = Plist.Deserialize(InfoPlist);
                                                   var bundleIdentifier = !Equals(Configuration, XamarinConfiguration.Store.ToString())
                                                       ? Configuration
                                                       : string.Empty;
 
                                                   plist["CFBundleIdentifier"] = $"{BaseBundleIdentifier}.{bundleIdentifier.ToLower()}".TrimEnd('.');
-                                                  Logger.Info($"CFBundleIdentifier: {plist["CFBundleIdentifier"]}");
+                                                  Serilog.Log.Information("CFBundleIdentifier: {CFBundleIdentifier}", plist["CFBundleIdentifier"]);
 
                                                   plist["CFBundleShortVersionString"] = $"{GitVersion?.MajorMinorPatch}";
-                                                  Logger.Info($"CFBundleShortVersionString: {plist["CFBundleShortVersionString"]}");
+                                                  Serilog.Log.Information("CFBundleShortVersionString: {CFBundleShortVersionString}", plist["CFBundleShortVersionString"]);
 
                                                   plist["CFBundleVersion"] = $"{GitVersion?.PreReleaseNumber}";
-                                                  Logger.Info($"CFBundleVersion: {plist["CFBundleVersion"]}");
+                                                  Serilog.Log.Information("CFBundleVersion: {CFBundleVersion}", plist["CFBundleVersion"]);
 
                                                   Plist.Serialize(InfoPlist, plist);
                                               }

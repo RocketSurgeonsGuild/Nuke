@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -72,7 +71,7 @@ public class ComputedGitVersionAttribute : ValueInjectionAttributeBase
         );
         if (rootDirectory == null)
         {
-            Logger.Warn("No git repository found, GitVersion will not be accurate.");
+            Serilog.Log.Warning("N git repository found, GitVersion will not be accurate");
             return new GitVersion();
         }
 

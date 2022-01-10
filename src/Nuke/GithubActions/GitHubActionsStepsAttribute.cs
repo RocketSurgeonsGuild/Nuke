@@ -4,9 +4,7 @@ using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
 using Nuke.Common.Execution;
 using Nuke.Common.IO;
-using Nuke.Common.Tooling;
 using Nuke.Common.Utilities.Collections;
-using YamlDotNet.Core;
 using YamlDotNet.RepresentationModel;
 
 #pragma warning disable CA1019
@@ -15,20 +13,30 @@ using YamlDotNet.RepresentationModel;
 #pragma warning disable CA1813
 namespace Rocket.Surgery.Nuke.GithubActions;
 
+/// <summary>
+/// Base attribute for a github actions workflow
+/// </summary>
 public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttributeBase
 {
-    protected readonly string _name;
+    /// <summary>
+    /// The name of the file
+    /// </summary>
+    protected string Name { get; }
 
+    /// <summary>
+    /// The default constructor given the file name
+    /// </summary>
+    /// <param name="name"></param>
     protected GithubActionsStepsAttributeBase(string name)
     {
-        _name = name;
+        Name = name;
     }
 
     /// <inheritdoc />
     public override Type HostType { get; } = typeof(GitHubActions);
 
     /// <inheritdoc />
-    public override string ConfigurationFile => NukeBuild.RootDirectory / ".github" / "workflows" / $"{_name}.yml";
+    public override string ConfigurationFile => NukeBuild.RootDirectory / ".github" / "workflows" / $"{Name}.yml";
 
     /// <summary>
     ///     The triggers
@@ -116,7 +124,7 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
                                  .OfType<YamlMappingNode>()
                                  .Where(
                                       z => z.Children.ContainsKey(key) && z.Children[key] is YamlScalarNode sn
-                                                                       && sn.Value?.Contains("@") == true
+                                                                       && sn.Value?.Contains('@', StringComparison.OrdinalIgnoreCase) == true
                                   )
                                  .Select(
                                       z => ( name: ( (YamlScalarNode)z.Children[key] ).Value!.Split("@")[0],
@@ -130,8 +138,8 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
         string? GetValue(string? uses)
         {
             if (uses == null) return null;
-            var key = uses.Split('@')[0];
-            if (nodeList.TryGetValue(key, out var value))
+            var nodeKey = uses.Split('@')[0];
+            if (nodeList.TryGetValue(nodeKey, out var value))
             {
                 return value;
             }
@@ -237,7 +245,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
     public string[] Parameters { get; set; } = Array.Empty<string>();
 
     /// <inheritdoc />
-    public override string IdPostfix => _name;
+    public override string IdPostfix => Name;
 
     /// <inheritdoc />
     public override IEnumerable<string> GeneratedFiles => new[] { ConfigurationFile };
@@ -323,7 +331,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
 
         var config = new RocketSurgeonGitHubActionsConfiguration
         {
-            Name = _name,
+            Name = Name,
             DetailedTriggers = GetTriggers().ToList(),
             Jobs = new List<RocketSurgeonsGithubActionsJobBase>
             {

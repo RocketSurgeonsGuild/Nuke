@@ -1,5 +1,4 @@
 ﻿using Nuke.Common.IO;
-using Nuke.Common.Tooling;
 using Nuke.Common.Tools.ReportGenerator;
 
 // ReSharper disable SuspiciousTypeConversion.Global

@@ -36,14 +36,14 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
         }
         // We only care on local machines
 
-        if (HookNames.Any(hook => !FileExists(NukeBuild.RootDirectory / $".git/hooks/{hook}"))
-         || !DirectoryExists(NukeBuild.RootDirectory / "node_modules"))
+        if (HookNames.Any(hook => !(NukeBuild.RootDirectory / $".git/hooks/{hook}").FileExists())
+         || !(NukeBuild.RootDirectory / "node_modules").DirectoryExists())
         {
-            Logger.Info("Git hooks not found...");
+            Serilog.Log.Information("Git hooks not found...");
 
-            if (FileExists(NukeBuild.RootDirectory / "package.json"))
+            if ((NukeBuild.RootDirectory / "package.json").FileExists())
             {
-                Logger.Info("package.json found running npm install to see if that installs any hooks");
+                Serilog.Log.Information("package.json found running npm install to see if that installs any hooks");
                 ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npm"), "install").AssertWaitForExit()
                             .AssertZeroExitCode();
             }
@@ -51,9 +51,9 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
 
         foreach (var hook in HookNames)
         {
-            if (!FileExists(NukeBuild.RootDirectory / $".git/hooks/{hook}"))
+            if (!(NukeBuild.RootDirectory / $".git/hooks/{hook}").FileExists())
             {
-                Logger.Info($"Was unable to install {hook} hook.");
+                Serilog.Log.Information("Was unable to install {Hook} hook", hook);
             }
         }
     }

@@ -1,6 +1,5 @@
 using System.Linq.Expressions;
 using Nuke.Common.CI.AzurePipelines;
-using static Nuke.Common.Logger;
 using static Nuke.Common.EnvironmentInfo;
 
 #pragma warning disable CA1822
@@ -28,25 +27,25 @@ public class AzurePipelinesTasks
                                                          .Executes(
                                                               () =>
                                                               {
-                                                                  Info("AGENT_ID: {0}", GetVariable<string>("AGENT_ID"));
-                                                                  Info("AGENT_NAME: {0}", GetVariable<string>("AGENT_NAME"));
-                                                                  Info("AGENT_VERSION: {0}", GetVariable<string>(" "));
-                                                                  Info("AGENT_JOBNAME: {0}", GetVariable<string>("AGENT_JOBNAME"));
-                                                                  Info("AGENT_JOBSTATUS: {0}", GetVariable<string>("AGENT_JOBSTATUS"));
-                                                                  Info("AGENT_MACHINE_NAME: {0}", GetVariable<string>("AGENT_MACHINE_NAME"));
-                                                                  Info("\n");
+                                                                  Serilog.Log.Information("AGENT_ID: {AgentID}", GetVariable<string>("AGENT_ID"));
+                                                                  Serilog.Log.Information("AGENT_NAME: {AgentName}", GetVariable<string>("AGENT_NAME"));
+                                                                  Serilog.Log.Information("AGENT_VERSION: {AgentVersion}", GetVariable<string>(" "));
+                                                                  Serilog.Log.Information("AGENT_JOBNAME: {AgentJobName}", GetVariable<string>("AGENT_JOBNAME"));
+                                                                  Serilog.Log.Information("AGENT_JOBSTATUS: {AgentJobStatus}", GetVariable<string>("AGENT_JOBSTATUS"));
+                                                                  Serilog.Log.Information("AGENT_MACHINE_NAME: {AgentMachineName}", GetVariable<string>("AGENT_MACHINE_NAME"));
+                                                                  Serilog.Log.Information("\n");
 
-                                                                  Info("BUILD_BUILDID: {0}", GetVariable<string>("BUILD_BUILDID"));
-                                                                  Info("BUILD_BUILDNUMBER: {0}", GetVariable<string>("BUILD_BUILDNUMBER"));
-                                                                  Info("BUILD_DEFINITIONNAME: {0}", GetVariable<string>("BUILD_DEFINITIONNAME"));
-                                                                  Info("BUILD_DEFINITIONVERSION: {0}", GetVariable<string>("BUILD_DEFINITIONVERSION"));
-                                                                  Info("BUILD_QUEUEDBY: {0}", GetVariable<string>("BUILD_QUEUEDBY"));
-                                                                  Info("\n");
+                                                                  Serilog.Log.Information("BUILD_BUILDID: {BuildBuildId}", GetVariable<string>("BUILD_BUILDID"));
+                                                                  Serilog.Log.Information("BUILD_BUILDNUMBER: {BuildBuildnumber}", GetVariable<string>("BUILD_BUILDNUMBER"));
+                                                                  Serilog.Log.Information("BUILD_DEFINITIONNAME: {BuildDefinitionName}", GetVariable<string>("BUILD_DEFINITIONNAME"));
+                                                                  Serilog.Log.Information("BUILD_DEFINITIONVERSION: {BuildDefinitionVersion}", GetVariable<string>("BUILD_DEFINITIONVERSION"));
+                                                                  Serilog.Log.Information("BUILD_QUEUEDBY: {BuildQueuedBy}", GetVariable<string>("BUILD_QUEUEDBY"));
+                                                                  Serilog.Log.Information("\n");
 
-                                                                  Info("BUILD_SOURCEBRANCHNAME: {0}", GetVariable<string>("BUILD_SOURCEBRANCHNAME"));
-                                                                  Info("BUILD_SOURCEVERSION: {0}", GetVariable<string>("BUILD_SOURCEVERSION"));
-                                                                  Info("BUILD_REPOSITORY_NAME: {0}", GetVariable<string>("BUILD_REPOSITORY_NAME"));
-                                                                  Info("BUILD_REPOSITORY_PROVIDER: {0}", GetVariable<string>("BUILD_REPOSITORY_PROVIDER"));
+                                                                  Serilog.Log.Information("BUILD_SOURCEBRANCHNAME: {BuildSourceBranchName}", GetVariable<string>("BUILD_SOURCEBRANCHNAME"));
+                                                                  Serilog.Log.Information("BUILD_SOURCEVERSION: {BuildSourceVersion}", GetVariable<string>("BUILD_SOURCEVERSION"));
+                                                                  Serilog.Log.Information("BUILD_REPOSITORY_NAME: {BuildRepositoryName}", GetVariable<string>("BUILD_REPOSITORY_NAME"));
+                                                                  Serilog.Log.Information("BUILD_REPOSITORY_PROVIDER: {BuildRepositoryProvider}", GetVariable<string>("BUILD_REPOSITORY_PROVIDER"));
                                                               }
                                                           );
 

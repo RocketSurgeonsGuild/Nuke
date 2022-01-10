@@ -1,6 +1,6 @@
+using Nuke.Common.IO;
 using Nuke.Common.Tools.DotNet;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
-using static Nuke.Common.IO.FileSystemTasks;
 
 namespace Rocket.Surgery.Nuke.DotNetCore;
 
@@ -19,7 +19,7 @@ public interface ICanRestoreWithDotNetCore : IHaveCleanTarget,
     /// </summary>
     public Target DotnetToolRestore => _ => _
                                            .After(Clean)
-                                           .OnlyWhenStatic(() => FileExists(NukeBuild.RootDirectory / ".config" / "dotnet-tools.json"))
+                                           .OnlyWhenStatic(() => (NukeBuild.RootDirectory / ".config" / "dotnet-tools.json").FileExists())
                                            .Unlisted()
                                            .Executes(() => DotNet("tool restore"));
 

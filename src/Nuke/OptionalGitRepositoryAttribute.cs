@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
+﻿using System.Reflection;
 using Nuke.Common.Git;
 using Nuke.Common.IO;
 
@@ -23,7 +22,7 @@ public sealed class OptionalGitRepositoryAttribute : GitRepositoryAttribute
             return base.GetValue(member, instance);
         }
 
-        Logger.Warn("No git repository found, GitRepository will not be available.");
+        Serilog.Log.Warning("No git repository found, GitRepository will not be available");
         return null;
     }
 }

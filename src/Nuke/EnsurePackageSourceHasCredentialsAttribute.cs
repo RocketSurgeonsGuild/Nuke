@@ -35,21 +35,24 @@ public class EnsurePackageSourceHasCredentialsAttribute : BuildExtensionAttribut
         var packageSourceProvider = new PackageSourceProvider(settings);
 
         var source = packageSourceProvider.LoadPackageSources()
-                                          .FirstOrDefault(x => x.Name.Equals(SourceName, StringComparison.OrdinalIgnoreCase));
+                                          .FirstOrDefault(
+                                               x => x.Name.Equals(SourceName, StringComparison.OrdinalIgnoreCase)
+                                           );
         if (source == null)
         {
-            var error =
-                $"NuGet Package Source {SourceName} could not be found. This is required for the build to complete.";
-            Logger.Error(error);
-            throw new Exception(error);
+            Serilog.Log.Error(
+                "NuGet Package Source {SourceName} could not be found. This is required for the build to complete",
+                SourceName
+            );
+            throw new Exception();
         }
-
-        if (source.Credentials?.IsValid() != true)
+        else if (source.Credentials?.IsValid() != true)
         {
-            var error =
-                $"NuGet Package Source {SourceName} does not have any credentials defined.  Please configure the credentials for {SourceName} to build.";
-            Logger.Error(error);
-            throw new Exception(error);
+            Serilog.Log.Error(
+                "NuGet Package Source {SourceName} does not have any credentials defined.  Please configure the credentials for the source to build",
+                SourceName
+            );
+            throw new Exception();
         }
     }
 }

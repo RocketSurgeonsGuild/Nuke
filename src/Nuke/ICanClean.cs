@@ -56,22 +56,22 @@ public interface ICanClean : IHaveCleanTarget, IHaveBuildTarget
                                             // ReSharper disable SuspiciousTypeConversion.Global
                                             if (this is IMayTheForceBeWithYou forceBeWithYou && forceBeWithYou.Force)
                                             {
-                                                if (this is IComprehendSamples samples && DirectoryExists(samples.SampleDirectory))
+                                                if (this is IComprehendSamples samples && samples.SampleDirectory.DirectoryExists())
                                                 {
                                                     samples.SampleDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
                                                 }
 
-                                                if (this is IComprehendSources sources && DirectoryExists(sources.SourceDirectory))
+                                                if (this is IComprehendSources sources && sources.SourceDirectory.DirectoryExists())
                                                 {
                                                     sources.SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
                                                 }
 
-                                                if (this is IComprehendTemplates templates && DirectoryExists(templates.TemplatesDirectory))
+                                                if (this is IComprehendTemplates templates && templates.TemplatesDirectory.DirectoryExists())
                                                 {
                                                     templates.TemplatesDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
                                                 }
 
-                                                if (this is IComprehendTests tests && DirectoryExists(tests.TestsDirectory))
+                                                if (this is IComprehendTests tests && tests.TestsDirectory.DirectoryExists())
                                                 {
                                                     tests.TestsDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
                                                 }
