@@ -40,7 +40,6 @@ public partial class Solution : NukeBuild,
     /// </summary>
     public static int Main()
     {
-        NukeBuild.Host
         return Execute<Solution>(x => x.Default);
     }
 
