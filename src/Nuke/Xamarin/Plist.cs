@@ -125,7 +125,7 @@ internal static class Plist
             return new XElement("data", Convert.ToBase64String(bytes));
         }
 
-        if (item is global::System.Collections.IDictionary dictionary)
+        if (item is System.Collections.IDictionary dictionary)
         {
             var dict = new XElement("dict");
 
@@ -140,7 +140,7 @@ internal static class Plist
             return dict;
         }
 
-        if (item is global::System.Collections.IEnumerable enumerable)
+        if (item is System.Collections.IEnumerable enumerable)
         {
             var array = new XElement("array");
 

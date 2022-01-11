@@ -50,7 +50,7 @@ public sealed class PrintCIEnvironmentAttribute : BuildExtensionAttributeBase, I
 
         using (Logger.Block("CI Environment"))
         {
-            Logger.Info("CI: {0}", EnvironmentInfo.GetVariable<string>("CI"));
+            Serilog.Log.Information("CI: {CI}", EnvironmentInfo.GetVariable<string>("CI"));
 
             foreach (var variable in WellKnownEnvironmentVariablePrefixes.Concat(_additionalPrefixes)
                                                                          .SelectMany(
@@ -59,7 +59,7 @@ public sealed class PrintCIEnvironmentAttribute : BuildExtensionAttributeBase, I
                                                                               )
                                                                           ))
             {
-                Logger.Info($"{variable}: {EnvironmentInfo.Variables[variable]}");
+                Serilog.Log.Information("{Key}: {Value}", variable, EnvironmentInfo.Variables[variable]);
             }
         }
     }

@@ -8,8 +8,16 @@ using Nuke.Common.Utilities.Collections;
 #pragma warning disable CA2227
 namespace Rocket.Surgery.Nuke.GithubActions;
 
+/// <summary>
+/// Base job used for generation github actions yaml
+/// </summary>
 public abstract class RocketSurgeonsGithubActionsJobBase : ConfigurationEntity
 {
+    /// <summary>
+    /// Create the base job
+    /// </summary>
+    /// <param name="name"></param>
+    /// <exception cref="ArgumentNullException"></exception>
     protected RocketSurgeonsGithubActionsJobBase(string name)
     {
         if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
@@ -91,6 +99,9 @@ public class RocketSurgeonsGithubActionsJob : RocketSurgeonsGithubActionsJobBase
     /// </summary>
     public List<GitHubActionsStep> Steps { get; set; } = new();
 
+    /// <summary>
+    /// Should the job matrix fail fast, or wait for all to fail
+    /// </summary>
     public bool FailFast { get; set; } = true;
 
     /// <inheritdoc />

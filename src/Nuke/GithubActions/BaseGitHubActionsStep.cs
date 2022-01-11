@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using Nuke.Common.CI.GitHubActions.Configuration;
+﻿using Nuke.Common.CI.GitHubActions.Configuration;
 using Nuke.Common.Utilities.Collections;
 
 // ReSharper disable MemberCanBePrivate.Global

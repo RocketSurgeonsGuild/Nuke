@@ -1,5 +1,3 @@
-using System.Diagnostics;
-using System.Reflection;
 using JetBrains.Annotations;
 using Nuke.Common;
 using Nuke.Common.CI;
@@ -9,7 +7,6 @@ using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Tools.MSBuild;
 using Rocket.Surgery.Nuke.DotNetCore;
-using Rocket.Surgery.Nuke.GithubActions;
 
 [PublicAPI]
 [CheckBuildProjectConfigurations]

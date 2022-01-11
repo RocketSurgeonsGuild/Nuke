@@ -51,7 +51,7 @@ public interface ICanTestWithDotNetCore : IHaveCollectCoverage,
                                        async () =>
                                        {
                                            var runsettings = TestsDirectory / "coverlet.runsettings";
-                                           if (!FileExists(runsettings))
+                                           if (!runsettings.FileExists())
                                            {
                                                runsettings = NukeBuild.TemporaryDirectory / "default.runsettings";
                                                using var tempFile = File.Open(runsettings, FileMode.OpenOrCreate);

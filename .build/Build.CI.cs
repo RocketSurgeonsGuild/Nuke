@@ -1,10 +1,8 @@
-using Newtonsoft.Json;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
 using Rocket.Surgery.Nuke.ContinuousIntegration;
 using Rocket.Surgery.Nuke.DotNetCore;
 using Rocket.Surgery.Nuke.GithubActions;
-using YamlDotNet.Core;
 
 #pragma warning disable CA1050
 

@@ -29,7 +29,7 @@ public interface ICIEnvironment : IHaveBuildVersion
                                        .Executes(
                                             () =>
                                             {
-                                                Logger.Info("CI: {0}", EnvironmentInfo.GetVariable<string>("CI"));
+                                                Serilog.Log.Information("CI: {CI}", EnvironmentInfo.GetVariable<string>("CI"));
 
                                                 foreach (var variable in WellKnownEnvironmentVariablePrefixes
                                                    .SelectMany(
@@ -38,7 +38,7 @@ public interface ICIEnvironment : IHaveBuildVersion
                                                         )
                                                     ))
                                                 {
-                                                    Logger.Info($"{variable}: {EnvironmentInfo.Variables[variable]}");
+                                                    Serilog.Log.Information("{Key}: {Value}", variable, EnvironmentInfo.Variables[variable]);
                                                 }
                                             }
                                         );

@@ -12,8 +12,8 @@ public interface IHaveBuildVersion : IHaveGitVersion, IHaveSolution, IHaveConfig
        .Executes(
             () =>
             {
-                Logger.Info(
-                    "Building version {0} of {1} ({2}) using version {3} of Nuke.",
+                Serilog.Log.Information(
+                    "Building version {NuGetVersion} of {SolutionName} ({Configuration}) using version {NukeVersion} of Nuke",
                     GitVersion?.NuGetVersionV2 ?? GitVersion?.NuGetVersion,
                     Solution.Name,
                     Configuration,

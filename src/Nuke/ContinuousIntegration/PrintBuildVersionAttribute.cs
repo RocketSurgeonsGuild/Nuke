@@ -25,8 +25,8 @@ public sealed class PrintBuildVersionAttribute : BuildExtensionAttributeBase, IO
         {
             using (Block("Build Version"))
             {
-                Info(
-                    "Building version {0} of {1} ({2}) using version {3} of Nuke.",
+                Serilog.Log.Information(
+                    "Building version {InformationalVersion} of {SolutionName} ({Configuration}) using version {NukeVersion} of Nuke",
                     gitVersion.GitVersion?.InformationalVersion,
                     solution.Solution.Name,
                     configuration.Configuration,

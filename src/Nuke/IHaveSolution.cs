@@ -1,5 +1,4 @@
 ﻿using Nuke.Common.ProjectModel;
-using Nuke.Common.ValueInjection;
 
 namespace Rocket.Surgery.Nuke;
 
@@ -12,5 +11,5 @@ public interface IHaveSolution : IHave
     ///     The solution currently being build
     /// </summary>
     [Solution]
-    public Solution Solution => ValueInjectionUtility.TryGetValue(() => Solution)!;
+    public Solution Solution => TryGetValue(() => Solution)!;
 }

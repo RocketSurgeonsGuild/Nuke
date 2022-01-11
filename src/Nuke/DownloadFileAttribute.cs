@@ -2,7 +2,6 @@ using Nuke.Common.Execution;
 using Nuke.Common.IO;
 using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.IO.HttpTasks;
-using static Nuke.Common.IO.FileSystemTasks;
 
 #pragma warning disable CA1019
 #pragma warning disable CA1813
@@ -44,17 +43,17 @@ public class DownloadFileAttribute : BuildExtensionAttributeBase, IOnBuildInitia
         IReadOnlyCollection<ExecutableTarget> executionPlan
     )
     {
-        if (!FileExists(_filePath))
+        if (!_filePath.FileExists())
         {
-            Logger.Trace(
-                "Downloading {0} {1} to {2}",
+            Serilog.Log.Verbose(
+                "Downloading {Type} {Url} to {Path}",
                 Type,
                 _url,
                 GetRelativePath(NukeBuild.RootDirectory, _filePath)
             );
             HttpDownloadFile(_url, _filePath);
-            Logger.Success(
-                "Downloaded {0} {2} from {1}",
+            Serilog.Log.Information(
+                "Downloaded {Type} {Url} to {Path}",
                 Type,
                 _url,
                 GetRelativePath(NukeBuild.RootDirectory, _filePath)

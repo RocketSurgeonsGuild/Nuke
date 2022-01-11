@@ -2,7 +2,10 @@ using System.Text.RegularExpressions;
 
 namespace Rocket.Surgery.Nuke;
 
-public class Symbols
+/// <summary>
+/// Symbol store
+/// </summary>
+public static class Symbols
 {
     /// <summary>
     ///     The default symbols
