@@ -1,6 +1,3 @@
 {
-    "age": "0",
-    "label": [":package: dependencies"],
-    "fork": "SingleRepository",
-    "exclude": "^(Microsoft.AspNetCore.*|Microsoft.Extensions.*)"
+    "age": "0"
 }

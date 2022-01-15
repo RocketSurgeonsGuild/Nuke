@@ -14,17 +14,17 @@ using YamlDotNet.RepresentationModel;
 namespace Rocket.Surgery.Nuke.GithubActions;
 
 /// <summary>
-/// Base attribute for a github actions workflow
+///     Base attribute for a github actions workflow
 /// </summary>
 public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttributeBase
 {
     /// <summary>
-    /// The name of the file
+    ///     The name of the file
     /// </summary>
     protected string Name { get; }
 
     /// <summary>
-    /// The default constructor given the file name
+    ///     The default constructor given the file name
     /// </summary>
     /// <param name="name"></param>
     protected GithubActionsStepsAttributeBase(string name)
@@ -94,7 +94,7 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     public string[] Enhancements { get; set; } = Array.Empty<string>();
 
     /// <summary>
-    /// Applies the given enhancements to the build
+    ///     Applies the given enhancements to the build
     /// </summary>
     /// <param name="build"></param>
     /// <param name="config"></param>
@@ -343,8 +343,8 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                 new RocketSurgeonsGithubWorkflowJob("Publish")
                 {
                     Needs = { "Build" },
-                    Uses = "RocketSurgeonsGuild/actions/.github/workflows/publish-nuget.yml@v0.2.5",
-                    Secrets = new Dictionary<string, string>()
+                    Uses = "RocketSurgeonsGuild/actions/.github/workflows/publish-nuget.yml@v0.2.6",
+                    Secrets = new Dictionary<string, string>
                     {
                         ["RSG_NUGET_API_KEY"] = "${{ secrets.RSG_NUGET_API_KEY }}",
                         ["RSG_AZURE_DEVOPS"] = "${{ secrets.RSG_AZURE_DEVOPS }}",
@@ -470,7 +470,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
 //    public CloseMilestoneWorkflowAttribute(string name) : base(name)
 //    {
 //
-//        Uses = "RocketSurgeonsGuild/actions/.github/workflows/close-milestone.yml@v0.2.5";
+//        Uses = "RocketSurgeonsGuild/actions/.github/workflows/close-milestone.yml@v0.2.6";
 //        Secrets = new Dictionary<string, string>()
 //        {
 //            ["GITHUB_TOKEN"] = "${{ secrets.GITHUB_TOKEN }}",
