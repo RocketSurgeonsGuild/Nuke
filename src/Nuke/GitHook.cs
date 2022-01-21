@@ -1,6 +1,25 @@
 namespace Rocket.Surgery.Nuke;
 
 /// <summary>
+///     An interface that can be used to implement git hooks for your build
+/// </summary>
+public interface IGitHooksEngine
+{
+    /// <summary>
+    ///     Determine if hooks are installed or not
+    /// </summary>
+    /// <param name="hooks"></param>
+    /// <returns></returns>
+    bool AreHooksInstalled(IReadOnlyCollection<string> hooks);
+
+    /// <summary>
+    ///     Install the given git hooks locally.
+    /// </summary>
+    /// <param name="hooks"></param>
+    void InstallHooks(IReadOnlyCollection<string> hooks);
+}
+
+/// <summary>
 ///     The allows git hooks
 /// </summary>
 public enum GitHook
