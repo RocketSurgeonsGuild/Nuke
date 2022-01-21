@@ -1,6 +1,8 @@
 using Nuke.Common.Execution;
+using Nuke.Common.IO;
 using Nuke.Common.Tooling;
-using static Nuke.Common.IO.FileSystemTasks;
+using Nuke.Common.Tools.Git;
+using Serilog;
 
 #pragma warning disable CA1019
 #pragma warning disable CA1308
@@ -18,7 +20,10 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
     public EnsureGitHooksAttribute(params GitHook[] hookNames)
     {
         HookNames = hookNames
-                   .Select(x => x.ToString().Humanize().Replace(" ", "_", StringComparison.Ordinal).Dasherize().ToLowerInvariant())
+                   .Select(
+                        x => x.ToString().Humanize().Replace(" ", "_", StringComparison.Ordinal).Dasherize()
+                              .ToLowerInvariant()
+                    )
                    .ToArray();
     }
 
@@ -30,30 +35,47 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
     /// <inheritdoc />
     public void OnBuildCreated(NukeBuild build, IReadOnlyCollection<ExecutableTarget> executableTargets)
     {
+        // Only care about local environments
         if (!NukeBuild.IsLocalBuild)
         {
             return;
         }
-        // We only care on local machines
 
-        if (HookNames.Any(hook => !(NukeBuild.RootDirectory / $".git/hooks/{hook}").FileExists())
-         || !(NukeBuild.RootDirectory / "node_modules").DirectoryExists())
+        // ReSharper disable once SuspiciousTypeConversion.Global
+        if (build is not IGitHooksEngine engine)
         {
-            Serilog.Log.Information("Git hooks not found...");
-
-            if ((NukeBuild.RootDirectory / "package.json").FileExists())
-            {
-                Serilog.Log.Information("package.json found running npm install to see if that installs any hooks");
-                ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npm"), "install").AssertWaitForExit()
-                            .AssertZeroExitCode();
-            }
+            Log.Verbose("No git hooks engine found, defaulting to husky");
+            engine = new HuskyEngine();
         }
 
-        foreach (var hook in HookNames)
+        if (!engine.AreHooksInstalled(HookNames))
         {
-            if (!(NukeBuild.RootDirectory / $".git/hooks/{hook}").FileExists())
+            Log.Information("git hooks not found...");
+            engine.InstallHooks(HookNames);
+        }
+    }
+
+    private class HuskyEngine : IGitHooksEngine
+    {
+        public bool AreHooksInstalled(IReadOnlyCollection<string> hooks)
+        {
+            return ProcessTasks.StartProcess(GitTasks.GitPath, "config --get core.hookspath").Output.StdToText().Trim()
+                == NukeBuild.RootDirectory.GetRelativePathTo(".husky");
+        }
+
+        public void InstallHooks(IReadOnlyCollection<string> hooks)
+        {
+            if (( NukeBuild.RootDirectory / "package.json" ).FileExists())
             {
-                Serilog.Log.Information("Was unable to install {Hook} hook", hook);
+                Log.Information("package.json found running npm install to see if that installs any hooks");
+                ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npm"), "run prepare").AssertWaitForExit()
+                            .AssertZeroExitCode();
+            }
+            else
+            {
+                Log.Information("package.json not found running npx husky install");
+                ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npx"), "husky install").AssertWaitForExit()
+                            .AssertZeroExitCode();
             }
         }
     }

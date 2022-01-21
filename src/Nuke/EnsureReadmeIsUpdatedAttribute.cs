@@ -1,5 +1,6 @@
 using Nuke.Common.Execution;
 using Rocket.Surgery.Nuke.Readme;
+using Serilog;
 
 // ReSharper disable once SuspiciousTypeConversion.Global
 // ReSharper disable once MemberCanBePrivate.Global
@@ -40,10 +41,18 @@ public sealed class EnsureReadmeIsUpdatedAttribute : BuildExtensionAttributeBase
     )
     {
         if (!NukeBuild.IsLocalBuild || build is not IHaveSolution buildSolution) return;
-        using var block = Logger.Block("Update Readme");
 
-        var readmeContent = File.ReadAllText(NukeBuild.RootDirectory / ReadmeFilePath);
-        readmeContent = new ReadmeUpdater().Process(readmeContent, buildSolution);
-        File.WriteAllText(NukeBuild.RootDirectory / ReadmeFilePath, readmeContent);
+        try
+        {
+            var readmeContent = File.ReadAllText(NukeBuild.RootDirectory / ReadmeFilePath);
+            readmeContent = new ReadmeUpdater().Process(readmeContent, buildSolution);
+            File.WriteAllText(NukeBuild.RootDirectory / ReadmeFilePath, readmeContent);
+        }
+#pragma warning disable CA1031
+        catch (Exception e)
+#pragma warning restore CA1031
+        {
+            Log.Warning(e, "Unable to update readme");
+        }
     }
 }

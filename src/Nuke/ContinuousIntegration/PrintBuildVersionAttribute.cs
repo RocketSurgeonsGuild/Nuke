@@ -1,5 +1,5 @@
 ﻿using Nuke.Common.Execution;
-using static Nuke.Common.Logger;
+using Serilog;
 
 // ReSharper disable SuspiciousTypeConversion.Global
 
@@ -23,16 +23,13 @@ public sealed class PrintBuildVersionAttribute : BuildExtensionAttributeBase, IO
         if (build is IHaveGitVersion gitVersion && build is IHaveSolution solution &&
             build is IHaveConfiguration configuration)
         {
-            using (Block("Build Version"))
-            {
-                Serilog.Log.Information(
-                    "Building version {InformationalVersion} of {SolutionName} ({Configuration}) using version {NukeVersion} of Nuke",
-                    gitVersion.GitVersion?.InformationalVersion,
-                    solution.Solution.Name,
-                    configuration.Configuration,
-                    typeof(NukeBuild).Assembly.GetVersionText()
-                );
-            }
+            Log.Information(
+                "Building version {InformationalVersion} of {SolutionName} ({Configuration}) using version {NukeVersion} of Nuke",
+                gitVersion.GitVersion?.InformationalVersion,
+                solution.Solution.Name,
+                configuration.Configuration,
+                typeof(NukeBuild).Assembly.GetVersionText()
+            );
         }
     }
 }
