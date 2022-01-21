@@ -21,7 +21,6 @@ public interface ICanPackWithDotNetCore : IHaveBuildTarget,
     public Target CorePack => _ => _
                                   .Description("Packs all the NuGet packages.")
                                   .DependsOn(Build)
-                                  .After(Test)
                                   .Executes(
                                        () => DotNetTasks.DotNetPack(
                                            s => s.SetProject(Solution)
