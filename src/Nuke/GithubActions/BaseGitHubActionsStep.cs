@@ -1,5 +1,4 @@
 ﻿using Nuke.Common.CI.GitHubActions.Configuration;
-using Nuke.Common.Utilities.Collections;
 
 // ReSharper disable MemberCanBePrivate.Global
 #pragma warning disable CA2227
@@ -37,9 +36,14 @@ public abstract class BaseGitHubActionsStep : GitHubActionsStep
     public GithubActionCondition? If { get; set; }
 
     /// <summary>
-    ///     The environment variables for the step
+    ///     The dependencies of this job
     /// </summary>
-    public Dictionary<string, string> Environment { get; set; } = new();
+    public Dictionary<string, string> Environment { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>
+    ///     The properties to use with the action
+    /// </summary>
+    public Dictionary<string, string> Secrets { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
@@ -52,18 +56,12 @@ public abstract class BaseGitHubActionsStep : GitHubActionsStep
                 writer.WriteLine($"id: {Id}");
             }
 
+            writer.WriteKeyValues("env", Environment);
+            writer.WriteKeyValues("secrets", Secrets);
+
             if (!string.IsNullOrWhiteSpace(If?.ToString()))
             {
                 writer.WriteLine($"if: {If}");
-            }
-
-            if (Environment.Any())
-            {
-                writer.WriteLine("env:");
-                using (writer.Indent())
-                {
-                    Environment.ForEach(x => { writer.WriteLine($"{x.Key}: {x.Value}"); });
-                }
             }
         }
     }

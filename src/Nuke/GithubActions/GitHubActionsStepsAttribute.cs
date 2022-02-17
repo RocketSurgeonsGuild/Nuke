@@ -343,7 +343,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                 new RocketSurgeonsGithubWorkflowJob("Publish")
                 {
                     Needs = { "Build" },
-                    Uses = "RocketSurgeonsGuild/actions/.github/workflows/publish-nuget.yml@v0.2.6",
+                    Uses = "RocketSurgeonsGuild/actions/.github/workflows/publish-nuget.yml@v0.3.0",
                     Secrets = new Dictionary<string, string>
                     {
                         ["RSG_NUGET_API_KEY"] = "${{ secrets.RSG_NUGET_API_KEY }}",
@@ -470,7 +470,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
 //    public CloseMilestoneWorkflowAttribute(string name) : base(name)
 //    {
 //
-//        Uses = "RocketSurgeonsGuild/actions/.github/workflows/close-milestone.yml@v0.2.6";
+//        Uses = "RocketSurgeonsGuild/actions/.github/workflows/close-milestone.yml@v0.3.0";
 //        Secrets = new Dictionary<string, string>()
 //        {
 //            ["GITHUB_TOKEN"] = "${{ secrets.GITHUB_TOKEN }}",
