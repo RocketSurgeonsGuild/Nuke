@@ -2,19 +2,18 @@
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
 using Nuke.Common.Tooling;
-using Nuke.Common.Utilities.Collections;
 
 #pragma warning disable CA1002
 #pragma warning disable CA2227
 namespace Rocket.Surgery.Nuke.GithubActions;
 
 /// <summary>
-/// Base job used for generation github actions yaml
+///     Base job used for generation github actions yaml
 /// </summary>
 public abstract class RocketSurgeonsGithubActionsJobBase : ConfigurationEntity
 {
     /// <summary>
-    /// Create the base job
+    ///     Create the base job
     /// </summary>
     /// <param name="name"></param>
     /// <exception cref="ArgumentNullException"></exception>
@@ -30,14 +29,29 @@ public abstract class RocketSurgeonsGithubActionsJobBase : ConfigurationEntity
     public string Name { get; }
 
     /// <summary>
-    /// The dependencies of this job
+    ///     The dependencies of this job
     /// </summary>
-    public Dictionary<string, string> Outputs { get; set; } = new();
+    public Dictionary<string, string> Outputs { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 
     /// <summary>
-    /// The dependencies of this job
+    ///     The dependencies of this job
+    /// </summary>
+    public Dictionary<string, string> Environment { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>
+    ///     The properties to use with the action
+    /// </summary>
+    public Dictionary<string, string> Secrets { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>
+    ///     The dependencies of this job
     /// </summary>
     public List<string> Needs { get; set; } = new();
+
+    /// <summary>
+    ///     The condition to run this job under
+    /// </summary>
+    public GithubActionCondition? If { get; set; }
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
@@ -57,13 +71,13 @@ public abstract class RocketSurgeonsGithubActionsJobBase : ConfigurationEntity
                 }
             }
 
-            if (Outputs.Any())
+            writer.WriteKeyValues("outputs", Outputs);
+            writer.WriteKeyValues("env", Environment);
+            writer.WriteKeyValues("secrets", Secrets);
+
+            if (!string.IsNullOrWhiteSpace(If?.ToString()))
             {
-                writer.WriteLine("outputs:");
-                using (writer.Indent())
-                {
-                    Outputs.ForEach(x => writer.WriteLine($"{x.Key}: '{x.Value}'"));
-                }
+                writer.WriteLine($"if: {If}");
             }
         }
     }
@@ -90,17 +104,12 @@ public class RocketSurgeonsGithubActionsJob : RocketSurgeonsGithubActionsJobBase
     public IEnumerable<GitHubActionsImage> Images { get; set; } = Enumerable.Empty<GitHubActionsImage>();
 
     /// <summary>
-    ///     The condition to run this job under
-    /// </summary>
-    public GithubActionCondition? If { get; set; }
-
-    /// <summary>
     ///     The steps to run
     /// </summary>
     public List<GitHubActionsStep> Steps { get; set; } = new();
 
     /// <summary>
-    /// Should the job matrix fail fast, or wait for all to fail
+    ///     Should the job matrix fail fast, or wait for all to fail
     /// </summary>
     public bool FailFast { get; set; } = true;
 
@@ -146,11 +155,6 @@ public class RocketSurgeonsGithubActionsJob : RocketSurgeonsGithubActionsJobBase
                 writer.WriteLine("runs-on: ${{ matrix.os }}");
             }
 
-            if (!string.IsNullOrWhiteSpace(If?.ToString()))
-            {
-                writer.WriteLine($"if: {If}");
-            }
-
             writer.WriteLine("steps:");
             using (writer.Indent())
             {
@@ -188,11 +192,6 @@ public class RocketSurgeonsGithubWorkflowJob : RocketSurgeonsGithubActionsJobBas
     /// </summary>
     public Dictionary<string, string> With { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 
-    /// <summary>
-    ///     The properties to use with the action
-    /// </summary>
-    public Dictionary<string, string> Secrets { get; set; } = new(StringComparer.OrdinalIgnoreCase);
-
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
@@ -201,24 +200,7 @@ public class RocketSurgeonsGithubWorkflowJob : RocketSurgeonsGithubActionsJobBas
         using (writer.Indent())
         {
             writer.WriteLine($"uses: {Uses}");
-
-            if (With.Any())
-            {
-                writer.WriteLine("with:");
-                using (writer.Indent())
-                {
-                    With.ForEach(x => writer.WriteLine($"{x.Key}: '{x.Value}'"));
-                }
-            }
-
-            if (Secrets.Any())
-            {
-                writer.WriteLine("secrets:");
-                using (writer.Indent())
-                {
-                    Secrets.ForEach(x => writer.WriteLine($"{x.Key}: '{x.Value}'"));
-                }
-            }
+            writer.WriteKeyValues("with", With);
         }
     }
 }

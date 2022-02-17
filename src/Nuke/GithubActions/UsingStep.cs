@@ -62,15 +62,50 @@ public class UsingStep : BaseGitHubActionsStep
         using (writer.Indent())
         {
             writer.WriteLine($"uses: {Uses}");
+            writer.WriteKeyValues("with", With);
+        }
+    }
+}
 
-            if (With.Any())
+public static class CustomFileWriterExtensions
+{
+    public static void WriteKeyValues(this CustomFileWriter writer, string key, IDictionary<string, string> dictionary)
+    {
+        if (dictionary.Any())
+        {
+            writer.WriteLine(key + ":");
+            using (writer.Indent())
             {
-                writer.WriteLine("with:");
-                using (writer.Indent())
+                dictionary.ForEach(z => WriteValue(writer, z));
+            }
+        }
+    }
+
+    private static void WriteValue(CustomFileWriter writer, KeyValuePair<string, string> kvp)
+    {
+        var (key, value) = kvp;
+        if (value.StartsWith(">", StringComparison.Ordinal) || value.StartsWith("|", StringComparison.Ordinal))
+        {
+            var values = value.Split('\n');
+            writer.WriteLine($"{key}: {values[0].TrimEnd()}");
+            using (writer.Indent())
+            {
+                foreach (var v in values.Skip(1))
                 {
-                    With.ForEach(x => writer.WriteLine($"{x.Key}: '{x.Value}'"));
+                    writer.WriteLine(v.Trim());
                 }
             }
+
+            return;
+        }
+
+        if (value.Contains('\'', StringComparison.Ordinal))
+        {
+            writer.WriteLine($"{key}: \"{value}\"");
+        }
+        else
+        {
+            writer.WriteLine($"{key}: '{value}'");
         }
     }
 }

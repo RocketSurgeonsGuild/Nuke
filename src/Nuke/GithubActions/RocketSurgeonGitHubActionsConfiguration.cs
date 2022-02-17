@@ -2,7 +2,6 @@ using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
 using Nuke.Common.Tooling;
-using Nuke.Common.Utilities.Collections;
 
 #pragma warning disable CA1002
 #pragma warning disable CA1308
@@ -36,9 +35,14 @@ public class RocketSurgeonGitHubActionsConfiguration : ConfigurationEntity
     public List<RocketSurgeonsGithubActionsJobBase> Jobs { get; set; } = new();
 
     /// <summary>
-    ///     The environment
+    ///     The dependencies of this job
     /// </summary>
-    public Dictionary<string, string> Environment { get; set; } = new();
+    public Dictionary<string, string> Environment { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>
+    ///     The properties to use with the action
+    /// </summary>
+    public Dictionary<string, string> Secrets { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
@@ -59,21 +63,15 @@ public class RocketSurgeonGitHubActionsConfiguration : ConfigurationEntity
             }
         }
 
+        writer.WriteKeyValues("env", Environment);
+        writer.WriteKeyValues("secrets", Secrets);
+
         writer.WriteLine();
 
         writer.WriteLine("jobs:");
         using (writer.Indent())
         {
             Jobs.ForEach(x => x.Write(writer));
-        }
-
-        if (Environment.Any())
-        {
-            writer.WriteLine("env:");
-            using (writer.Indent())
-            {
-                Environment.ForEach(x => writer.WriteLine($"{x.Key}: {x.Value}"));
-            }
         }
     }
 }
