@@ -1,2 +1,3 @@
 azure-pipelines.nuke.yml
 .github/workflows/ci.yml
+.nuke/build.schema.json
