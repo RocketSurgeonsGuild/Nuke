@@ -59,8 +59,19 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
     {
         public bool AreHooksInstalled(IReadOnlyCollection<string> hooks)
         {
-            return ProcessTasks.StartProcess(GitTasks.GitPath, "config --get core.hookspath").Output.StdToText().Trim()
-                == NukeBuild.RootDirectory.GetRelativePathTo(".husky");
+            try
+            {
+                var hooksOutput = GitTasks.Git("config --get core.hookspath");
+                var hooksPath = hooksOutput.StdToText().Trim();
+                var huskyScriptPath = NukeBuild.RootDirectory / ".husky" / "_" / "husky.sh";
+                return hooksPath == ".husky" && huskyScriptPath.FileExists();
+            }
+#pragma warning disable CA1031
+            catch
+#pragma warning restore CA1031
+            {
+                return false;
+            }
         }
 
         public void InstallHooks(IReadOnlyCollection<string> hooks)
@@ -68,13 +79,20 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
             if (( NukeBuild.RootDirectory / "package.json" ).FileExists())
             {
                 Log.Information("package.json found running npm install to see if that installs any hooks");
-                ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npm"), "run prepare").AssertWaitForExit()
+                ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npm"), "install")
+                            .AssertWaitForExit()
                             .AssertZeroExitCode();
+                ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npm"), "run prepare")
+                            .AssertWaitForExit();
             }
-            else
+
+            if (!AreHooksInstalled(hooks))
             {
-                Log.Information("package.json not found running npx husky install");
-                ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npx"), "husky install").AssertWaitForExit()
+                Log.Information(
+                    "package.json not found or prepare script did not work correctly running npx husky install"
+                );
+                ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npx"), "husky install")
+                            .AssertWaitForExit()
                             .AssertZeroExitCode();
             }
         }
