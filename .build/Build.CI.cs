@@ -23,7 +23,11 @@ internal class LocalConstants
         "omnisharp.json",
         "package-lock.json",
         "package.json",
-        "Readme.md"
+        "Readme.md",
+        ".github/dependabot.yml",
+        ".github/labels.yml",
+        ".github/release.yml",
+        ".github/renovate.json",
     };
 }
 
