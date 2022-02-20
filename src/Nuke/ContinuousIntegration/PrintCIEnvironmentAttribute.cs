@@ -1,5 +1,6 @@
 ﻿using Nuke.Common.Execution;
 using Nuke.Common.Utilities.Collections;
+using Serilog;
 
 // ReSharper disable InconsistentNaming
 
@@ -48,19 +49,17 @@ public sealed class PrintCIEnvironmentAttribute : BuildExtensionAttributeBase, I
         if (NukeBuild.IsLocalBuild)
             return;
 
-        using (Logger.Block("CI Environment"))
-        {
-            Serilog.Log.Information("CI: {CI}", EnvironmentInfo.GetVariable<string>("CI"));
+        Log.Information("CI: {CI}", EnvironmentInfo.GetVariable<string>("CI"));
 
-            foreach (var variable in WellKnownEnvironmentVariablePrefixes.Concat(_additionalPrefixes)
-                                                                         .SelectMany(
-                                                                              prefix => EnvironmentInfo.Variables.Keys.Where(
-                                                                                  key => key.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)
-                                                                              )
-                                                                          ))
-            {
-                Serilog.Log.Information("{Key}: {Value}", variable, EnvironmentInfo.Variables[variable]);
-            }
+        foreach (var variable in WellKnownEnvironmentVariablePrefixes
+                                .Concat(_additionalPrefixes)
+                                .SelectMany(
+                                     prefix => EnvironmentInfo.Variables.Keys.Where(
+                                         key => key.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)
+                                     )
+                                 ))
+        {
+            Log.Information("{Key}: {Value}", variable, EnvironmentInfo.Variables[variable]);
         }
     }
 }

@@ -67,8 +67,17 @@ public class UsingStep : BaseGitHubActionsStep
     }
 }
 
+/// <summary>
+///     Custom file writer extensions to help with writing out string dictionaries and multi line strings.
+/// </summary>
 public static class CustomFileWriterExtensions
 {
+    /// <summary>
+    ///     Write a set of key value pairs
+    /// </summary>
+    /// <param name="writer"></param>
+    /// <param name="key"></param>
+    /// <param name="dictionary"></param>
     public static void WriteKeyValues(this CustomFileWriter writer, string key, IDictionary<string, string> dictionary)
     {
         if (dictionary.Any())
