@@ -56,4 +56,5 @@ jobs:
           name: 'v${{ steps.gitversion.outputs.majorMinorPatch }}'
           tag: 'v${{ steps.gitversion.outputs.majorMinorPatch }}'
           token: ${{ secrets.RSG_BOT_TOKEN }}
+          draft: true
           commit: ${{ github.base_ref }}
