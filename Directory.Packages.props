@@ -20,7 +20,7 @@
     <PackageVersion Include="YamlDotNet" Version="11.2.1" />
     <PackageVersion Include="JetBrains.ReSharper.GlobalTools" Version="2021.3.3" />
     <!--        <PackageVersion Include="JetBrains.ReSharper.GlobalTools" Version="2020.3.0-eap05"/>-->
-    <PackageVersion Include="Microsoft.Build" Version="17.0.0" />
+    <PackageVersion Include="Microsoft.Build" Version="17.1.0" />
     <PackageVersion Include="Microsoft.Build.Framework" Version="17.0.0" />
     <PackageVersion Include="Microsoft.Build.Tasks.Core" Version="17.0.0" />
     <PackageVersion Include="Microsoft.Build.Utilities.Core" Version="17.0.0" />
