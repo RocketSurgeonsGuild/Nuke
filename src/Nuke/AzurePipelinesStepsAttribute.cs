@@ -76,11 +76,11 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
         foreach (var parameter in parameters)
         {
             if (Parameters.Any(
-                z => z.Equals(parameter.Name, StringComparison.OrdinalIgnoreCase) || z.Equals(
-                    parameter.GetCustomAttribute<ParameterAttribute>()?.Name,
-                    StringComparison.OrdinalIgnoreCase
-                )
-            ))
+                    z => z.Equals(parameter.Name, StringComparison.OrdinalIgnoreCase) || z.Equals(
+                        parameter.GetCustomAttribute<ParameterAttribute>()?.Name,
+                        StringComparison.OrdinalIgnoreCase
+                    )
+                ))
             {
                 var value = parameter.GetValue(build);
                 if (value is AbsolutePath)
@@ -127,9 +127,11 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
         var chainLinkNames = GetInvokedTargets(executableTarget, relevantTargets).Select(z => z.Name).ToArray();
 
         var dotnetTools = Path.Combine(NukeBuild.RootDirectory, ".config/dotnet-tools.json");
-        var localTool = File.ReadAllText(dotnetTools).Contains("\"nuke.globaltool\": {", StringComparison.OrdinalIgnoreCase);
+
+        var localTool = File.Exists(dotnetTools) && File.ReadAllText(dotnetTools).Contains("\"nuke.globaltool\": {", StringComparison.OrdinalIgnoreCase);
 
         var tool = localTool ? "dotnet nuke" : "nuke";
+
         return new AzurePipelinesStep
         {
             Name = executableTarget.Name,
