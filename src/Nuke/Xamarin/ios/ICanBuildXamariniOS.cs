@@ -1,5 +1,6 @@
 ﻿using Nuke.Common.IO;
 using Nuke.Common.Tools.MSBuild;
+using Serilog;
 using static Nuke.Common.Tools.MSBuild.MSBuildTasks;
 
 #pragma warning disable CA1304
@@ -55,20 +56,22 @@ public interface ICanBuildXamariniOS : IHaveBuildTarget,
                                          .Executes(
                                               () =>
                                               {
-                                                  Serilog.Log.Verbose("Info.plist Path: {InfoPlist}", InfoPlist);
+                                                  Log.Verbose("Info.plist Path: {InfoPlist}", InfoPlist);
                                                   var plist = Plist.Deserialize(InfoPlist);
                                                   var bundleIdentifier = !Equals(Configuration, XamarinConfiguration.Store.ToString())
                                                       ? Configuration
                                                       : string.Empty;
 
                                                   plist["CFBundleIdentifier"] = $"{BaseBundleIdentifier}.{bundleIdentifier.ToLower()}".TrimEnd('.');
-                                                  Serilog.Log.Information("CFBundleIdentifier: {CFBundleIdentifier}", plist["CFBundleIdentifier"]);
+                                                  Log.Information("CFBundleIdentifier: {CFBundleIdentifier}", plist["CFBundleIdentifier"]);
 
                                                   plist["CFBundleShortVersionString"] = $"{GitVersion?.MajorMinorPatch}";
-                                                  Serilog.Log.Information("CFBundleShortVersionString: {CFBundleShortVersionString}", plist["CFBundleShortVersionString"]);
+                                                  Log.Information(
+                                                      "CFBundleShortVersionString: {CFBundleShortVersionString}", plist["CFBundleShortVersionString"]
+                                                  );
 
-                                                  plist["CFBundleVersion"] = $"{GitVersion?.PreReleaseNumber}";
-                                                  Serilog.Log.Information("CFBundleVersion: {CFBundleVersion}", plist["CFBundleVersion"]);
+                                                  plist["CFBundleVersion"] = $"{GitVersion?.FullSemVer.Replace('+', '.')}";
+                                                  Log.Information("CFBundleVersion: {CFBundleVersion}", plist["CFBundleVersion"]);
 
                                                   Plist.Serialize(InfoPlist, plist);
                                               }
