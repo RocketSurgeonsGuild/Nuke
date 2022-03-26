@@ -1,12 +1,13 @@
-﻿using System.Globalization;
-using System.Text;
+﻿using System.Collections;
+using System.Globalization;
 using System.Xml.Linq;
 using Nuke.Common.IO;
+using Serilog;
 
 namespace Rocket.Surgery.Nuke.Xamarin;
 
 /// <summary>
-///     Taken from https://github.com/cake-contrib/Cake.Plist/blob/develop/src/Cake.Plist/PlistConverter.cs
+///     Taken from https://github.com/cake-contrib/Cake.Plist/blob/develop/src/Cake.Plist/PlistConverter.cs.
 /// </summary>
 internal static class Plist
 {
@@ -28,36 +29,17 @@ internal static class Plist
     /// </summary>
     /// <param name="path">The path to the plist.</param>
     /// <param name="value">The object to serialize.</param>
-    /// <returns>The deserialized plist.</returns>
     public static void Serialize(AbsolutePath path, object value)
     {
-        var doc = SerializeDocument(value);
-
-        string result;
-
-        using (var sw = new MemoryStream())
-        {
-            using (var strw = new StreamWriter(sw))
-            {
-                doc.Save(strw);
-                result = new UTF8Encoding(false).GetString(sw.ToArray());
-            }
-        }
-
-        using (var stream = File.OpenWrite(path))
-        {
-            using (var write = new StreamWriter(stream, new UTF8Encoding(false), 1024, true))
-            {
-                write.Write(result);
-            }
-        }
+        SerializeDocument(value)
+           .Save(path, SaveOptions.OmitDuplicateNamespaces);
     }
 
     /// <summary>
     ///     Serializes the .plist file provided.
     /// </summary>
-    /// <param name="item">The plist object</param>
-    /// <returns>The xml document</returns>
+    /// <param name="item">The plist object.</param>
+    /// <returns>The xml document.</returns>
     private static XDocument SerializeDocument(object item)
     {
         var doc = new XDocument(new XDeclaration("1.0", "UTF-8", "yes"));
@@ -66,7 +48,7 @@ internal static class Plist
                 "plist",
                 "-//Apple//DTD PLIST 1.0//EN",
                 "http://www.apple.com/DTDs/PropertyList-1.0.dtd",
-                ""
+                string.Empty
             )
         );
 
@@ -81,78 +63,71 @@ internal static class Plist
     /// <summary>
     ///     Serializes the .plist file provided.
     /// </summary>
-    /// <param name="item">The plist object</param>
-    /// <returns>The xml element</returns>
+    /// <param name="item">The plist object.</param>
+    /// <returns>The xml element.</returns>
     private static XElement? SerializeObject(object item)
     {
-        if (item is string)
+        switch (item)
         {
-            return new XElement("string", item);
-        }
-
-        if (item is double || item is float || item is decimal)
-        {
-            return new XElement("real", Convert.ToString(item, CultureInfo.InvariantCulture));
-        }
-
-        if (item is int || item is long)
-        {
-            return new XElement("integer", Convert.ToString(item, CultureInfo.InvariantCulture));
-        }
-
-        if (item is bool && item as bool? == true)
-        {
-            return new XElement("true");
-        }
-
-        if (item is bool && item as bool? == false)
-        {
-            return new XElement("false");
-        }
-
-        if (item is DateTime time)
-        {
-            return new XElement("date", time.ToString("yyyy-MM-ddTHH:mm:ss.fffZ", DateTimeFormatInfo.InvariantInfo));
-        }
-
-        if (item is DateTimeOffset offset)
-        {
-            return new XElement("date", offset.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ", DateTimeFormatInfo.InvariantInfo));
-        }
-
-        if (item is byte[] bytes)
-        {
-            return new XElement("data", Convert.ToBase64String(bytes));
-        }
-
-        if (item is System.Collections.IDictionary dictionary)
-        {
-            var dict = new XElement("dict");
-
-            var enumerator = dictionary.GetEnumerator();
-
-            while (enumerator.MoveNext())
+            case string:
+                Log.Verbose("string: {String}", item);
+                return new XElement("string", item);
+            case double:
+            case float:
+            case decimal:
+                Log.Verbose("floating point: {Float}", item);
+                return new XElement("real", Convert.ToString(item, CultureInfo.InvariantCulture));
+            case int:
+            case long:
+                Log.Verbose("integer: {Integer}", item);
+                return new XElement("integer", Convert.ToString(item, CultureInfo.InvariantCulture));
+            case bool when item as bool? == true:
+                Log.Verbose("boolean: {Boolean}", item);
+                return new XElement("true");
+            case bool when item as bool? == false:
+                Log.Verbose("boolean: {Boolean}", item);
+                return new XElement("false");
+            case DateTime time:
+                Log.Verbose("DateTime: {DateTime}", item);
+                return new XElement("date", time.ToString("yyyy-MM-ddTHH:mm:ss.fffZ", DateTimeFormatInfo.InvariantInfo));
+            case DateTimeOffset offset:
+                Log.Verbose("DateTimeOffset: {DateTimeOffset}", item);
+                return new XElement("date", offset.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ", DateTimeFormatInfo.InvariantInfo));
+            case byte[] bytes:
+                Log.Verbose("DateTimeOffset: {DateTimeOffset}", item);
+                return new XElement("data", Convert.ToBase64String(bytes));
+            case IDictionary dictionary:
             {
-                dict.Add(new XElement("key", enumerator.Key));
-                dict.Add(SerializeObject(enumerator.Value!));
+                var dict = new XElement("dict");
+
+                var enumerator = dictionary.GetEnumerator();
+
+                while (enumerator.MoveNext())
+                {
+                    dict.Add(new XElement("key", enumerator.Key));
+                    dict.Add(SerializeObject(enumerator.Value!));
+                }
+
+                Log.Verbose("Dictionary: {Dictionary}", item);
+                return dict;
             }
 
-            return dict;
-        }
-
-        if (item is System.Collections.IEnumerable enumerable)
-        {
-            var array = new XElement("array");
-
-            foreach (var itm in enumerable)
+            case IEnumerable enumerable:
             {
-                array.Add(SerializeObject(itm!));
+                var array = new XElement("array");
+
+                foreach (var itm in enumerable)
+                {
+                    array.Add(SerializeObject(itm!));
+                }
+
+                Log.Verbose("Array: {Array}", item);
+                return array;
             }
 
-            return array;
+            default:
+                return null;
         }
-
-        return null;
     }
 
     private static dynamic DeserializeXml(XElement element)
@@ -195,6 +170,7 @@ internal static class Plist
 
                 return typedArray;
             }
+
             case "dict":
             {
                 var dictionary = new Dictionary<string, object>();
@@ -217,6 +193,7 @@ internal static class Plist
 
                 return dictionary;
             }
+
             default:
                 return null!;
         }
