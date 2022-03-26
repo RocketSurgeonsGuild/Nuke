@@ -31,11 +31,12 @@ namespace Rocket.Surgery.Nuke.Xamarin
                                                                    .SetProperty("Platform", iOSTargetPlatform)
                                                                    .SetProperty("BuildIpa", "true")
                                                                    .SetProperty("ArchiveOnBuild", "true")
+                                                                   .SetProperty("IpaPackageDir", ArtifactsDirectory / "ios")
                                                                    .SetConfiguration(Configuration)
                                                                    .SetDefaultLoggers(LogsDirectory / "package.log")
                                                                    .SetGitVersionEnvironment(GitVersion)
                                                                    .SetAssemblyVersion(GitVersion?.FullSemanticVersion())
-                                                                   .SetPackageVersion(GitVersion?.NuGetVersionV2)
+                                                                   .SetPackageVersion(GitVersion?.FullSemanticVersion())
                                                    )
                                            );
     }

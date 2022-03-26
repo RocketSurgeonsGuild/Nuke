@@ -4,6 +4,7 @@ using System.Xml.Linq;
 using Nuke.Common.IO;
 using Serilog;
 
+// ReSharper disable once CheckNamespace
 namespace Rocket.Surgery.Nuke.Xamarin;
 
 /// <summary>
