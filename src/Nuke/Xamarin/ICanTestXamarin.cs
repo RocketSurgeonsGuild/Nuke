@@ -22,7 +22,7 @@ public interface ICanTestXamarin : IHaveTestTarget,
     /// </summary>
     public new Target Test => _ => _
                                   .DependsOn(Build)
-                                  .OnlyWhenStatic(() => FileSystemTasks.DirectoryExists(TestsDirectory))
+                                  .OnlyWhenStatic(() => TestsDirectory.DirectoryExists())
                                   .Executes(
                                        () =>
                                        {

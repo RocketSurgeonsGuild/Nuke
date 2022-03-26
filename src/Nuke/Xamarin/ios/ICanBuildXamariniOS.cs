@@ -42,7 +42,7 @@ public interface ICanBuildXamariniOS : IHaveBuildTarget,
                                                                   .SetConfiguration(Configuration)
                                                                   .SetDefaultLoggers(LogsDirectory / "build.log")
                                                                   .SetGitVersionEnvironment(GitVersion)
-                                                                  .SetAssemblyVersion(GitVersion?.AssemblySemVer)
+                                                                  .SetAssemblyVersion(GitVersion?.FullSemanticVersion())
                                                                   .SetPackageVersion(GitVersion?.NuGetVersionV2)
                                           )
                                       );

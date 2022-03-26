@@ -1,5 +1,6 @@
 using Nuke.Common.IO;
 using Nuke.Common.Tools.MSBuild;
+using Serilog;
 using static Nuke.Common.Tools.MSBuild.MSBuildTasks;
 
 #pragma warning disable CA1304
@@ -40,7 +41,7 @@ public interface ICanBuildXamarinMac : IHaveBuildTarget,
                                                        .SetConfiguration(Configuration)
                                                        .SetDefaultLoggers(LogsDirectory / "build.log")
                                                        .SetGitVersionEnvironment(GitVersion)
-                                                       .SetAssemblyVersion(GitVersion?.AssemblySemVer)
+                                                       .SetAssemblyVersion(GitVersion?.FullSemanticVersion())
                                                        .SetPackageVersion(GitVersion?.NuGetVersionV2)
                                         )
                                     );
@@ -52,20 +53,20 @@ public interface ICanBuildXamarinMac : IHaveBuildTarget,
        .Executes(
             () =>
             {
-                Serilog.Log.Verbose("Info.plist Path: {InfoPlist}", InfoPlist);
+                Log.Verbose("Info.plist Path: {InfoPlist}", InfoPlist);
                 var plist = Plist.Deserialize(InfoPlist);
                 var bundleIdentifier = !Equals(Configuration, XamarinConfiguration.Store.ToString())
                     ? Configuration
                     : string.Empty;
 
                 plist["CFBundleIdentifier"] = $"{BaseBundleIdentifier}.{bundleIdentifier.ToLower()}".TrimEnd('.');
-                Serilog.Log.Information("CFBundleIdentifier: {CFBundleIdentifier}", plist["CFBundleIdentifier"]);
+                Log.Information("CFBundleIdentifier: {CFBundleIdentifier}", plist["CFBundleIdentifier"]);
 
                 plist["CFBundleShortVersionString"] = $"{GitVersion?.Major}.{GitVersion?.Minor}.{GitVersion?.Patch}";
-                Serilog.Log.Information("CFBundleShortVersionString: {CFBundleShortVersionString}", plist["CFBundleShortVersionString"]);
+                Log.Information("CFBundleShortVersionString: {CFBundleShortVersionString}", plist["CFBundleShortVersionString"]);
 
                 plist["CFBundleVersion"] = $"{GitVersion?.PreReleaseNumber}";
-                Serilog.Log.Information("CFBundleVersion: {CFBundleVersion}", plist["CFBundleVersion"]);
+                Log.Information("CFBundleVersion: {CFBundleVersion}", plist["CFBundleVersion"]);
 
                 Plist.Serialize(InfoPlist, plist);
             }
