@@ -5,7 +5,7 @@ namespace Rocket.Surgery.Nuke;
 /// <summary>
 ///     <see cref="GitVersion" /> extensions.
 /// </summary>
-public static class GitVersionEx
+public static class GitVersionFunctions
 {
     /// <summary>
     ///     Gets the full semantic version from <see cref="GitVersion" />.
