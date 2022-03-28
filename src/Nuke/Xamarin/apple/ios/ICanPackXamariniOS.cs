@@ -33,7 +33,7 @@ public interface ICanPackXamariniOS : IHavePackTarget,
                                                                .SetConfiguration(Configuration)
                                                                .SetDefaultLoggers(LogsDirectory / "package.log")
                                                                .SetGitVersionEnvironment(GitVersion)
-                                                               .SetAssemblyVersion(GitVersion?.FullSemanticVersion())
+                                                               .SetAssemblyVersion(GitVersion.FullSemanticVersion())
                                                                .SetPackageVersion(GitVersion?.NuGetVersionV2)
                                                )
                                        );

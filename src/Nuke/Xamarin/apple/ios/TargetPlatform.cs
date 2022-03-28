@@ -2,6 +2,7 @@ using System.ComponentModel;
 using Nuke.Common.Tooling;
 
 // ReSharper disable InconsistentNaming
+// ReSharper disable once CheckNamespace
 namespace Rocket.Surgery.Nuke.Xamarin;
 
 /// <summary>
