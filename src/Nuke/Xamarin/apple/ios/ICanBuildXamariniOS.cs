@@ -14,6 +14,7 @@ public interface ICanBuildXamariniOS : IXamarinAppleTarget,
                                        IHaveRestoreTarget,
                                        IHaveSolution,
                                        IHaveConfiguration,
+                                       IHaveIpa,
                                        IHaveOutputLogs,
                                        IHaveiOSTargetPlatform,
                                        ICan
@@ -30,7 +31,7 @@ public interface ICanBuildXamariniOS : IXamarinAppleTarget,
                                                                   .SetConfiguration(Configuration)
                                                                   .SetDefaultLoggers(LogsDirectory / "build.log")
                                                                   .SetGitVersionEnvironment(GitVersion)
-                                                                  .SetAssemblyVersion(GitVersion?.FullSemanticVersion())
+                                                                  .SetAssemblyVersion(GitVersion.FullSemanticVersion())
                                                                   .SetPackageVersion(GitVersion?.NuGetVersionV2)
                                           )
                                       );

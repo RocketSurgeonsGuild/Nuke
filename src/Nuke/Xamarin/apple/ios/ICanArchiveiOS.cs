@@ -14,6 +14,7 @@ namespace Rocket.Surgery.Nuke.Xamarin
                                       IHaveOutputLogs,
                                       IHaveGitVersion,
                                       IHaveSolution,
+                                      IHaveIpa,
                                       IHaveiOSTargetPlatform,
                                       IHaveEnableRestore,
                                       ICan
@@ -31,12 +32,12 @@ namespace Rocket.Surgery.Nuke.Xamarin
                                                                    .SetProperty("Platform", iOSTargetPlatform)
                                                                    .SetProperty("BuildIpa", "true")
                                                                    .SetProperty("ArchiveOnBuild", "true")
-                                                                   .SetProperty("IpaPackageDir", ArtifactsDirectory / "ios")
+                                                                   .SetProperty("IpaPackageDir", IpaDirectory)
                                                                    .SetConfiguration(Configuration)
                                                                    .SetDefaultLoggers(LogsDirectory / "package.log")
                                                                    .SetGitVersionEnvironment(GitVersion)
-                                                                   .SetAssemblyVersion(GitVersion?.FullSemanticVersion())
-                                                                   .SetPackageVersion(GitVersion?.FullSemanticVersion())
+                                                                   .SetAssemblyVersion(GitVersion.FullSemanticVersion())
+                                                                   .SetPackageVersion(GitVersion.FullSemanticVersion())
                                                    )
                                            );
     }
