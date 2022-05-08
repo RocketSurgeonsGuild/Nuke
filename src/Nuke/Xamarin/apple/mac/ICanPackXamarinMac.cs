@@ -30,8 +30,8 @@ public interface IHavePackXamarinMac : IHavePackTarget,
                                                               .SetConfiguration(Configuration)
                                                               .SetDefaultLoggers(LogsDirectory / "package.log")
                                                               .SetGitVersionEnvironment(GitVersion)
-                                                              .SetAssemblyVersion(GitVersion.FullSemanticVersion())
-                                                              .SetPackageVersion(GitVersion?.NuGetVersionV2)
+                                                              .SetAssemblyVersion(GitVersion.AssemblyVersion())
+                                                              .SetPackageVersion(GitVersion.PackageVersion())
                                       )
                                   );
 }

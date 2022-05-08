@@ -29,8 +29,8 @@ public interface ICanBuildXamarinMac : IXamarinAppleTarget,
                                                        .SetConfiguration(Configuration)
                                                        .SetDefaultLoggers(LogsDirectory / "build.log")
                                                        .SetGitVersionEnvironment(GitVersion)
-                                                       .SetAssemblyVersion(GitVersion.FullSemanticVersion())
-                                                       .SetPackageVersion(GitVersion?.NuGetVersionV2)
+                                                       .SetAssemblyVersion(GitVersion.AssemblyVersion())
+                                                       .SetPackageVersion(GitVersion.PackageVersion())
                                         )
                                     );
 }
