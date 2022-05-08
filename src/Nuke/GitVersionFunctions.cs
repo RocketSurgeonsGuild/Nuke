@@ -18,6 +18,26 @@ public static class GitVersionFunctions
     }
 
     /// <summary>
+    ///     Gets the assembly version from the <see cref="GitVersion" />.
+    /// </summary>
+    /// <param name="gitVersion">The git version.</param>
+    /// <returns>The converted semantic version with no alpha characters.</returns>
+    public static string AssemblyVersion(this GitVersion? gitVersion)
+    {
+        return FullSemanticVersion(gitVersion).RemoveAlphaCharacters();
+    }
+
+    /// <summary>
+    ///     Gets the package version from the <see cref="GitVersion" />.
+    /// </summary>
+    /// <param name="gitVersion">The git version.</param>
+    /// <returns>The converted nuget package version with no alpha characters.</returns>
+    public static string PackageVersion(this GitVersion? gitVersion)
+    {
+        return gitVersion?.NuGetVersionV2?.RemoveAlphaCharacters() ?? string.Empty;
+    }
+
+    /// <summary>
     ///     Gets the Major.Minor.Patch from <see cref="GitVersion" />.
     /// </summary>
     /// <param name="gitVersion">The git version.</param>

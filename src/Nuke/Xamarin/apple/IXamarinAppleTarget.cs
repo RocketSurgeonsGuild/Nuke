@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Serilog;
 
 // ReSharper disable once CheckNamespace
@@ -21,7 +22,7 @@ public interface IXamarinAppleTarget : IHaveBundleIdentifier, IHaveGitVersion, I
                 plist["CFBundleIdentifier"] = $"{BundleIdentifier}.{Suffix.ToLower()}".TrimEnd('.');
                 Log.Information("CFBundleIdentifier: {CFBundleIdentifier}", plist["CFBundleIdentifier"]);
 
-                plist["CFBundleShortVersionString"] = GitVersion.MajorMinorPatch();
+                plist["CFBundleShortVersionString"] = Regex.Replace(GitVersion.MajorMinorPatch(), "[^0-9.]", "");
                 Log.Information(
                     "CFBundleShortVersionString: {CFBundleShortVersionString}",
                     plist["CFBundleShortVersionString"]
