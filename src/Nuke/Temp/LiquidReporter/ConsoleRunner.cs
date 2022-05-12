@@ -20,38 +20,9 @@ internal class LiquidReporter
         _logger = logger;
     }
 
-    internal void Run(string title, string output)
+    internal string Run(string title)
     {
-        var report = GenerateReport(GenerateLibraryParameters(title));
-        if (string.IsNullOrEmpty(report))
-        {
-            _logger.Error("Error, report generated no content");
-            return;
-        }
-
-        var saved = SaveReport(report, output);
-        if (!saved)
-        {
-            _logger.Error("Error, report unable to be saved");
-        }
-    }
-
-    private bool SaveReport(string report, string location)
-    {
-        try
-        {
-            File.WriteAllText(location, report);
-        }
-        catch (UnauthorizedAccessException e)
-        {
-            _logger.Error(e.Message);
-        }
-        catch (Exception e)
-        {
-            _logger.Error("Unexpected error occurred while saving report {Message}", e.Message);
-        }
-
-        return false;
+        return GenerateReport(GenerateLibraryParameters(title));
     }
 
     private string GenerateReport(LibraryDrop libraryDrop)

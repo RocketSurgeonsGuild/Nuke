@@ -17,21 +17,15 @@ public sealed class GithubActionConventionsAttribute : BuildExtensionAttributeBa
         if (build is not INukeBuild nukeBuild) return;
         if (nukeBuild.Host != GitHubActions.Instance) return;
         if (EnvironmentInfo.GetVariable<string>("GITHUB_STEP_SUMMARY") is not { Length: > 0 } summary) return;
-
-        // ReSharper disable once SuspiciousTypeConversion.Global
-        if (build is IGenerateCodeCoverageSummary codeCoverage && ( codeCoverage.CoverageSummaryDirectory / "summary.md" ).Exists())
-        {
-            FileSystemTasks.CopyFile(
-                codeCoverage.CoverageSummaryDirectory / "summary.md",
-                EnvironmentInfo.GetVariable<string>("GITHUB_STEP_SUMMARY")
-            );
-        }
+        FileSystemTasks.Touch(summary);
 
         // ReSharper disable once SuspiciousTypeConversion.Global
         if (build is IHaveTestArtifacts testResultReports && testResultReports.TestResultsDirectory.GlobFiles("**/*.trx") is { Count: > 0 } results)
         {
             var reporter = new LiquidReporter(results.Select(z => z.ToString()), Log.Logger);
-            reporter.Run("Test results", EnvironmentInfo.GetVariable<string>("GITHUB_STEP_SUMMARY")!);
+            var report = reporter.Run("Test results");
+            var summaryContent = TextTasks.ReadAllText(summary);
+            TextTasks.WriteAllText(summary, summaryContent + "\n" + report);
 //            DotNet(
 //                new Arguments()
 //                   .Add("liquid")
@@ -39,6 +33,14 @@ public sealed class GithubActionConventionsAttribute : BuildExtensionAttributeBa
 //                   .Add("--output {0}", EnvironmentInfo.GetVariable<string>("GITHUB_STEP_SUMMARY"))
 //                   .ToString()
 //            );
+        }
+
+        // ReSharper disable once SuspiciousTypeConversion.Global
+        if (build is IGenerateCodeCoverageSummary codeCoverage && ( codeCoverage.CoverageSummaryDirectory / "summary.md" ).Exists())
+        {
+            var coverageSummary = TextTasks.ReadAllText(codeCoverage.CoverageSummaryDirectory / "summary.md");
+            var summaryContent = TextTasks.ReadAllText(summary);
+            TextTasks.WriteAllText(summary, summaryContent + "\n" + coverageSummary);
         }
     }
 }
