@@ -1,5 +1,4 @@
-﻿using Nuke.Common.CI.GitHubActions;
-using Nuke.Common.IO;
+﻿using Nuke.Common.IO;
 using Nuke.Common.Tools.ReportGenerator;
 
 namespace Rocket.Surgery.Nuke;
@@ -31,54 +30,20 @@ public interface IGenerateCodeCoverageSummary : ITriggerCodeCoverageReports, IGe
                                                      .Unlisted()
                                                      .OnlyWhenDynamic(() => InputReports.Any())
                                                      .Executes(
-                                                          () => ReportGeneratorTasks.ReportGenerator(
-                                                              s => WithTag(s)
-                                                                  .SetFramework(Constants.ReportGeneratorFramework)
-                                                                   // .SetToolPath(toolPath)
-                                                                  .SetReports(InputReports)
-                                                                  .SetTargetDirectory(CoverageSummaryDirectory)
-                                                                  .SetReportTypes(ReportTypes.HtmlSummary, ReportTypes.TextSummary)
-                                                          )
-                                                      );
-}
+                                                          () =>
+                                                          {
+                                                              var output = ReportGeneratorTasks.ReportGenerator(
+                                                                  s => WithTag(s)
+                                                                      .SetFramework(Constants.ReportGeneratorFramework)
+                                                                       // .SetToolPath(toolPath)
+                                                                      .SetReports(InputReports)
+                                                                      .SetTargetDirectory(CoverageSummaryDirectory)
+                                                                      .SetReportTypes(
+                                                                           ReportTypes.HtmlSummary, ReportTypes.TextSummary, ReportTypes.MarkdownSummary
+                                                                       )
+                                                              );
 
-/// <summary>
-///     Generates a code coverage summary for github actions
-/// </summary>
-public interface IGenerateCodeCoverageSummaryForGithubActions : ITriggerCodeCoverageReports, IGenerate
-{
-    /// <summary>
-    ///     Generate a code coverage summary for the given reports
-    /// </summary>
-    public Target GenerateCodeCoverageSummaryForGithubActions => _ => _
-                                                                     .After(GenerateCodeCoverageReportCobertura)
-                                                                     .TriggeredBy(TriggerCodeCoverageReports)
-                                                                     .Unlisted()
-                                                                     .OnlyWhenDynamic(() => InputReports.Any())
-                                                                     .OnlyWhenStatic(() => IsServerBuild)
-                                                                     .OnlyWhenStatic(
-                                                                          () => Host == GitHubActions.Instance && !string.IsNullOrWhiteSpace(
-                                                                              EnvironmentInfo.GetVariable<string>("GITHUB_STEP_SUMMARY", null)
-                                                                          )
-                                                                      )
-                                                                     .Executes(
-                                                                          () =>
-                                                                          {
-                                                                              var temp = TemporaryDirectory / "github-actions-summary";
-                                                                              FileSystemTasks.EnsureCleanDirectory(temp);
-                                                                              var output = ReportGeneratorTasks.ReportGenerator(
-                                                                                  s => WithTag(s)
-                                                                                      .SetFramework(Constants.ReportGeneratorFramework)
-                                                                                       // .SetToolPath(toolPath)
-                                                                                      .SetReports(InputReports)
-                                                                                      .SetTargetDirectory(temp)
-                                                                                      .SetReportTypes(ReportTypes.MarkdownSummary)
-                                                                              );
-                                                                              FileSystemTasks.CopyFile(
-                                                                                  temp / "summary.md",
-                                                                                  EnvironmentInfo.GetVariable<string>("GITHUB_STEP_SUMMARY")
-                                                                              );
-                                                                              return output;
-                                                                          }
-                                                                      );
+                                                              return output;
+                                                          }
+                                                      );
 }
