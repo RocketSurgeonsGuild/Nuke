@@ -161,10 +161,5 @@ Source:
 </details>
 {%- endif -%}
 </details>
-
 ---
-
 {%- endfor -%}
-
-
-[{{ library.text }}]({{ library.link }})

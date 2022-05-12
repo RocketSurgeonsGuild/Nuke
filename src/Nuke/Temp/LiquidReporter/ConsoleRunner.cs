@@ -55,7 +55,7 @@ internal class LiquidReporter
             using var stream = GetType().Assembly.GetManifestResourceStream("MdMultiReport.md")!;
             using var template = new StreamReader(stream);
             var parameters = new object?[] { template.ReadToEnd(), null };
-            reportGeneratorMethod.Invoke(reportGenerator, parameters);
+            report = (string)reportGeneratorMethod.Invoke(reportGenerator, parameters);
             var errors = (IList<Exception>)parameters[1]!;
             foreach (var error in errors)
                 _logger.Error(error.Message);

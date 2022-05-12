@@ -1,3 +1,4 @@
+using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
 using Nuke.Common.IO;
 using Rocket.Surgery.Nuke.Temp.LiquidReporter;
@@ -15,11 +16,11 @@ public sealed class GithubActionConventionsAttribute : BuildExtensionAttributeBa
     public void OnBuildFinished(NukeBuild build)
     {
         if (build is not INukeBuild nukeBuild) return;
-//        if (nukeBuild.Host != GitHubActions.Instance) return;
-        if (EnvironmentInfo.GetVariable<AbsolutePath>("GITHUB_STEP_SUMMARY") is not {} summary) return;
+        if (nukeBuild.Host != GitHubActions.Instance) return;
+        if (EnvironmentInfo.GetVariable<AbsolutePath>("GITHUB_STEP_SUMMARY") is not { } summary) return;
 
         // ReSharper disable once SuspiciousTypeConversion.Global
-        if (build.InvokedTargets.Any(z => z.Name == nameof(IHaveTestTarget.Test))
+        if (build.ExecutionPlan.Any(z => z.Name == nameof(IHaveTestTarget.Test))
          && build is IHaveTestArtifacts testResultReports
          && testResultReports.TestResultsDirectory.GlobFiles("**/*.trx") is
                 { Count: > 0 } results)
@@ -27,7 +28,7 @@ public sealed class GithubActionConventionsAttribute : BuildExtensionAttributeBa
             FileSystemTasks.Touch(summary);
             var reporter = new LiquidReporter(results.Select(z => z.ToString()), Log.Logger);
             var report = reporter.Run("Test results");
-            TextTasks.WriteAllText(summary, TextTasks.ReadAllText(summary) + "\n" + report);
+            TextTasks.WriteAllText(summary, TextTasks.ReadAllText(summary).TrimStart() + "\n" + report);
 //            DotNet(
 //                new Arguments()
 //                   .Add("liquid")
@@ -38,18 +39,13 @@ public sealed class GithubActionConventionsAttribute : BuildExtensionAttributeBa
         }
 
         // ReSharper disable once SuspiciousTypeConversion.Global
-        if (build.InvokedTargets.Any(z => z.Name == nameof(IGenerateCodeCoverageSummary.CoverageSummaryDirectory))
+        if (build.ExecutionPlan.Any(z => z.Name == nameof(IGenerateCodeCoverageSummary.GenerateCodeCoverageSummary))
          && build is IGenerateCodeCoverageSummary codeCoverage
          && ( codeCoverage.CoverageSummaryDirectory / "summary.md" ).Exists())
         {
             FileSystemTasks.Touch(summary);
-            var coverageSummary = TextTasks.ReadAllText(codeCoverage.CoverageSummaryDirectory / "summary.md");
-            TextTasks.WriteAllText(summary, TextTasks.ReadAllText(summary) + "\n" + coverageSummary);
-        }
-
-        if (summary.Exists())
-        {
-            Log.Logger.Information(TextTasks.ReadAllText(summary));
+            var coverageSummary = TextTasks.ReadAllText(codeCoverage.CoverageSummaryDirectory / "Summary.md");
+            TextTasks.WriteAllText(summary, TextTasks.ReadAllText(summary).TrimStart() + "\n" + coverageSummary);
         }
     }
 }

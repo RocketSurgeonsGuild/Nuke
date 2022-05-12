@@ -1,36 +1,164 @@
+# Test results
+### Run Summary
 
+<p>
+<strong>Overall Result:</strong> ✔️ Pass <br />
+<strong>Pass Rate:</strong> 100% <br />
+<strong>Run Duration:</strong> < 1ms <br />
+<strong>Date:</strong> 2022-05-12 13:44:47 - 2022-05-12 13:44:51 <br />
+<strong>Total Tests:</strong> 6 <br />
+</p>
+
+<table>
+<thead>
+<tr>
+<th>✔️ Passed</th>
+<th>❌ Failed</th>
+<th>⚠️ Skipped</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>6</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>100%</td>
+<td>0%</td>
+<td>0%</td>
+</tr>
+</tbody>
+</table>
+
+---
+
+#### Test Run
+<strong>Group Result:</strong> ✔️ Pass <br />
+<strong>Pass Rate:</strong> 100% <br />
+<strong>Tests:</strong> 6 <br />
+<strong>Duration:</strong> < 1ms <br />
+<details open>
+<summary><strong>Results:</strong></summary>
+<details>
+<summary>✔️ Passed (6)</summary>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<details>
+<summary>
+✔️ Rocket.Surgery.Nuke.Tests.GitVersionTests.Fact1
+</summary>
+Source:
+<blockquote>Rocket.Surgery.Nuke.Tests.GitVersionTests.Fact1</blockquote>
+</details>
+</td>
+<td>< 1ms</td>
+</tr>
+<tr>
+<td>
+<details>
+<summary>
+✔️ Rocket.Surgery.Nuke.Tests.MiscTests.Test1
+</summary>
+Source:
+<blockquote>Rocket.Surgery.Nuke.Tests.MiscTests.Test1</blockquote>
+</details>
+</td>
+<td>< 1ms</td>
+</tr>
+<tr>
+<td>
+<details>
+<summary>
+✔️ Rocket.Surgery.Nuke.Tests.MiscTests.NuGetVerbosityMappingAttribute
+</summary>
+Source:
+<blockquote>Rocket.Surgery.Nuke.Tests.MiscTests.NuGetVerbosityMappingAttribute</blockquote>
+</details>
+</td>
+<td>< 1ms</td>
+</tr>
+<tr>
+<td>
+<details>
+<summary>
+✔️ Rocket.Surgery.Nuke.Tests.MiscTests.NuGetVerbosityMappingAttribute
+</summary>
+Source:
+<blockquote>Rocket.Surgery.Nuke.Tests.MiscTests.NuGetVerbosityMappingAttribute</blockquote>
+</details>
+</td>
+<td>< 1ms</td>
+</tr>
+<tr>
+<td>
+<details>
+<summary>
+✔️ Rocket.Surgery.Nuke.Tests.MiscTests.Test1
+</summary>
+Source:
+<blockquote>Rocket.Surgery.Nuke.Tests.MiscTests.Test1</blockquote>
+</details>
+</td>
+<td>< 1ms</td>
+</tr>
+<tr>
+<td>
+<details>
+<summary>
+✔️ Rocket.Surgery.Nuke.Tests.GitVersionTests.Fact1
+</summary>
+Source:
+<blockquote>Rocket.Surgery.Nuke.Tests.GitVersionTests.Fact1</blockquote>
+</details>
+</td>
+<td>< 1ms</td>
+</tr>
+</tbody>
+</table>
+</details>
+</details>
+---
 
 # Summary
 |||
 |:---|:---|
-| Generated on: | 5/12/2022 - 12:58:24 PM |
-| Coverage date: | 5/12/2022 - 12:58:19 PM - 5/12/2022 - 12:58:22 PM |
+| Generated on: | 5/12/2022 - 1:44:53 PM |
+| Coverage date: | 5/12/2022 - 1:44:49 PM - 5/12/2022 - 1:44:51 PM |
 | Parser: | MultiReport (2x Cobertura) |
 | Assemblies: | 1 |
 | Classes: | 106 |
 | Files: | 102 |
 | Covered lines: | 11 |
-| Uncovered lines: | 2364 |
-| Coverable lines: | 2375 |
-| Total lines: | 5621 |
-| Line coverage: | 0.4% (11 of 2375) |
+| Uncovered lines: | 2375 |
+| Coverable lines: | 2386 |
+| Total lines: | 5630 |
+| Line coverage: | 0.4% (11 of 2386) |
 | Covered branches: | 0 |
-| Total branches: | 424 |
-| Branch coverage: | 0% (0 of 424) |
+| Total branches: | 428 |
+| Branch coverage: | 0% (0 of 428) |
 | Covered methods: | 2 |
 | Total methods: | 240 |
 | Method coverage: | 0.8% (2 of 240) |
-| Tag: | 0.17.11-github-action-summaries.12+Branch.feature-github-action-summaries.Sha.3ad9864b53d4de61a81dad22f1d3bdfd34ebb510 |
+| Tag: | 0.17.11-github-action-summaries.15+Branch.feature-github-action-summaries.Sha.5a5ac4b63f50fca31ce952c30a90c1f905042db1 |
 
 |**Name**|**Covered**|**Uncovered**|**Coverable**|**Total**|**Line coverage**|**Covered**|**Total**|**Branch coverage**|**Covered**|**Total**|**Method coverage**|
 |:---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-|**Rocket.Surgery.Nuke**|**11**|**2364**|**2375**|**6633**|**0.4%**|**0**|**424**|**0%**|**2**|**240**|**0.8%**|
+|**Rocket.Surgery.Nuke**|**11**|**2375**|**2386**|**6642**|**0.4%**|**0**|**428**|**0%**|**2**|**240**|**0.8%**|
 |Rocket.Surgery.Nuke.Azp.AzurePipelinesParameter|0|5|5|26|0%|0|0||0|2|0%|
 |Rocket.Surgery.Nuke.Azp.AzurePipelinesStep|0|12|12|44|0%|0|0||0|2|0%|
 |Rocket.Surgery.Nuke.Azp.AzurePipelinesSteps|0|26|26|54|0%|0|6|0%|0|2|0%|
 |Rocket.Surgery.Nuke.Azp.AzurePipelinesTasks|0|66|66|111|0%|0|4|0%|0|7|0%|
 |Rocket.Surgery.Nuke.AzurePipelinesStepsAttribute|0|87|87|160|0%|0|20|0%|0|9|0%|
-|Rocket.Surgery.Nuke.ContinuousIntegration.GithubActionConventionsAttribute|0|18|18|47|0%|0|16|0%|0|1|0%|
+|Rocket.Surgery.Nuke.ContinuousIntegration.GithubActionConventionsAttribute|0|26|26|55|0%|0|20|0%|0|1|0%|
 |Rocket.Surgery.Nuke.ContinuousIntegration.ICIEnvironment|0|25|25|45|0%|0|0||0|2|0%|
 |Rocket.Surgery.Nuke.ContinuousIntegration.PrintBuildVersionAttribute|0|13|13|35|0%|0|8|0%|0|1|0%|
 |Rocket.Surgery.Nuke.ContinuousIntegration.PrintCIEnvironmentAttribute|0|25|25|65|0%|0|4|0%|0|3|0%|
@@ -112,7 +240,7 @@
 |Rocket.Surgery.Nuke.SolutionExtensions|0|6|6|29|0%|0|0||0|2|0%|
 |Rocket.Surgery.Nuke.StringExtensions|0|3|3|19|0%|0|0||0|1|0%|
 |Rocket.Surgery.Nuke.Symbols|0|20|20|48|0%|0|2|0%|0|3|0%|
-|Rocket.Surgery.Nuke.Temp.LiquidReporter.LiquidReporter|0|51|51|85|0%|0|2|0%|0|4|0%|
+|Rocket.Surgery.Nuke.Temp.LiquidReporter.LiquidReporter|0|54|54|86|0%|0|2|0%|0|4|0%|
 |Rocket.Surgery.Nuke.Temp.LiquidReporter.Loaders.TrxLoader|0|9|9|19|0%|0|2|0%|0|1|0%|
 |Rocket.Surgery.Nuke.Temp.LiquidReporter.Services.InputProcessingService|0|24|24|51|0%|0|2|0%|0|4|0%|
 |Rocket.Surgery.Nuke.TitleEventsAttribute|0|12|12|33|0%|0|0||0|4|0%|
