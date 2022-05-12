@@ -41,7 +41,7 @@ public sealed class GithubActionConventionsAttribute : BuildExtensionAttributeBa
         // ReSharper disable once SuspiciousTypeConversion.Global
         if (build.ExecutionPlan.Any(z => z.Name == nameof(IGenerateCodeCoverageSummary.GenerateCodeCoverageSummary))
          && build is IGenerateCodeCoverageSummary codeCoverage
-         && ( codeCoverage.CoverageSummaryDirectory / "summary.md" ).Exists())
+         && ( codeCoverage.CoverageSummaryDirectory / "Summary.md" ).Exists())
         {
             FileSystemTasks.Touch(summary);
             var coverageSummary = TextTasks.ReadAllText(codeCoverage.CoverageSummaryDirectory / "Summary.md");
