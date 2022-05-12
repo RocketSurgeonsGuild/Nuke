@@ -1,8 +1,8 @@
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
 using Nuke.Common.IO;
-using Nuke.Common.Tooling;
-using static Nuke.Common.Tools.DotNet.DotNetTasks;
+using Rocket.Surgery.Nuke.Temp.LiquidReporter;
+using Serilog;
 
 namespace Rocket.Surgery.Nuke.ContinuousIntegration;
 
@@ -30,13 +30,15 @@ public sealed class GithubActionConventionsAttribute : BuildExtensionAttributeBa
         // ReSharper disable once SuspiciousTypeConversion.Global
         if (build is IHaveTestArtifacts testResultReports && testResultReports.TestResultsDirectory.GlobFiles("**/*.trx") is { Count: > 0 } results)
         {
-            DotNet(
-                new Arguments()
-                   .Add("liquid")
-                   .Add("--inputs {0}", results.Select(z => "File=" + z), ' ', quoteMultiple: true)
-                   .Add("--output {0}", EnvironmentInfo.GetVariable<string>("GITHUB_STEP_SUMMARY"))
-                   .ToString()
-            );
+            var reporter = new LiquidReporter(results.Select(z => z.ToString()), Log.Logger);
+            reporter.Run("Test results", EnvironmentInfo.GetVariable<string>("GITHUB_STEP_SUMMARY")!);
+//            DotNet(
+//                new Arguments()
+//                   .Add("liquid")
+//                   .Add("--inputs {0}", results.Select(z => "File=" + z), ' ', quoteMultiple: true)
+//                   .Add("--output {0}", EnvironmentInfo.GetVariable<string>("GITHUB_STEP_SUMMARY"))
+//                   .ToString()
+//            );
         }
     }
 }

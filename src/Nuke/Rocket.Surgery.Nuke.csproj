@@ -15,6 +15,7 @@
     <PackageReference Include="Microsoft.Build.Framework" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" />
+      <PackageReference Include="LiquidTestReports.Core" />
   </ItemGroup>
   <ItemGroup>
     <None Include="build/*.*" Pack="true" PackagePath="build" />
@@ -27,5 +28,7 @@
     <Using Include="Humanizer" />
     <Using Include="Nuke.Common" />
     <Using Include="Nuke.Common.Utilities" />
+    <None Remove="Temp\LiquidReporter\Resources\MdMultiReport.md" />
+    <EmbeddedResource Include="Temp\LiquidReporter\Resources\MdMultiReport.md" LogicalName="MdMultiReport.md" />
   </ItemGroup>
 </Project>
