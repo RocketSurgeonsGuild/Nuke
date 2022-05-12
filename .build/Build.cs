@@ -29,6 +29,7 @@ public partial class Solution : NukeBuild,
                                 IGenerateCodeCoverageReport,
                                 IGenerateCodeCoverageSummary,
                                 IGenerateCodeCoverageBadges,
+                                IGenerateCodeCoverageSummaryForGithubActions,
                                 IHaveConfiguration<Configuration>
 {
     /// <summary>
