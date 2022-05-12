@@ -1,4 +1,3 @@
-using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
 using Nuke.Common.IO;
 using Rocket.Surgery.Nuke.Temp.LiquidReporter;
@@ -9,13 +8,14 @@ namespace Rocket.Surgery.Nuke.ContinuousIntegration;
 /// <summary>
 ///     Enhances the build with some github actions specific conventions
 /// </summary>
+[PublicAPI]
 public sealed class GithubActionConventionsAttribute : BuildExtensionAttributeBase, IOnBuildFinished
 {
     /// <inheritdoc />
     public void OnBuildFinished(NukeBuild build)
     {
         if (build is not INukeBuild nukeBuild) return;
-        if (nukeBuild.Host != GitHubActions.Instance) return;
+//        if (nukeBuild.Host != GitHubActions.Instance) return;
         if (EnvironmentInfo.GetVariable<string>("GITHUB_STEP_SUMMARY") is not { Length: > 0 } summary) return;
         FileSystemTasks.Touch(summary);
 

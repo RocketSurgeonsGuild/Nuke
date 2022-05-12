@@ -1,4 +1,6 @@
-﻿using DotLiquid;
+﻿using System.Globalization;
+using System.Reflection;
+using DotLiquid;
 using DotLiquid.Exceptions;
 using LiquidTestReports.Core.Drops;
 using Rocket.Surgery.Nuke.Temp.LiquidReporter.Services;
@@ -41,14 +43,15 @@ internal class LiquidReporter
 
         string report = null;
 
-        _logger.Information("Generating report");
-
         try
         {
+            _logger.Information("Generating report");
             var reportGeneratorType = typeof(LibraryTestRun).Assembly.GetType("LiquidTestReports.Core.ReportGenerator")!;
-            var reportGeneratorMethod = reportGeneratorType.GetMethod("GenerateReport")!;
-            var reportGenerator = Activator.CreateInstance(reportGeneratorType, new LibraryTestRun { Run = run, Library = libraryDrop });
-
+            var reportGeneratorMethod = reportGeneratorType.GetMethod("GenerateReport", BindingFlags.NonPublic | BindingFlags.Instance)!;
+            var reportGenerator = Activator.CreateInstance(
+                reportGeneratorType, BindingFlags.Instance | BindingFlags.CreateInstance | BindingFlags.NonPublic, null,
+                new object[] { new LibraryTestRun { Run = run, Library = libraryDrop } }, CultureInfo.InvariantCulture
+            );
             using var stream = GetType().Assembly.GetManifestResourceStream("MdMultiReport.md")!;
             using var template = new StreamReader(stream);
             var parameters = new object?[] { template.ReadToEnd(), null };
