@@ -10,13 +10,26 @@ namespace Rocket.Surgery.Nuke.ContinuousIntegration;
 ///     Enhances the build with some github actions specific conventions
 /// </summary>
 [PublicAPI]
-public sealed class GithubActionConventionsAttribute : BuildExtensionAttributeBase, IOnBuildFinished
+#pragma warning disable CA1813
+[AttributeUsage(AttributeTargets.Class)]
+public class ContinuousIntegrationConventionsAttribute : BuildExtensionAttributeBase, IOnBuildFinished
+#pragma warning restore CA1813
 {
     /// <inheritdoc />
     public void OnBuildFinished(NukeBuild build)
     {
         if (build is not INukeBuild nukeBuild) return;
-        if (nukeBuild.Host != GitHubActions.Instance) return;
+        if (nukeBuild.IsLocalBuild) return;
+        switch (nukeBuild.Host)
+        {
+            case GitHubActions:
+                HandleGithubActions(build);
+                break;
+        }
+    }
+
+    private static void HandleGithubActions(INukeBuild build)
+    {
         if (EnvironmentInfo.GetVariable<AbsolutePath>("GITHUB_STEP_SUMMARY") is not { } summary) return;
 
         // ReSharper disable once SuspiciousTypeConversion.Global
