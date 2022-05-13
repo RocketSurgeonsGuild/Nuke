@@ -3,7 +3,7 @@
 /// <summary>
 ///     Constants for Cli tool.
 /// </summary>
-internal class Constants
+internal static class Constants
 {
     /// <summary>
     ///     The file extension of MD file.

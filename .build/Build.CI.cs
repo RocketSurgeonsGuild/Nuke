@@ -6,7 +6,7 @@ using Rocket.Surgery.Nuke.GithubActions;
 
 #pragma warning disable CA1050
 
-internal class LocalConstants
+internal static class LocalConstants
 {
     public static string[] PathsIgnore =
     {

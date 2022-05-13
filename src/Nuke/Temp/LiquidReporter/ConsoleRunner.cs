@@ -6,6 +6,8 @@ using LiquidTestReports.Core.Drops;
 using Rocket.Surgery.Nuke.Temp.LiquidReporter.Services;
 using Serilog;
 
+// ReSharper disable TemplateIsNotCompileTimeConstantProblem
+
 namespace Rocket.Surgery.Nuke.Temp.LiquidReporter;
 
 /// <summary>
@@ -38,10 +40,10 @@ internal class LiquidReporter
         catch (InvalidDataException e)
         {
             _logger.Error(e.Message);
-            return null;
+            return string.Empty;
         }
 
-        string report = null;
+        var report = string.Empty;
 
         try
         {
@@ -55,7 +57,7 @@ internal class LiquidReporter
             using var stream = GetType().Assembly.GetManifestResourceStream("MdMultiReport.md")!;
             using var template = new StreamReader(stream);
             var parameters = new object?[] { template.ReadToEnd(), null };
-            report = (string)reportGeneratorMethod.Invoke(reportGenerator, parameters);
+            report = (string)reportGeneratorMethod.Invoke(reportGenerator, parameters)!;
             var errors = (IList<Exception>)parameters[1]!;
             foreach (var error in errors)
                 _logger.Error(error.Message);
@@ -65,7 +67,9 @@ internal class LiquidReporter
         {
             _logger.Error(e.Message);
         }
+#pragma warning disable CA1031
         catch (Exception e)
+#pragma warning restore CA1031
         {
             _logger.Error("Unexpected error occurred while generating report {Message}", e.Message);
         }

@@ -45,6 +45,13 @@ public sealed class GithubActionConventionsAttribute : BuildExtensionAttributeBa
         {
             FileSystemTasks.Touch(summary);
             var coverageSummary = TextTasks.ReadAllText(codeCoverage.CoverageSummaryDirectory / "Summary.md");
+            if (coverageSummary.IndexOf("|**Name**", StringComparison.Ordinal) is > -1 and var index)
+            {
+                var topCoverageSummary = coverageSummary[..( index - 1 )];
+                var detailsCoverageSummary = coverageSummary[index..];
+                coverageSummary = topCoverageSummary + "\n<details>\n<summary>Coverage Details</summary>\n" + detailsCoverageSummary + "\n</details>";
+            }
+
             TextTasks.WriteAllText(summary, TextTasks.ReadAllText(summary).TrimStart() + "\n" + coverageSummary);
         }
     }

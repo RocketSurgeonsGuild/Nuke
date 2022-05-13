@@ -3,14 +3,16 @@ using Schemas.VisualStudio.TeamTest;
 
 namespace Rocket.Surgery.Nuke.Temp.LiquidReporter.Loaders;
 
-internal class TrxLoader
+internal static class TrxLoader
 {
     internal static TestRunType FromFile(string file)
     {
         var ser = new XmlSerializer(typeof(TestRunType));
         using (var reader = new StreamReader(file))
         {
+#pragma warning disable CA5369
             if (ser.Deserialize(reader) is TestRunType results)
+#pragma warning restore CA5369
                 return results;
         }
 
