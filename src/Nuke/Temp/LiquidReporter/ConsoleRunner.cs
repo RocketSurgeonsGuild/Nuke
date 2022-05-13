@@ -60,7 +60,7 @@ internal class LiquidReporter
             report = (string)reportGeneratorMethod.Invoke(reportGenerator, parameters)!;
             var errors = (IList<Exception>)parameters[1]!;
             foreach (var error in errors)
-                _logger.Error(error.Message);
+                _logger.Verbose(error.Message);
             _logger.Information("Finished generating report");
         }
         catch (SyntaxException e)
