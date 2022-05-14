@@ -19,7 +19,9 @@ public interface IXamarinAppleTarget : IHaveBundleIdentifier, IHaveGitVersion, I
                 Log.Verbose("Info.plist Path: {InfoPlist}", InfoPlist);
                 var plist = Plist.Deserialize(InfoPlist);
 
+#pragma warning disable CA1304
                 plist["CFBundleIdentifier"] = $"{BundleIdentifier}.{Suffix.ToLower()}".TrimEnd('.');
+#pragma warning restore CA1304
                 Log.Information("CFBundleIdentifier: {CFBundleIdentifier}", plist["CFBundleIdentifier"]);
 
                 plist["CFBundleShortVersionString"] = Regex.Replace(GitVersion.MajorMinorPatch(), "[^0-9.]", "");

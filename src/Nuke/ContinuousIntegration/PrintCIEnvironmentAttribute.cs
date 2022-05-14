@@ -13,7 +13,7 @@ namespace Rocket.Surgery.Nuke.ContinuousIntegration;
 [PublicAPI]
 [UsedImplicitly(ImplicitUseKindFlags.Default)]
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
-public sealed class PrintCIEnvironmentAttribute : BuildExtensionAttributeBase, IOnBuildInitialized
+public sealed class PrintCIEnvironmentAttribute : BuildExtensionAttributeBase, IOnBuildInitialized, IOnBuildFinished
 {
     private readonly string[] _additionalPrefixes;
 
@@ -61,5 +61,15 @@ public sealed class PrintCIEnvironmentAttribute : BuildExtensionAttributeBase, I
         {
             Log.Information("{Key}: {Value}", variable, EnvironmentInfo.Variables[variable]);
         }
+    }
+
+    /// <inheritdoc />
+    public void OnBuildFinished(NukeBuild build)
+    {
+        if (build.GetType().HasCustomAttribute<ContinuousIntegrationConventionsAttribute>()) return;
+
+        Log.Logger.Warning("Please updated the build to also be decorated with [ContinuousIntegrationConventions]");
+        // Shim in compatibility such that this "just works" until the build is updated to use the new attribute
+        new ContinuousIntegrationConventionsAttribute().OnBuildFinished(build);
     }
 }
