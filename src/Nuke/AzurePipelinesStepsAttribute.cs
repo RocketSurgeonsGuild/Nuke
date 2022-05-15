@@ -125,12 +125,7 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
     )
     {
         var chainLinkNames = GetInvokedTargets(executableTarget, relevantTargets).Select(z => z.Name).ToArray();
-
-        var dotnetTools = Path.Combine(NukeBuild.RootDirectory, ".config/dotnet-tools.json");
-
-        var localTool = File.Exists(dotnetTools) && File.ReadAllText(dotnetTools).Contains("\"nuke.globaltool\": {", StringComparison.OrdinalIgnoreCase);
-
-        var tool = localTool ? "dotnet nuke" : "nuke";
+        var tool = Helpers.IsDotnetToolInstalled("codecov.tool") ? "dotnet nuke" : "nuke";
 
         return new AzurePipelinesStep
         {

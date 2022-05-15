@@ -103,90 +103,14 @@ public partial class Solution
             item.ExcludePaths = LocalConstants.PathsIgnore;
         }
 
-        var buildJob = configuration.Jobs.OfType<RocketSurgeonsGithubActionsJob>().First(z => z.Name == "Build");
-        buildJob.FailFast = false;
-        var checkoutStep = buildJob.Steps.OfType<CheckoutStep>().Single();
-        // For fetch all
-        checkoutStep.FetchDepth = 0;
-        buildJob.Environment["NUGET_PACKAGES"] = "${{ github.workspace }}/.nuget/packages";
-        buildJob.Steps.InsertRange(
-            buildJob.Steps.IndexOf(checkoutStep) + 1,
-            new BaseGitHubActionsStep[]
-            {
-                new RunStep("Fetch all history for all tags and branches")
-                {
-                    Run = "git fetch --prune"
-                },
-                new UsingStep("NuGet Cache")
-                {
-                    Uses = "actions/cache@v2",
-                    With =
-                    {
-                        ["path"] = "${{ github.workspace }}/.nuget/packages",
-                        // keep in mind using central package versioning here
-                        ["key"] =
-                            "${{ runner.os }}-nuget-${{ hashFiles('**/Directory.Packages.props') }}-${{ hashFiles('**/Directory.Packages.support.props') }}",
-                        ["restore-keys"] = @"|
-              ${{ runner.os }}-nuget-"
-                    }
-                },
-                new SetupDotNetStep("Use .NET Core 3.1 SDK")
-                {
-                    DotNetVersion = "3.1.x"
-                },
-                new SetupDotNetStep("Use .NET Core 6.0 SDK")
-                {
-                    DotNetVersion = "6.0.x"
-                }
-            }
-        );
-
-        buildJob.Steps.Add(
-            new UsingStep("Publish Coverage")
-            {
-                Uses = "codecov/codecov-action@v1",
-                With = new Dictionary<string, string>
-                {
-                    ["name"] = "actions-${{ matrix.os }}",
-                }
-            }
-        );
-
-        buildJob.Steps.Add(
-            new UploadArtifactStep("Publish logs")
-            {
-                Name = "logs",
-                Path = "artifacts/logs/",
-                If = "always()"
-            }
-        );
-
-        buildJob.Steps.Add(
-            new UploadArtifactStep("Publish coverage data")
-            {
-                Name = "coverage",
-                Path = "coverage/",
-                If = "always()"
-            }
-        );
-
-        buildJob.Steps.Add(
-            new UploadArtifactStep("Publish test data")
-            {
-                Name = "test data",
-                Path = "artifacts/test/",
-                If = "always()"
-            }
-        );
-
-        buildJob.Steps.Add(
-            new UploadArtifactStep("Publish NuGet Packages")
-            {
-                Name = "nuget",
-                Path = "artifacts/nuget/",
-                If = "always()"
-            }
-        );
+        configuration.Jobs.OfType<RocketSurgeonsGithubActionsJob>()
+                     .First(z => z.Name == "Build")
+                     .UseDotNetSdks("3.1", "6.0")
+                     .AddNuGetCache()
+                      // .ConfigureForGitVersion()
+                     .ConfigureStep<CheckoutStep>(step => step.FetchDepth = 0)
+                     .PublishLogs<Solution>()
+                     .FailFast = false;
 
         return configuration;
     }
