@@ -291,7 +291,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                     Run = "dotnet tool restore"
                 }
             );
-            if (!File.ReadAllText(dotnetTools).Contains("\"nuke.globaltool\": {", StringComparison.OrdinalIgnoreCase))
+            if (!File.ReadAllText(dotnetTools).Contains("\"nuke.globaltool\"", StringComparison.OrdinalIgnoreCase))
             {
                 steps.Add(globalToolStep);
             }
