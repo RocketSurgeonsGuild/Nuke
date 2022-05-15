@@ -78,7 +78,7 @@ public static class GithubActionsExtensions
                     {
                         Uses = "codecov/codecov-action@v1",
                         If =
-                            "github.event_name != 'pull_request' && github.event_name != 'pull_request_target') || ((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]'",
+                            "(github.event_name != 'pull_request' && github.event_name != 'pull_request_target') || ((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]')",
                         With = new() { ["name"] = "actions-${{ matrix.os }}" }
                     }
                 );
