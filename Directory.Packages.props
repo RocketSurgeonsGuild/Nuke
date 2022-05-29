@@ -13,7 +13,7 @@
         />
     <PackageVersion Include="Rocket.Surgery.MSBuild.Metadata" Version="1.1.0" />
     <PackageVersion Include="Rocket.Surgery.MSBuild.SourceLink" Version="1.1.1" />
-    <PackageVersion Include="Roslynator.Analyzers" Version="4.1.0" />
+    <PackageVersion Include="Roslynator.Analyzers" Version="4.1.1" />
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="Buildalyzer" Version="4.1.4" />
