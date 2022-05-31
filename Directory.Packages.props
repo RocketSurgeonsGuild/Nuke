@@ -17,7 +17,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="Buildalyzer" Version="4.1.4" />
-    <PackageVersion Include="GitVersion.Tool" Version="5.10.2" />
+    <PackageVersion Include="GitVersion.Tool" Version="5.10.3" />
     <PackageVersion Include="Humanizer.Core" Version="2.14.1" />
     <PackageVersion Include="Nuke.Common" Version="6.0.3" />
     <PackageVersion Include="ReportGenerator" Version="5.1.9" />
