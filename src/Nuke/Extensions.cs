@@ -11,7 +11,7 @@ public static class Extensions
     /// <param name="value"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public static T As<T>(this T value) where T : INukeBuild
+    public static T As<T>(this T value)
     {
         return value;
     }
