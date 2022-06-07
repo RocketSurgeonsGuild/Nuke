@@ -4,6 +4,7 @@ using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
 using Nuke.Common.Execution;
 using Nuke.Common.IO;
+using Nuke.Common.Tooling;
 using Nuke.Common.Utilities.Collections;
 using YamlDotNet.RepresentationModel;
 
@@ -217,7 +218,8 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
 {
-    private readonly GitHubActionsImage[] _images;
+    private readonly string[] _images;
+    private readonly bool _isGithubHosted;
 
     /// <summary>
     ///     The default constructor
@@ -229,6 +231,24 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         string name,
         GitHubActionsImage image,
         params GitHubActionsImage[] images
+    ) : base(name)
+    {
+        _images = new[] { image }.Concat(images)
+                                 .Select(z => z.GetValue().Replace(".", "_", StringComparison.Ordinal))
+                                 .ToArray();
+        _isGithubHosted = true;
+    }
+
+    /// <summary>
+    ///     The default constructor
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="image"></param>
+    /// <param name="images"></param>
+    public GitHubActionsStepsAttribute(
+        string name,
+        string image,
+        params string[] images
     ) : base(name)
     {
         _images = new[] { image }.Concat(images).ToArray();
@@ -338,23 +358,13 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                 new RocketSurgeonsGithubActionsJob("Build")
                 {
                     Steps = steps,
-                    Images = _images,
-                },
-                new RocketSurgeonsGithubWorkflowJob("Publish")
-                {
-                    Needs = { "Build" },
-                    Uses = "RocketSurgeonsGuild/actions/.github/workflows/publish-nuget.yml@v0.3.0",
-                    Secrets = new Dictionary<string, string>
-                    {
-                        ["RSG_NUGET_API_KEY"] = "${{ secrets.RSG_NUGET_API_KEY }}",
-                        ["RSG_AZURE_DEVOPS"] = "${{ secrets.RSG_AZURE_DEVOPS }}",
-                    }
+                    RunsOn = !_isGithubHosted ? _images : Array.Empty<string>(),
+                    Matrix = _isGithubHosted ? _images : Array.Empty<string>(),
                 }
             }
         };
 
         ApplyEnhancements(build, config);
-
 
         return config;
     }

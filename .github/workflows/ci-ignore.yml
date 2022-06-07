@@ -70,7 +70,6 @@ on:
 
 jobs:
   Build:
-    strategy:
       matrix:
         os: [windows-latest, ubuntu-latest]
     runs-on: ${{ matrix.os }}
