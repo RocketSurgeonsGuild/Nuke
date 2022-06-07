@@ -1,7 +1,5 @@
 ﻿using Nuke.Common.CI;
-using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
-using Nuke.Common.Tooling;
 
 #pragma warning disable CA1002
 #pragma warning disable CA2227
@@ -99,9 +97,14 @@ public class RocketSurgeonsGithubActionsJob : RocketSurgeonsGithubActionsJobBase
     }
 
     /// <summary>
-    ///     The images to use (for docker)
+    ///     The images to run on in a matrix
     /// </summary>
-    public IEnumerable<GitHubActionsImage> Images { get; set; } = Enumerable.Empty<GitHubActionsImage>();
+    public IEnumerable<string> Matrix { get; set; } = Enumerable.Empty<string>();
+
+    /// <summary>
+    ///     The images to run on
+    /// </summary>
+    public IEnumerable<string> RunsOn { get; set; } = Enumerable.Empty<string>();
 
     /// <summary>
     ///     The steps to run
@@ -120,7 +123,7 @@ public class RocketSurgeonsGithubActionsJob : RocketSurgeonsGithubActionsJobBase
 
         using (writer.Indent())
         {
-            if (Images.Count() > 1 || !FailFast)
+            if (Matrix.Count() > 1 || !FailFast)
             {
                 writer.WriteLine("strategy:");
             }
@@ -132,25 +135,26 @@ public class RocketSurgeonsGithubActionsJob : RocketSurgeonsGithubActionsJobBase
                     writer.WriteLine("fail-fast: false");
                 }
 
-                if (Images.Count() > 1)
+                if (Matrix.Count() > 1)
                 {
                     writer.WriteLine("matrix:");
 
                     using (writer.Indent())
                     {
-                        var images = string.Join(
-                            ", ", Images.Select(image => image.GetValue().Replace(".", "_", StringComparison.Ordinal))
-                        );
-                        writer.WriteLine($"os: [{images}]");
+                        writer.WriteLine($"os: [{string.Join(", ", Matrix)}]");
                     }
                 }
             }
 
-            if (Images.Count() == 1)
+            if (!Matrix.Any() && RunsOn.Any())
             {
-                writer.WriteLine($"runs-on: {Images.First().GetValue().Replace(".", "_", StringComparison.Ordinal)}");
+                writer.WriteLine($"runs-on: [{string.Join(", ", RunsOn)}]");
             }
-            else if (Images.Count() > 1)
+            else if (Matrix.Count() == 1)
+            {
+                writer.WriteLine($"runs-on: {Matrix.First()}");
+            }
+            else if (Matrix.Count() > 1)
             {
                 writer.WriteLine("runs-on: ${{ matrix.os }}");
             }

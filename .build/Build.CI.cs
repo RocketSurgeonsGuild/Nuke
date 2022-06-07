@@ -6,31 +6,6 @@ using Rocket.Surgery.Nuke.GithubActions;
 
 #pragma warning disable CA1050
 
-internal static class LocalConstants
-{
-    public static string[] PathsIgnore =
-    {
-        ".codecov.yml",
-        ".editorconfig",
-        ".gitattributes",
-        ".gitignore",
-        ".gitmodules",
-        ".lintstagedrc.js",
-        ".prettierignore",
-        ".prettierrc",
-        "LICENSE",
-        "nukeeper.settings.json",
-        "omnisharp.json",
-        "package-lock.json",
-        "package.json",
-        "Readme.md",
-        ".github/dependabot.yml",
-        ".github/labels.yml",
-        ".github/release.yml",
-        ".github/renovate.json",
-    };
-}
-
 [GitHubActionsSteps(
     "ci-ignore",
     GitHubActionsImage.WindowsLatest,
@@ -73,16 +48,8 @@ internal static class LocalConstants
 [ContinuousIntegrationConventions]
 public partial class Solution
 {
-    public static RocketSurgeonGitHubActionsConfiguration CiIgnoreMiddleware(
-        RocketSurgeonGitHubActionsConfiguration configuration
-    )
+    public static RocketSurgeonGitHubActionsConfiguration CiIgnoreMiddleware(RocketSurgeonGitHubActionsConfiguration configuration)
     {
-        foreach (var item in configuration.DetailedTriggers.OfType<RocketSurgeonGitHubActionsVcsTrigger>())
-        {
-            item.IncludePaths = LocalConstants.PathsIgnore;
-        }
-
-        configuration.Jobs.RemoveAt(1);
         ( (RocketSurgeonsGithubActionsJob)configuration.Jobs[0] ).Steps = new List<GitHubActionsStep>
         {
             new RunStep("N/A")
@@ -91,26 +58,22 @@ public partial class Solution
             }
         };
 
-        return configuration;
+        return configuration.IncludeRepositoryConfigurationFiles();
     }
 
-    public static RocketSurgeonGitHubActionsConfiguration CiMiddleware(
-        RocketSurgeonGitHubActionsConfiguration configuration
-    )
+    public static RocketSurgeonGitHubActionsConfiguration CiMiddleware(RocketSurgeonGitHubActionsConfiguration configuration)
     {
-        foreach (var item in configuration.DetailedTriggers.OfType<RocketSurgeonGitHubActionsVcsTrigger>())
-        {
-            item.ExcludePaths = LocalConstants.PathsIgnore;
-        }
-
-        configuration.Jobs.OfType<RocketSurgeonsGithubActionsJob>()
-                     .First(z => z.Name == "Build")
-                     .UseDotNetSdks("3.1", "6.0")
-                     .AddNuGetCache()
-                      // .ConfigureForGitVersion()
-                     .ConfigureStep<CheckoutStep>(step => step.FetchDepth = 0)
-                     .PublishLogs<Solution>()
-                     .FailFast = false;
+        configuration
+           .ExcludeRepositoryConfigurationFiles()
+           .AddNugetPublish()
+           .Jobs.OfType<RocketSurgeonsGithubActionsJob>()
+           .First(z => z.Name == "Build")
+           .UseDotNetSdks("3.1", "6.0")
+           .AddNuGetCache()
+            // .ConfigureForGitVersion()
+           .ConfigureStep<CheckoutStep>(step => step.FetchDepth = 0)
+           .PublishLogs<Solution>()
+           .FailFast = false;
 
         return configuration;
     }

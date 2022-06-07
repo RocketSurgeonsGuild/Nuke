@@ -9,6 +9,102 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 public static class GithubActionsExtensions
 {
     /// <summary>
+    ///     Adds the default publish nuget step to the given configuration
+    /// </summary>
+    /// <param name="configuration"></param>
+    /// <returns></returns>
+    public static RocketSurgeonGitHubActionsConfiguration AddNugetPublish(this RocketSurgeonGitHubActionsConfiguration configuration)
+    {
+        configuration.Jobs.Add(
+            new RocketSurgeonsGithubWorkflowJob("Publish")
+            {
+                Needs = { "Build" },
+                Uses = "RocketSurgeonsGuild/actions/.github/workflows/publish-nuget.yml@v0.3.0",
+                Secrets = new Dictionary<string, string>
+                {
+                    ["RSG_NUGET_API_KEY"] = "${{ secrets.RSG_NUGET_API_KEY }}",
+                    ["RSG_AZURE_DEVOPS"] = "${{ secrets.RSG_AZURE_DEVOPS }}",
+                }
+            }
+        );
+        return configuration;
+    }
+
+    private static string[] _pathsIgnore =
+    {
+        ".codecov.yml",
+        ".editorconfig",
+        ".gitattributes",
+        ".gitignore",
+        ".gitmodules",
+        ".lintstagedrc.js",
+        ".prettierignore",
+        ".prettierrc",
+        "LICENSE",
+        "nukeeper.settings.json",
+        "omnisharp.json",
+        "package-lock.json",
+        "package.json",
+        "Readme.md",
+        ".github/dependabot.yml",
+        ".github/labels.yml",
+        ".github/release.yml",
+        ".github/renovate.json",
+    };
+
+    /// <summary>
+    ///     Adds common paths that should be included to trigger a full CI build in github actions
+    /// </summary>
+    /// <param name="configuration"></param>
+    /// <returns></returns>
+    public static RocketSurgeonGitHubActionsConfiguration IncludeRepositoryConfigurationFiles(this RocketSurgeonGitHubActionsConfiguration configuration)
+    {
+        return IncludePaths(configuration, _pathsIgnore);
+    }
+
+    /// <summary>
+    ///     Adds common paths that should be excluded from triggering a full CI build in github actions
+    /// </summary>
+    /// <param name="configuration"></param>
+    /// <returns></returns>
+    public static RocketSurgeonGitHubActionsConfiguration ExcludeRepositoryConfigurationFiles(this RocketSurgeonGitHubActionsConfiguration configuration)
+    {
+        return ExcludePaths(configuration, _pathsIgnore);
+    }
+
+    /// <summary>
+    ///     Adds paths that should be included to trigger a full CI build in github actions
+    /// </summary>
+    /// <param name="configuration"></param>
+    /// <param name="paths"></param>
+    /// <returns></returns>
+    public static RocketSurgeonGitHubActionsConfiguration IncludePaths(this RocketSurgeonGitHubActionsConfiguration configuration, params string[] paths)
+    {
+        foreach (var item in configuration.DetailedTriggers.OfType<RocketSurgeonGitHubActionsVcsTrigger>())
+        {
+            item.IncludePaths = ( item.IncludePaths ?? Array.Empty<string>() ).Concat(paths).Distinct().ToArray();
+        }
+
+        return configuration;
+    }
+
+    /// <summary>
+    ///     Adds paths that should be excluded from triggering a full CI build in github actions
+    /// </summary>
+    /// <param name="configuration"></param>
+    /// <param name="paths"></param>
+    /// <returns></returns>
+    public static RocketSurgeonGitHubActionsConfiguration ExcludePaths(this RocketSurgeonGitHubActionsConfiguration configuration, params string[] paths)
+    {
+        foreach (var item in configuration.DetailedTriggers.OfType<RocketSurgeonGitHubActionsVcsTrigger>())
+        {
+            item.ExcludePaths = ( item.IncludePaths ?? Array.Empty<string>() ).Concat(paths).Distinct().ToArray();
+        }
+
+        return configuration;
+    }
+
+    /// <summary>
     ///     Add nuget caching
     /// </summary>
     /// <param name="job"></param>
