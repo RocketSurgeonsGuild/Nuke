@@ -123,7 +123,7 @@ public class RocketSurgeonsGithubActionsJob : RocketSurgeonsGithubActionsJobBase
 
         using (writer.Indent())
         {
-            if (RunsOn.Count() > 1 || !FailFast)
+            if (Matrix.Count() > 1 || !FailFast)
             {
                 writer.WriteLine("strategy:");
             }

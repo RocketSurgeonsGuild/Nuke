@@ -52,7 +52,6 @@ public static class GithubActionsExtensions
         ".github/renovate.json",
     };
 
-
     /// <summary>
     ///     Adds common paths that should be included to trigger a full CI build in github actions
     /// </summary>
@@ -60,12 +59,7 @@ public static class GithubActionsExtensions
     /// <returns></returns>
     public static RocketSurgeonGitHubActionsConfiguration IncludeRepositoryConfigurationFiles(this RocketSurgeonGitHubActionsConfiguration configuration)
     {
-        foreach (var item in configuration.DetailedTriggers.OfType<RocketSurgeonGitHubActionsVcsTrigger>())
-        {
-            item.IncludePaths = ( item.IncludePaths ?? Array.Empty<string>() ).Concat(_pathsIgnore).ToArray();
-        }
-
-        return configuration;
+        return IncludePaths(configuration, _pathsIgnore);
     }
 
     /// <summary>
@@ -75,9 +69,36 @@ public static class GithubActionsExtensions
     /// <returns></returns>
     public static RocketSurgeonGitHubActionsConfiguration ExcludeRepositoryConfigurationFiles(this RocketSurgeonGitHubActionsConfiguration configuration)
     {
+        return ExcludePaths(configuration, _pathsIgnore);
+    }
+
+    /// <summary>
+    ///     Adds paths that should be included to trigger a full CI build in github actions
+    /// </summary>
+    /// <param name="configuration"></param>
+    /// <param name="paths"></param>
+    /// <returns></returns>
+    public static RocketSurgeonGitHubActionsConfiguration IncludePaths(this RocketSurgeonGitHubActionsConfiguration configuration, params string[] paths)
+    {
         foreach (var item in configuration.DetailedTriggers.OfType<RocketSurgeonGitHubActionsVcsTrigger>())
         {
-            item.ExcludePaths = ( item.IncludePaths ?? Array.Empty<string>() ).Concat(_pathsIgnore).ToArray();
+            item.IncludePaths = ( item.IncludePaths ?? Array.Empty<string>() ).Concat(paths).Distinct().ToArray();
+        }
+
+        return configuration;
+    }
+
+    /// <summary>
+    ///     Adds paths that should be excluded from triggering a full CI build in github actions
+    /// </summary>
+    /// <param name="configuration"></param>
+    /// <param name="paths"></param>
+    /// <returns></returns>
+    public static RocketSurgeonGitHubActionsConfiguration ExcludePaths(this RocketSurgeonGitHubActionsConfiguration configuration, params string[] paths)
+    {
+        foreach (var item in configuration.DetailedTriggers.OfType<RocketSurgeonGitHubActionsVcsTrigger>())
+        {
+            item.ExcludePaths = ( item.IncludePaths ?? Array.Empty<string>() ).Concat(paths).Distinct().ToArray();
         }
 
         return configuration;
