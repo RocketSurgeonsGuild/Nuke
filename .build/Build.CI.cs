@@ -46,7 +46,7 @@ using Rocket.Surgery.Nuke.GithubActions;
 [UploadLogs]
 [TitleEvents]
 [ContinuousIntegrationConventions]
-public partial class Solution
+public partial class Pipeline
 {
     public static RocketSurgeonGitHubActionsConfiguration CiIgnoreMiddleware(RocketSurgeonGitHubActionsConfiguration configuration)
     {
@@ -72,7 +72,7 @@ public partial class Solution
            .AddNuGetCache()
             // .ConfigureForGitVersion()
            .ConfigureStep<CheckoutStep>(step => step.FetchDepth = 0)
-           .PublishLogs<Solution>()
+           .PublishLogs<Pipeline>()
            .FailFast = false;
 
         return configuration;
