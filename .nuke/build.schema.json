@@ -37,6 +37,7 @@
             "AppVeyor",
             "AzurePipelines",
             "Bamboo",
+            "Bitbucket",
             "Bitrise",
             "GitHubActions",
             "GitLab",
@@ -99,6 +100,7 @@
               "GenerateReadme",
               "Pack",
               "Restore",
+              "T",
               "Test",
               "Trigger_Code_Coverage_Reports",
               "TriggerCodeCoverageReports"
@@ -135,6 +137,7 @@
               "GenerateReadme",
               "Pack",
               "Restore",
+              "T",
               "Test",
               "Trigger_Code_Coverage_Reports",
               "TriggerCodeCoverageReports"
