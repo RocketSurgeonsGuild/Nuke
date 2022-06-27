@@ -27,8 +27,10 @@ public sealed class LocalBuildConventionsAttribute : BuildExtensionAttributeBase
             using var _ = File.Create(path);
             _.Close();
         }
-
-        if (File.GetLastWriteTime(path) + TimeSpan.FromHours(1) > DateTime.Now) return;
+        else if (File.GetLastWriteTime(path) + TimeSpan.FromHours(1) > DateTime.Now)
+        {
+            return;
+        }
 
         var attributes = nukeBuild.GetType().GetCustomAttributes(true)
                                   .OfType<SolutionUpdaterConfigurationAttribute>()
