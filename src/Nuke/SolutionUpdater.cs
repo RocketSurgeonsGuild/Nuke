@@ -30,6 +30,7 @@ internal static class SolutionUpdater
                      .Concat(ReplaceDotSolutionFolder(solution, configFolder))
                      .Concat(AddConfigurationFiles(solution, additionalRelativeFolderFilePatterns, additionalConfigFolderFilePatterns, configFolder))
                      .Concat(AddNukeBuilds(solution, configFolder))
+                     .Concat(NormalizePaths(solution))
             ;
 
 
@@ -117,6 +118,25 @@ internal static class SolutionUpdater
         );
 
         return actions;
+    }
+
+    private static IEnumerable<Action> NormalizePaths(Solution solution)
+    {
+        foreach (var folder in solution.AllSolutionFolders)
+        {
+            if (folder.Items.Values.All(z => ( (RelativePath)z ).ToUnixRelativePath() == z)) continue;
+            if (folder.Items.Keys.All(z => ( (RelativePath)z ).ToUnixRelativePath() == z)) continue;
+            yield return () =>
+            {
+                foreach (var item in folder.Items.Where(
+                             z => ( (RelativePath)z.Key ).ToUnixRelativePath() != z.Key || ( (RelativePath)z.Value ).ToUnixRelativePath() != z.Value
+                         ).ToArray())
+                {
+                    folder.Items.Remove(item.Key);
+                    folder.Items.Add(( (RelativePath)item.Key ).ToUnixRelativePath(), ( (RelativePath)item.Value ).ToUnixRelativePath());
+                }
+            };
+        }
     }
 
     private static IEnumerable<Action> AddSolutionItemToRelativeFolder(Solution solution, SolutionFolder configFolder, AbsolutePath path)
