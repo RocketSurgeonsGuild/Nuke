@@ -30,6 +30,7 @@ internal static class SolutionUpdater
                      .Concat(ReplaceDotSolutionFolder(solution, configFolder))
                      .Concat(AddConfigurationFiles(solution, additionalRelativeFolderFilePatterns, additionalConfigFolderFilePatterns, configFolder))
                      .Concat(AddNukeBuilds(solution, configFolder))
+                     .Concat(NormalizePaths(solution))
             ;
 
 
@@ -88,7 +89,9 @@ internal static class SolutionUpdater
     }
 
     private static IEnumerable<Action> AddConfigurationFiles(
-        Solution solution, IEnumerable<string> additionalRelativeFolderFilePatterns, IEnumerable<string> additionalConfigFolderFilePatterns,
+        Solution solution,
+        IEnumerable<string> additionalRelativeFolderFilePatterns,
+        IEnumerable<string> additionalConfigFolderFilePatterns,
         SolutionFolder configFolder
     )
     {
@@ -97,7 +100,7 @@ internal static class SolutionUpdater
         actions.AddRange(
             solution.Directory
                     .GlobFiles(".config/*")
-                    .SelectMany(path => AddSolutionItemToFolder(configFolder, path))
+                    .SelectMany(path => AddSolutionItemToFolder(configFolder, NukeBuild.RootDirectory.GetUnixRelativePathTo(path)))
         );
         actions.AddRange(
             solution.Directory
@@ -117,41 +120,61 @@ internal static class SolutionUpdater
         return actions;
     }
 
+    private static IEnumerable<Action> NormalizePaths(Solution solution)
+    {
+        foreach (var folder in solution.AllSolutionFolders)
+        {
+            if (folder.Items.Values.All(z => ( (RelativePath)z ).ToUnixRelativePath() == z)) continue;
+            if (folder.Items.Keys.All(z => ( (RelativePath)z ).ToUnixRelativePath() == z)) continue;
+            yield return () =>
+            {
+                foreach (var item in folder.Items.Where(
+                             z => ( (RelativePath)z.Key ).ToUnixRelativePath() != z.Key || ( (RelativePath)z.Value ).ToUnixRelativePath() != z.Value
+                         ).ToArray())
+                {
+                    folder.Items.Remove(item.Key);
+                    folder.Items.Add(( (RelativePath)item.Key ).ToUnixRelativePath(), ( (RelativePath)item.Value ).ToUnixRelativePath());
+                }
+            };
+        }
+    }
+
     private static IEnumerable<Action> AddSolutionItemToRelativeFolder(Solution solution, SolutionFolder configFolder, AbsolutePath path)
     {
         var folder = path.Parent == NukeBuild.RootDirectory
             ? configFolder
-            : GetNestedFolder(solution, null, NukeBuild.RootDirectory.GetRelativePathTo(path.Parent))!;
-        return AddSolutionItemToFolder(folder, path);
+            : GetNestedFolder(solution, null, NukeBuild.RootDirectory.GetRelativePathTo(path.Parent).ToUnixRelativePath())!;
+        return AddSolutionItemToFolder(folder, NukeBuild.RootDirectory.GetUnixRelativePathTo(path));
     }
 
     private static IEnumerable<Action> AddSolutionItemToRelativeConfigFolder(Solution solution, SolutionFolder configFolder, AbsolutePath path)
     {
-        var folder = GetNestedFolder(solution, configFolder, NukeBuild.RootDirectory.GetRelativePathTo(path.Parent)) ?? configFolder;
-        return AddSolutionItemToFolder(folder, path);
+        var folder = GetNestedFolder(solution, configFolder, NukeBuild.RootDirectory.GetRelativePathTo(path.Parent).ToUnixRelativePath()) ?? configFolder;
+        return AddSolutionItemToFolder(folder, NukeBuild.RootDirectory.GetUnixRelativePathTo(path));
     }
 
-    private static SolutionFolder? GetNestedFolder(Solution solution, SolutionFolder? folder, RelativePath path)
+    private static SolutionFolder? GetNestedFolder(Solution solution, SolutionFolder? folder, UnixRelativePath path)
     {
-        return PathConstruction.NormalizePath(path)
-                               .Split(Path.DirectorySeparatorChar)
-                               .Where(z => !string.IsNullOrWhiteSpace(z))
-                               .Aggregate(
-                                    folder,
-                                    (acc, pathPart) => solution.GetSolutionFolder(pathPart)
-                                                    ?? acc?.GetSolutionFolder(pathPart) ?? solution.AddSolutionFolder(pathPart, solutionFolder: acc)
-                                );
+        return path.ToString().Split('/')
+                   .Where(z => !string.IsNullOrWhiteSpace(z))
+                   .Aggregate(
+                        folder,
+                        (acc, pathPart) => solution.GetSolutionFolder(pathPart)
+                                        ?? acc?.GetSolutionFolder(pathPart) ?? solution.AddSolutionFolder(pathPart, solutionFolder: acc)
+                    );
     }
 
-    private static IEnumerable<Action> AddSolutionItemToFolder(SolutionFolder folder, AbsolutePath path)
+    private static IEnumerable<Action> AddSolutionItemToFolder(SolutionFolder folder, UnixRelativePath path)
     {
-        var relativePath = NukeBuild.RootDirectory.GetRelativePathTo(path);
-        if (folder.Items.Values.Any(z => z.EqualsOrdinalIgnoreCase(relativePath))) yield break;
-        if (folder.Items.ContainsKey(relativePath)) yield break;
+        if (folder.Items.Values.Select(z => ( (RelativePath)z ).ToUnixRelativePath().ToString()).Any(z => z == path)) yield break;
+        if (folder.Items.Keys.Select(z => ( (RelativePath)z ).ToUnixRelativePath().ToString()).Any(z => z == path)) yield break;
+        if (folder.Items.ContainsKey(path)) yield break;
         yield return () =>
         {
-            if (folder.Items.ContainsKey(relativePath)) return;
-            folder.Items.Add(relativePath, relativePath);
+            if (folder.Items.Values.Select(z => ( (RelativePath)z ).ToUnixRelativePath().ToString()).Any(z => z == path)) return;
+            if (folder.Items.Keys.Select(z => ( (RelativePath)z ).ToUnixRelativePath().ToString()).Any(z => z == path)) return;
+            if (folder.Items.ContainsKey(path)) return;
+            folder.Items.Add(path, path);
         };
     }
 
