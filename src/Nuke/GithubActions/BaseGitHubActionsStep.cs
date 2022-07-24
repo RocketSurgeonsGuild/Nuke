@@ -71,7 +71,7 @@ public abstract class BaseGitHubActionsStep : GitHubActionsStep
 
             if (ContinueOnError)
             {
-                writer.WriteLine($"continue-on-error: {Id}");
+                writer.WriteLine("continue-on-error: true");
             }
         }
     }
