@@ -36,6 +36,11 @@ public abstract class BaseGitHubActionsStep : GitHubActionsStep
     public GithubActionCondition? If { get; set; }
 
     /// <summary>
+    ///     Should this continue on error or not
+    /// </summary>
+    public bool ContinueOnError { get; set; }
+
+    /// <summary>
     ///     The dependencies of this job
     /// </summary>
     public Dictionary<string, string> Environment { get; set; } = new(StringComparer.OrdinalIgnoreCase);
@@ -62,6 +67,11 @@ public abstract class BaseGitHubActionsStep : GitHubActionsStep
             if (!string.IsNullOrWhiteSpace(If?.ToString()))
             {
                 writer.WriteLine($"if: {If}");
+            }
+
+            if (ContinueOnError)
+            {
+                writer.WriteLine($"continue-on-error: {Id}");
             }
         }
     }
