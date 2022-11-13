@@ -183,8 +183,7 @@ public static class GithubActionsExtensions
     public static RocketSurgeonsGithubActionsJob PublishArtifacts<T>(this RocketSurgeonsGithubActionsJob job) where T : INukeBuild
     {
         // fallback for projects not yet calling publish artifacts
-        if (typeof(IHaveNuGetPackages).IsAssignableFrom(typeof(T)) && job.InternalData.TryGetValue(typeof(IHaveNuGetPackages), out var found)
-                                                                   && found is not true)
+        if (typeof(IHaveNuGetPackages).IsAssignableFrom(typeof(T)) && !job.InternalData.TryGetValue(typeof(IHaveNuGetPackages), out _))
         {
             AddStep(
                 job,
@@ -198,7 +197,7 @@ public static class GithubActionsExtensions
             job.InternalData[typeof(IHaveNuGetPackages)] = true;
         }
 
-        if (typeof(IGenerateDocFx).IsAssignableFrom(typeof(T)) && job.InternalData.TryGetValue(typeof(IGenerateDocFx), out var found1) && found1 is not true)
+        if (typeof(IGenerateDocFx).IsAssignableFrom(typeof(T)) && job.InternalData.TryGetValue(typeof(IGenerateDocFx), out _))
         {
             AddStep(
                 job,
