@@ -111,6 +111,8 @@ public class RocketSurgeonsGithubActionsJob : RocketSurgeonsGithubActionsJobBase
     /// </summary>
     public List<GitHubActionsStep> Steps { get; set; } = new();
 
+    internal IDictionary<object, object> InternalData { get; } = new Dictionary<object, object>();
+
     /// <summary>
     ///     Should the job matrix fail fast, or wait for all to fail
     /// </summary>
