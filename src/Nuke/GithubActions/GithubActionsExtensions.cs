@@ -53,6 +53,32 @@ public static class GithubActionsExtensions
     };
 
     /// <summary>
+    ///     Adds a new step to the current configuration
+    /// </summary>
+    /// <param name="configuration"></param>
+    /// <param name="job"></param>
+    /// <returns></returns>
+    public static RocketSurgeonGitHubActionsConfiguration AddJob(
+        this RocketSurgeonGitHubActionsConfiguration configuration, RocketSurgeonsGithubActionsJobBase job
+    )
+    {
+        configuration.Jobs.Add(job);
+        return configuration;
+    }
+
+    /// <summary>
+    ///     Adds a new step to the current step
+    /// </summary>
+    /// <param name="configuration"></param>
+    /// <param name="step"></param>
+    /// <returns></returns>
+    public static RocketSurgeonsGithubActionsJob AddStep(this RocketSurgeonsGithubActionsJob configuration, GitHubActionsStep step)
+    {
+        configuration.Steps.Add(step);
+        return configuration;
+    }
+
+    /// <summary>
     ///     Adds common paths that should be included to trigger a full CI build in github actions
     /// </summary>
     /// <param name="configuration"></param>
@@ -154,11 +180,52 @@ public static class GithubActionsExtensions
     /// <param name="job"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
+    public static RocketSurgeonsGithubActionsJob PublishArtifacts<T>(this RocketSurgeonsGithubActionsJob job) where T : INukeBuild
+    {
+        // fallback for projects not yet calling publish artifacts
+        if (typeof(IHaveNuGetPackages).IsAssignableFrom(typeof(T)) && job.InternalData.TryGetValue(typeof(IHaveNuGetPackages), out var found)
+                                                                   && found is not true)
+        {
+            AddStep(
+                job,
+                new UploadArtifactStep("Publish NuGet Packages")
+                {
+                    Name = "nuget",
+                    Path = "artifacts/nuget/",
+                    If = "always()"
+                }
+            );
+            job.InternalData[typeof(IHaveNuGetPackages)] = true;
+        }
+
+        if (typeof(IGenerateDocFx).IsAssignableFrom(typeof(T)) && job.InternalData.TryGetValue(typeof(IGenerateDocFx), out var found1) && found1 is not true)
+        {
+            AddStep(
+                job,
+                new UploadArtifactStep("Publish Documentation")
+                {
+                    Name = "docs",
+                    Path = "artifacts/docs/",
+                }
+            );
+            job.InternalData[typeof(IGenerateDocFx)] = true;
+        }
+
+        return job;
+    }
+
+    /// <summary>
+    ///     Publishes standard logging based on the interfaces used by the build
+    /// </summary>
+    /// <param name="job"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
     public static RocketSurgeonsGithubActionsJob PublishLogs<T>(this RocketSurgeonsGithubActionsJob job) where T : INukeBuild
     {
         if (typeof(IHaveCodeCoverage).IsAssignableFrom(typeof(T)))
         {
-            job.Steps.Add(
+            AddStep(
+                job,
                 new UploadArtifactStep("Publish coverage data")
                 {
                     Name = "coverage",
@@ -169,7 +236,8 @@ public static class GithubActionsExtensions
 
             if (Helpers.IsDotnetToolInstalled("codecov.tool"))
             {
-                job.Steps.Add(
+                AddStep(
+                    job,
                     new UsingStep("Publish Coverage")
                     {
                         Uses = "codecov/codecov-action@v1",
@@ -183,7 +251,8 @@ public static class GithubActionsExtensions
 
         if (typeof(IHaveOutputLogs).IsAssignableFrom(typeof(T)))
         {
-            job.Steps.Add(
+            AddStep(
+                job,
                 new UploadArtifactStep("Publish logs")
                 {
                     Name = "logs",
@@ -195,7 +264,8 @@ public static class GithubActionsExtensions
 
         if (typeof(IHaveTestArtifacts).IsAssignableFrom(typeof(T)))
         {
-            job.Steps.Add(
+            AddStep(
+                job,
                 new UploadArtifactStep("Publish test data")
                 {
                     Name = "test data",
@@ -205,17 +275,7 @@ public static class GithubActionsExtensions
             );
         }
 
-        if (typeof(IHaveNuGetPackages).IsAssignableFrom(typeof(T)))
-        {
-            job.Steps.Add(
-                new UploadArtifactStep("Publish NuGet Packages")
-                {
-                    Name = "nuget",
-                    Path = "artifacts/nuget/",
-                    If = "always()"
-                }
-            );
-        }
+        PublishArtifacts<T>(job);
 
         return job;
     }

@@ -75,7 +75,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macOS-latest, windows-latest, ubuntu-latest]
+        os: [macos-latest, windows-latest, ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
@@ -136,12 +136,6 @@ jobs:
         with:
           name: 'test data'
           path: 'artifacts/test/'
-      - name: 🏺 Publish NuGet Packages
-        if: always()
-        uses: actions/upload-artifact@v3.1.1
-        with:
-          name: 'nuget'
-          path: 'artifacts/nuget/'
   Publish:
     needs:
       - Build
