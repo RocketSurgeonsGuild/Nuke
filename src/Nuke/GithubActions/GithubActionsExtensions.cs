@@ -197,7 +197,7 @@ public static class GithubActionsExtensions
             job.InternalData[typeof(IHaveNuGetPackages)] = true;
         }
 
-        if (typeof(IGenerateDocFx).IsAssignableFrom(typeof(T)) && job.InternalData.TryGetValue(typeof(IGenerateDocFx), out _))
+        if (typeof(IGenerateDocFx).IsAssignableFrom(typeof(T)) && !job.InternalData.TryGetValue(typeof(IGenerateDocFx), out _))
         {
             AddStep(
                 job,
