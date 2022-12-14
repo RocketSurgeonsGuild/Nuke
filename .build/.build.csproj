@@ -15,10 +15,6 @@
         <PackageReference Include="ReportGenerator" ExcludeAssets="All" />
         <PackageReference Include="JetBrains.ReSharper.GlobalTools" ExcludeAssets="All" />
         <ProjectReference Include="../src/Nuke/Rocket.Surgery.Nuke.csproj" />
-        <PackageReference Include="Microsoft.Build" />
-        <PackageReference Include="Microsoft.Build.Framework" />
-        <PackageReference Include="Microsoft.Build.Tasks.Core" />
-        <PackageReference Include="Microsoft.Build.Utilities.Core" />
     </ItemGroup>
 
     <ItemGroup>

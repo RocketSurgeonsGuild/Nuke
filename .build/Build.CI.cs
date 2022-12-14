@@ -68,7 +68,7 @@ public partial class Pipeline
            .AddNugetPublish()
            .Jobs.OfType<RocketSurgeonsGithubActionsJob>()
            .First(z => z.Name == "Build")
-           .UseDotNetSdks("3.1", "6.0")
+           .UseDotNetSdks("6.0", "7.0")
            .AddNuGetCache()
             // .ConfigureForGitVersion()
            .ConfigureStep<CheckoutStep>(step => step.FetchDepth = 0)
