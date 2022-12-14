@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;net6.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <NoWarn>$(NoWarn);CS0436</NoWarn>
       <!-- This has to be turned on because in Nuke.Common.props it is turned off to false, which causes build failures when writing to the same dll multiple times with cross targeting -->
       <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
@@ -11,11 +11,7 @@
     <PackageReference Include="YamlDotNet" />
     <PackageReference Include="Buildalyzer" />
     <PackageReference Include="Humanizer.Core" />
-    <PackageReference Include="Microsoft.Build" />
-    <PackageReference Include="Microsoft.Build.Framework" />
-    <PackageReference Include="Microsoft.Build.Tasks.Core" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" />
-      <PackageReference Include="LiquidTestReports.Core" />
+    <PackageReference Include="LiquidTestReports.Core" />
   </ItemGroup>
   <ItemGroup>
     <None Include="build/*.*" Pack="true" PackagePath="build" />

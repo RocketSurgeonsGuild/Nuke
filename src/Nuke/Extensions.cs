@@ -1,5 +1,6 @@
 namespace Rocket.Surgery.Nuke;
 
+#pragma warning disable CA1724
 /// <summary>
 ///     Extension methods for working with nuke build tasks
 /// </summary>
