@@ -41,6 +41,7 @@ public class RocketSurgeonGitHubActionsVcsTrigger : GitHubActionsDetailedTrigger
     {
         writer.WriteLine(Kind.GetValue() + ":");
 
+        if (Kind == GitHubActionsTrigger.WorkflowDispatch) return;
         using (writer.Indent())
         {
             if (Branches.Length > 0)

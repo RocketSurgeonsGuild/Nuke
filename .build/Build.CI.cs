@@ -23,7 +23,7 @@ using Rocket.Surgery.Nuke.GithubActions;
     GitHubActionsImage.WindowsLatest,
     GitHubActionsImage.UbuntuLatest,
     AutoGenerate = false,
-    On = new[] { GitHubActionsTrigger.Push },
+    On = new[] { GitHubActionsTrigger.WorkflowDispatch },
     OnPushTags = new[] { "v*" },
     OnPushBranches = new[] { "master", "main", "next" },
     OnPullRequestBranches = new[] { "master", "main", "next" },

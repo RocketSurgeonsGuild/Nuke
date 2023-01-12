@@ -176,6 +176,14 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     /// <returns></returns>
     protected virtual IEnumerable<GitHubActionsDetailedTrigger> GetTriggers()
     {
+        if (On.Any(z => z == GitHubActionsTrigger.WorkflowDispatch))
+        {
+            yield return new RocketSurgeonGitHubActionsVcsTrigger
+            {
+                Kind = GitHubActionsTrigger.WorkflowDispatch
+            };
+        }
+
         if (OnPushBranches.Length > 0 ||
             OnPushTags.Length > 0 ||
             OnPushIncludePaths.Length > 0 ||
