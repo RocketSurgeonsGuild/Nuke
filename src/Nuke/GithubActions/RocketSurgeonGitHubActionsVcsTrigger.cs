@@ -1,10 +1,18 @@
-﻿using Nuke.Common.CI.GitHubActions;
-using Nuke.Common.CI.GitHubActions.Configuration;
+﻿using Nuke.Common.CI.GitHubActions.Configuration;
 using Nuke.Common.Tooling;
 using Nuke.Common.Utilities.Collections;
 
 #pragma warning disable CA1819
 namespace Rocket.Surgery.Nuke.GithubActions;
+
+[PublicAPI]
+public enum RocketSurgeonGitHubActionsTrigger
+{
+    [EnumValue("push")] Push,
+    [EnumValue("pull_request")] PullRequest,
+    [EnumValue("workflow_dispatch")] WorkflowDispatch,
+    [EnumValue("workflow_call")] WorkflowCall
+}
 
 /// <summary>
 ///     A detailed trigger for version control
@@ -14,7 +22,7 @@ public class RocketSurgeonGitHubActionsVcsTrigger : GitHubActionsDetailedTrigger
     /// <summary>
     ///     The kind of the trigger
     /// </summary>
-    public GitHubActionsTrigger Kind { get; set; }
+    public RocketSurgeonGitHubActionsTrigger Kind { get; set; }
 
     /// <summary>
     ///     The branches
@@ -41,7 +49,7 @@ public class RocketSurgeonGitHubActionsVcsTrigger : GitHubActionsDetailedTrigger
     {
         writer.WriteLine(Kind.GetValue() + ":");
 
-        if (Kind == GitHubActionsTrigger.WorkflowDispatch) return;
+        if (Kind is RocketSurgeonGitHubActionsTrigger.WorkflowDispatch or RocketSurgeonGitHubActionsTrigger.WorkflowCall) return;
         using (writer.Indent())
         {
             if (Branches.Length > 0)

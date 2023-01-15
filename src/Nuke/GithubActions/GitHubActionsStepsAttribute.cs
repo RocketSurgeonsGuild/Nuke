@@ -42,7 +42,7 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     /// <summary>
     ///     The triggers
     /// </summary>
-    public GitHubActionsTrigger[] On { get; set; } = Array.Empty<GitHubActionsTrigger>();
+    public RocketSurgeonGitHubActionsTrigger[] On { get; set; } = Array.Empty<RocketSurgeonGitHubActionsTrigger>();
 
     /// <summary>
     ///     The branches to run for push
@@ -176,11 +176,19 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     /// <returns></returns>
     protected virtual IEnumerable<GitHubActionsDetailedTrigger> GetTriggers()
     {
-        if (On.Any(z => z == GitHubActionsTrigger.WorkflowDispatch))
+        if (On.Any(z => z == RocketSurgeonGitHubActionsTrigger.WorkflowDispatch))
         {
             yield return new RocketSurgeonGitHubActionsVcsTrigger
             {
-                Kind = GitHubActionsTrigger.WorkflowDispatch
+                Kind = RocketSurgeonGitHubActionsTrigger.WorkflowDispatch
+            };
+        }
+
+        if (On.Any(z => z == RocketSurgeonGitHubActionsTrigger.WorkflowCall))
+        {
+            yield return new RocketSurgeonGitHubActionsVcsTrigger
+            {
+                Kind = RocketSurgeonGitHubActionsTrigger.WorkflowCall
             };
         }
 
@@ -191,7 +199,7 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
         {
             yield return new RocketSurgeonGitHubActionsVcsTrigger
             {
-                Kind = GitHubActionsTrigger.Push,
+                Kind = RocketSurgeonGitHubActionsTrigger.Push,
                 Branches = OnPushBranches,
                 Tags = OnPushTags,
                 IncludePaths = OnPushIncludePaths,
@@ -206,7 +214,7 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
         {
             yield return new RocketSurgeonGitHubActionsVcsTrigger
             {
-                Kind = GitHubActionsTrigger.PullRequest,
+                Kind = RocketSurgeonGitHubActionsTrigger.PullRequest,
                 Branches = OnPullRequestBranches,
                 Tags = OnPullRequestTags,
                 IncludePaths = OnPullRequestIncludePaths,

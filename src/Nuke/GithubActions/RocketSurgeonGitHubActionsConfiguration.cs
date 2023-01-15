@@ -1,5 +1,4 @@
 using Nuke.Common.CI;
-using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
 using Nuke.Common.Tooling;
 
@@ -22,7 +21,7 @@ public class RocketSurgeonGitHubActionsConfiguration : ConfigurationEntity
     /// <summary>
     ///     The short triggers
     /// </summary>
-    public List<GitHubActionsTrigger> ShortTriggers { get; set; } = new();
+    public List<RocketSurgeonGitHubActionsTrigger> ShortTriggers { get; set; } = new();
 
     /// <summary>
     ///     The detailed triggers
