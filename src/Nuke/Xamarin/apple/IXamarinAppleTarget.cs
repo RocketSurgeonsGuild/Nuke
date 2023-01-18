@@ -1,4 +1,3 @@
-using System.Text.RegularExpressions;
 using Serilog;
 
 // ReSharper disable once CheckNamespace
@@ -7,7 +6,7 @@ namespace Rocket.Surgery.Nuke.Xamarin;
 /// <summary>
 ///     Represents an application with a apple head, and associated concerns.
 /// </summary>
-public interface IXamarinAppleTarget : IHaveBundleIdentifier, IHaveGitVersion, IHaveInfoPlist
+public partial interface IXamarinAppleTarget : IHaveBundleIdentifier, IHaveGitVersion, IHaveInfoPlist
 {
     /// <summary>
     ///     modify info.plist
@@ -24,13 +23,13 @@ public interface IXamarinAppleTarget : IHaveBundleIdentifier, IHaveGitVersion, I
 #pragma warning restore CA1304
                 Log.Information("CFBundleIdentifier: {CFBundleIdentifier}", plist["CFBundleIdentifier"]);
 
-                plist["CFBundleShortVersionString"] = Regex.Replace(GitVersion.MajorMinorPatch(), "[^0-9.]", "");
+                plist["CFBundleShortVersionString"] = GitVersion.MajorMinorPatch();
                 Log.Information(
                     "CFBundleShortVersionString: {CFBundleShortVersionString}",
                     plist["CFBundleShortVersionString"]
                 );
 
-                plist["CFBundleVersion"] = GitVersion.FullSemanticVersion();
+                plist["CFBundleVersion"] = GitVersion.AssemblyVersion();
                 Log.Information("CFBundleVersion: {CFBundleVersion}", plist["CFBundleVersion"]);
 
                 Plist.Serialize(InfoPlist, plist);

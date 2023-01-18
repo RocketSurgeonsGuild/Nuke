@@ -36,8 +36,8 @@ namespace Rocket.Surgery.Nuke.Xamarin
                                                                    .SetConfiguration(Configuration)
                                                                    .SetDefaultLoggers(LogsDirectory / "package.log")
                                                                    .SetGitVersionEnvironment(GitVersion)
-                                                                   .SetAssemblyVersion(GitVersion.FullSemanticVersion())
-                                                                   .SetPackageVersion(GitVersion.FullSemanticVersion())
+                                                                   .SetAssemblyVersion(GitVersion.AssemblyVersion())
+                                                                   .SetPackageVersion(GitVersion.PackageVersion())
                                                    )
                                            );
     }
