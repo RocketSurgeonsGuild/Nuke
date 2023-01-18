@@ -5,7 +5,7 @@ namespace Rocket.Surgery.Nuke;
 /// <summary>
 ///     Extensions for strings
 /// </summary>
-public static class StringExtensions
+public static partial class StringExtensions
 {
     /// <summary>
     ///     Removes alpha characters from a string.
@@ -14,6 +14,9 @@ public static class StringExtensions
     /// <returns>The string with no alpha characters.</returns>
     public static string RemoveAlphaCharacters(this string input)
     {
-        return Regex.Replace(input, "[^0-9.]", "");
+        return NumericRegex().Replace(input, "");
     }
+
+    [GeneratedRegex("[^0-9.]")]
+    private static partial Regex NumericRegex();
 }
