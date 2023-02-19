@@ -29,7 +29,7 @@ public interface ICanPackWithDotNetCore : IHaveBuildTarget,
                                                  .SetConfiguration(Configuration)
                                                  .EnableNoRestore()
                                                  .EnableNoBuild()
-                                                 .AddProperty("PublishDir", NuGetPackageDirectory)
+                                                 .AddProperty("PackageOutputPath", NuGetPackageDirectory)
                                        )
                                    );
 }
