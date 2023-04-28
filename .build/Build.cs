@@ -72,5 +72,6 @@ public partial class Pipeline : NukeBuild,
 
     [OptionalGitRepository] public GitRepository? GitRepository { get; }
     [ComputedGitVersion] public GitVersion GitVersion { get; } = null!;
+    [Parameter] public string? GitHubToken { get; }
     [Parameter("Configuration to build")] public Configuration Configuration { get; } = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 }

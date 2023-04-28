@@ -18,6 +18,13 @@ name: ci
 
 on:
   workflow_dispatch:
+    secrets:
+      GITHUB_TOKEN:
+        description: The default github actions token
+      RSG_NUGET_API_KEY:
+        description: ${{ secrets.RSG_NUGET_API_KEY }}
+      RSG_AZURE_DEVOPS:
+        description: ${{ secrets.RSG_AZURE_DEVOPS }}
   workflow_call:
   push:
     branches:
@@ -105,16 +112,16 @@ jobs:
           dotnet tool restore
       - name: 🎁 Restore
         run: |
-          dotnet nuke Restore --skip
+          dotnet nuke Restore --skip --githubtoken '${{ secrets.GITHUB_TOKEN }}'
       - name: ⚙ Build
         run: |
-          dotnet nuke Build --skip
+          dotnet nuke Build --skip --githubtoken '${{ secrets.GITHUB_TOKEN }}'
       - name: 🚦 Test
         run: |
-          dotnet nuke Test TriggerCodeCoverageReports GenerateCodeCoverageReportCobertura GenerateCodeCoverageBadges GenerateCodeCoverageSummary GenerateCodeCoverageReport --skip
+          dotnet nuke Test TriggerCodeCoverageReports GenerateCodeCoverageReportCobertura GenerateCodeCoverageBadges GenerateCodeCoverageSummary GenerateCodeCoverageReport --skip --githubtoken '${{ secrets.GITHUB_TOKEN }}'
       - name: 📦 Pack
         run: |
-          dotnet nuke Pack --skip
+          dotnet nuke Pack --skip --githubtoken '${{ secrets.GITHUB_TOKEN }}'
       - name: 🏺 Publish coverage data
         if: always()
         uses: actions/upload-artifact@v3.1.2

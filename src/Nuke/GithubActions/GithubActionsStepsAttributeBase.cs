@@ -198,7 +198,9 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
             yield return new RocketSurgeonGitHubActionsWorkflowTrigger
             {
                 Kind = RocketSurgeonGitHubActionsTrigger.WorkflowDispatch,
-                Inputs = Inputs
+                Inputs = Inputs.ToList(),
+                Secrets = GetAllSecrets().ToList(),
+                Outputs = Outputs.ToList()
             };
         }
 
@@ -207,9 +209,7 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
             yield return new RocketSurgeonGitHubActionsWorkflowTrigger
             {
                 Kind = RocketSurgeonGitHubActionsTrigger.WorkflowCall,
-                Inputs = Inputs,
-                Outputs = Outputs,
-                Secrets = GetAllSecrets().ToArray()
+                Inputs = Inputs.ToList()
             };
         }
 
@@ -258,7 +258,7 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     /// <returns></returns>
     protected virtual IEnumerable<GitHubActionsWorkflowTriggerSecret> GetAllSecrets()
     {
-        yield return new GitHubActionsWorkflowTriggerSecret("GITHUB_TOKEN", Alias: "GithubToken");
+        yield return new GitHubActionsWorkflowTriggerSecret("GITHUB_TOKEN", "The default github actions token", Alias: "GithubToken");
         foreach (var secret in ImportSecrets)
             yield return new GitHubActionsWorkflowTriggerSecret(secret);
         foreach (var secret in Secrets)

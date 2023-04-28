@@ -1,4 +1,5 @@
 using Nuke.Common.CI.GitHubActions.Configuration;
+using Nuke.Common.Utilities.Collections;
 
 namespace Rocket.Surgery.Nuke.GithubActions;
 
@@ -15,6 +16,13 @@ public static class GithubActionsExtensions
     /// <returns></returns>
     public static RocketSurgeonGitHubActionsConfiguration AddNugetPublish(this RocketSurgeonGitHubActionsConfiguration configuration)
     {
+        configuration.DetailedTriggers.OfType<RocketSurgeonGitHubActionsWorkflowTrigger>().ForEach(
+            trigger =>
+            {
+                trigger.Secrets.Add(new GitHubActionsWorkflowTriggerSecret("RSG_NUGET_API_KEY", "${{ secrets.RSG_NUGET_API_KEY }}"));
+                trigger.Secrets.Add(new GitHubActionsWorkflowTriggerSecret("RSG_AZURE_DEVOPS", "${{ secrets.RSG_AZURE_DEVOPS }}"));
+            }
+        );
         configuration.Jobs.Add(
             new RocketSurgeonsGithubWorkflowJob("Publish")
             {
@@ -108,7 +116,7 @@ public static class GithubActionsExtensions
     {
         foreach (var item in configuration.DetailedTriggers.OfType<RocketSurgeonGitHubActionsVcsTrigger>())
         {
-            item.IncludePaths = ( item.IncludePaths ?? Array.Empty<string>() ).Concat(paths).Distinct().ToArray();
+            item.IncludePaths = Enumerable.Concat(item.IncludePaths ?? Array.Empty<string>(), paths).Distinct().ToArray();
         }
 
         return configuration;
@@ -124,7 +132,7 @@ public static class GithubActionsExtensions
     {
         foreach (var item in configuration.DetailedTriggers.OfType<RocketSurgeonGitHubActionsVcsTrigger>())
         {
-            item.ExcludePaths = ( item.IncludePaths ?? Array.Empty<string>() ).Concat(paths).Distinct().ToArray();
+            item.ExcludePaths = Enumerable.Concat(item.IncludePaths ?? Array.Empty<string>(), paths).Distinct().ToArray();
         }
 
         return configuration;

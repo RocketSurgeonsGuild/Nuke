@@ -18,7 +18,7 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
     {
         writer.WriteLine(Kind.GetValue() + ":");
 
-        if (Kind is RocketSurgeonGitHubActionsTrigger.WorkflowDispatch or RocketSurgeonGitHubActionsTrigger.WorkflowCall) return;
+        if (Kind is not RocketSurgeonGitHubActionsTrigger.WorkflowDispatch and not RocketSurgeonGitHubActionsTrigger.WorkflowCall) return;
         using (writer.Indent())
         {
             if (Inputs.Any())
@@ -51,7 +51,7 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
                 }
             }
 
-            if (Secrets.Any())
+            if (Kind is RocketSurgeonGitHubActionsTrigger.WorkflowDispatch && Secrets.Any())
             {
                 writer.WriteLine("secrets:");
                 using (writer.Indent())
@@ -75,7 +75,7 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
                 }
             }
 
-            if (Outputs.Any())
+            if (Kind is RocketSurgeonGitHubActionsTrigger.WorkflowDispatch && Outputs.Any())
             {
                 writer.WriteLine("ouputs:");
                 using (writer.Indent())
@@ -98,7 +98,7 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
         }
     }
 
-    public GitHubActionsWorkflowTriggerInput[] Inputs { get; set; } = Array.Empty<GitHubActionsWorkflowTriggerInput>();
-    public GitHubActionsWorkflowTriggerSecret[] Secrets { get; set; } = Array.Empty<GitHubActionsWorkflowTriggerSecret>();
-    public GitHubActionsWorkflowTriggerOutput[] Outputs { get; set; } = Array.Empty<GitHubActionsWorkflowTriggerOutput>();
+    public List<GitHubActionsWorkflowTriggerInput> Inputs { get; set; } = new();
+    public List<GitHubActionsWorkflowTriggerSecret> Secrets { get; set; } = new();
+    public List<GitHubActionsWorkflowTriggerOutput> Outputs { get; set; } = new();
 }
