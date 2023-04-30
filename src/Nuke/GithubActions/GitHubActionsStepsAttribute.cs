@@ -6,7 +6,6 @@ using Nuke.Common.Execution;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Utilities.Collections;
-using Serilog;
 
 #pragma warning disable CA1019
 #pragma warning disable CA1308
@@ -160,7 +159,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             var key = par.GetCustomAttribute<ParameterAttribute>()?.Name ?? par.Name;
             if (environmentVariables.TryGetValue(key, out var value))
             {
-                Log.Logger.Information("Found Parameter {Name}", value.Name);
+//                Log.Logger.Information("Found Parameter {Name}", value.Name);
                 stepParameters.Add(
                     new KeyValuePair<string, string>(
                         key, $"{value.Prefix}.{value.Name}{( string.IsNullOrWhiteSpace(value.Default) ? "" : $" || {value.Default}" )}"

@@ -34,7 +34,7 @@ on:
         required: False
       RSG_AZURE_DEVOPS:
         required: False
-    ouputs:
+    outputs:
       THIS_IS_A_OUTPUT:
         value: 
   push:

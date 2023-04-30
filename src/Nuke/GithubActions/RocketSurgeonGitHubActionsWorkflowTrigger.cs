@@ -71,7 +71,7 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
 
             if (Kind is RocketSurgeonGitHubActionsTrigger.WorkflowCall && Outputs.Any())
             {
-                writer.WriteLine("ouputs:");
+                writer.WriteLine("outputs:");
                 using (writer.Indent())
                 {
                     foreach (var input in Outputs)
