@@ -1,6 +1,6 @@
 namespace Rocket.Surgery.Nuke.GithubActions;
 
-[AttributeUsage(AttributeTargets.Class)]
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 public sealed class GitHubActionsSecretAttribute : TriggerValueAttribute
 {
     public bool? Required { get; set; }
