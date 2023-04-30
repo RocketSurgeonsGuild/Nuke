@@ -38,11 +38,6 @@ public class RocketSurgeonGitHubActionsConfiguration : ConfigurationEntity
     /// </summary>
     public Dictionary<string, string> Environment { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 
-    /// <summary>
-    ///     The properties to use with the action
-    /// </summary>
-    public Dictionary<string, string> Secrets { get; set; } = new(StringComparer.OrdinalIgnoreCase);
-
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
@@ -63,7 +58,6 @@ public class RocketSurgeonGitHubActionsConfiguration : ConfigurationEntity
         }
 
         writer.WriteKeyValues("env", Environment);
-        writer.WriteKeyValues("secrets", Secrets);
 
         writer.WriteLine();
 

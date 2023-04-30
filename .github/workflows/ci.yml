@@ -19,6 +19,11 @@ name: ci
 on:
   workflow_dispatch:
   workflow_call:
+    secrets:
+      RSG_NUGET_API_KEY:
+        required: False
+      RSG_AZURE_DEVOPS:
+        required: False
   push:
     branches:
       - 'master'
@@ -105,16 +110,16 @@ jobs:
           dotnet tool restore
       - name: 🎁 Restore
         run: |
-          dotnet nuke Restore --skip
+          dotnet nuke Restore --skip --githubtoken '${{ secrets.GITHUB_TOKEN }}'
       - name: ⚙ Build
         run: |
-          dotnet nuke Build --skip
+          dotnet nuke Build --skip --githubtoken '${{ secrets.GITHUB_TOKEN }}'
       - name: 🚦 Test
         run: |
-          dotnet nuke Test TriggerCodeCoverageReports GenerateCodeCoverageReportCobertura GenerateCodeCoverageBadges GenerateCodeCoverageSummary GenerateCodeCoverageReport --skip
+          dotnet nuke Test TriggerCodeCoverageReports GenerateCodeCoverageReportCobertura GenerateCodeCoverageBadges GenerateCodeCoverageSummary GenerateCodeCoverageReport --skip --githubtoken '${{ secrets.GITHUB_TOKEN }}'
       - name: 📦 Pack
         run: |
-          dotnet nuke Pack --skip
+          dotnet nuke Pack --skip --githubtoken '${{ secrets.GITHUB_TOKEN }}'
       - name: 🏺 Publish coverage data
         if: always()
         uses: actions/upload-artifact@v3.1.2
@@ -147,7 +152,7 @@ jobs:
   Publish:
     needs:
       - Build
+    uses: RocketSurgeonsGuild/actions/.github/workflows/publish-nuget.yml@v0.3.3
     secrets:
       RSG_NUGET_API_KEY: '${{ secrets.RSG_NUGET_API_KEY }}'
       RSG_AZURE_DEVOPS: '${{ secrets.RSG_AZURE_DEVOPS }}'
-    uses: RocketSurgeonsGuild/actions/.github/workflows/publish-nuget.yml@v0.3.3
