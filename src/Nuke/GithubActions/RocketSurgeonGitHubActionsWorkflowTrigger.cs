@@ -34,13 +34,10 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
                             writer.WriteLine($"type: {input.Type.GetValue()}");
                             if (!string.IsNullOrWhiteSpace(input.Description))
                             {
-                                writer.WriteLine($"description: {input.Description}");
+                                writer.WriteLine($"description: '{input.Description}'");
                             }
 
-                            if (input.Required.HasValue)
-                            {
-                                writer.WriteLine($"required: {input.Required}");
-                            }
+                            writer.WriteLine($"required: {input.Required ?? false}");
 
                             if (input.Default != null)
                             {
@@ -63,13 +60,10 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
                         {
                             if (!string.IsNullOrWhiteSpace(input.Description))
                             {
-                                writer.WriteLine($"description: {input.Description}");
+                                writer.WriteLine($"description: '{input.Description}'");
                             }
 
-                            if (input.Required.HasValue)
-                            {
-                                writer.WriteLine($"required: {input.Required}");
-                            }
+                            writer.WriteLine($"required: {input.Required ?? false}");
                         }
                     }
                 }
@@ -87,7 +81,7 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
                         {
                             if (!string.IsNullOrWhiteSpace(input.Description))
                             {
-                                writer.WriteLine($"description: {input.Description}");
+                                writer.WriteLine($"description: '{input.Description}'");
                             }
 
                             writer.WriteLine($"value: {input.Value}");
