@@ -26,6 +26,9 @@
           "type": "string",
           "description": "The directory where coverage artifacts are to be dropped"
         },
+        "GitHubToken": {
+          "type": "string"
+        },
         "Help": {
           "type": "boolean",
           "description": "Shows the help text for this build assembly"
@@ -143,6 +146,24 @@
               "TriggerCodeCoverageReports"
             ]
           }
+        },
+        "THIS_IS_A_VARIABLE": {
+          "type": "string"
+        },
+        "ThisIsADifferentOutput": {
+          "type": "string"
+        },
+        "ThisIsAEnv": {
+          "type": "string"
+        },
+        "ThisIsAInput": {
+          "type": "string"
+        },
+        "ThisIsAOtherVariable": {
+          "type": "string"
+        },
+        "ThisIsASecret": {
+          "type": "string"
         },
         "Verbosity": {
           "type": "string",

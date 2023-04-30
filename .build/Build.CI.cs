@@ -51,7 +51,7 @@ using Rocket.Surgery.Nuke.GithubActions;
 [GitHubActionsVariable("THIS_IS_A_VARIABLE", Alias = "ThisIsAOtherVariable")]
 [GitHubActionsInput("THIS_IS_A_INPUT" /*, Alias = "ThisIsAInput"*/)]
 [GitHubActionsOutput("THIS_IS_A_OUTPUT", Alias = "ThisIsADifferentOutput")]
-[GitHubActionsEnvironmentVariable("THIS_IS_A_ENV" /*, Alias = "ThisIsAEnv"*/)]
+[GitHubActionsEnvironmentVariable("THIS_IS_A_ENV" /*, Alias = "ThisIsAEnv"*/, Default = "'test'")]
 [GitHubActionsSecret("THIS_IS_A_SECRET" /*, Alias = "ThisIsASecret"*/)]
 [PrintBuildVersion]
 [PrintCIEnvironment]
