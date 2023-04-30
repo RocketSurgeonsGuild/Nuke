@@ -199,7 +199,7 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
             {
                 Kind = RocketSurgeonGitHubActionsTrigger.WorkflowDispatch,
                 Inputs = Inputs.ToList(),
-                Secrets = GetAllSecrets().ToList(),
+                Secrets = GetAllSecrets(false).ToList(),
                 Outputs = Outputs.ToList()
             };
         }
@@ -210,7 +210,7 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
             {
                 Kind = RocketSurgeonGitHubActionsTrigger.WorkflowCall,
                 Inputs = Inputs.ToList(),
-                Secrets = GetAllSecrets().ToList(),
+                Secrets = GetAllSecrets(false).ToList(),
                 Outputs = Outputs.ToList()
             };
         }
@@ -258,9 +258,10 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     ///     Get a list of values that need to be imported.
     /// </summary>
     /// <returns></returns>
-    protected virtual IEnumerable<GitHubActionsWorkflowTriggerSecret> GetAllSecrets()
+    protected virtual IEnumerable<GitHubActionsWorkflowTriggerSecret> GetAllSecrets(bool githubToken = true)
     {
-        yield return new GitHubActionsWorkflowTriggerSecret("GITHUB_TOKEN", "The default github actions token", Alias: "GithubToken");
+        if (githubToken)
+            yield return new GitHubActionsWorkflowTriggerSecret("GITHUB_TOKEN", "The default github actions token", Alias: "GithubToken");
         foreach (var secret in ImportSecrets)
             yield return new GitHubActionsWorkflowTriggerSecret(secret);
         foreach (var secret in Secrets)

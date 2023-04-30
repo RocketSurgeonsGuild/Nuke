@@ -20,8 +20,6 @@ on:
   workflow_dispatch:
   workflow_call:
     secrets:
-      GITHUB_TOKEN:
-        description: The default github actions token
       RSG_NUGET_API_KEY:
         description: ${{ secrets.RSG_NUGET_API_KEY }}
       RSG_AZURE_DEVOPS:
