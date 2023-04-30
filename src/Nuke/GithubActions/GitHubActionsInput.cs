@@ -1,9 +1,9 @@
 namespace Rocket.Surgery.Nuke.GithubActions;
 
-public record GitHubActionsWorkflowTriggerInput(
+public record GitHubActionsInput(
     string Name,
-    GitHubActionsWorkflowTriggerInputType Type = GitHubActionsWorkflowTriggerInputType.String,
-    object? Default = null,
+    GitHubActionsInputType Type = GitHubActionsInputType.String,
+    string? Default = null,
     string? Description = null,
     bool? Required = null,
     string? Alias = null

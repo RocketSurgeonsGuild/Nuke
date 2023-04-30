@@ -2,7 +2,7 @@ using Nuke.Common.Tooling;
 
 namespace Rocket.Surgery.Nuke.GithubActions;
 
-public enum GitHubActionsWorkflowTriggerInputType
+public enum GitHubActionsInputType
 {
     [EnumValue("string")] String,
     [EnumValue("boolean")] Boolean,

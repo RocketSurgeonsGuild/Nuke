@@ -117,23 +117,30 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             steps.Add(globalToolStep);
         }
 
-        var environmentVariables = Inputs
-                                  .Concat<ITriggerValue>(Secrets)
-                                  .Concat(Variables)
-                                  .Append(new GitHubActionsWorkflowTriggerSecret("GITHUB_TOKEN", Alias: "GithubToken"))
+        var attributes = build.GetType().GetCustomAttributes().OfType<TriggerValueAttribute>().ToArray();
+        var environmentAttributes = build.GetType().GetCustomAttributes()
+                                         .OfType<GitHubActionsEnvironmentVariableAttribute>()
+                                         .Select(z => z.ToEnvironmentVariable())
+                                         .Concat(GetParameters(build).Select(z => new GitHubActionsEnvironmentVariable(z.Name, z.Default)))
+                                         .DistinctBy(z => z.Name)
+                                         .ToArray();
+        var inputs = attributes.OfType<GitHubActionsInputAttribute>().Select(z => z.ToInput()).ToArray();
+        var outputs = attributes.OfType<GitHubActionsOutputAttribute>().Select(z => z.ToOutput()).ToArray();
+        var secrets = attributes.OfType<GitHubActionsSecretAttribute>().Select(z => z.ToSecret()).ToArray();
+        var variables = attributes.OfType<GitHubActionsVariableAttribute>().Select(z => z.ToVariable()).ToArray();
+
+        var environmentVariables = inputs
+                                  .Concat<ITriggerValue>(GetAllSecrets(secrets))
+                                  .Concat(variables)
+                                  .Concat(environmentAttributes)
                                   .SelectMany(
                                        z =>
                                        {
-                                           if (!string.IsNullOrWhiteSpace(z.Alias))
+                                           return new[]
                                            {
-                                               return new[]
-                                               {
-                                                   new KeyValuePair<string, ITriggerValue>(z.Name, z),
-                                                   new KeyValuePair<string, ITriggerValue>(z.Alias, z)
-                                               };
-                                           }
-
-                                           return new[] { new KeyValuePair<string, ITriggerValue>(z.Name, z) };
+                                               new KeyValuePair<string, ITriggerValue>(z.Name, z),
+                                               new KeyValuePair<string, ITriggerValue>(z.Alias ?? z.Name.Pascalize(), z)
+                                           };
                                        }
                                    )
                                   .DistinctBy(z => z.Key, StringComparer.OrdinalIgnoreCase)
@@ -146,18 +153,20 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                   )
                  .Where(x => x.GetCustomAttribute<ParameterAttribute>() != null);
 
-        var stepParameters = new List<string>();
+        var stepParameters = new List<KeyValuePair<string, string>>();
         foreach (var par in implicitParameters)
         {
             var key = par.GetCustomAttribute<ParameterAttribute>()?.Name ?? par.Name;
             if (environmentVariables.TryGetValue(key, out var value))
             {
 //                Log.Logger.Information("Found Parameter {Name}", value.Name);
-                stepParameters.Add($$$"""--{{{key.ToLowerInvariant()}}} '${{ {{{value.Prefix}}}.{{{value.Name}}} }}'""");
+                stepParameters.Add(
+                    new KeyValuePair<string, string>(
+                        key, $"{value.Prefix}.{value.Name}{( string.IsNullOrWhiteSpace(value.Default) ? "" : $" || {value.Default}" )}"
+                    )
+                );
             }
         }
-
-        stepParameters.AddRange(GetParameters(build).Select(z => $$$"""--{{{z.Name.ToLowerInvariant()}}} '${{ env.{{{z.Name.ToUpperInvariant()}}} }}'"""));
 
         var lookupTable = new LookupTable<ExecutableTarget, ExecutableTarget[]>();
         foreach (var (execute, targets) in relevantTargets
@@ -172,7 +181,10 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                 new RunStep(execute.Name.Humanize(LetterCasing.Title))
                 {
                     Run =
-                        $"{( localTool ? "dotnet nuke" : "nuke" )} {targets.Select(z => z.Name).JoinSpace()} --skip {stepParameters.JoinSpace()}"
+                        $"{( localTool ? "dotnet nuke" : "nuke" )} {targets.Select(z => z.Name).JoinSpace()} --skip {stepParameters
+                           .GroupBy(z => z.Key, StringComparer.OrdinalIgnoreCase)
+                           .Select(z => z.Last())
+                           .Select(z => $$$"""--{{{z.Key.ToLowerInvariant()}}} '${{ {{{z.Value}}} }}'""").JoinSpace()}"
                            .TrimEnd()
                 }
             );
@@ -181,7 +193,9 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         var config = new RocketSurgeonGitHubActionsConfiguration
         {
             Name = Name,
-            DetailedTriggers = GetTriggers().ToList(),
+            DetailedTriggers = GetTriggers(inputs, outputs, secrets).ToList(),
+            // TODO: Figure out what this looks like here
+//            Environment = environmentAttributes
             Jobs = new List<RocketSurgeonsGithubActionsJobBase>
             {
                 new RocketSurgeonsGithubActionsJob("Build")
@@ -189,17 +203,17 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                     Steps = steps,
                     RunsOn = !_isGithubHosted ? _images : Array.Empty<string>(),
                     Matrix = _isGithubHosted ? _images : Array.Empty<string>(),
-                    Environment = Inputs
-                                 .Concat<ITriggerValue>(Secrets)
-                                 .Concat(Variables)
-                                 .Select(
-                                      z => new KeyValuePair<string, string>(
-                                          $"{z.Prefix.ToUpperInvariant()}_{( z.Alias ?? z.Name ).ToUpperInvariant()}",
-                                          $$$"""${{ {{{z.Prefix}}}.{{{z.Name}}} }}"""
-                                      )
-                                  )
-                                 .ToDictionary(z => z.Key, z => z.Value, StringComparer.OrdinalIgnoreCase)
-                                 .AddDictionary((IDictionary<string, string>)EnvironmentVariables)
+                    // TODO: Figure out what this looks like here
+//                    Environment = inputs
+//                                 .Concat<ITriggerValue>(GetAllSecrets(secrets))
+//                                 .Concat(variables)
+//                                 .Select(
+//                                      z => new KeyValuePair<string, string>(
+//                                          $"{( z.Prefix.Equals("ENV", StringComparison.OrdinalIgnoreCase) ? "" : $"{z.Prefix.ToUpperInvariant()}_" )}{( z.Alias ?? z.Name ).ToUpperInvariant()}",
+//                                          $$$"""${{ {{{z.Prefix}}}.{{{z.Name}}} }}"""
+//                                      )
+//                                  )
+//                                 .ToDictionary(z => z.Key, z => z.Value, StringComparer.OrdinalIgnoreCase)
                 }
             }
         };
