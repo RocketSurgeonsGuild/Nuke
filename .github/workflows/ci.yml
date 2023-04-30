@@ -18,6 +18,10 @@ name: ci
 
 on:
   workflow_dispatch:
+    inputs:
+      THIS_IS_A_INPUT:
+        type: string
+        required: False
   workflow_call:
     inputs:
       THIS_IS_A_INPUT:

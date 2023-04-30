@@ -177,6 +177,7 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
             yield return new RocketSurgeonGitHubActionsWorkflowTrigger
             {
                 Kind = RocketSurgeonGitHubActionsTrigger.WorkflowDispatch,
+                Inputs = GetAllInputs(inputs).ToList(),
             };
         }
 
@@ -186,8 +187,8 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
             {
                 Kind = RocketSurgeonGitHubActionsTrigger.WorkflowCall,
                 Secrets = GetAllSecrets(secrets, false).ToList(),
-                Outputs = outputs.ToList(),
-                Inputs = inputs.ToList()
+                Outputs = GetAllOutputs(outputs).ToList(),
+                Inputs = GetAllInputs(inputs).ToList()
             };
         }
 
@@ -225,8 +226,11 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
             yield return new GitHubActionsScheduledTrigger { Cron = OnCronSchedule };
     }
 
+    public string[] UseInputs { get; set; } = Array.Empty<string>();
+    public string[] UseOutputs { get; set; } = Array.Empty<string>();
+
     /// <summary>
-    ///     Get a list of values that need to be imported.
+    ///     Get a list of inputs that need to be imported.
     /// </summary>
     /// <returns></returns>
     protected virtual IEnumerable<GitHubActionsSecret> GetAllSecrets(IEnumerable<GitHubActionsSecret> secrets, bool githubToken = true)
@@ -237,5 +241,24 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
         {
             yield return secret;
         }
+    }
+
+    /// <summary>
+    ///     Get a list of inputs that need to be imported.
+    /// </summary>
+    /// <returns></returns>
+    protected virtual IEnumerable<GitHubActionsInput> GetAllInputs(IEnumerable<GitHubActionsInput> inputs)
+    {
+        return inputs.IntersectBy(UseInputs, z => z.Name, StringComparer.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
+    ///     Get a list of inputs that outputs to be imported.
+    /// </summary>
+    /// <returns></returns>
+    protected virtual IEnumerable<GitHubActionsOutput> GetAllOutputs(IEnumerable<GitHubActionsOutput> inputs)
+    {
+        return inputs
+           .IntersectBy(UseOutputs, z => z.Name, StringComparer.OrdinalIgnoreCase);
     }
 }

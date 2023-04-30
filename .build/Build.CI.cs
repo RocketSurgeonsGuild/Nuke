@@ -44,7 +44,9 @@ using Rocket.Surgery.Nuke.GithubActions;
         nameof(Default)
     },
     ExcludedTargets = new[] { nameof(ICanClean.Clean), nameof(ICanRestoreWithDotNetCore.DotnetToolRestore) },
-    Enhancements = new[] { nameof(CiMiddleware) }
+    Enhancements = new[] { nameof(CiMiddleware) },
+    UseInputs = new[] { "THIS_IS_A_INPUT" },
+    UseOutputs = new[] { "THIS_IS_A_OUTPUT" }
 )]
 [GitHubActionsVariable("THIS_IS_A_VARIABLE", Alias = "ThisIsAOtherVariable")]
 [GitHubActionsInput("THIS_IS_A_INPUT" /*, Alias = "ThisIsAInput"*/)]
