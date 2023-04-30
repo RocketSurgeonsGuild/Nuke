@@ -37,31 +37,6 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     public RocketSurgeonGitHubActionsTrigger[] On { get; set; } = Array.Empty<RocketSurgeonGitHubActionsTrigger>();
 
     /// <summary>
-    ///     The workflow inputs
-    /// </summary>
-    public GitHubActionsWorkflowTriggerInput[] Inputs { get; set; } = Array.Empty<GitHubActionsWorkflowTriggerInput>();
-
-    /// <summary>
-    ///     The workflow secrets
-    /// </summary>
-    public GitHubActionsWorkflowTriggerSecret[] Secrets { get; set; } = Array.Empty<GitHubActionsWorkflowTriggerSecret>();
-
-    /// <summary>
-    ///     The workflow variables
-    /// </summary>
-    public GitHubActionsWorkflowTriggerVariable[] Variables { get; set; } = Array.Empty<GitHubActionsWorkflowTriggerVariable>();
-
-    /// <summary>
-    ///     The workflow outputs
-    /// </summary>
-    public GitHubActionsWorkflowTriggerOutput[] Outputs { get; set; } = Array.Empty<GitHubActionsWorkflowTriggerOutput>();
-
-    /// <summary>
-    ///     The workflow outputs
-    /// </summary>
-    public Dictionary<string, string> EnvironmentVariables { get; set; } = new();
-
-    /// <summary>
     ///     The branches to run for push
     /// </summary>
     public string[] OnPushBranches { get; set; } = Array.Empty<string>();
@@ -191,16 +166,18 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     ///     Gets the list of triggers as defined
     /// </summary>
     /// <returns></returns>
-    protected virtual IEnumerable<GitHubActionsDetailedTrigger> GetTriggers()
+    protected virtual IEnumerable<GitHubActionsDetailedTrigger> GetTriggers(
+        IEnumerable<GitHubActionsInput> inputs,
+        IEnumerable<GitHubActionsOutput> outputs,
+        IEnumerable<GitHubActionsSecret> secrets
+    )
     {
         if (On.Any(z => z == RocketSurgeonGitHubActionsTrigger.WorkflowDispatch))
         {
             yield return new RocketSurgeonGitHubActionsWorkflowTrigger
             {
                 Kind = RocketSurgeonGitHubActionsTrigger.WorkflowDispatch,
-                Inputs = Inputs.ToList(),
-                Secrets = GetAllSecrets(false).ToList(),
-                Outputs = Outputs.ToList()
+                Inputs = GetAllInputs(inputs).ToList(),
             };
         }
 
@@ -209,9 +186,9 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
             yield return new RocketSurgeonGitHubActionsWorkflowTrigger
             {
                 Kind = RocketSurgeonGitHubActionsTrigger.WorkflowCall,
-                Inputs = Inputs.ToList(),
-                Secrets = GetAllSecrets(false).ToList(),
-                Outputs = Outputs.ToList()
+                Secrets = GetAllSecrets(secrets, false).ToList(),
+                Outputs = GetAllOutputs(outputs).ToList(),
+                Inputs = GetAllInputs(inputs).ToList()
             };
         }
 
@@ -249,22 +226,39 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
             yield return new GitHubActionsScheduledTrigger { Cron = OnCronSchedule };
     }
 
-    /// <summary>
-    ///     The secrets to import from the actions environment
-    /// </summary>
-    public string[] ImportSecrets { get; set; } = Array.Empty<string>();
+    public string[] UseInputs { get; set; } = Array.Empty<string>();
+    public string[] UseOutputs { get; set; } = Array.Empty<string>();
 
     /// <summary>
-    ///     Get a list of values that need to be imported.
+    ///     Get a list of inputs that need to be imported.
     /// </summary>
     /// <returns></returns>
-    protected virtual IEnumerable<GitHubActionsWorkflowTriggerSecret> GetAllSecrets(bool githubToken = true)
+    protected virtual IEnumerable<GitHubActionsSecret> GetAllSecrets(IEnumerable<GitHubActionsSecret> secrets, bool githubToken = true)
     {
         if (githubToken)
-            yield return new GitHubActionsWorkflowTriggerSecret("GITHUB_TOKEN", "The default github actions token", Alias: "GithubToken");
-        foreach (var secret in ImportSecrets)
-            yield return new GitHubActionsWorkflowTriggerSecret(secret);
-        foreach (var secret in Secrets)
+            yield return new GitHubActionsSecret("GITHUB_TOKEN", "The default github actions token", Alias: "GithubToken");
+        foreach (var secret in secrets)
+        {
             yield return secret;
+        }
+    }
+
+    /// <summary>
+    ///     Get a list of inputs that need to be imported.
+    /// </summary>
+    /// <returns></returns>
+    protected virtual IEnumerable<GitHubActionsInput> GetAllInputs(IEnumerable<GitHubActionsInput> inputs)
+    {
+        return inputs.IntersectBy(UseInputs, z => z.Name, StringComparer.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
+    ///     Get a list of inputs that outputs to be imported.
+    /// </summary>
+    /// <returns></returns>
+    protected virtual IEnumerable<GitHubActionsOutput> GetAllOutputs(IEnumerable<GitHubActionsOutput> inputs)
+    {
+        return inputs
+           .IntersectBy(UseOutputs, z => z.Name, StringComparer.OrdinalIgnoreCase);
     }
 }

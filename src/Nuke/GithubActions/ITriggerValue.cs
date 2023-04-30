@@ -6,4 +6,5 @@ public interface ITriggerValue
     string? Alias { get; }
     string? Description { get; }
     string Prefix { get; }
+    string? Default { get; }
 }

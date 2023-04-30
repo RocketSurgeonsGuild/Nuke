@@ -71,7 +71,7 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
 
             if (Kind is RocketSurgeonGitHubActionsTrigger.WorkflowCall && Outputs.Any())
             {
-                writer.WriteLine("ouputs:");
+                writer.WriteLine("outputs:");
                 using (writer.Indent())
                 {
                     foreach (var input in Outputs)
@@ -92,7 +92,7 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
         }
     }
 
-    public List<GitHubActionsWorkflowTriggerInput> Inputs { get; set; } = new();
-    public List<GitHubActionsWorkflowTriggerSecret> Secrets { get; set; } = new();
-    public List<GitHubActionsWorkflowTriggerOutput> Outputs { get; set; } = new();
+    public List<GitHubActionsInput> Inputs { get; set; } = new();
+    public List<GitHubActionsSecret> Secrets { get; set; } = new();
+    public List<GitHubActionsOutput> Outputs { get; set; } = new();
 }

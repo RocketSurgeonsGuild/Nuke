@@ -18,12 +18,25 @@ name: ci
 
 on:
   workflow_dispatch:
+    inputs:
+      THIS_IS_A_INPUT:
+        type: string
+        required: False
   workflow_call:
+    inputs:
+      THIS_IS_A_INPUT:
+        type: string
+        required: False
     secrets:
+      THIS_IS_A_SECRET:
+        required: False
       RSG_NUGET_API_KEY:
         required: False
       RSG_AZURE_DEVOPS:
         required: False
+    outputs:
+      THIS_IS_A_OUTPUT:
+        value: 
   push:
     branches:
       - 'master'
@@ -110,16 +123,16 @@ jobs:
           dotnet tool restore
       - name: 🎁 Restore
         run: |
-          dotnet nuke Restore --skip --githubtoken '${{ secrets.GITHUB_TOKEN }}'
+          dotnet nuke Restore --skip --thisisainput '${{ inputs.THIS_IS_A_INPUT }}' --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
       - name: ⚙ Build
         run: |
-          dotnet nuke Build --skip --githubtoken '${{ secrets.GITHUB_TOKEN }}'
+          dotnet nuke Build --skip --thisisainput '${{ inputs.THIS_IS_A_INPUT }}' --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
       - name: 🚦 Test
         run: |
-          dotnet nuke Test TriggerCodeCoverageReports GenerateCodeCoverageReportCobertura GenerateCodeCoverageBadges GenerateCodeCoverageSummary GenerateCodeCoverageReport --skip --githubtoken '${{ secrets.GITHUB_TOKEN }}'
+          dotnet nuke Test TriggerCodeCoverageReports GenerateCodeCoverageReportCobertura GenerateCodeCoverageBadges GenerateCodeCoverageSummary GenerateCodeCoverageReport --skip --thisisainput '${{ inputs.THIS_IS_A_INPUT }}' --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
       - name: 📦 Pack
         run: |
-          dotnet nuke Pack --skip --githubtoken '${{ secrets.GITHUB_TOKEN }}'
+          dotnet nuke Pack --skip --thisisainput '${{ inputs.THIS_IS_A_INPUT }}' --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
       - name: 🏺 Publish coverage data
         if: always()
         uses: actions/upload-artifact@v3.1.2

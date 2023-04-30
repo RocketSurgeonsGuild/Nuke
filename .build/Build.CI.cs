@@ -1,3 +1,4 @@
+using Nuke.Common;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
 using Rocket.Surgery.Nuke.ContinuousIntegration;
@@ -43,8 +44,15 @@ using Rocket.Surgery.Nuke.GithubActions;
         nameof(Default)
     },
     ExcludedTargets = new[] { nameof(ICanClean.Clean), nameof(ICanRestoreWithDotNetCore.DotnetToolRestore) },
-    Enhancements = new[] { nameof(CiMiddleware) }
+    Enhancements = new[] { nameof(CiMiddleware) },
+    UseInputs = new[] { "THIS_IS_A_INPUT" },
+    UseOutputs = new[] { "THIS_IS_A_OUTPUT" }
 )]
+[GitHubActionsVariable("THIS_IS_A_VARIABLE", Alias = "ThisIsAOtherVariable")]
+[GitHubActionsInput("THIS_IS_A_INPUT" /*, Alias = "ThisIsAInput"*/)]
+[GitHubActionsOutput("THIS_IS_A_OUTPUT", Alias = "ThisIsADifferentOutput")]
+[GitHubActionsEnvironmentVariable("THIS_IS_A_ENV" /*, Alias = "ThisIsAEnv"*/, Default = "'test'")]
+[GitHubActionsSecret("THIS_IS_A_SECRET" /*, Alias = "ThisIsASecret"*/)]
 [PrintBuildVersion]
 [PrintCIEnvironment]
 [UploadLogs]
@@ -64,6 +72,13 @@ public partial class Pipeline
 
         return configuration.IncludeRepositoryConfigurationFiles();
     }
+
+    [Parameter] public string ThisIsAInput { get; set; }
+    [Parameter] public string ThisIsADifferentOutput { get; set; }
+    [Parameter] public string ThisIsAOtherVariable { get; set; }
+    [Parameter(Name = "THIS_IS_A_VARIABLE")] public string ThisIsAVariable { get; set; }
+    [Parameter] public string ThisIsAEnv { get; set; }
+    [Parameter] public string ThisIsASecret { get; set; }
 
     public static RocketSurgeonGitHubActionsConfiguration CiMiddleware(RocketSurgeonGitHubActionsConfiguration configuration)
     {

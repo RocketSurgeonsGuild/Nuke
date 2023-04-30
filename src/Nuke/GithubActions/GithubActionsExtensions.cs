@@ -19,8 +19,8 @@ public static class GithubActionsExtensions
         configuration.DetailedTriggers.OfType<RocketSurgeonGitHubActionsWorkflowTrigger>().ForEach(
             trigger =>
             {
-                trigger.Secrets.Add(new GitHubActionsWorkflowTriggerSecret("RSG_NUGET_API_KEY"));
-                trigger.Secrets.Add(new GitHubActionsWorkflowTriggerSecret("RSG_AZURE_DEVOPS"));
+                trigger.Secrets.Add(new GitHubActionsSecret("RSG_NUGET_API_KEY"));
+                trigger.Secrets.Add(new GitHubActionsSecret("RSG_AZURE_DEVOPS"));
             }
         );
         configuration.Jobs.Add(
