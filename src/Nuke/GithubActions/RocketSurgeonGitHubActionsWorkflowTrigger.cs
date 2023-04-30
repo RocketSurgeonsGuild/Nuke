@@ -51,7 +51,7 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
                 }
             }
 
-            if (Kind is RocketSurgeonGitHubActionsTrigger.WorkflowDispatch && Secrets.Any())
+            if (Kind is RocketSurgeonGitHubActionsTrigger.WorkflowCall && Secrets.Any())
             {
                 writer.WriteLine("secrets:");
                 using (writer.Indent())
@@ -75,7 +75,7 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
                 }
             }
 
-            if (Kind is RocketSurgeonGitHubActionsTrigger.WorkflowDispatch && Outputs.Any())
+            if (Kind is RocketSurgeonGitHubActionsTrigger.WorkflowCall && Outputs.Any())
             {
                 writer.WriteLine("ouputs:");
                 using (writer.Indent())

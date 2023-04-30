@@ -198,7 +198,9 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
             yield return new RocketSurgeonGitHubActionsWorkflowTrigger
             {
                 Kind = RocketSurgeonGitHubActionsTrigger.WorkflowDispatch,
-                Inputs = Inputs.ToList()
+                Inputs = Inputs.ToList(),
+                Secrets = GetAllSecrets().ToList(),
+                Outputs = Outputs.ToList()
             };
         }
 
