@@ -230,7 +230,7 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     public string[] UseOutputs { get; set; } = Array.Empty<string>();
 
     /// <summary>
-    ///     Get a list of inputs that need to be imported.
+    ///     Get a list of secrets that need to be imported.
     /// </summary>
     /// <returns></returns>
     protected virtual IEnumerable<GitHubActionsSecret> GetAllSecrets(IEnumerable<GitHubActionsSecret> secrets, bool githubToken = true)
@@ -244,6 +244,15 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     }
 
     /// <summary>
+    ///     Get a list of variables that need to be imported.
+    /// </summary>
+    /// <returns></returns>
+    protected virtual IEnumerable<GitHubActionsVariable> GetAllVariables(IEnumerable<GitHubActionsVariable> variables)
+    {
+        return variables;
+    }
+
+    /// <summary>
     ///     Get a list of inputs that need to be imported.
     /// </summary>
     /// <returns></returns>
@@ -253,7 +262,7 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     }
 
     /// <summary>
-    ///     Get a list of inputs that outputs to be imported.
+    ///     Get a list of outputs that outputs to be imported.
     /// </summary>
     /// <returns></returns>
     protected virtual IEnumerable<GitHubActionsOutput> GetAllOutputs(IEnumerable<GitHubActionsOutput> inputs)
