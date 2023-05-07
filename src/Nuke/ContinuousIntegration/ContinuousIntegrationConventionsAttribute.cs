@@ -54,7 +54,7 @@ public class ContinuousIntegrationConventionsAttribute : BuildExtensionAttribute
         // ReSharper disable once SuspiciousTypeConversion.Global
         if (build.ExecutionPlan.Any(z => z.Name == nameof(IGenerateCodeCoverageSummary.GenerateCodeCoverageSummary))
          && build is IGenerateCodeCoverageSummary codeCoverage
-         && ( codeCoverage.CoverageSummaryDirectory / "Summary.md" ).Exists())
+         && ( codeCoverage.CoverageSummaryDirectory / "Summary.md" ).FileExists())
         {
             FileSystemTasks.Touch(summary);
             var coverageSummary = TextTasks.ReadAllText(codeCoverage.CoverageSummaryDirectory / "Summary.md");
