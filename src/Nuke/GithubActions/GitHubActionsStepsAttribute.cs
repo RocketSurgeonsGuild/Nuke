@@ -226,7 +226,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             );
         }
 
-        var outputs = jobOutputs.Select(z => z.ToWorkflow(Name));
+        var outputs = jobOutputs.Select(z => z.ToWorkflow("build"));
 
         var config = new RocketSurgeonGitHubActionsConfiguration
         {
@@ -236,7 +236,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
 //            Environment = environmentAttributes
             Jobs = new List<RocketSurgeonsGithubActionsJobBase>
             {
-                new RocketSurgeonsGithubActionsJob("Build")
+                new RocketSurgeonsGithubActionsJob("build")
                 {
                     Steps = steps,
                     Outputs = jobOutputs,
