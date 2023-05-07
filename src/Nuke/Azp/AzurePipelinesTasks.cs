@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using Nuke.Common.CI.AzurePipelines;
 using Serilog;
 using static Nuke.Common.EnvironmentInfo;
@@ -17,13 +16,13 @@ public class AzurePipelinesTasks
     /// <summary>
     ///     Gets a value that determines if the build is running on Azure DevOps.
     /// </summary>
-    public static Expression<Func<bool>> IsRunningOnAzurePipelines => () =>
+    public static Func<bool> IsRunningOnAzurePipelines => () =>
         NukeBuild.Host is AzurePipelines || Environment.GetEnvironmentVariable("LOGNAME") == "vsts";
 
     /// <summary>
     ///     Gets a value that determines if the build is not running on Azure DevOps.
     /// </summary>
-    public static Expression<Func<bool>> IsNotRunningOnAzurePipelines => () =>
+    public static Func<bool> IsNotRunningOnAzurePipelines => () =>
         !( NukeBuild.Host is AzurePipelines || Environment.GetEnvironmentVariable("LOGNAME") == "vsts" );
 
     /// <summary>

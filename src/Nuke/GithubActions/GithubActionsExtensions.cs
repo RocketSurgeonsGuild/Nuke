@@ -1,4 +1,8 @@
+using System.Collections.Concurrent;
+using System.Reflection;
+using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
+using Nuke.Common.Execution;
 using Nuke.Common.Utilities.Collections;
 
 namespace Rocket.Surgery.Nuke.GithubActions;
@@ -345,5 +349,42 @@ public static class GithubActionsExtensions
             }
         );
         return job;
+    }
+
+
+    private static ConcurrentDictionary<ITargetDefinition, List<GitHubActionsOutput>> outputPaths = new();
+    private static PropertyInfo DefinitionProperty = typeof(ExecutableTarget).GetProperty("Definition", BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+
+    internal static List<GitHubActionsOutput> GetGithubActionsOutput(ExecutableTarget target)
+    {
+        var def = (ITargetDefinition)DefinitionProperty.GetValue(target)!;
+        if (outputPaths.TryGetValue(def, out var paths))
+        {
+            return paths;
+        }
+
+        paths = new();
+        outputPaths[def] = paths;
+        return paths;
+    }
+
+    public static GitHubActions SetOutput(this GitHubActions instance, string key, string? value)
+    {
+        var outputFile = EnvironmentInfo.GetVariable<string>("GITHUB_OUTPUT");
+        File.AppendAllText(outputFile, $"{key}={value}{Environment.NewLine}");
+        return instance;
+    }
+
+    public static ITargetDefinition ProducesGithubActionsOutput(this ITargetDefinition target, string outputName, string? descrption = null)
+    {
+        if (!outputPaths.TryGetValue(target, out var paths))
+        {
+            paths = new();
+            outputPaths[target] = paths;
+        }
+
+        paths.Add(new GitHubActionsOutput(outputName, descrption));
+        return target;
     }
 }

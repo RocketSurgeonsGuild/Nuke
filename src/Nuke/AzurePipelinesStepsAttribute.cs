@@ -27,13 +27,13 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
     };
 
     /// <inheritdoc />
-    public override string ConfigurationFile => NukeBuild.RootDirectory / "azure-pipelines.nuke.yml";
+    public override AbsolutePath ConfigurationFile => NukeBuild.RootDirectory / "azure-pipelines.nuke.yml";
 
     /// <inheritdoc />
     public override Type HostType => typeof(AzurePipelines);
 
     /// <inheritdoc />
-    public override IEnumerable<string> GeneratedFiles => new[] { ConfigurationFile };
+    public override IEnumerable<AbsolutePath> GeneratedFiles => new[] { ConfigurationFile };
 
     /// <inheritdoc />
     public override IEnumerable<string> RelevantTargetNames => InvokeTargets;
@@ -56,17 +56,16 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
 
     /// <inheritdoc />
     public override ConfigurationEntity GetConfiguration(
-        NukeBuild build,
         IReadOnlyCollection<ExecutableTarget> relevantTargets
     )
     {
         var paramList = new List<AzurePipelinesParameter>();
         var parameters =
-            build.GetType()
+            Build.GetType()
                  .GetInterfaces()
                  .SelectMany(x => x.GetMembers())
                  .Concat(
-                      build.GetType()
+                      Build.GetType()
                            .GetMembers(
                                 BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic |
                                 BindingFlags.Public | BindingFlags.FlattenHierarchy
@@ -82,7 +81,7 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
                     )
                 ))
             {
-                var value = parameter.GetValue(build);
+                var value = parameter.GetValue(Build);
                 if (value is AbsolutePath)
                 {
                     value = null;

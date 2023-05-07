@@ -45,6 +45,11 @@ public abstract class BaseGitHubActionsStep : GitHubActionsStep
     /// </summary>
     public Dictionary<string, string> Environment { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 
+    /// <summary>
+    ///     The outputs of this step
+    /// </summary>
+    public List<GitHubActionsOutput> Outputs { get; set; } = new();
+
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {

@@ -36,11 +36,9 @@ public sealed class EnsureReadmeIsUpdatedAttribute : BuildExtensionAttributeBase
     public string ReadmeFilePath { get; set; }
 
     /// <inheritdoc />
-    public void OnBuildInitialized(
-        NukeBuild build, IReadOnlyCollection<ExecutableTarget> executableTargets, IReadOnlyCollection<ExecutableTarget> executionPlan
-    )
+    public void OnBuildInitialized(IReadOnlyCollection<ExecutableTarget> executableTargets, IReadOnlyCollection<ExecutableTarget> executionPlan)
     {
-        if (!NukeBuild.IsLocalBuild || build is not IHaveSolution buildSolution) return;
+        if (!NukeBuild.IsLocalBuild || Build is not IHaveSolution buildSolution) return;
 
         try
         {

@@ -70,17 +70,14 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
     public override string IdPostfix => Name;
 
     /// <inheritdoc />
-    public override IEnumerable<string> GeneratedFiles => new[] { ConfigurationFile };
+    public override IEnumerable<AbsolutePath> GeneratedFiles => new[] { ConfigurationFile };
 
     /// <inheritdoc />
     public override IEnumerable<string> RelevantTargetNames => InvokedTargets;
     // public override IEnumerable<string> IrrelevantTargetNames => new string[0];
 
     /// <inheritdoc />
-    public override ConfigurationEntity GetConfiguration(
-        NukeBuild build,
-        IReadOnlyCollection<ExecutableTarget> relevantTargets
-    )
+    public override ConfigurationEntity GetConfiguration(IReadOnlyCollection<ExecutableTarget> relevantTargets)
     {
         var steps = new List<GitHubActionsStep>
         {
@@ -117,37 +114,48 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             steps.Add(globalToolStep);
         }
 
-        var attributes = build.GetType().GetCustomAttributes().OfType<TriggerValueAttribute>().ToArray();
-        var environmentAttributes = build.GetType().GetCustomAttributes()
+        var attributes = Build.GetType().GetCustomAttributes().OfType<TriggerValueAttribute>().ToArray();
+        var environmentAttributes = Build.GetType().GetCustomAttributes()
                                          .OfType<GitHubActionsEnvironmentVariableAttribute>()
                                          .Select(z => z.ToEnvironmentVariable())
-                                         .Concat(GetParameters(build).Select(z => new GitHubActionsEnvironmentVariable(z.Name, z.Default)))
+                                         .Concat(GetParameters(Build).Select(z => new GitHubActionsEnvironmentVariable(z.Name, z.Default)))
                                          .DistinctBy(z => z.Name)
                                          .ToArray();
-        var inputs = attributes.OfType<GitHubActionsInputAttribute>().Select(z => z.ToInput()).ToArray();
-        var outputs = attributes.OfType<GitHubActionsOutputAttribute>().Select(z => z.ToOutput()).ToArray();
+        var inputs = attributes.OfType<GitHubActionsInputAttribute>().Select(z => z.ToInput())
+                               .SelectMany(
+                                    z =>
+                                    {
+                                        return new[]
+                                        {
+                                            new KeyValuePair<string, GitHubActionsInput>(z.Name, z),
+                                            new KeyValuePair<string, GitHubActionsInput>(z.Alias ?? z.Name.Pascalize(), z)
+                                        };
+                                    }
+                                )
+                               .DistinctBy(z => z.Key, StringComparer.OrdinalIgnoreCase)
+                               .ToDictionary(z => z.Key, z => z.Value, StringComparer.OrdinalIgnoreCase);
         var secrets = attributes.OfType<GitHubActionsSecretAttribute>().Select(z => z.ToSecret()).ToArray();
         var variables = attributes.OfType<GitHubActionsVariableAttribute>().Select(z => z.ToVariable()).ToArray();
 
-        var environmentVariables = GetAllInputs(inputs)
-                                  .Concat<ITriggerValue>(GetAllSecrets(secrets))
-                                  .Concat(variables)
-                                  .Concat(environmentAttributes)
-                                  .SelectMany(
-                                       z =>
-                                       {
-                                           return new[]
-                                           {
-                                               new KeyValuePair<string, ITriggerValue>(z.Name, z),
-                                               new KeyValuePair<string, ITriggerValue>(z.Alias ?? z.Name.Pascalize(), z)
-                                           };
-                                       }
-                                   )
-                                  .DistinctBy(z => z.Key, StringComparer.OrdinalIgnoreCase)
-                                  .ToDictionary(z => z.Key, z => z.Value, StringComparer.OrdinalIgnoreCase);
+        var environmentVariables =
+            GetAllSecrets(secrets)
+               .Concat<ITriggerValue>(variables)
+               .Concat(environmentAttributes)
+               .SelectMany(
+                    z =>
+                    {
+                        return new[]
+                        {
+                            new KeyValuePair<string, ITriggerValue>(z.Name, z),
+                            new KeyValuePair<string, ITriggerValue>(z.Alias ?? z.Name.Pascalize(), z)
+                        };
+                    }
+                )
+               .DistinctBy(z => z.Key, StringComparer.OrdinalIgnoreCase)
+               .ToDictionary(z => z.Key, z => z.Value, StringComparer.OrdinalIgnoreCase);
 
         var implicitParameters =
-            build.GetType().GetMembers(
+            Build.GetType().GetMembers(
                       BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public |
                       BindingFlags.FlattenHierarchy
                   )
@@ -157,7 +165,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         foreach (var par in implicitParameters)
         {
             var key = par.GetCustomAttribute<ParameterAttribute>()?.Name ?? par.Name;
-            if (environmentVariables.TryGetValue(key, out var value))
+            if (environmentVariables.TryGetValue(key, out var value) && value is not GitHubActionsInput)
             {
 //                Log.Logger.Information("Found Parameter {Name}", value.Name);
                 stepParameters.Add(
@@ -168,6 +176,8 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             }
         }
 
+        var jobOutputs = new List<GitHubActionsStepOutput>();
+        var requiredInputs = new List<GitHubActionsInput>();
         var lookupTable = new LookupTable<ExecutableTarget, ExecutableTarget[]>();
         foreach (var (execute, targets) in relevantTargets
                                           .Select(
@@ -177,23 +187,51 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                                           .ForEachLazy(x => lookupTable.Add(x.ExecutableTarget, x.Targets.ToArray()))
                 )
         {
+            var localStepParameters = stepParameters.ToList();
+            foreach (var target in targets)
+            {
+                var stepOutputs = GithubActionsExtensions.GetGithubActionsOutput(target);
+                jobOutputs.AddRange(stepOutputs.Select(z => z.ToStep(execute.Name.Camelize())));
+
+                foreach (var par in target.DelegateRequirements
+                                          .Select(z => z.GetMemberInfo())
+                                          .Where(z => z.GetCustomAttribute<ParameterAttribute>() != null))
+                {
+                    var key = par.GetCustomAttribute<ParameterAttribute>()?.Name ?? par.Name;
+                    if (inputs.TryGetValue(key, out var value))
+                    {
+                        requiredInputs.Add(value);
+                        localStepParameters.Insert(
+                            0,
+                            new KeyValuePair<string, string>(
+                                key,
+                                $"{value.Prefix}.{value.Name}{( string.IsNullOrWhiteSpace(value.Default) ? "" : $" || {value.Default}" )}"
+                            )
+                        );
+                    }
+                }
+            }
+
             steps.Add(
                 new RunStep(execute.Name.Humanize(LetterCasing.Title))
                 {
+                    Id = execute.Name.Camelize(),
                     Run =
-                        $"{( localTool ? "dotnet nuke" : "nuke" )} {targets.Select(z => z.Name).JoinSpace()} --skip {stepParameters
+                        $"{( localTool ? "dotnet nuke" : "nuke" )} {targets.Select(z => z.Name).JoinSpace()} --skip {localStepParameters
                            .GroupBy(z => z.Key, StringComparer.OrdinalIgnoreCase)
                            .Select(z => z.Last())
                            .Select(z => $$$"""--{{{z.Key.ToLowerInvariant()}}} '${{ {{{z.Value}}} }}'""").JoinSpace()}"
-                           .TrimEnd()
+                           .TrimEnd(),
                 }
             );
         }
 
+        var outputs = jobOutputs.Select(z => z.ToWorkflow(Name));
+
         var config = new RocketSurgeonGitHubActionsConfiguration
         {
             Name = Name,
-            DetailedTriggers = GetTriggers(inputs, outputs, secrets).ToList(),
+            DetailedTriggers = GetTriggers(requiredInputs, outputs, secrets).ToList(),
             // TODO: Figure out what this looks like here
 //            Environment = environmentAttributes
             Jobs = new List<RocketSurgeonsGithubActionsJobBase>
@@ -201,6 +239,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                 new RocketSurgeonsGithubActionsJob("Build")
                 {
                     Steps = steps,
+                    Outputs = jobOutputs,
                     RunsOn = !_isGithubHosted ? _images : Array.Empty<string>(),
                     Matrix = _isGithubHosted ? _images : Array.Empty<string>(),
                     // TODO: Figure out what this looks like here
@@ -218,7 +257,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             }
         };
 
-        ApplyEnhancements(build, config);
+        ApplyEnhancements(config);
 
         return config;
     }
@@ -228,7 +267,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
     /// </summary>
     /// <param name="build"></param>
     /// <returns></returns>
-    protected virtual IEnumerable<GithubActionsNukeParameter> GetParameters(NukeBuild build)
+    protected virtual IEnumerable<GithubActionsNukeParameter> GetParameters(INukeBuild build)
     {
         var parameters =
             build.GetType().GetMembers(

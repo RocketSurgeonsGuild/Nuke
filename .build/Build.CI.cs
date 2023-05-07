@@ -44,13 +44,11 @@ using Rocket.Surgery.Nuke.GithubActions;
         nameof(Default)
     },
     ExcludedTargets = new[] { nameof(ICanClean.Clean), nameof(ICanRestoreWithDotNetCore.DotnetToolRestore) },
-    Enhancements = new[] { nameof(CiMiddleware) },
-    UseInputs = new[] { "THIS_IS_A_INPUT" },
-    UseOutputs = new[] { "THIS_IS_A_OUTPUT" }
+    Enhancements = new[] { nameof(CiMiddleware) }
 )]
 [GitHubActionsVariable("THIS_IS_A_VARIABLE", Alias = "ThisIsAOtherVariable")]
 [GitHubActionsInput("THIS_IS_A_INPUT" /*, Alias = "ThisIsAInput"*/)]
-[GitHubActionsOutput("THIS_IS_A_OUTPUT", Alias = "ThisIsADifferentOutput")]
+[GitHubActionsInput("THIS_IS_ANOTHER_INPUT" /*, Alias = "ThisIsAInput"*/)]
 [GitHubActionsEnvironmentVariable("THIS_IS_A_ENV" /*, Alias = "ThisIsAEnv"*/, Default = "'test'")]
 [GitHubActionsSecret("THIS_IS_A_SECRET" /*, Alias = "ThisIsASecret"*/)]
 [PrintBuildVersion]
@@ -73,7 +71,13 @@ public partial class Pipeline
         return configuration.IncludeRepositoryConfigurationFiles();
     }
 
+    private Target WithOutputs => _ => _.ProducesGithubActionsOutput("iSetAThing", "Some output value")
+                                        .DependentFor(Build)
+                                        .Requires(() => ThisIsAInput)
+                                        .Executes(() => GitHubActions.Instance?.SetOutput("iSetAThing", "myValue"));
+
     [Parameter] public string ThisIsAInput { get; set; }
+    [Parameter] public string ThisIsAnotherInput { get; set; }
     [Parameter] public string ThisIsADifferentOutput { get; set; }
     [Parameter] public string ThisIsAOtherVariable { get; set; }
     [Parameter(Name = "THIS_IS_A_VARIABLE")] public string ThisIsAVariable { get; set; }

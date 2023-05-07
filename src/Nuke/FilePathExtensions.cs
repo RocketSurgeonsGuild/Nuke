@@ -25,7 +25,7 @@ public static class FilePathExtensions
                 return path;
             }
 
-            if (!FileSystemTasks.DirectoryExists(path))
+            if (!path.Exists())
             {
                 continue;
             }

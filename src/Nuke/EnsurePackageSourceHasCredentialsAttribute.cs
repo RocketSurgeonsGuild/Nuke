@@ -1,5 +1,6 @@
 using NuGet.Configuration;
 using Nuke.Common.Execution;
+using Serilog;
 
 #pragma warning disable CA1813
 #pragma warning disable CA2201
@@ -29,7 +30,7 @@ public class EnsurePackageSourceHasCredentialsAttribute : BuildExtensionAttribut
     public string SourceName { get; }
 
     /// <inheritdoc />
-    public void OnBuildCreated(NukeBuild build, IReadOnlyCollection<ExecutableTarget> executableTargets)
+    public void OnBuildCreated(IReadOnlyCollection<ExecutableTarget> executableTargets)
     {
         var settings = Settings.LoadDefaultSettings(NukeBuild.RootDirectory);
         var packageSourceProvider = new PackageSourceProvider(settings);
@@ -40,15 +41,16 @@ public class EnsurePackageSourceHasCredentialsAttribute : BuildExtensionAttribut
                                            );
         if (source == null)
         {
-            Serilog.Log.Error(
+            Log.Error(
                 "NuGet Package Source {SourceName} could not be found. This is required for the build to complete",
                 SourceName
             );
             throw new Exception();
         }
-        else if (source.Credentials?.IsValid() != true)
+
+        if (source.Credentials?.IsValid() != true)
         {
-            Serilog.Log.Error(
+            Log.Error(
                 "NuGet Package Source {SourceName} does not have any credentials defined.  Please configure the credentials for the source to build",
                 SourceName
             );
