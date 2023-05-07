@@ -28,10 +28,10 @@ on:
     outputs:
       withOutputsISetAThing:
         description: 'Some output value'
-        value: ${{ jobs.inputs.outputs.withOutputsISetAThing }}
+        value: ${{ jobs.build.outputs.withOutputsISetAThing }}
 
 jobs:
-  Build:
+  build:
     outputs:
       withOutputsISetAThing: '${{ steps.withOutputs.outputs.iSetAThing }}'
     runs-on: ubuntu-latest

@@ -96,7 +96,7 @@ public partial class Pipeline
            .ExcludeRepositoryConfigurationFiles()
            .AddNugetPublish()
            .Jobs.OfType<RocketSurgeonsGithubActionsJob>()
-           .First(z => z.Name == "Build")
+           .First(z => z.Name.Equals("Build", StringComparison.OrdinalIgnoreCase))
            .UseDotNetSdks("6.0", "7.0")
            .AddNuGetCache()
             // .ConfigureForGitVersion()
