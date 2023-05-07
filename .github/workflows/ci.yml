@@ -18,15 +18,7 @@ name: ci
 
 on:
   workflow_dispatch:
-    inputs:
-      THIS_IS_A_INPUT:
-        type: string
-        required: False
   workflow_call:
-    inputs:
-      THIS_IS_A_INPUT:
-        type: string
-        required: False
     secrets:
       THIS_IS_A_SECRET:
         required: False
@@ -34,10 +26,6 @@ on:
         required: False
       RSG_AZURE_DEVOPS:
         required: False
-    outputs:
-      withOutputsISetAThing:
-        description: 'Some output value'
-        value: ${{ jobs.ci.outputs.withOutputsISetAThing }}
   push:
     branches:
       - 'master'
@@ -91,8 +79,6 @@ on:
 
 jobs:
   Build:
-    outputs:
-      withOutputsISetAThing: '${{ steps.withOutputs.outputs.iSetAThing }}'
     env:
       NUGET_PACKAGES: '${{ github.workspace }}/.nuget/packages'
     strategy:
@@ -128,10 +114,6 @@ jobs:
         id: restore
         run: |
           dotnet nuke Restore --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
-      - name: With Outputs
-        id: withOutputs
-        run: |
-          dotnet nuke WithOutputs --skip --thisisainput '${{ inputs.THIS_IS_A_INPUT }}' --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
       - name: ⚙ Build
         id: build
         run: |

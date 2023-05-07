@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Build Schema",
   "$ref": "#/definitions/build",
+  "title": "Build Schema",
   "definitions": {
     "build": {
       "type": "object",
@@ -106,7 +106,8 @@
               "T",
               "Test",
               "Trigger_Code_Coverage_Reports",
-              "TriggerCodeCoverageReports"
+              "TriggerCodeCoverageReports",
+              "WithOutputs"
             ]
           }
         },
@@ -143,7 +144,8 @@
               "T",
               "Test",
               "Trigger_Code_Coverage_Reports",
-              "TriggerCodeCoverageReports"
+              "TriggerCodeCoverageReports",
+              "WithOutputs"
             ]
           }
         },
@@ -157,6 +159,9 @@
           "type": "string"
         },
         "ThisIsAInput": {
+          "type": "string"
+        },
+        "ThisIsAnotherInput": {
           "type": "string"
         },
         "ThisIsAOtherVariable": {

@@ -46,6 +46,13 @@ using Rocket.Surgery.Nuke.GithubActions;
     ExcludedTargets = new[] { nameof(ICanClean.Clean), nameof(ICanRestoreWithDotNetCore.DotnetToolRestore) },
     Enhancements = new[] { nameof(CiMiddleware) }
 )]
+[GitHubActionsSteps(
+    "inputs",
+    GitHubActionsImage.UbuntuLatest,
+    AutoGenerate = false,
+    On = new[] { RocketSurgeonGitHubActionsTrigger.WorkflowCall },
+    InvokedTargets = new[] { nameof(WithOutputs) }
+)]
 [GitHubActionsVariable("THIS_IS_A_VARIABLE", Alias = "ThisIsAOtherVariable")]
 [GitHubActionsInput("THIS_IS_A_INPUT" /*, Alias = "ThisIsAInput"*/)]
 [GitHubActionsInput("THIS_IS_ANOTHER_INPUT" /*, Alias = "ThisIsAInput"*/)]
@@ -72,7 +79,6 @@ public partial class Pipeline
     }
 
     private Target WithOutputs => _ => _.ProducesGithubActionsOutput("iSetAThing", "Some output value")
-                                        .DependentFor(Build)
                                         .Requires(() => ThisIsAInput)
                                         .Executes(() => GitHubActions.Instance?.SetOutput("iSetAThing", "myValue"));
 
