@@ -1,5 +1,6 @@
 using Nuke.Common.Execution;
 using Nuke.Common.IO;
+using Serilog;
 using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.IO.HttpTasks;
 
@@ -38,21 +39,20 @@ public class DownloadFileAttribute : BuildExtensionAttributeBase, IOnBuildInitia
 
     /// <inheritdoc />
     public void OnBuildInitialized(
-        NukeBuild build,
         IReadOnlyCollection<ExecutableTarget> executableTargets,
         IReadOnlyCollection<ExecutableTarget> executionPlan
     )
     {
         if (!_filePath.FileExists())
         {
-            Serilog.Log.Verbose(
+            Log.Verbose(
                 "Downloading {Type} {Url} to {Path}",
                 Type,
                 _url,
                 GetRelativePath(NukeBuild.RootDirectory, _filePath)
             );
             HttpDownloadFile(_url, _filePath);
-            Serilog.Log.Information(
+            Log.Information(
                 "Downloaded {Type} {Url} to {Path}",
                 Type,
                 _url,

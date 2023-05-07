@@ -26,11 +26,6 @@ public abstract class RocketSurgeonsGithubActionsJobBase : ConfigurationEntity
     /// <summary>
     ///     The dependencies of this job
     /// </summary>
-    public Dictionary<string, string> Outputs { get; set; } = new(StringComparer.OrdinalIgnoreCase);
-
-    /// <summary>
-    ///     The dependencies of this job
-    /// </summary>
     public Dictionary<string, string> Environment { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 
     /// <summary>
@@ -42,6 +37,12 @@ public abstract class RocketSurgeonsGithubActionsJobBase : ConfigurationEntity
     ///     The condition to run this job under
     /// </summary>
     public GithubActionCondition? If { get; set; }
+
+
+    /// <summary>
+    ///     The outputs of this job
+    /// </summary>
+    public List<GitHubActionsStepOutput> Outputs { get; set; } = new();
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
@@ -61,7 +62,7 @@ public abstract class RocketSurgeonsGithubActionsJobBase : ConfigurationEntity
                 }
             }
 
-            writer.WriteKeyValues("outputs", Outputs);
+            writer.WriteKeyValues("outputs", Outputs.ToDictionary(z => $"{z.StepName}{z.OutputName.Pascalize()}".Camelize(), z => z.ToString()));
             writer.WriteKeyValues("env", Environment);
 
             if (!string.IsNullOrWhiteSpace(If?.ToString()))

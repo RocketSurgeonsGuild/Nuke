@@ -11,9 +11,9 @@ namespace Rocket.Surgery.Nuke;
 public sealed class LocalBuildConventionsAttribute : BuildExtensionAttributeBase, IOnBuildFinished, IOnBuildInitialized
 {
     /// <inheritdoc />
-    public void OnBuildFinished(NukeBuild build)
+    public void OnBuildFinished()
     {
-        if (build is not (INukeBuild nukeBuild and IHaveSolution haveSolution)) return;
+        if (Build is not (INukeBuild nukeBuild and IHaveSolution haveSolution)) return;
         if (nukeBuild.IsServerBuild) return;
 
 //        EnsureSolutionIsUptoDate(nukeBuild, haveSolution);
@@ -44,11 +44,9 @@ public sealed class LocalBuildConventionsAttribute : BuildExtensionAttributeBase
     }
 
     /// <inheritdoc />
-    public void OnBuildInitialized(
-        NukeBuild build, IReadOnlyCollection<ExecutableTarget> executableTargets, IReadOnlyCollection<ExecutableTarget> executionPlan
-    )
+    public void OnBuildInitialized(IReadOnlyCollection<ExecutableTarget> executableTargets, IReadOnlyCollection<ExecutableTarget> executionPlan)
     {
-        if (build is not (INukeBuild nukeBuild and IHaveSolution haveSolution)) return;
+        if (Build is not (INukeBuild nukeBuild and IHaveSolution haveSolution)) return;
         if (nukeBuild.IsServerBuild) return;
 
         EnsureSolutionIsUptoDate(nukeBuild, haveSolution);

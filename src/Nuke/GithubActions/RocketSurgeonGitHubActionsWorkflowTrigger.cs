@@ -76,7 +76,7 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
                 {
                     foreach (var input in Outputs)
                     {
-                        writer.WriteLine($"{input.Name}:");
+                        writer.WriteLine($"{input.OutputName}:");
                         using (writer.Indent())
                         {
                             if (!string.IsNullOrWhiteSpace(input.Description))
@@ -84,7 +84,7 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
                                 writer.WriteLine($"description: '{input.Description}'");
                             }
 
-                            writer.WriteLine($"value: {input.Value}");
+                            writer.WriteLine($"value: {input}");
                         }
                     }
                 }
@@ -94,5 +94,5 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
 
     public List<GitHubActionsInput> Inputs { get; set; } = new();
     public List<GitHubActionsSecret> Secrets { get; set; } = new();
-    public List<GitHubActionsOutput> Outputs { get; set; } = new();
+    public List<GitHubActionsWorkflowOutput> Outputs { get; set; } = new();
 }

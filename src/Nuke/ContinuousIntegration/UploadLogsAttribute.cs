@@ -15,9 +15,9 @@ namespace Rocket.Surgery.Nuke.ContinuousIntegration;
 public sealed class UploadLogsAttribute : BuildExtensionAttributeBase, IOnBuildFinished
 {
     /// <inheritdoc />
-    public void OnBuildFinished(NukeBuild build)
+    public void OnBuildFinished()
     {
-        if (build is IHaveOutputLogs logs)
+        if (Build is IHaveOutputLogs logs)
         {
             foreach (var item in logs.LogsDirectory.GlobFiles("**/*"))
             {

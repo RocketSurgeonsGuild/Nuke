@@ -15,13 +15,12 @@ public sealed class PrintBuildVersionAttribute : BuildExtensionAttributeBase, IO
 {
     /// <inheritdoc />
     public void OnBuildInitialized(
-        NukeBuild build,
         IReadOnlyCollection<ExecutableTarget> executableTargets,
         IReadOnlyCollection<ExecutableTarget> executionPlan
     )
     {
-        if (build is IHaveGitVersion gitVersion && build is IHaveSolution solution &&
-            build is IHaveConfiguration configuration)
+        if (Build is IHaveGitVersion gitVersion && Build is IHaveSolution solution &&
+            Build is IHaveConfiguration configuration)
         {
             Log.Information(
                 "Building version {InformationalVersion} of {SolutionName} ({Configuration}) using version {NukeVersion} of Nuke",

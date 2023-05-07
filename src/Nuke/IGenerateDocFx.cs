@@ -21,8 +21,8 @@ public interface IGenerateDocFx : IHaveDocs
     ///     The core docs to generate documentation
     /// </summary>
     public Target CoreDocs => _ => _
-                                  .OnlyWhenStatic(() => FileSystemTasks.DirectoryExists(DocumentationDirectory))
-                                  .OnlyWhenStatic(() => FileSystemTasks.FileExists(DocumentationDirectory / "docfx.json"))
+                                  .OnlyWhenStatic(() => DocumentationDirectory.DirectoryExists())
+                                  .OnlyWhenStatic(() => ( DocumentationDirectory / "docfx.json" ).FileExists())
                                   .Executes(
                                        () =>
                                        {

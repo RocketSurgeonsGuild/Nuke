@@ -16,14 +16,14 @@ public class ContinuousIntegrationConventionsAttribute : BuildExtensionAttribute
 #pragma warning restore CA1813
 {
     /// <inheritdoc />
-    public void OnBuildFinished(NukeBuild build)
+    public void OnBuildFinished()
     {
-        if (build is not INukeBuild nukeBuild) return;
+        if (Build is not { } nukeBuild) return;
         if (nukeBuild.IsLocalBuild) return;
         switch (nukeBuild.Host)
         {
             case GitHubActions:
-                HandleGithubActions(build);
+                HandleGithubActions(Build);
                 break;
         }
     }

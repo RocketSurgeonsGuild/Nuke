@@ -1,6 +1,7 @@
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
+using Nuke.Common.IO;
 using Nuke.Common.Utilities.Collections;
 using YamlDotNet.RepresentationModel;
 
@@ -29,7 +30,7 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     public override Type HostType { get; } = typeof(GitHubActions);
 
     /// <inheritdoc />
-    public override string ConfigurationFile => NukeBuild.RootDirectory / ".github" / "workflows" / $"{Name}.yml";
+    public override AbsolutePath ConfigurationFile => NukeBuild.RootDirectory / ".github" / "workflows" / $"{Name}.yml";
 
     /// <summary>
     ///     The triggers
@@ -91,15 +92,15 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     /// </summary>
     /// <param name="build"></param>
     /// <param name="config"></param>
-    protected void ApplyEnhancements(NukeBuild build, RocketSurgeonGitHubActionsConfiguration config)
+    protected void ApplyEnhancements(RocketSurgeonGitHubActionsConfiguration config)
     {
         if (Enhancements.Any())
         {
-            foreach (var method in Enhancements.Join(build.GetType().GetMethods(), z => z, z => z.Name, (_, e) => e))
+            foreach (var method in Enhancements.Join(Build.GetType().GetMethods(), z => z, z => z.Name, (_, e) => e))
             {
                 config = method.IsStatic
                     ? method.Invoke(null, new object[] { config }) as RocketSurgeonGitHubActionsConfiguration ?? config
-                    : method.Invoke(build, new object[] { config }) as RocketSurgeonGitHubActionsConfiguration
+                    : method.Invoke(Build, new object[] { config }) as RocketSurgeonGitHubActionsConfiguration
                    ?? config;
             }
         }
@@ -168,7 +169,7 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     /// <returns></returns>
     protected virtual IEnumerable<GitHubActionsDetailedTrigger> GetTriggers(
         IEnumerable<GitHubActionsInput> inputs,
-        IEnumerable<GitHubActionsOutput> outputs,
+        IEnumerable<GitHubActionsWorkflowOutput> outputs,
         IEnumerable<GitHubActionsSecret> secrets
     )
     {
@@ -177,7 +178,7 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
             yield return new RocketSurgeonGitHubActionsWorkflowTrigger
             {
                 Kind = RocketSurgeonGitHubActionsTrigger.WorkflowDispatch,
-                Inputs = GetAllInputs(inputs).ToList(),
+                Inputs = inputs.ToList(),
             };
         }
 
@@ -187,8 +188,8 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
             {
                 Kind = RocketSurgeonGitHubActionsTrigger.WorkflowCall,
                 Secrets = GetAllSecrets(secrets, false).ToList(),
-                Outputs = GetAllOutputs(outputs).ToList(),
-                Inputs = GetAllInputs(inputs).ToList()
+                Outputs = outputs.ToList(),
+                Inputs = inputs.ToList()
             };
         }
 
@@ -226,9 +227,6 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
             yield return new GitHubActionsScheduledTrigger { Cron = OnCronSchedule };
     }
 
-    public string[] UseInputs { get; set; } = Array.Empty<string>();
-    public string[] UseOutputs { get; set; } = Array.Empty<string>();
-
     /// <summary>
     ///     Get a list of secrets that need to be imported.
     /// </summary>
@@ -241,33 +239,5 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
         {
             yield return secret;
         }
-    }
-
-    /// <summary>
-    ///     Get a list of variables that need to be imported.
-    /// </summary>
-    /// <returns></returns>
-    protected virtual IEnumerable<GitHubActionsVariable> GetAllVariables(IEnumerable<GitHubActionsVariable> variables)
-    {
-        return variables;
-    }
-
-    /// <summary>
-    ///     Get a list of inputs that need to be imported.
-    /// </summary>
-    /// <returns></returns>
-    protected virtual IEnumerable<GitHubActionsInput> GetAllInputs(IEnumerable<GitHubActionsInput> inputs)
-    {
-        return inputs.IntersectBy(UseInputs, z => z.Name, StringComparer.OrdinalIgnoreCase);
-    }
-
-    /// <summary>
-    ///     Get a list of outputs that outputs to be imported.
-    /// </summary>
-    /// <returns></returns>
-    protected virtual IEnumerable<GitHubActionsOutput> GetAllOutputs(IEnumerable<GitHubActionsOutput> inputs)
-    {
-        return inputs
-           .IntersectBy(UseOutputs, z => z.Name, StringComparer.OrdinalIgnoreCase);
     }
 }

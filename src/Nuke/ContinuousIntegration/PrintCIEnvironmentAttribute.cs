@@ -41,7 +41,6 @@ public sealed class PrintCIEnvironmentAttribute : BuildExtensionAttributeBase, I
 
     /// <inheritdoc />
     public void OnBuildInitialized(
-        NukeBuild build,
         IReadOnlyCollection<ExecutableTarget> executableTargets,
         IReadOnlyCollection<ExecutableTarget> executionPlan
     )
@@ -64,12 +63,12 @@ public sealed class PrintCIEnvironmentAttribute : BuildExtensionAttributeBase, I
     }
 
     /// <inheritdoc />
-    public void OnBuildFinished(NukeBuild build)
+    public void OnBuildFinished()
     {
-        if (build.GetType().HasCustomAttribute<ContinuousIntegrationConventionsAttribute>()) return;
+        if (Build.GetType().HasCustomAttribute<ContinuousIntegrationConventionsAttribute>()) return;
 
         Log.Logger.Warning("Please updated the build to also be decorated with [ContinuousIntegrationConventions]");
         // Shim in compatibility such that this "just works" until the build is updated to use the new attribute
-        new ContinuousIntegrationConventionsAttribute().OnBuildFinished(build);
+        new ContinuousIntegrationConventionsAttribute().OnBuildFinished();
     }
 }

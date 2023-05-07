@@ -9,6 +9,7 @@ using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.ValueInjection;
+using Serilog;
 using static Nuke.Common.EnvironmentInfo;
 
 #pragma warning disable CA1019
@@ -71,7 +72,7 @@ public class ComputedGitVersionAttribute : ValueInjectionAttributeBase
         );
         if (rootDirectory == null)
         {
-            Serilog.Log.Warning("N git repository found, GitVersion will not be accurate");
+            Log.Warning("N git repository found, GitVersion will not be accurate");
             return new GitVersion();
         }
 
@@ -94,10 +95,10 @@ public class ComputedGitVersionAttribute : ValueInjectionAttributeBase
                                            .DisableProcessLogOutput()
                                            .SetUpdateAssemblyInfo(UpdateAssemblyInfo)
                                            .SetProcessToolPath(
-                                                ToolPathResolver.GetPackageExecutable(
+                                                NuGetToolPathResolver.GetPackageExecutable(
                                                     "GitVersion.Tool|GitVersion.CommandLine",
                                                     "gitversion.dll|gitversion.exe",
-                                                    framework: "netcoreapp3.1"
+                                                    framework: Constants.GitVersionFramework
                                                 )
                                             )
                                    )

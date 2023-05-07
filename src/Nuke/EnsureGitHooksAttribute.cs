@@ -33,7 +33,7 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
     public string[] HookNames { get; }
 
     /// <inheritdoc />
-    public void OnBuildCreated(NukeBuild build, IReadOnlyCollection<ExecutableTarget> executableTargets)
+    public void OnBuildCreated(IReadOnlyCollection<ExecutableTarget> executableTargets)
     {
         // Only care about local environments
         if (!NukeBuild.IsLocalBuild)
@@ -42,7 +42,7 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
         }
 
         // ReSharper disable once SuspiciousTypeConversion.Global
-        if (build is not IGitHooksEngine engine)
+        if (Build is not IGitHooksEngine engine)
         {
             Log.Verbose("No git hooks engine found, defaulting to husky");
             engine = new HuskyEngine();
@@ -61,7 +61,7 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
         {
             try
             {
-                var hooksOutput = GitTasks.Git("config --get core.hookspath");
+                var hooksOutput = GitTasks.Git($"config --get core.hookspath");
                 var hooksPath = hooksOutput.StdToText().Trim();
                 var huskyScriptPath = NukeBuild.RootDirectory / ".husky" / "_" / "husky.sh";
                 return hooksPath == ".husky" && huskyScriptPath.FileExists();
