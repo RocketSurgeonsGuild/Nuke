@@ -109,8 +109,10 @@ public static class ToolSettingsExtensions
 
         var nukeAssembly = typeof(VerbosityMappingAttribute).Assembly;
         var verbosityMappingType = nukeAssembly.GetType("Nuke.Common.Tooling.VerbosityMapping")!;
-        var mappings = (LookupTable<Type, (Verbosity Verbosity, object MappedVerbosity)>)verbosityMappingType.GetField("Mappings", BindingFlags.Static)
-           .GetValue(null, Array.Empty<object>());
+        var mappings = (LookupTable<Type, (Verbosity Verbosity, object MappedVerbosity)>)verbosityMappingType.GetRuntimeFields()
+           .Single(z => z.Name == "Mappings")
+           .NotNull()
+           .GetValue(null)!;
 
         if (mappings.Contains(typeof(MSBuildVerbosity)))
         {
