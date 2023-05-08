@@ -228,21 +228,13 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
 
         var outputs = jobOutputs.Select(z => z.ToWorkflow("build"));
 
-        var config = new RocketSurgeonGitHubActionsConfiguration
+        var buildJob = new RocketSurgeonsGithubActionsJob("build")
         {
-            Name = Name,
-            DetailedTriggers = GetTriggers(requiredInputs, outputs, secrets).ToList(),
+            Steps = steps,
+            Outputs = jobOutputs,
+            RunsOn = !_isGithubHosted ? _images : Array.Empty<string>(),
+            Matrix = _isGithubHosted ? _images : Array.Empty<string>(),
             // TODO: Figure out what this looks like here
-//            Environment = environmentAttributes
-            Jobs = new List<RocketSurgeonsGithubActionsJobBase>
-            {
-                new RocketSurgeonsGithubActionsJob("build")
-                {
-                    Steps = steps,
-                    Outputs = jobOutputs,
-                    RunsOn = !_isGithubHosted ? _images : Array.Empty<string>(),
-                    Matrix = _isGithubHosted ? _images : Array.Empty<string>(),
-                    // TODO: Figure out what this looks like here
 //                    Environment = inputs
 //                                 .Concat<ITriggerValue>(GetAllSecrets(secrets))
 //                                 .Concat(variables)
@@ -253,11 +245,26 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
 //                                      )
 //                                  )
 //                                 .ToDictionary(z => z.Key, z => z.Value, StringComparer.OrdinalIgnoreCase)
-                }
-            }
+        };
+        var triggers = GetTriggers(requiredInputs, outputs, secrets).ToArray();
+
+        var config = new RocketSurgeonGitHubActionsConfiguration
+        {
+            Name = Name,
+            DetailedTriggers = triggers.ToList(),
+            // TODO: Figure out what this looks like here
+//            Environment = environmentAttributes
+            Jobs = new List<RocketSurgeonsGithubActionsJobBase> { buildJob }
         };
 
         ApplyEnhancements(config);
+
+        if (!buildJob.Name.Equals("build", StringComparison.OrdinalIgnoreCase))
+        {
+            config.DetailedTriggers = GetTriggers(requiredInputs, outputs, secrets)
+                                     .Concat(config.DetailedTriggers.Except(triggers))
+                                     .ToList();
+        }
 
         return config;
     }
