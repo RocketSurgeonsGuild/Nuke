@@ -51,4 +51,6 @@ public sealed class LocalBuildConventionsAttribute : BuildExtensionAttributeBase
 
         EnsureSolutionIsUptoDate(nukeBuild, haveSolution);
     }
+
+    public override float Priority { get; set; } = -1000;
 }

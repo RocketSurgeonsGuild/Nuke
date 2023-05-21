@@ -71,4 +71,6 @@ public sealed class PrintCIEnvironmentAttribute : BuildExtensionAttributeBase, I
         // Shim in compatibility such that this "just works" until the build is updated to use the new attribute
         new ContinuousIntegrationConventionsAttribute().OnBuildFinished();
     }
+
+    public override float Priority { get; set; } = -1000;
 }

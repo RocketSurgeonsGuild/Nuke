@@ -53,4 +53,6 @@ public sealed class EnsureReadmeIsUpdatedAttribute : BuildExtensionAttributeBase
             Log.Warning(e, "Unable to update readme");
         }
     }
+
+    public override float Priority { get; set; } = -1000;
 }
