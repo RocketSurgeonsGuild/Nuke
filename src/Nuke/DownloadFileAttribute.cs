@@ -60,4 +60,6 @@ public class DownloadFileAttribute : BuildExtensionAttributeBase, IOnBuildInitia
             );
         }
     }
+
+    public override float Priority { get; set; } = -1000;
 }

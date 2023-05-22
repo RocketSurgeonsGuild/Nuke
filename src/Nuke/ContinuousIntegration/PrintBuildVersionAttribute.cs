@@ -22,7 +22,7 @@ public sealed class PrintBuildVersionAttribute : BuildExtensionAttributeBase, IO
         if (Build is IHaveGitVersion gitVersion && Build is IHaveSolution solution &&
             Build is IHaveConfiguration configuration)
         {
-            Log.Information(
+            Log.Logger.Information(
                 "Building version {InformationalVersion} of {SolutionName} ({Configuration}) using version {NukeVersion} of Nuke",
                 gitVersion.GitVersion?.InformationalVersion,
                 solution.Solution.Name,
@@ -31,4 +31,6 @@ public sealed class PrintBuildVersionAttribute : BuildExtensionAttributeBase, IO
             );
         }
     }
+
+    public override float Priority { get; set; } = -1000;
 }

@@ -30,4 +30,6 @@ public sealed class UploadLogsAttribute : BuildExtensionAttributeBase, IOnBuildF
     {
         AzurePipelines.Instance?.WriteCommand("task.uploadfile", path);
     }
+
+    public override float Priority { get; set; } = -1000;
 }
