@@ -15,7 +15,7 @@
             "commands": ["reportgenerator"]
         },
         "nuke.globaltool": {
-            "version": "7.0.3",
+            "version": "7.0.4",
             "commands": ["nuke"]
         },
         "codecov.tool": {
