@@ -19,7 +19,7 @@ function cleanupcode(filenames) {
 
 module.exports = {
     '!(*verified|*received).cs': filenames => {
-        return [`echo "'${filenames.join(`' '`)}'" | dotnet format --include -`].concat(cleanupcode(filenames));
+        return [`echo "'${filenames.join(`' '`)}'" | dotnet format --include -`]; //.concat(cleanupcode(filenames));
     },
     '*.{csproj,targets,props,xml}': filenames => forEachChunk(filenames, chunk => [`prettier --write '${chunk.join(`' '`)}'`]),
     '*.{js,ts,jsx,tsx,json,yml,yaml}': filenames => forEachChunk(filenames, chunk => [`prettier --write '${chunk.join(`' '`)}'`]),
