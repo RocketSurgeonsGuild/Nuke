@@ -54,6 +54,7 @@ using Rocket.Surgery.Nuke.GithubActions;
     InvokedTargets = new[] { nameof(WithOutputs) }
 )]
 [GitHubActionsVariable("THIS_IS_A_VARIABLE", Alias = "ThisIsAOtherVariable")]
+[GitHubActionsVariable("THIS_IS_ANOTHER_VARIABLE")]
 [GitHubActionsInput("THIS_IS_A_INPUT" /*, Alias = "ThisIsAInput"*/)]
 [GitHubActionsInput("THIS_IS_ANOTHER_INPUT" /*, Alias = "ThisIsAInput"*/)]
 [GitHubActionsEnvironmentVariable("THIS_IS_A_ENV" /*, Alias = "ThisIsAEnv"*/, Default = "'test'")]
@@ -86,6 +87,7 @@ public partial class Pipeline
     [Parameter] public string ThisIsAnotherInput { get; set; }
     [Parameter] public string ThisIsADifferentOutput { get; set; }
     [Parameter] public string ThisIsAOtherVariable { get; set; }
+    [Parameter] public string ThisIsAnotherVariable { get; set; }
     [Parameter(Name = "THIS_IS_A_VARIABLE")] public string ThisIsAVariable { get; set; }
     [Parameter] public string ThisIsAEnv { get; set; }
     [Parameter] public string ThisIsASecret { get; set; }
