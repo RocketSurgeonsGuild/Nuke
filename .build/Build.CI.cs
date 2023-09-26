@@ -87,6 +87,7 @@ public partial class Pipeline
     [Parameter] public string ThisIsAnotherInput { get; set; }
     [Parameter] public string ThisIsADifferentOutput { get; set; }
     [Parameter] public string ThisIsAOtherVariable { get; set; }
+    [Parameter] public string ThisIsAnotherVariable { get; set; }
     [Parameter(Name = "THIS_IS_A_VARIABLE")] public string ThisIsAVariable { get; set; }
     [Parameter] public string ThisIsAEnv { get; set; }
     [Parameter] public string ThisIsASecret { get; set; }
