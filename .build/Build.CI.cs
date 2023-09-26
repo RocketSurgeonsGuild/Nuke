@@ -54,6 +54,7 @@ using Rocket.Surgery.Nuke.GithubActions;
     InvokedTargets = new[] { nameof(WithOutputs) }
 )]
 [GitHubActionsVariable("THIS_IS_A_VARIABLE", Alias = "ThisIsAOtherVariable")]
+[GitHubActionsVariable("THIS_IS_ANOTHER_VARIABLE")]
 [GitHubActionsInput("THIS_IS_A_INPUT" /*, Alias = "ThisIsAInput"*/)]
 [GitHubActionsInput("THIS_IS_ANOTHER_INPUT" /*, Alias = "ThisIsAInput"*/)]
 [GitHubActionsEnvironmentVariable("THIS_IS_A_ENV" /*, Alias = "ThisIsAEnv"*/, Default = "'test'")]

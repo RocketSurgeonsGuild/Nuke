@@ -11,6 +11,6 @@ public sealed class GitHubActionsVariableAttribute : TriggerValueAttribute
 
     public GitHubActionsVariable ToVariable()
     {
-        return new GitHubActionsVariable(Name, Description, Alias ?? Name.Humanize());
+        return new GitHubActionsVariable(Name, Description, Alias);
     }
 }
