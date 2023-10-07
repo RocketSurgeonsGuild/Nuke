@@ -1,4 +1,4 @@
-﻿namespace Rocket.Surgery.Nuke.GithubActions;
+namespace Rocket.Surgery.Nuke.GithubActions;
 
 /// <summary>
 ///     Defines an step that runs code in the given shell
@@ -24,12 +24,19 @@ public class RunStep : BaseGitHubActionsStep
     /// </summary>
     public GithubActionShell? Shell { get; set; }
 
+    /// <summary>
+    ///     The working directory where the script is run
+    /// </summary>
+    public string? WorkingDirectory { get; set; }
+
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
         base.Write(writer);
         using (writer.Indent())
         {
+            if (!string.IsNullOrWhiteSpace(WorkingDirectory))
+                writer.WriteLine($"working-directory: {WorkingDirectory}");
             if (!string.IsNullOrWhiteSpace(Shell?.ToString()))
                 writer.WriteLine($"shell: {Shell}");
             writer.WriteLine("run: |");
