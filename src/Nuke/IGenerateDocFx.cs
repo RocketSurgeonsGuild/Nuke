@@ -1,6 +1,7 @@
 ﻿using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DocFX;
+using Nuke.Common.Tools.DotNet;
 
 namespace Rocket.Surgery.Nuke;
 
@@ -16,6 +17,8 @@ public interface IGenerateDocFx : IHaveDocs
     public bool? Serve => EnvironmentInfo.GetVariable<bool?>("Serve")
                           // ?? ValueInjectionUtility.TryGetValue(() => Serve)
                        ?? false;
+    
+    public Tool Docfx => DotnetTool.GetTool("docfx"); 
 
     /// <summary>
     ///     The core docs to generate documentation
@@ -26,34 +29,20 @@ public interface IGenerateDocFx : IHaveDocs
                                   .Executes(
                                        () =>
                                        {
-                                           DocFXTasks.DocFXMetadata(
-                                               z => z.SetProcessWorkingDirectory(DocumentationDirectory)
-                                           );
-                                           DocFXTasks.DocFXBuild(
-                                               z => z.SetProcessWorkingDirectory(DocumentationDirectory)
-                                                     .SetOutputFolder(ArtifactsDirectory)
-                                           );
-
+                                           
                                            if (Serve == true)
                                            {
-                                               Task.Run(
-                                                   () =>
-                                                       DocFXTasks.DocFXServe(
-                                                           z => z.SetProcessWorkingDirectory(DocumentationDirectory)
-                                                                 .SetFolder(DocumentationsOutputDirectory)
-                                                       )
-                                               );
+                                               Task.Run(() => Docfx($"{DocumentationDirectory / "docfx.json"} --serve"));
 
                                                var watcher = new FileSystemWatcher(DocumentationDirectory) { EnableRaisingEvents = true };
                                                while (true)
                                                {
                                                    watcher.WaitForChanged(WatcherChangeTypes.All);
-                                                   DocFXTasks.DocFXBuild(
-                                                       z => z.SetProcessWorkingDirectory(DocumentationDirectory)
-                                                             .SetOutputFolder(ArtifactsDirectory)
-                                                   );
+                                                   Docfx($"{DocumentationDirectory / "docfx.json"}");
                                                }
                                            }
+
+                                           Docfx($"{DocumentationDirectory / "docfx.json"}");
                                        }
                                    );
 }
