@@ -164,6 +164,9 @@
         "ThisIsAnotherInput": {
           "type": "string"
         },
+        "ThisIsAnotherVariable": {
+          "type": "string"
+        },
         "ThisIsAOtherVariable": {
           "type": "string"
         },

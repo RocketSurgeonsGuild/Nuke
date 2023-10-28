@@ -13,7 +13,6 @@ public static class Helpers
     /// <returns></returns>
     public static bool IsDotnetToolInstalled(string nugetPackageName)
     {
-        var dotnetTools = Path.Combine(NukeBuild.RootDirectory, ".config/dotnet-tools.json");
-        return File.Exists(dotnetTools) && File.ReadAllText(dotnetTools).Contains($"\"{nugetPackageName}\"", StringComparison.OrdinalIgnoreCase);
+        return DotnetTool.IsInstalled(nugetPackageName);
     }
 }
