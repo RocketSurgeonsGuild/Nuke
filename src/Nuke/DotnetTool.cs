@@ -70,7 +70,6 @@ public static class DotnetTool
             commandBuilder.KeyComparer = StringComparer.OrdinalIgnoreCase;
             foreach (var tool in source.Tools)
             {
-                Console.WriteLine("TOOL: " + tool.Key);
                 foreach (var command in tool.Value.Commands)
                 {
                     commandBuilder.Add(command, new FullToolCommandDefinition(tool.Key, tool.Value.Version, command));
