@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
     <NoWarn>$(NoWarn);CS0436</NoWarn>
       <!-- This has to be turned on because in Nuke.Common.props it is turned off to false, which causes build failures when writing to the same dll multiple times with cross targeting -->
       <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
