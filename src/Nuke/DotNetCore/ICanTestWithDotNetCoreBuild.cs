@@ -44,7 +44,7 @@ public interface ICanTestWithDotNetCoreBuild : IHaveCollectCoverage,
                                   .Executes(
                                        () =>
                                        {
-                                           EnsureCleanDirectory(TestResultsDirectory);
+                                           TestResultsDirectory.CreateOrCleanDirectory();
                                            CoverageDirectory.GlobFiles("*.cobertura.xml", "*.opencover.xml", "*.json", "*.info")
                                                             .Where(x => Guid.TryParse(Path.GetFileName(x).Split('.')[0], out var _))
                                                             .ForEach(DeleteFile);

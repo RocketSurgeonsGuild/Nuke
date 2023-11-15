@@ -41,21 +41,25 @@ public interface ICanTestWithDotNetCore : IHaveCollectCoverage,
                                   .Executes(
                                        () =>
                                        {
-                                           EnsureCleanDirectory(TestResultsDirectory);
+                                           TestResultsDirectory.CreateOrCleanDirectory();
                                            CoverageDirectory.GlobFiles("*.cobertura.xml", "*.opencover.xml", "*.json", "*.info")
                                                             .Where(x => Guid.TryParse(Path.GetFileName(x).Split('.')[0], out var _))
-                                                            .ForEach(DeleteFile);
+                                                            .ForEach(AbsolutePathExtensions.DeleteFile);
                                        }
                                    )
                                   .Executes(
                                        async () =>
                                        {
+                                           // ReSharper disable once IdentifierTypo
+                                           // ReSharper disable once StringLiteralTypo
                                            var runsettings = TestsDirectory / "coverlet.runsettings";
                                            if (!runsettings.FileExists())
                                            {
+                                               // ReSharper disable once StringLiteralTypo
                                                runsettings = NukeBuild.TemporaryDirectory / "default.runsettings";
-                                               using var tempFile = File.Open(runsettings, FileMode.OpenOrCreate);
+                                               await using var tempFile = File.Open(runsettings, runsettings.Exists() ? FileMode.Truncate : FileMode.CreateNew);
                                                await typeof(ICanTestWithDotNetCore).Assembly
+                                                                                    // ReSharper disable once NullableWarningSuppressionIsUsed
                                                                                    .GetManifestResourceStream("Rocket.Surgery.Nuke.default.runsettings")!
                                                                                    .CopyToAsync(tempFile)
                                                                                    .ConfigureAwait(false);
