@@ -23,34 +23,25 @@ public interface ICanTestXamarin : IHaveTestTarget,
     public new Target Test => _ => _
                                   .DependsOn(Build)
                                   .OnlyWhenStatic(() => TestsDirectory.DirectoryExists())
+                                  .CreateOrCleanDirectory(TestResultsDirectory)
+                                  .CleanCoverageDirectory(CoverageDirectory)
                                   .Executes(
-                                       () =>
-                                       {
-                                           DotNetTasks.DotNetTest(
-                                               settings =>
-                                                   settings.SetProjectFile(Solution)
-                                                           .SetDefaultLoggers(LogsDirectory / "test.log")
-                                                           .SetGitVersionEnvironment(GitVersion)
-                                                           .SetConfiguration(Configuration)
-                                                           .EnableNoRestore()
-                                                           .SetLoggers("trx")
-                                                           .SetProperty("CollectCoverage", "true")
-                                                           .SetProperty(
-                                                                "DeterministicSourcePaths",
-                                                                "false"
-                                                            ) // DeterministicSourcePaths being true breaks coverlet!
-                                                           .SetProperty("CoverageDirectory", CoverageDirectory)
-                                                           .SetResultsDirectory(TestResultsDirectory)
-                                           );
-
-                                           foreach (var coverage in TestResultsDirectory.GlobFiles("**/*.cobertura.xml"))
-                                           {
-                                               FileSystemTasks.CopyFileToDirectory(
-                                                   coverage,
-                                                   CoverageDirectory,
-                                                   FileExistsPolicy.OverwriteIfNewer
-                                               );
-                                           }
-                                       }
-                                   );
+                                       () => DotNetTasks.DotNetTest(
+                                           settings =>
+                                               settings.SetProjectFile(Solution)
+                                                       .SetDefaultLoggers(LogsDirectory / "test.log")
+                                                       .SetGitVersionEnvironment(GitVersion)
+                                                       .SetConfiguration(Configuration)
+                                                       .EnableNoRestore()
+                                                       .SetLoggers("trx")
+                                                       .SetProperty("CollectCoverage", "true")
+                                                       .SetProperty(
+                                                            "DeterministicSourcePaths",
+                                                            "false"
+                                                        ) // DeterministicSourcePaths being true breaks coverlet!
+                                                       .SetProperty("CoverageDirectory", CoverageDirectory)
+                                                       .SetResultsDirectory(TestResultsDirectory)
+                                       )
+                                   )
+                                  .CollectCoverage(TestResultsDirectory, CoverageDirectory);
 }

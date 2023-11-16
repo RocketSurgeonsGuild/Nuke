@@ -41,5 +41,38 @@ public static class FilePathExtensions
         return paths.First();
     }
 
+    /// <summary>
+    ///     Returns the first directory that exists on disk
+    /// </summary>
+    /// <remarks>
+    ///     Caches the result for faster lookups later
+    /// </remarks>
+    /// <param name="paths"></param>
+    /// <returns></returns>
+    public static AbsolutePath PickFile(params AbsolutePath[] paths)
+    {
+        foreach (var path in paths)
+        {
+            if (Cache.TryGetValue(path, out var _))
+            {
+                return path;
+            }
+
+            if (!path.FileExists())
+            {
+                continue;
+            }
+
+            foreach (var p in paths)
+            {
+                Cache.TryAdd(p, path);
+            }
+
+            return path;
+        }
+
+        return paths.First();
+    }
+
     private static readonly ConcurrentDictionary<AbsolutePath, AbsolutePath> Cache = new();
 }

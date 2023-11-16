@@ -1,5 +1,6 @@
 ﻿using Nuke.Common.IO;
 using Nuke.Common.Tools.ReportGenerator;
+using static Nuke.Common.IO.FileSystemTasks;
 
 // ReSharper disable SuspiciousTypeConversion.Global
 
@@ -19,9 +20,8 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
     /// <remarks>
     ///     used to determine if any coverage was emitted, if not the tasks will skip to avoid errors
     /// </remarks>
-    public IEnumerable<string> InputReports => CoverageDirectory
-                                              .GlobFiles("**/*.cobertura.xml")
-                                              .Select(z => z.ToString());
+    public IEnumerable<AbsolutePath> InputReports => CoverageDirectory
+                                              .GlobFiles("**/*.cobertura.xml");
 
     [Obsolete("Legacy target has been renamed to TriggerCodeCoverageReports")]
     // ReSharper disable once InconsistentNaming
@@ -57,6 +57,28 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                              .Executes(
                                                                   () =>
                                                                   {
+                                                                      if (this is IHaveTestArtifacts { TestResultsDirectory: { } testResultsDirectory })
+                                                                      {
+                                                                          // Ensure anything that has been dropped in the test results from a collector is
+                                                                          // into the coverage directory
+                                                                          foreach (var file in testResultsDirectory
+                                                                                              .GlobFiles("**/*.cobertura.xml")
+                                                                                              .Where(x => Guid.TryParse(Path.GetFileName(x.Parent), out var _))
+                                                                                              .SelectMany(coverage => coverage.Parent.GlobFiles("*.*")))
+                                                                          {
+                                                                              var folderName = Path.GetFileName(file.Parent);
+                                                                              var extensionPart = string.Join(".", Path.GetFileName(file).Split('.').Skip(1));
+                                                                              CopyFile(
+                                                                                  file,
+                                                                                  CoverageDirectory / $"{folderName}.{extensionPart}",
+                                                                                  FileExistsPolicy.OverwriteIfNewer
+                                                                              );
+                                                                          }
+                                                                      }
+                                                                  })
+                                                             .Executes(
+                                                                  () =>
+                                                                  {
                                                                       // var toolPath = ToolPathResolver.GetPackageExecutable("ReportGenerator", "ReportGenerator.dll", framework: "netcoreapp3.0");
                                                                       ReportGeneratorTasks.ReportGenerator(
                                                                           s => WithTag(s)
@@ -69,17 +91,17 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                                               .SetReportTypes(ReportTypes.Cobertura)
                                                                       );
 
-                                                                      FileSystemTasks.CopyFile(
+                                                                      CopyFile(
                                                                           CoverageDirectory / "Cobertura.xml",
                                                                           CoverageDirectory / "solution.cobertura",
                                                                           FileExistsPolicy.OverwriteIfNewer
                                                                       );
-                                                                      FileSystemTasks.CopyFile(
+                                                                      CopyFile(
                                                                           CoverageDirectory / "Cobertura.xml",
                                                                           CoverageDirectory / "solution.xml",
                                                                           FileExistsPolicy.OverwriteIfNewer
                                                                       );
-                                                                      FileSystemTasks.RenameFile(
+                                                                      RenameFile(
                                                                           CoverageDirectory / "solution.xml",
                                                                           CoverageDirectory / "cobertura.xml",
                                                                           FileExistsPolicy.OverwriteIfNewer
