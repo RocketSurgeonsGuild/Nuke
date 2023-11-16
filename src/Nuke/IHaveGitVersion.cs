@@ -10,5 +10,6 @@ public interface IHaveGitVersion : IHave
     /// <summary>
     ///     The current version as defined by GitVersion
     /// </summary>
-    GitVersion? GitVersion { get; }
+    [ComputedGitVersion]
+    public GitVersion GitVersion => null!;
 }

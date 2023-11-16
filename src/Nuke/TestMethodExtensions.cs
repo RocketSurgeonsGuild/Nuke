@@ -65,16 +65,17 @@ public static class TestMethodExtensions
     /// A method that ensures the given runsettings file exists or creates a default one
     /// </summary>
     /// <param name="target"></param>
-    /// <param name="userSettings"></param>
+    /// <param name="runsettings"></param>
     /// <returns></returns>
-    public static ITargetDefinition EnsureRunSettingsExists(this ITargetDefinition target, AbsolutePath userSettings)
+    // ReSharper disable once IdentifierTypo
+    // ReSharper disable once StringLiteralTypo
+    public static ITargetDefinition EnsureRunSettingsExists(this ITargetDefinition target, AbsolutePath runsettings)
     {
         return target.Executes(
             async () =>
             {
                 // ReSharper disable once IdentifierTypo
                 // ReSharper disable once StringLiteralTypo
-                var runsettings = userSettings;
                 if (!runsettings.FileExists())
                 {
                     // ReSharper disable once StringLiteralTypo

@@ -14,11 +14,23 @@ public static class FilePathExtensions
     /// <remarks>
     ///     Caches the result for faster lookups later
     /// </remarks>
+    /// <param name="path"></param>
     /// <param name="paths"></param>
     /// <returns></returns>
-    public static AbsolutePath PickDirectory(params AbsolutePath[] paths)
+    public static AbsolutePath PickDirectory(AbsolutePath path, params AbsolutePath[] paths) => PickDirectory([path, ..paths]);
+    
+    /// <summary>
+    ///     Returns the first directory that exists on disk
+    /// </summary>
+    /// <remarks>
+    ///     Caches the result for faster lookups later
+    /// </remarks>
+    /// <param name="paths"></param>
+    /// <returns></returns>
+    public static AbsolutePath PickDirectory(IEnumerable<AbsolutePath> paths)
     {
-        foreach (var path in paths)
+        var absolutePaths = paths as AbsolutePath[] ?? paths.ToArray();
+        foreach (var path in absolutePaths)
         {
             if (Cache.TryGetValue(path, out var _))
             {
@@ -30,7 +42,7 @@ public static class FilePathExtensions
                 continue;
             }
 
-            foreach (var p in paths)
+            foreach (var p in absolutePaths)
             {
                 Cache.TryAdd(p, path);
             }
@@ -38,20 +50,32 @@ public static class FilePathExtensions
             return path;
         }
 
-        return paths.First();
+        return absolutePaths.First();
     }
 
     /// <summary>
-    ///     Returns the first directory that exists on disk
+    ///     Returns the first file that exists on disk
+    /// </summary>
+    /// <remarks>
+    ///     Caches the result for faster lookups later
+    /// </remarks>
+    /// <param name="path"></param>
+    /// <param name="paths"></param>
+    /// <returns></returns>
+    public static AbsolutePath PickFile(AbsolutePath path, params AbsolutePath[] paths) => PickFile([path, ..paths]);
+
+    /// <summary>
+    ///     Returns the first file that exists on disk
     /// </summary>
     /// <remarks>
     ///     Caches the result for faster lookups later
     /// </remarks>
     /// <param name="paths"></param>
     /// <returns></returns>
-    public static AbsolutePath PickFile(params AbsolutePath[] paths)
+    public static AbsolutePath PickFile(IEnumerable<AbsolutePath> paths)
     {
-        foreach (var path in paths)
+        var absolutePaths = paths as AbsolutePath[] ?? paths.ToArray();
+        foreach (var path in absolutePaths)
         {
             if (Cache.TryGetValue(path, out var _))
             {
@@ -63,7 +87,7 @@ public static class FilePathExtensions
                 continue;
             }
 
-            foreach (var p in paths)
+            foreach (var p in absolutePaths)
             {
                 Cache.TryAdd(p, path);
             }
@@ -71,7 +95,7 @@ public static class FilePathExtensions
             return path;
         }
 
-        return paths.First();
+        return absolutePaths.First();
     }
 
     private static readonly ConcurrentDictionary<AbsolutePath, AbsolutePath> Cache = new();
