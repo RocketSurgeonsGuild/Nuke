@@ -3,7 +3,9 @@ namespace Rocket.Surgery.Nuke;
 internal static class Constants
 {
     public const string ReportGeneratorFramework =
-#if NET7_0_OR_GREATER
+#if NET8_0_OR_GREATER
+            "net8.0"
+#elif NET7_0_OR_GREATER
             "net7.0"
 #elif NET6_0_OR_GREATER
             "net6.0"
@@ -15,7 +17,9 @@ internal static class Constants
         ;
 
     public const string GitVersionFramework =
-#if NET7_0_OR_GREATER
+#if NET8_0_OR_GREATER
+            "net8.0"
+#elif NET7_0_OR_GREATER
             "net7.0"
 #elif NET6_0_OR_GREATER
             "net6.0"

@@ -13,5 +13,6 @@ public interface IHaveGitRepository : IHave
     /// <summary>
     ///     The Git Repository currently being built
     /// </summary>
-    GitRepository? GitRepository { get; }
+    [OptionalGitRepository]
+    public GitRepository? GitRepository => null;
 }
