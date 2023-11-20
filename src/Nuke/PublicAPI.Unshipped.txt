@@ -492,6 +492,7 @@ Rocket.Surgery.Nuke.ICanDotNetFormat.DotNetFormat.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ICanDotNetFormat.DotNetFormatSeverity.get -> Nuke.Common.Tools.DotNet.DotNetFormatSeverity!
 Rocket.Surgery.Nuke.ICanLint
 Rocket.Surgery.Nuke.ICanLint.Lint.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.ICanLint.LintFiles.get -> System.Collections.Generic.IReadOnlyList<string!>!
 Rocket.Surgery.Nuke.ICanUpdateReadme
 Rocket.Surgery.Nuke.ICanUpdateReadme.GenerateReadme.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ICanUpdateReadme.Readme.get -> Rocket.Surgery.Nuke.Readme.ReadmeUpdater!
@@ -732,6 +733,7 @@ static Rocket.Surgery.Nuke.GithubActions.GithubActionsExtensions.ExcludePaths(th
 static Rocket.Surgery.Nuke.GithubActions.GithubActionsExtensions.ExcludeRepositoryConfigurationFiles(this Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration! configuration) -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration!
 static Rocket.Surgery.Nuke.GithubActions.GithubActionsExtensions.IncludePaths(this Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration! configuration, params string![]! paths) -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration!
 static Rocket.Surgery.Nuke.GithubActions.GithubActionsExtensions.IncludeRepositoryConfigurationFiles(this Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration! configuration) -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration!
+static Rocket.Surgery.Nuke.GithubActions.GithubActionsExtensions.ProducesGithubActionsOutput(this Nuke.Common.ITargetDefinition! target, string! outputName, string? description = null) -> Nuke.Common.ITargetDefinition!
 static Rocket.Surgery.Nuke.GithubActions.GithubActionsExtensions.PublishArtifacts<T>(this Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob! job) -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob!
 static Rocket.Surgery.Nuke.GithubActions.GithubActionsExtensions.PublishLogs<T>(this Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob! job) -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob!
 static Rocket.Surgery.Nuke.GithubActions.GithubActionsExtensions.SetOutput(this Nuke.Common.CI.GitHubActions.GitHubActions! instance, string! key, string? value) -> Nuke.Common.CI.GitHubActions.GitHubActions!

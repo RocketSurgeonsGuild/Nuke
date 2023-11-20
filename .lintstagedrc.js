@@ -20,7 +20,7 @@ function cleanupcode(filenames) {
 // MoveUnshippedToShipped
 
 module.exports = {
-    '!(*verified|*received).cs': filenames => [`dotnet nuke lint --lint-files ${filenames.join(' ')}`],
+    '!(*verified|*received).cs': filenames => [`.build/bin/Debug/net6.0/.build.exe lint --lint-files ${filenames.join(' ')}`],
     '*.{csproj,targets,props,xml}': filenames => forEachChunk(filenames, chunk => [`prettier --write '${chunk.join(`' '`)}'`]),
     '*.{js,ts,jsx,tsx,json,yml,yaml}': filenames => forEachChunk(filenames, chunk => [`prettier --write '${chunk.join(`' '`)}'`]),
 };
