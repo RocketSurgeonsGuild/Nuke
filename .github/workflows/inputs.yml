@@ -29,6 +29,20 @@ on:
       withOutputsISetAThing:
         description: 'Some output value'
         value: ${{ jobs.build.outputs.withOutputsISetAThing }}
+permissions:
+  actions: read
+  checks: read
+  contents: read
+  deployments: read
+  id-token: none
+  issues: write
+  discussions: none
+  packages: none
+  pages: none
+  pull-requests: write
+  repository-projects: none
+  security-events: none
+  statuses: write
 
 jobs:
   build:
