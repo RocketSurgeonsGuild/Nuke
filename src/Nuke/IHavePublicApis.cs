@@ -23,7 +23,10 @@ public interface IHavePublicApis : ICanDotNetFormat
                                                             .Where(z => z.HasPackageReference("Microsoft.CodeAnalysis.PublicApiAnalyzers"));
 
     private IEnumerable<AbsolutePath> LintPublicApiShippedFiles => PublicApiAnalyzerProjects
-                                                                 .SelectMany(project => new[] { GetShippedFilePath(project.Directory), GetUnshippedFilePath(project.Directory) })
+                                                                  .SelectMany(
+                                                                       project => new[]
+                                                                           { GetShippedFilePath(project.Directory), GetUnshippedFilePath(project.Directory) }
+                                                                   )
 #pragma warning disable CA1860
                                                                   .Where(file => !LintPaths.Any() || LintPaths.Any(z => z == file));
 #pragma warning restore CA1860
@@ -78,22 +81,18 @@ public interface IHavePublicApis : ICanDotNetFormat
         d
            .After(LintPublicApiAnalyzers)
            .OnlyWhenDynamic(() => ShouldMoveUnshippedToShipped)
-           .OnlyWhenDynamic(() => LintPublicApiShippedFiles.Any())
            .DependentFor(Lint)
            .Executes(
                 async () =>
                 {
                     foreach (var project in PublicApiAnalyzerProjects)
                     {
+                        Logger.Info($"Moving unshipped to shipped for {project.Name}");
                         var shippedFilePath = GetShippedFilePath(project.Directory);
                         var unshippedFilePath = GetUnshippedFilePath(project.Directory);
 
-                        var shipped = ( shippedFilePath.FileExists() ? await File.ReadAllLinesAsync(shippedFilePath) : Array.Empty<string>() )
-                                     .Where(z => z != "#nullable enable")
-                                     .ToList();
-                        var unshipped = ( unshippedFilePath.FileExists() ? await File.ReadAllLinesAsync(shippedFilePath) : Array.Empty<string>() )
-                                       .Where(z => z != "#nullable enable")
-                                       .ToList();
+                        var shipped = await GetLines(shippedFilePath);
+                        var unshipped = await GetLines(unshippedFilePath);
                         foreach (var item in unshipped)
                         {
                             if (item is not { Length: > 0 }) continue;
@@ -105,6 +104,12 @@ public interface IHavePublicApis : ICanDotNetFormat
                         await File.WriteAllLinesAsync(shippedFilePath, shipped);
                         await File.WriteAllTextAsync(unshippedFilePath, "#nullable enable");
                     }
+
+                    async static Task<List<string>> GetLines(AbsolutePath path) => path.FileExists()
+                        ? ( await File.ReadAllLinesAsync(path) )
+                         .Where(z => z != "#nullable enable")
+                         .ToList()
+                        : new List<string>();
                 }
             );
 }

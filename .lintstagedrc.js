@@ -8,17 +8,6 @@ function forEachChunk(chunks, callback, chunkSize = 50) {
     return mappedFiles;
 }
 
-function cleanupcode(filenames) {
-    var sln = require('./.nuke/parameters.json').Solution;
-    return forEachChunk(filenames, chunk => [
-        `dotnet jb cleanupcode "--profile=Full Cleanup" "--disable-settings-layers=GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal" "--include=${chunk.join(
-            ';'
-        )}"`,
-    ]);
-}
-
-// MoveUnshippedToShipped
-
 module.exports = {
     '!(*verified|*received).cs': filenames => [`.build/bin/Debug/net6.0/.build.exe lint --lint-files ${filenames.join(' ')}`],
     '*.{Shipped.txt,Unshipped.txt}': filenames => [`.build/bin/Debug/net6.0/.build.exe move-unshipped-to-shipped --lint-files ${filenames.join(' ')}`],
