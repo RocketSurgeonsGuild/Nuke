@@ -20,6 +20,7 @@ public interface ICanPackWithDotNetCore : IHaveBuildTarget,
     /// </summary>
     public Target CorePack => d => d
                                   .Description("Packs all the NuGet packages.")
+                                  .Unlisted()
                                   .DependsOn(Build)
                                   .Executes(
                                        () => DotNetTasks.DotNetPack(

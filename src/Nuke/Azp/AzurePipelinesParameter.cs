@@ -10,7 +10,6 @@ public class AzurePipelinesParameter : ConfigurationEntity
 {
     // ReSharper disable once NullableWarningSuppressionIsUsed
     /// <summary>
-    /// 
     ///     The parameter name
     /// </summary>
     public string Name { get; set; } = null!;

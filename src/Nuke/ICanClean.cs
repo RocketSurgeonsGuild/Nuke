@@ -67,7 +67,8 @@ public interface ICanClean : IHaveCleanTarget, IHaveBuildTarget
 
                                                 if (this is IComprehendTemplates templates && templates.TemplatesDirectory.DirectoryExists())
                                                 {
-                                                    templates.TemplatesDirectory.GlobDirectories("**/bin", "**/obj").ForEach(AbsolutePathExtensions.DeleteDirectory);
+                                                    templates.TemplatesDirectory.GlobDirectories("**/bin", "**/obj")
+                                                             .ForEach(AbsolutePathExtensions.DeleteDirectory);
                                                 }
 
                                                 if (this is IComprehendTests tests && tests.TestsDirectory.DirectoryExists())

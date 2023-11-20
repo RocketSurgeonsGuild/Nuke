@@ -13,13 +13,6 @@ public interface IGenerateCodeCoverageReport : ITriggerCodeCoverageReports, IGen
     /// </summary>
     public AbsolutePath CoverageReportDirectory => CoverageDirectory / "report";
 
-    [Obsolete("Legacy target has been renamed to GenerateCodeCoverageReport")]
-    // ReSharper disable once InconsistentNaming
-#pragma warning disable CS1591, CA1707
-    public Target Generate_Code_Coverage_Report =>
-        d => d.DependsOn(GenerateCodeCoverageReport).Unlisted();
-#pragma warning restore CS1591, CA1707
-
     /// <summary>
     ///     Generates a code coverage report got the given set of input reports
     /// </summary>

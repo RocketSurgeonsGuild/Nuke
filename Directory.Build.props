@@ -25,7 +25,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <AnalysisLevel>latest</AnalysisLevel>
         <!--        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>-->
-                <WarningsAsErrors>RS0017</WarningsAsErrors>
+        <WarningsAsErrors>RS0017</WarningsAsErrors>
         <!--        <WarningsNotAsErrors></WarningsNotAsErrors>-->
     </PropertyGroup>
     <ItemGroup>

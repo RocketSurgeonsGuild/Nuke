@@ -21,6 +21,7 @@ internal static class SolutionUpdater
         IEnumerable<string> additionalConfigFolderFilePatterns
     )
     {
+        if (EnvironmentInfo.GetVariable("NUKE_INTERNAL_INTERCEPTOR") == "1") return;
         if (solution.GetSolutionFolder("config") is not { } configFolder)
         {
             configFolder = solution.AddSolutionFolder("config");

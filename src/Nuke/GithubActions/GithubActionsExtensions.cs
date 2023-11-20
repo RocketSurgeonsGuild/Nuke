@@ -353,8 +353,10 @@ public static class GithubActionsExtensions
 
 
     private static readonly ConcurrentDictionary<ITargetDefinition, List<GitHubActionsOutput>> outputPaths = new();
+
     // ReSharper disable once NullableWarningSuppressionIsUsed
-    private static readonly PropertyInfo DefinitionProperty = typeof(ExecutableTarget).GetProperty("Definition", BindingFlags.Instance | BindingFlags.NonPublic)!;
+    private static readonly PropertyInfo DefinitionProperty =
+        typeof(ExecutableTarget).GetProperty("Definition", BindingFlags.Instance | BindingFlags.NonPublic)!;
 
 
     internal static List<GitHubActionsOutput> GetGithubActionsOutput(ExecutableTarget target)
@@ -372,7 +374,7 @@ public static class GithubActionsExtensions
     }
 
     /// <summary>
-    /// Set an output for github actions
+    ///     Set an output for github actions
     /// </summary>
     /// <param name="instance"></param>
     /// <param name="key"></param>
@@ -386,7 +388,7 @@ public static class GithubActionsExtensions
     }
 
     /// <summary>
-    /// Defines a target that produces a certian github actions output
+    ///     Defines a target that produces a certian github actions output
     /// </summary>
     /// <param name="target"></param>
     /// <param name="outputName"></param>

@@ -24,6 +24,7 @@ public interface ICanTestWithDotNetCoreBuild : IHaveCollectCoverage,
     /// </summary>
     public Target CoreTest => d => d
                                   .Description("Executes all the unit tests.")
+                                  .Unlisted()
                                   .After(Build)
                                   .OnlyWhenDynamic(() => TestsDirectory.GlobFiles("**/*.csproj").Count > 0)
                                   .WhenSkipped(DependencyBehavior.Execute)

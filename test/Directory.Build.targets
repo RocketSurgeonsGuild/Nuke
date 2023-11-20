@@ -5,11 +5,7 @@
         <PackageReference Include="Rocket.Surgery.Extensions.Testing.XUnit" />
         <PackageReference Include="Bogus" />
         <PackageReference Include="coverlet.collector" />
-        <PackageReference
-            Include="coverlet.msbuild"
-            IncludeAssets="all"
-            PrivateAssets="runtime;build;native;contentfiles;analyzers"
-        />
+        <PackageReference Include="coverlet.msbuild" IncludeAssets="all" PrivateAssets="runtime;build;native;contentfiles;analyzers" />
         <PackageReference Include="FakeItEasy" />
         <PackageReference Include="FakeItEasy.Analyzer.CSharp" />
         <PackageReference Include="FluentAssertions" />

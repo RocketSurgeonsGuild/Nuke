@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using System.Reflection;
 using System.Text.Json;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
@@ -21,10 +20,13 @@ public static class DotNetTool
     /// </summary>
     /// <param name="nugetPackageName"></param>
     /// <returns></returns>
-    public static bool IsInstalled(string nugetPackageName) => ResolveToolsManifest().IsInstalled(nugetPackageName);
+    public static bool IsInstalled(string nugetPackageName)
+    {
+        return ResolveToolsManifest().IsInstalled(nugetPackageName);
+    }
 
     /// <summary>
-    /// Gets the tool definition for a given local dotnet tool
+    ///     Gets the tool definition for a given local dotnet tool
     /// </summary>
     /// <param name="nugetPackageName"></param>
     /// <returns></returns>
@@ -81,19 +83,25 @@ public static class DotNetTool
             return new ResolvedToolsManifest(commandBuilder.ToImmutable());
         }
 
-        public bool IsInstalled(string commandName) => CommandDefinitions.ContainsKey(commandName)
-                                                    || CommandDefinitions.Values.Any(z => z.PackageId.Equals(commandName, StringComparison.OrdinalIgnoreCase));
+        public bool IsInstalled(string commandName)
+        {
+            return CommandDefinitions.ContainsKey(commandName)
+                || CommandDefinitions.Values.Any(z => z.PackageId.Equals(commandName, StringComparison.OrdinalIgnoreCase));
+        }
 
-        public Tool GetTool(string nugetPackageName) => CommandDefinitions.TryGetValue(nugetPackageName, out var tool)
-            ? (arguments, directory, variables, timeout, output, invocation, logger, handler) =>
-            {
-                var args = arguments.ToStringAndClear();
-                args = args.StartsWith('"')
-                    ? string.Concat("\"", tool.Command, " ", args.AsSpan(1))
-                    : string.Concat(tool.Command, " ", args);
-                return DotNetTasks.DotNet(args, directory, variables, timeout, output, invocation, logger, handler);
-            }
-        : throw new InvalidOperationException($"Tool {nugetPackageName} is not installed");
+        public Tool GetTool(string nugetPackageName)
+        {
+            return CommandDefinitions.TryGetValue(nugetPackageName, out var tool)
+                ? (arguments, directory, variables, timeout, output, invocation, logger, handler) =>
+                {
+                    var args = arguments.ToStringAndClear();
+                    args = args.StartsWith('"')
+                        ? string.Concat("\"", tool.Command, " ", args.AsSpan(1))
+                        : string.Concat(tool.Command, " ", args);
+                    return DotNetTasks.DotNet(args, directory, variables, timeout, output, invocation, logger, handler);
+                }
+            : throw new InvalidOperationException($"Tool {nugetPackageName} is not installed");
+        }
     }
 
     internal class ToolsManifset
@@ -106,38 +114,5 @@ public static class DotNetTool
         // ReSharper disable once NullableWarningSuppressionIsUsed
         public string Version { get; set; } = null!;
         public string[] Commands { get; set; } = Array.Empty<string>();
-    }
-}
-
-/// <summary>
-/// This property loads the given dotnet global tool.
-/// </summary>
-[PublicAPI]
-[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-public sealed class DotnetToolAttribute : ToolInjectionAttributeBase
-{
-    private readonly string _command;
-
-    /// <summary>
-    /// DotnetToolAttribute constructor
-    /// </summary>
-    /// <param name="command"></param>
-#pragma warning disable CA1019
-    public DotnetToolAttribute(string command)
-    {
-        _command = command;
-    }
-#pragma warning restore CA1019
-
-    /// <inheritdoc />
-    public override ToolRequirement GetRequirement(MemberInfo member)
-    {
-        return new ToolRequirement();
-    }
-
-    /// <inheritdoc />
-    public override object GetValue(MemberInfo member, object instance)
-    {
-        return DotNetTool.GetTool(_command);
     }
 }

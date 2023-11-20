@@ -94,15 +94,17 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
     }
 
     /// <summary>
-    /// The input variables for the workflow
-    /// </summary> 
+    ///     The input variables for the workflow
+    /// </summary>
     public List<GitHubActionsInput> Inputs { get; set; } = new();
+
     /// <summary>
-    /// The secret variables for the workflow
+    ///     The secret variables for the workflow
     /// </summary>
     public List<GitHubActionsSecret> Secrets { get; set; } = new();
+
     /// <summary>
-    /// The output variables for the workflow
+    ///     The output variables for the workflow
     /// </summary>
     public List<GitHubActionsWorkflowOutput> Outputs { get; set; } = new();
 }

@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 namespace Rocket.Surgery.Nuke;
 
 /// <summary>
-/// Symbol store
+///     Symbol store
 /// </summary>
 public static class Symbols
 {

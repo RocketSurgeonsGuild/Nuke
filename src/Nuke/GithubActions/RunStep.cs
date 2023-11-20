@@ -30,7 +30,7 @@ public class RunStep : BaseGitHubActionsStep
     /// </summary>
     public string? WorkingDirectory { get; set; }
 
-    private static readonly string[] separator = new[] { "\r\n", "\n" };
+    private static readonly string[] separator = { "\r\n", "\n" };
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)

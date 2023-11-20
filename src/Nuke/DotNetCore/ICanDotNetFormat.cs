@@ -3,21 +3,22 @@ using Nuke.Common.Tools.DotNet;
 namespace Rocket.Surgery.Nuke.DotNetCore;
 
 /// <summary>
-/// Defines the targets and properties for using DotNet Format
+///     Defines the targets and properties for using DotNet Format
 /// </summary>
 public interface ICanDotNetFormat : IHaveSolution, ICanLint
 {
     /// <summary>
-    /// The default severity to use for DotNetFormat
+    ///     The default severity to use for DotNetFormat
     /// </summary>
     public DotNetFormatSeverity DotNetFormatSeverity => DotNetFormatSeverity.warn;
 
     /// <summary>
-    /// The dotnet format target
+    ///     The dotnet format target
     /// </summary>
     public Target DotNetFormat => d =>
         d
-           .DependentFor(Lint)
+           .DependentFor(PostLint)
+           .After(Lint)
            .OnlyWhenStatic(() => IsLocalBuild)
            .Executes(
                 () => LintPaths.Any()
@@ -26,20 +27,19 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint
             );
 
     /// <summary>
-    /// Use the jetbrains code cleanup tool to format the code if installed
+    ///     Use the jetbrains code cleanup tool to format the code if installed
     /// </summary>
-    public Target JetBrainsCodeCleanup => d =>
+    public Target JetBrainsCleanupCode => d =>
         d
            .DependentFor(Lint)
-           .OnlyWhenStatic(() => false)
+           .Before(DotNetFormat)
            .OnlyWhenStatic(() => !LintPaths.Any())
            .OnlyWhenStatic(() => DotNetTool.IsInstalled("jb"))
            .Executes(
-                () =>
-                {
-                    DotNetTool.GetTool("jb")(
-                        $""""cleanupcode {Solution.Path} --profile='Full Cleanup' --disable-settings-layers='GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal'""""
-                    );
-                }
+                () => DotNetTasks.DotNet(
+                    $""""jb cleanupcode "{Solution.Path}" --profile="Full Cleanup" --disable-settings-layers="GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal" """",
+                    RootDirectory,
+                    logOutput: true
+                )
             );
 }

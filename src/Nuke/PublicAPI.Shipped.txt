@@ -14,8 +14,8 @@ override Rocket.Surgery.Nuke.ContinuousIntegration.PrintCIEnvironmentAttribute.P
 override Rocket.Surgery.Nuke.ContinuousIntegration.PrintCIEnvironmentAttribute.Priority.set -> void
 override Rocket.Surgery.Nuke.ContinuousIntegration.UploadLogsAttribute.Priority.get -> float
 override Rocket.Surgery.Nuke.ContinuousIntegration.UploadLogsAttribute.Priority.set -> void
-override Rocket.Surgery.Nuke.DotnetToolAttribute.GetRequirement(System.Reflection.MemberInfo! member) -> Nuke.Common.Tooling.ToolRequirement!
-override Rocket.Surgery.Nuke.DotnetToolAttribute.GetValue(System.Reflection.MemberInfo! member, object! instance) -> object!
+override Rocket.Surgery.Nuke.DotNetToolAttribute.GetRequirement(System.Reflection.MemberInfo! member) -> Nuke.Common.Tooling.ToolRequirement!
+override Rocket.Surgery.Nuke.DotNetToolAttribute.GetValue(System.Reflection.MemberInfo! member, object! instance) -> object!
 override Rocket.Surgery.Nuke.DownloadFileAttribute.Priority.get -> float
 override Rocket.Surgery.Nuke.DownloadFileAttribute.Priority.set -> void
 override Rocket.Surgery.Nuke.EnsureReadmeIsUpdatedAttribute.Priority.get -> float
@@ -112,7 +112,7 @@ Rocket.Surgery.Nuke.DotNetCore.ICanBuildWithDotNetCore.CoreBuild.get -> Nuke.Com
 Rocket.Surgery.Nuke.DotNetCore.ICanDotNetFormat
 Rocket.Surgery.Nuke.DotNetCore.ICanDotNetFormat.DotNetFormat.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.DotNetCore.ICanDotNetFormat.DotNetFormatSeverity.get -> Nuke.Common.Tools.DotNet.DotNetFormatSeverity!
-Rocket.Surgery.Nuke.DotNetCore.ICanDotNetFormat.JetBrainsCodeCleanup.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.DotNetCore.ICanDotNetFormat.JetBrainsCleanupCode.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.DotNetCore.ICanPackWithDotNetCore
 Rocket.Surgery.Nuke.DotNetCore.ICanPackWithDotNetCore.CorePack.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.DotNetCore.ICanRestoreWithDotNetCore
@@ -127,8 +127,8 @@ Rocket.Surgery.Nuke.DotNetCore.IHaveCollectCoverage.CollectCoverage.get -> bool
 Rocket.Surgery.Nuke.DotNetCore.IHaveDataCollector
 Rocket.Surgery.Nuke.DotNetCore.IHaveMsBuildCoverage
 Rocket.Surgery.Nuke.DotNetTool
-Rocket.Surgery.Nuke.DotnetToolAttribute
-Rocket.Surgery.Nuke.DotnetToolAttribute.DotnetToolAttribute(string! command) -> void
+Rocket.Surgery.Nuke.DotNetToolAttribute
+Rocket.Surgery.Nuke.DotNetToolAttribute.DotNetToolAttribute(string! command) -> void
 Rocket.Surgery.Nuke.DownloadFileAttribute
 Rocket.Surgery.Nuke.DownloadFileAttribute.DownloadFileAttribute(string! url, string! filePath) -> void
 Rocket.Surgery.Nuke.DownloadFileAttribute.OnBuildInitialized(System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! executableTargets, System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! executionPlan) -> void
@@ -138,6 +138,7 @@ Rocket.Surgery.Nuke.EnsureGitHooksAttribute
 Rocket.Surgery.Nuke.EnsureGitHooksAttribute.EnsureGitHooksAttribute(params Rocket.Surgery.Nuke.GitHook[]! hookNames) -> void
 Rocket.Surgery.Nuke.EnsureGitHooksAttribute.HookNames.get -> string![]!
 Rocket.Surgery.Nuke.EnsureGitHooksAttribute.OnBuildCreated(System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! executableTargets) -> void
+Rocket.Surgery.Nuke.EnsureGitHooksAttribute.OnBuildInitialized(System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! executableTargets, System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! executionPlan) -> void
 Rocket.Surgery.Nuke.EnsurePackageSourceHasCredentialsAttribute
 Rocket.Surgery.Nuke.EnsurePackageSourceHasCredentialsAttribute.EnsurePackageSourceHasCredentialsAttribute(string! sourceName) -> void
 Rocket.Surgery.Nuke.EnsurePackageSourceHasCredentialsAttribute.OnBuildCreated(System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! executableTargets) -> void
@@ -493,6 +494,9 @@ Rocket.Surgery.Nuke.ICanClean
 Rocket.Surgery.Nuke.ICanClean.Clean.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ICanLint
 Rocket.Surgery.Nuke.ICanLint.Lint.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.ICanLint.PostLint.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.ICanPrettier
+Rocket.Surgery.Nuke.ICanPrettier.Prettier.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ICanUpdateReadme
 Rocket.Surgery.Nuke.ICanUpdateReadme.GenerateReadme.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ICanUpdateReadme.Readme.get -> Rocket.Surgery.Nuke.Readme.ReadmeUpdater!
@@ -510,15 +514,12 @@ Rocket.Surgery.Nuke.IComprehendTests.TestsDirectory.get -> Nuke.Common.IO.Absolu
 Rocket.Surgery.Nuke.IGenerate
 Rocket.Surgery.Nuke.IGenerateCodeCoverageBadges
 Rocket.Surgery.Nuke.IGenerateCodeCoverageBadges.CoverageBadgeDirectory.get -> Nuke.Common.IO.AbsolutePath!
-Rocket.Surgery.Nuke.IGenerateCodeCoverageBadges.Generate_Code_Coverage_Badges.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.IGenerateCodeCoverageBadges.GenerateCodeCoverageBadges.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.IGenerateCodeCoverageReport
 Rocket.Surgery.Nuke.IGenerateCodeCoverageReport.CoverageReportDirectory.get -> Nuke.Common.IO.AbsolutePath!
-Rocket.Surgery.Nuke.IGenerateCodeCoverageReport.Generate_Code_Coverage_Report.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.IGenerateCodeCoverageReport.GenerateCodeCoverageReport.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.IGenerateCodeCoverageSummary
 Rocket.Surgery.Nuke.IGenerateCodeCoverageSummary.CoverageSummaryDirectory.get -> Nuke.Common.IO.AbsolutePath!
-Rocket.Surgery.Nuke.IGenerateCodeCoverageSummary.Generate_Code_Coverage_Summary.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.IGenerateCodeCoverageSummary.GenerateCodeCoverageSummary.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.IGenerateDocFx
 Rocket.Surgery.Nuke.IGenerateDocFx.CoreDocs.get -> Nuke.Common.Target!
@@ -578,10 +579,8 @@ Rocket.Surgery.Nuke.IMayTheForceBeWithYou
 Rocket.Surgery.Nuke.IMayTheForceBeWithYou.Force.get -> bool
 Rocket.Surgery.Nuke.ITrigger
 Rocket.Surgery.Nuke.ITriggerCodeCoverageReports
-Rocket.Surgery.Nuke.ITriggerCodeCoverageReports.Generate_Code_Coverage_Report_Cobertura.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ITriggerCodeCoverageReports.GenerateCodeCoverageReportCobertura.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ITriggerCodeCoverageReports.InputReports.get -> System.Collections.Generic.IEnumerable<Nuke.Common.IO.AbsolutePath!>!
-Rocket.Surgery.Nuke.ITriggerCodeCoverageReports.Trigger_Code_Coverage_Reports.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ITriggerCodeCoverageReports.TriggerCodeCoverageReports.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.LocalBuildConventionsAttribute
 Rocket.Surgery.Nuke.LocalBuildConventionsAttribute.LocalBuildConventionsAttribute() -> void

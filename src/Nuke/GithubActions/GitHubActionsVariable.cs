@@ -1,7 +1,7 @@
 namespace Rocket.Surgery.Nuke.GithubActions;
 
 /// <summary>
-/// A github actions variable
+///     A github actions variable
 /// </summary>
 /// <param name="Name"></param>
 /// <param name="Description"></param>
@@ -10,6 +10,7 @@ public record GitHubActionsVariable(string Name, string? Description = null, str
 {
     /// <inheritdoc />
     public string Prefix => "vars";
+
     /// <inheritdoc />
     public string? Default => null;
 }

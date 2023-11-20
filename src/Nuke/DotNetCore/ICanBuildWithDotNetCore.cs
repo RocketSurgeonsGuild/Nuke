@@ -18,6 +18,7 @@ public interface ICanBuildWithDotNetCore : IHaveRestoreTarget,
     /// </summary>
     public Target CoreBuild => d => d
                                    .Description("Builds all the projects.")
+                                   .Unlisted()
                                    .DependsOn(Restore)
                                    .Executes(
                                         () => DotNetTasks.DotNetBuild(

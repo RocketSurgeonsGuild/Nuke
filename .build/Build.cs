@@ -3,6 +3,7 @@ using Nuke.Common;
 using Nuke.Common.CI;
 using Nuke.Common.Execution;
 using Nuke.Common.Git;
+using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
@@ -27,6 +28,7 @@ public partial class Pipeline : NukeBuild,
                                 IHaveDataCollector,
                                 ICanClean,
                                 ICanDotNetFormat,
+                                ICanPrettier,
                                 IHavePublicApis,
                                 ICanUpdateReadme,
                                 IGenerateCodeCoverageReport,
@@ -45,9 +47,6 @@ public partial class Pipeline : NukeBuild,
     {
         return Execute<Pipeline>(x => x.Default);
     }
-
-
-    private Target T => _ => _.Executes(() => Solution);
 
     private Target Default => _ => _
                                   .DependsOn(Restore)

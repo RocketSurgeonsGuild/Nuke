@@ -2,46 +2,48 @@ using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tools.DotNet;
 using Rocket.Surgery.Nuke.DotNetCore;
+using Serilog;
 
 namespace Rocket.Surgery.Nuke;
 
 /// <summary>
-/// Defines targets for a library project that tracks apis using the Microsoft.CodeAnalysis.PublicApiAnalyzers package
+///     Defines targets for a library project that tracks apis using the Microsoft.CodeAnalysis.PublicApiAnalyzers package
 /// </summary>
 public interface IHavePublicApis : ICanDotNetFormat
 {
     /// <summary>
-    /// Determine if Unshipped apis should always be pushed the Shipped file used in lint-staged to automatically update the shipped file
+    ///     Determine if Unshipped apis should always be pushed the Shipped file used in lint-staged to automatically update the shipped file
     /// </summary>
     public bool ShouldMoveUnshippedToShipped => IsLocalBuild;
 
     /// <summary>
-    /// All the projects that depend on the Microsoft.CodeAnalysis.PublicApiAnalyzers package
+    ///     All the projects that depend on the Microsoft.CodeAnalysis.PublicApiAnalyzers package
     /// </summary>
     public IEnumerable<Project> PublicApiAnalyzerProjects => Solution
                                                             .AllProjects
-                                                            .Where(z => z.HasPackageReference("Microsoft.CodeAnalysis.PublicApiAnalyzers"));
-
-    private IEnumerable<AbsolutePath> LintPublicApiShippedFiles => PublicApiAnalyzerProjects
-                                                                  .SelectMany(
-                                                                       project => new[]
-                                                                           { GetShippedFilePath(project.Directory), GetUnshippedFilePath(project.Directory) }
-                                                                   )
-#pragma warning disable CA1860
-                                                                  .Where(file => !LintPaths.Any() || LintPaths.Any(z => z == file));
+                                                            .Where(z => z.HasPackageReference("Microsoft.CodeAnalysis.PublicApiAnalyzers"))
+                                                            .Where(z => !LintPaths.Any() || LintPaths.Any(x => z.Directory.Contains(x)));
 #pragma warning restore CA1860
 
 
-    private static AbsolutePath GetShippedFilePath(AbsolutePath directory) => directory / "PublicAPI.Shipped.txt";
-    private static AbsolutePath GetUnshippedFilePath(AbsolutePath directory) => directory / "PublicAPI.Unshipped.txt";
+    private static AbsolutePath GetShippedFilePath(AbsolutePath directory)
+    {
+        return directory / "PublicAPI.Shipped.txt";
+    }
+
+    private static AbsolutePath GetUnshippedFilePath(AbsolutePath directory)
+    {
+        return directory / "PublicAPI.Unshipped.txt";
+    }
 
     /// <summary>
-    /// Setup to lint the public api projects
+    ///     Setup to lint the public api projects
     /// </summary>
     [UsedImplicitly]
     public Target LintPublicApiAnalyzers => d =>
         d
            .DependentFor(Lint)
+           .Unlisted()
            .Executes(
                 async () =>
                 {
@@ -74,20 +76,20 @@ public interface IHavePublicApis : ICanDotNetFormat
             );
 
     /// <summary>
-    /// Ensure the shipped file is up to date
+    ///     Ensure the shipped file is up to date
     /// </summary>
     [UsedImplicitly]
     public Target MoveUnshippedToShipped => d =>
         d
            .After(LintPublicApiAnalyzers)
-           .OnlyWhenDynamic(() => ShouldMoveUnshippedToShipped)
            .DependentFor(Lint)
+           .OnlyWhenDynamic(() => ShouldMoveUnshippedToShipped)
            .Executes(
                 async () =>
                 {
                     foreach (var project in PublicApiAnalyzerProjects)
                     {
-                        Logger.Info($"Moving unshipped to shipped for {project.Name}");
+                        Log.Logger.Information("Moving unshipped to shipped for {ProjectName}", project.Name);
                         var shippedFilePath = GetShippedFilePath(project.Directory);
                         var unshippedFilePath = GetUnshippedFilePath(project.Directory);
 
@@ -105,11 +107,14 @@ public interface IHavePublicApis : ICanDotNetFormat
                         await File.WriteAllTextAsync(unshippedFilePath, "#nullable enable");
                     }
 
-                    async static Task<List<string>> GetLines(AbsolutePath path) => path.FileExists()
-                        ? ( await File.ReadAllLinesAsync(path) )
-                         .Where(z => z != "#nullable enable")
-                         .ToList()
-                        : new List<string>();
+                    static async Task<List<string>> GetLines(AbsolutePath path)
+                    {
+                        return path.FileExists()
+                            ? ( await File.ReadAllLinesAsync(path) )
+                             .Where(z => z != "#nullable enable")
+                             .ToList()
+                            : new List<string>();
+                    }
                 }
             );
 }

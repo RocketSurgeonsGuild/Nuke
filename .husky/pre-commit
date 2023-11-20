@@ -2,6 +2,7 @@
 . "$(dirname "$0")/_/husky.sh"
 
 dotnet nuke --help > /dev/null 2>&1 || true
+export NUKE_INTERNAL_INTERCEPTOR=1
 npx lint-staged -d -r
 .build/bin/Debug/net6.0/.build --generate-configuration GitHubActions_ci --host GitHubActions
 git add .github/workflows/ci.yml

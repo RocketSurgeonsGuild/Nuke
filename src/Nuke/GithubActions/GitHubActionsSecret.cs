@@ -1,7 +1,7 @@
 namespace Rocket.Surgery.Nuke.GithubActions;
 
 /// <summary>
-/// Defines a github action secret
+///     Defines a github action secret
 /// </summary>
 /// <param name="Name"></param>
 /// <param name="Description"></param>
@@ -11,6 +11,7 @@ public record GitHubActionsSecret(string Name, string? Description = null, bool?
 {
     /// <inheritdoc />
     public string Prefix => "secrets";
+
     /// <inheritdoc />
     public string? Default => null;
 }

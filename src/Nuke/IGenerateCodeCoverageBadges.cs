@@ -13,13 +13,6 @@ public interface IGenerateCodeCoverageBadges : ITriggerCodeCoverageReports, IGen
     /// </summary>
     public AbsolutePath CoverageBadgeDirectory => CoverageDirectory / "badges";
 
-    [Obsolete("Legacy target has been renamed to GenerateCodeCoverageBadges")]
-    // ReSharper disable once InconsistentNaming
-#pragma warning disable CS1591, CA1707
-    public Target Generate_Code_Coverage_Badges =>
-        d => d.DependsOn(GenerateCodeCoverageBadges).Unlisted();
-#pragma warning restore CS1591, CA1707
-
     /// <summary>
     ///     Generate a code coverage badges for the given reports
     /// </summary>

@@ -1,7 +1,7 @@
 namespace Rocket.Surgery.Nuke.GithubActions;
 
 /// <summary>
-/// Defines an a step output variable
+///     Defines an a step output variable
 /// </summary>
 /// <param name="StepName"></param>
 /// <param name="OutputName"></param>
@@ -9,7 +9,7 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 public record GitHubActionsStepOutput(string StepName, string OutputName, string? Description = null)
 {
     /// <summary>
-    /// Convert to the github actions template for this output variable
+    ///     Convert to the github actions template for this output variable
     /// </summary>
     /// <returns></returns>
     public override string ToString()
@@ -18,7 +18,7 @@ public record GitHubActionsStepOutput(string StepName, string OutputName, string
     }
 
     /// <summary>
-    /// Convert to a workflow output variable
+    ///     Convert to a workflow output variable
     /// </summary>
     /// <param name="jobName"></param>
     /// <returns></returns>

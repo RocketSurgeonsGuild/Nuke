@@ -1,7 +1,7 @@
 namespace Rocket.Surgery.Nuke.GithubActions;
 
 /// <summary>
-/// Defines a github actions input variable
+///     Defines a github actions input variable
 /// </summary>
 /// <param name="Name"></param>
 /// <param name="Type"></param>

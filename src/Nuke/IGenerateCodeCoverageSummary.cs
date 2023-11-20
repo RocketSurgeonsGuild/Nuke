@@ -13,14 +13,6 @@ public interface IGenerateCodeCoverageSummary : ITriggerCodeCoverageReports, IGe
     /// </summary>
     public AbsolutePath CoverageSummaryDirectory => CoverageDirectory / "summary";
 
-
-    [Obsolete("Legacy target has been renamed to GenerateCodeCoverageSummary")]
-    // ReSharper disable once InconsistentNaming
-#pragma warning disable CS1591, CA1707
-    public Target Generate_Code_Coverage_Summary =>
-        d => d.DependsOn(GenerateCodeCoverageSummary).Unlisted();
-#pragma warning restore CS1591, CA1707
-
     /// <summary>
     ///     Generate a code coverage summary for the given reports
     /// </summary>

@@ -220,9 +220,9 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                     Id = execute.Name.Camelize(),
                     Run =
                         $"{( localTool ? "dotnet nuke" : "nuke" )} {targets.Select(z => z.Name).JoinSpace()} --skip {localStepParameters
-                           .GroupBy(z => z.Key, StringComparer.OrdinalIgnoreCase)
-                           .Select(z => z.Last())
-                           .Select(z => $$$"""--{{{z.Key.ToLowerInvariant()}}} '${{ {{{z.Value}}} }}'""").JoinSpace()}"
+                                                                                                                    .GroupBy(z => z.Key, StringComparer.OrdinalIgnoreCase)
+                                                                                                                    .Select(z => z.Last())
+                                                                                                                    .Select(z => $$$"""--{{{z.Key.ToLowerInvariant()}}} '${{ {{{z.Value}}} }}'""").JoinSpace()}"
                            .TrimEnd(),
                 }
             );

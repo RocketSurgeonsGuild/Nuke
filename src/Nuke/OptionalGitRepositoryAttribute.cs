@@ -1,6 +1,7 @@
 using System.Reflection;
 using Nuke.Common.Git;
 using Nuke.Common.IO;
+using Serilog;
 
 namespace Rocket.Surgery.Nuke;
 
@@ -19,7 +20,7 @@ public sealed class OptionalGitRepositoryAttribute : GitRepositoryAttribute
             return base.GetValue(member, instance);
         }
 
-        Serilog.Log.Warning("No git repository found, GitRepository will not be available");
+        Log.Warning("No git repository found, GitRepository will not be available");
         return null;
     }
 }

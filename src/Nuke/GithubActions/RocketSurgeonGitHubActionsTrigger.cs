@@ -3,28 +3,28 @@ using Nuke.Common.Tooling;
 namespace Rocket.Surgery.Nuke.GithubActions;
 
 /// <summary>
-/// The kind of trigger for the github actions
+///     The kind of trigger for the github actions
 /// </summary>
 [PublicAPI]
 public enum RocketSurgeonGitHubActionsTrigger
 {
     /// <summary>
-    /// Push
+    ///     Push
     /// </summary>
     [EnumValue("push")] Push,
 
     /// <summary>
-    /// Pull request
+    ///     Pull request
     /// </summary>
     [EnumValue("pull_request")] PullRequest,
 
     /// <summary>
-    /// Workflow dispatch
+    ///     Workflow dispatch
     /// </summary>
     [EnumValue("workflow_dispatch")] WorkflowDispatch,
 
     /// <summary>
-    /// Workflow call
+    ///     Workflow call
     /// </summary>
     [EnumValue("workflow_call")] WorkflowCall
 }

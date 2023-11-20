@@ -17,7 +17,7 @@ public interface IGenerateDocFx : IHaveDocs
                        ?? false;
 
     /// <summary>
-    /// The docfx tool
+    ///     The docfx tool
     /// </summary>
     public Tool Docfx => DotNetTool.GetTool("docfx");
 
@@ -30,7 +30,6 @@ public interface IGenerateDocFx : IHaveDocs
                                   .Executes(
                                        () =>
                                        {
-
                                            if (Serve == true)
                                            {
                                                Task.Run(() => Docfx($"{DocumentationDirectory / "docfx.json"} --serve"));

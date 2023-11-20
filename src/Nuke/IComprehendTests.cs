@@ -13,11 +13,11 @@ public interface IComprehendTests : IComprehend
     AbsolutePath TestsDirectory => FilePathExtensions.PickDirectory(NukeBuild.RootDirectory / "test", NukeBuild.RootDirectory / "tests");
 
     /// <summary>
-    /// The default path to look for user (eg. commited to the repo) test runsettings
+    ///     The default path to look for user (eg. commited to the repo) test runsettings
     /// </summary>
     AbsolutePath RunSettings => FilePathExtensions.PickFile(
         TestsDirectory / "settings.runsettings",
         TestsDirectory / "tests.runsettings",
         TestsDirectory / "coverlet.runsettings"
-        ).ExistingFile() ?? NukeBuild.TemporaryDirectory / "default.runsettings";
+    ).ExistingFile() ?? NukeBuild.TemporaryDirectory / "default.runsettings";
 }

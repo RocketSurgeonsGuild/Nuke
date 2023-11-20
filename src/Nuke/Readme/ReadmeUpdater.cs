@@ -93,7 +93,7 @@ public class ReadmeUpdater
         foreach (var sectionMatch in sections
                                     .GroupBy(x => x.Groups[1].Value)
                                     .OrderByDescending(x => x.Key != "generated references")
-        )
+                )
         {
             var sectionName = sectionMatch.First().Groups[1].Value;
             if (!Sections.AllSections.TryGetValue(sectionName, out var section))

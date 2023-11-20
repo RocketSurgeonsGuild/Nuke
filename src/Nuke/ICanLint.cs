@@ -8,12 +8,17 @@ namespace Rocket.Surgery.Nuke;
 public interface ICanLint : INukeBuild
 {
     /// <summary>
-    ///     The old lint target
+    ///     The lint target
     /// </summary>
     public Target Lint => t => t;
 
     /// <summary>
-    /// The files to lint, if not given lints all files
+    ///     A lint target that runs first
+    /// </summary>
+    public Target PostLint => t => t.Unlisted().After(Lint).TriggeredBy(Lint);
+
+    /// <summary>
+    ///     The files to lint, if not given lints all files
     /// </summary>
     [Parameter("The files to lint, if not given lints all files", Separator = " ", Name = "lint-files")]
 #pragma warning disable CA1819
@@ -21,7 +26,7 @@ public interface ICanLint : INukeBuild
 #pragma warning restore CA1819
 
     /// <summary>
-    /// The lint paths rooted as an absolute path.
+    ///     The lint paths rooted as an absolute path.
     /// </summary>
     protected internal IEnumerable<AbsolutePath> LintPaths => PrivateLintFiles.Select(z => Path.IsPathRooted(z) ? (AbsolutePath)z : RootDirectory / z);
 }

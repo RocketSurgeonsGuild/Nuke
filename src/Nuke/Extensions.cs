@@ -33,7 +33,7 @@ public static class Extensions
 
     // ReSharper disable once CommentTypo
     /// <summary>
-    /// A method that ensures the given directory exists or is cleaned
+    ///     A method that ensures the given directory exists or is cleaned
     /// </summary>
     /// <param name="target"></param>
     /// <param name="testResultsDirectory"></param>
@@ -44,8 +44,10 @@ public static class Extensions
     }
 
     /// <summary>
-    ///   <p><em>Sets <see cref="ReportGeneratorSettings.Reports"/> to a new list</em></p>
-    ///   <p>The coverage reports that should be parsed (separated by semicolon). Wildcards are allowed.</p>
+    ///     <p>
+    ///         <em>Sets <see cref="ReportGeneratorSettings.Reports" /> to a new list</em>
+    ///     </p>
+    ///     <p>The coverage reports that should be parsed (separated by semicolon). Wildcards are allowed.</p>
     /// </summary>
     [Pure]
     public static T SetReports<T>(this T toolSettings, IEnumerable<AbsolutePath> reports) where T : ReportGeneratorSettings

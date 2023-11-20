@@ -5,13 +5,13 @@ using Rocket.Surgery.Nuke.DotNetCore;
 namespace Rocket.Surgery.Nuke;
 
 /// <summary>
-/// Methods used to allow common test tasks to be shared
+///     Methods used to allow common test tasks to be shared
 /// </summary>
 public static class TestMethodExtensions
 {
     // ReSharper disable once CommentTypo
     /// <summary>
-    /// Clean up any code coverage files from <see cref="IHaveCodeCoverage.CoverageDirectory"/>.
+    ///     Clean up any code coverage files from <see cref="IHaveCodeCoverage.CoverageDirectory" />.
     /// </summary>
     /// <param name="target"></param>
     /// <param name="testResultsDirectory"></param>
@@ -43,7 +43,7 @@ public static class TestMethodExtensions
 
     // ReSharper disable once CommentTypo
     /// <summary>
-    /// Clean up any code coverage files from <see cref="IHaveCodeCoverage.CoverageDirectory"/>.
+    ///     Clean up any code coverage files from <see cref="IHaveCodeCoverage.CoverageDirectory" />.
     /// </summary>
     /// <param name="target"></param>
     /// <param name="coverageDirectory"></param>
@@ -62,7 +62,7 @@ public static class TestMethodExtensions
 
     // ReSharper disable once CommentTypo
     /// <summary>
-    /// A method that ensures the given runsettings file exists or creates a default one
+    ///     A method that ensures the given runsettings file exists or creates a default one
     /// </summary>
     /// <param name="target"></param>
     /// <param name="runsettings"></param>
@@ -82,9 +82,9 @@ public static class TestMethodExtensions
                     runsettings = NukeBuild.TemporaryDirectory / "default.runsettings";
                     await using var tempFile = File.Open(runsettings, runsettings.FileExists() ? FileMode.Truncate : FileMode.CreateNew);
                     await typeof(ICanTestWithDotNetCore)
-                       .Assembly
-                       // ReSharper disable once NullableWarningSuppressionIsUsed
-                       .GetManifestResourceStream("Rocket.Surgery.Nuke.default.runsettings")!.CopyToAsync(tempFile);
+                         .Assembly
+                         // ReSharper disable once NullableWarningSuppressionIsUsed
+                         .GetManifestResourceStream("Rocket.Surgery.Nuke.default.runsettings")!.CopyToAsync(tempFile);
                 }
             }
         );

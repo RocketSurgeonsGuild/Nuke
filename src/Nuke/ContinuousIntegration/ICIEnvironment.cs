@@ -1,3 +1,5 @@
+using Serilog;
+
 namespace Rocket.Surgery.Nuke.ContinuousIntegration;
 
 // ReSharper disable InconsistentNaming
@@ -25,20 +27,21 @@ public interface ICIEnvironment : IHaveBuildVersion
     /// </summary>
     public Target CIEnvironment => d => d
                                        .TriggeredBy(BuildVersion)
+                                       .Unlisted()
                                        .OnlyWhenStatic(() => NukeBuild.IsServerBuild)
                                        .Executes(
                                             () =>
                                             {
-                                                Serilog.Log.Information("CI: {CI}", EnvironmentInfo.GetVariable<string>("CI"));
+                                                Log.Information("CI: {CI}", EnvironmentInfo.GetVariable<string>("CI"));
 
                                                 foreach (var variable in WellKnownEnvironmentVariablePrefixes
-                                                   .SelectMany(
-                                                        prefix => EnvironmentInfo.Variables.Keys.Where(
-                                                            key => key.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)
-                                                        )
-                                                    ))
+                                                            .SelectMany(
+                                                                 prefix => EnvironmentInfo.Variables.Keys.Where(
+                                                                     key => key.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)
+                                                                 )
+                                                             ))
                                                 {
-                                                    Serilog.Log.Information("{Key}: {Value}", variable, EnvironmentInfo.Variables[variable]);
+                                                    Log.Information("{Key}: {Value}", variable, EnvironmentInfo.Variables[variable]);
                                                 }
                                             }
                                         );

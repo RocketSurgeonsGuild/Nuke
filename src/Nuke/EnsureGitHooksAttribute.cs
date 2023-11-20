@@ -12,7 +12,7 @@ namespace Rocket.Surgery.Nuke;
 ///     Ensures that the given git hooks are defined in the .git directory
 /// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
-public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBuildCreated
+public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBuildCreated, IOnBuildInitialized
 {
     /// <summary>
     ///     Ensures that the given git hooks are defined in the .git directory
@@ -55,13 +55,27 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
         }
     }
 
+    /// <inheritdoc />
+    public void OnBuildInitialized(IReadOnlyCollection<ExecutableTarget> executableTargets, IReadOnlyCollection<ExecutableTarget> executionPlan)
+    {
+        if (( NukeBuild.RootDirectory / "package.json" ).FileExists() && !NukeBuild.RootDirectory.ContainsDirectory("node_modules"))
+        {
+            Log.Information("package.json found running npm install to see if that installs any hooks");
+            ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npm"), "install", workingDirectory: NukeBuild.RootDirectory)
+                        .AssertWaitForExit()
+                        .AssertZeroExitCode();
+            ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npm"), "run prepare", workingDirectory: NukeBuild.RootDirectory)
+                        .AssertWaitForExit();
+        }
+    }
+
     private class HuskyEngine : IGitHooksEngine
     {
         public bool AreHooksInstalled(IReadOnlyCollection<string> hooks)
         {
             try
             {
-                var hooksOutput = GitTasks.Git($"config --get core.hookspath");
+                var hooksOutput = GitTasks.Git($"config --get core.hookspath", logOutput: false, logInvocation: false);
                 var hooksPath = hooksOutput.StdToText().Trim();
                 var huskyScriptPath = NukeBuild.RootDirectory / ".husky" / "_" / "husky.sh";
                 return hooksPath == ".husky" && huskyScriptPath.FileExists();
@@ -79,10 +93,10 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
             if (( NukeBuild.RootDirectory / "package.json" ).FileExists())
             {
                 Log.Information("package.json found running npm install to see if that installs any hooks");
-                ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npm"), "install")
+                ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npm"), "install", workingDirectory: NukeBuild.RootDirectory)
                             .AssertWaitForExit()
                             .AssertZeroExitCode();
-                ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npm"), "run prepare")
+                ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npm"), "run prepare", workingDirectory: NukeBuild.RootDirectory)
                             .AssertWaitForExit();
             }
 
@@ -91,7 +105,7 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
                 Log.Information(
                     "package.json not found or prepare script did not work correctly running npx husky install"
                 );
-                ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npx"), "husky install")
+                ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npx"), "husky install", workingDirectory: NukeBuild.RootDirectory)
                             .AssertWaitForExit()
                             .AssertZeroExitCode();
             }

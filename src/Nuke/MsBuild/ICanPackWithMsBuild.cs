@@ -24,6 +24,7 @@ public interface ICanPackWithMsBuild : IHavePackTarget,
     /// </summary>
     public Target NetPack => d => d
                                  .DependsOn(Build)
+                                 .Unlisted()
                                  .After(Test)
                                  .Executes(
                                       () =>
