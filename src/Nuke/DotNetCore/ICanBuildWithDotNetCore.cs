@@ -1,4 +1,4 @@
-﻿using Nuke.Common.Tools.DotNet;
+using Nuke.Common.Tools.DotNet;
 
 namespace Rocket.Surgery.Nuke.DotNetCore;
 
@@ -16,7 +16,7 @@ public interface ICanBuildWithDotNetCore : IHaveRestoreTarget,
     /// <summary>
     ///     dotnet build
     /// </summary>
-    public Target CoreBuild => _ => _
+    public Target CoreBuild => d => d
                                    .Description("Builds all the projects.")
                                    .DependsOn(Restore)
                                    .Executes(

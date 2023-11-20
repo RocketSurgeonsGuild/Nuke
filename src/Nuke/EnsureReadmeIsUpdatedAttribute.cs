@@ -54,5 +54,6 @@ public sealed class EnsureReadmeIsUpdatedAttribute : BuildExtensionAttributeBase
         }
     }
 
+    /// <inheritdoc />
     public override float Priority { get; set; } = -1000;
 }

@@ -46,7 +46,7 @@ public class Histories : IReadmeSection
             }
 
             var (badge, history) = section.Process(subConfig, references, build);
-            results.Add(( section.Name, badge, history ));
+            results.Add((section.Name, badge, history));
         }
 
         var sb = new StringBuilder();

@@ -15,6 +15,7 @@ public class HeadlessRunStep : UsingStep
         Uses = "coactions/setup-xvfb@v1";
     }
 
+    // ReSharper disable once NullableWarningSuppressionIsUsed
     /// <summary>The script to run</summary>
     public string Run { get; set; } = null!;
 

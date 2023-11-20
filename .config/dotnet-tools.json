@@ -22,10 +22,6 @@
             "version": "2023.2.3",
             "commands": ["jb"]
         },
-        "dotnet-format": {
-            "version": "5.1.250801",
-            "commands": ["dotnet-format"]
-        },
         "nukeeper": {
             "version": "0.35.0",
             "commands": ["nukeeper"]

@@ -1,6 +1,7 @@
 using Nuke.Common.CI.GitHubActions.Configuration;
 using Nuke.Common.Tooling;
 
+#pragma warning disable CA1002, CA2227
 namespace Rocket.Surgery.Nuke.GithubActions;
 
 /// <summary>
@@ -21,7 +22,7 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
         if (Kind is not RocketSurgeonGitHubActionsTrigger.WorkflowDispatch and not RocketSurgeonGitHubActionsTrigger.WorkflowCall) return;
         using (writer.Indent())
         {
-            if (Inputs.Any())
+            if (Inputs.Count > 0)
             {
                 writer.WriteLine("inputs:");
                 using (writer.Indent())
@@ -48,7 +49,7 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
                 }
             }
 
-            if (Kind is RocketSurgeonGitHubActionsTrigger.WorkflowCall && Secrets.Any())
+            if (Kind is RocketSurgeonGitHubActionsTrigger.WorkflowCall && Secrets.Count > 0)
             {
                 writer.WriteLine("secrets:");
                 using (writer.Indent())
@@ -69,7 +70,7 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
                 }
             }
 
-            if (Kind is RocketSurgeonGitHubActionsTrigger.WorkflowCall && Outputs.Any())
+            if (Kind is RocketSurgeonGitHubActionsTrigger.WorkflowCall && Outputs.Count > 0)
             {
                 writer.WriteLine("outputs:");
                 using (writer.Indent())
@@ -92,7 +93,16 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
         }
     }
 
+    /// <summary>
+    /// The input variables for the workflow
+    /// </summary> 
     public List<GitHubActionsInput> Inputs { get; set; } = new();
+    /// <summary>
+    /// The secret variables for the workflow
+    /// </summary>
     public List<GitHubActionsSecret> Secrets { get; set; } = new();
+    /// <summary>
+    /// The output variables for the workflow
+    /// </summary>
     public List<GitHubActionsWorkflowOutput> Outputs { get; set; } = new();
 }

@@ -1,4 +1,4 @@
-﻿using System.Xml.Serialization;
+using System.Xml.Serialization;
 using Schemas.VisualStudio.TeamTest;
 
 namespace Rocket.Surgery.Nuke.Temp.LiquidReporter.Loaders;

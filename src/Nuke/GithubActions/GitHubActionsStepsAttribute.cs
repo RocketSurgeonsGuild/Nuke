@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
@@ -139,7 +139,9 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
 
         var environmentVariables =
             GetAllSecrets(secrets)
+               // ReSharper disable once CoVariantArrayConversion
                .Concat<ITriggerValue>(variables)
+               // ReSharper disable once CoVariantArrayConversion
                .Concat(environmentAttributes)
                .SelectMany(
                     z =>
@@ -167,7 +169,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             var key = par.GetCustomAttribute<ParameterAttribute>()?.Name ?? par.Name;
             if (environmentVariables.TryGetValue(key, out var value) && value is not GitHubActionsInput)
             {
-//                Log.Logger.Information("Found Parameter {Name}", value.Name);
+                //                Log.Logger.Information("Found Parameter {Name}", value.Name);
                 stepParameters.Add(
                     new KeyValuePair<string, string>(
                         key, $"{value.Prefix}.{value.Name}{( string.IsNullOrWhiteSpace(value.Default) ? "" : $" || {value.Default}" )}"
@@ -181,8 +183,8 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         var lookupTable = new LookupTable<ExecutableTarget, ExecutableTarget[]>();
         foreach (var (execute, targets) in relevantTargets
                                           .Select(
-                                               x => ( ExecutableTarget: x,
-                                                      Targets: GetInvokedTargets(x, relevantTargets).ToArray() )
+                                               x => (ExecutableTarget: x,
+                                                      Targets: GetInvokedTargets(x, relevantTargets).ToArray())
                                            )
                                           .ForEachLazy(x => lookupTable.Add(x.ExecutableTarget, x.Targets.ToArray()))
                 )
@@ -235,17 +237,18 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             RunsOn = !_isGithubHosted ? _images : Array.Empty<string>(),
             Matrix = _isGithubHosted ? _images : Array.Empty<string>(),
             // TODO: Figure out what this looks like here
-//                    Environment = inputs
-//                                 .Concat<ITriggerValue>(GetAllSecrets(secrets))
-//                                 .Concat(variables)
-//                                 .Select(
-//                                      z => new KeyValuePair<string, string>(
-//                                          $"{( z.Prefix.Equals("ENV", StringComparison.OrdinalIgnoreCase) ? "" : $"{z.Prefix.ToUpperInvariant()}_" )}{( z.Alias ?? z.Name ).ToUpperInvariant()}",
-//                                          $$$"""${{ {{{z.Prefix}}}.{{{z.Name}}} }}"""
-//                                      )
-//                                  )
-//                                 .ToDictionary(z => z.Key, z => z.Value, StringComparer.OrdinalIgnoreCase)
+            //                    Environment = inputs
+            //                                 .Concat<ITriggerValue>(GetAllSecrets(secrets))
+            //                                 .Concat(variables)
+            //                                 .Select(
+            //                                      z => new KeyValuePair<string, string>(
+            //                                          $"{( z.Prefix.Equals("ENV", StringComparison.OrdinalIgnoreCase) ? "" : $"{z.Prefix.ToUpperInvariant()}_" )}{( z.Alias ?? z.Name ).ToUpperInvariant()}",
+            //                                          $$$"""${{ {{{z.Prefix}}}.{{{z.Name}}} }}"""
+            //                                      )
+            //                                  )
+            //                                 .ToDictionary(z => z.Key, z => z.Value, StringComparer.OrdinalIgnoreCase)
         };
+        // ReSharper disable once PossibleMultipleEnumeration
         var triggers = GetTriggers(requiredInputs, outputs, secrets).ToArray();
 
         var config = new RocketSurgeonGitHubActionsConfiguration
@@ -253,7 +256,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             Name = Name,
             DetailedTriggers = triggers.ToList(),
             // TODO: Figure out what this looks like here
-//            Environment = environmentAttributes
+            //            Environment = environmentAttributes
             Jobs = new List<RocketSurgeonsGithubActionsJobBase> { buildJob }
         };
 
@@ -261,6 +264,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
 
         if (!buildJob.Name.Equals("build", StringComparison.OrdinalIgnoreCase))
         {
+            // ReSharper disable once PossibleMultipleEnumeration
             config.DetailedTriggers = GetTriggers(requiredInputs, outputs, secrets)
                                      .Concat(config.DetailedTriggers.Except(triggers))
                                      .ToList();

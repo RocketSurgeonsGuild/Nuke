@@ -22,7 +22,7 @@ namespace Rocket.Surgery.Nuke.Xamarin
         /// <summary>
         ///     packages a binary for distribution.
         /// </summary>
-        public Target ArchiveIpa => _ => _.OnlyWhenStatic(() => EnvironmentInfo.Platform == PlatformFamily.OSX)
+        public Target ArchiveIpa => d => d.OnlyWhenStatic(() => EnvironmentInfo.Platform == PlatformFamily.OSX)
                                           .Executes(
                                                () =>
                                                    MSBuild(

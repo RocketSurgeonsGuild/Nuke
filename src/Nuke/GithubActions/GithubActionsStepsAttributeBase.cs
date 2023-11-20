@@ -5,6 +5,8 @@ using Nuke.Common.IO;
 using Nuke.Common.Utilities.Collections;
 using YamlDotNet.RepresentationModel;
 
+#pragma warning disable CA1851
+// ReSharper disable PossibleMultipleEnumeration
 namespace Rocket.Surgery.Nuke.GithubActions;
 
 /// <summary>
@@ -90,11 +92,10 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     /// <summary>
     ///     Applies the given enhancements to the build
     /// </summary>
-    /// <param name="build"></param>
     /// <param name="config"></param>
     protected void ApplyEnhancements(RocketSurgeonGitHubActionsConfiguration config)
     {
-        if (Enhancements.Any())
+        if (Enhancements.Length > 0)
         {
             foreach (var method in Enhancements.Join(Build.GetType().GetMethods(), z => z, z => z.Name, (_, e) => e))
             {
@@ -121,8 +122,9 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
                                                                        && sn.Value?.Contains('@', StringComparison.OrdinalIgnoreCase) == true
                                   )
                                  .Select(
-                                      z => ( name: ( (YamlScalarNode)z.Children[key] ).Value!.Split("@")[0],
-                                             value: ( (YamlScalarNode)z.Children[key] ).Value )
+                                      // ReSharper disable once NullableWarningSuppressionIsUsed
+                                      z => (name: ( (YamlScalarNode)z.Children[key] ).Value!.Split("@")[0],
+                                             value: ( (YamlScalarNode)z.Children[key] ).Value)
                                   ).Distinct(z => z.name)
                                  .ToDictionary(
                                       z => z.name,

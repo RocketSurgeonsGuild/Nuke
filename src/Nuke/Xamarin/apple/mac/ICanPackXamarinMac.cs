@@ -1,4 +1,4 @@
-﻿using Nuke.Common.Tools.MSBuild;
+using Nuke.Common.Tools.MSBuild;
 using static Nuke.Common.Tools.MSBuild.MSBuildTasks;
 
 // ReSharper disable once CheckNamespace
@@ -18,7 +18,7 @@ public interface IHavePackXamarinMac : IHavePackTarget,
     /// <summary>
     ///     packages a binary for distribution.
     /// </summary>
-    public Target Package => _ => _
+    public Target Package => d => d
                                  .DependsOn(Test)
                                  .OnlyWhenStatic(() => EnvironmentInfo.Platform == PlatformFamily.OSX)
                                  .Executes(

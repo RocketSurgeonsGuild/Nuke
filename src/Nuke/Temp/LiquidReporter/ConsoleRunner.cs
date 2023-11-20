@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Reflection;
 using DotLiquid;
 using DotLiquid.Exceptions;
@@ -48,16 +48,21 @@ internal class LiquidReporter
         try
         {
             _logger.Information("Generating report");
+            // ReSharper disable once NullableWarningSuppressionIsUsed
             var reportGeneratorType = typeof(LibraryTestRun).Assembly.GetType("LiquidTestReports.Core.ReportGenerator")!;
+            // ReSharper disable once NullableWarningSuppressionIsUsed
             var reportGeneratorMethod = reportGeneratorType.GetMethod("GenerateReport", BindingFlags.NonPublic | BindingFlags.Instance)!;
             var reportGenerator = Activator.CreateInstance(
                 reportGeneratorType, BindingFlags.Instance | BindingFlags.CreateInstance | BindingFlags.NonPublic, null,
                 new object[] { new LibraryTestRun { Run = run, Library = libraryDrop } }, CultureInfo.InvariantCulture
             );
+            // ReSharper disable once NullableWarningSuppressionIsUsed
             using var stream = GetType().Assembly.GetManifestResourceStream("MdMultiReport.md")!;
             using var template = new StreamReader(stream);
             var parameters = new object?[] { template.ReadToEnd(), null };
+            // ReSharper disable once NullableWarningSuppressionIsUsed
             report = (string)reportGeneratorMethod.Invoke(reportGenerator, parameters)!;
+            // ReSharper disable once NullableWarningSuppressionIsUsed
             var errors = (IList<Exception>)parameters[1]!;
             foreach (var error in errors)
                 _logger.Verbose(error.Message);

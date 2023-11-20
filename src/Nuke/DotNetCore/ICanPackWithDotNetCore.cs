@@ -1,4 +1,4 @@
-﻿using Nuke.Common.Tools.DotNet;
+using Nuke.Common.Tools.DotNet;
 
 namespace Rocket.Surgery.Nuke.DotNetCore;
 
@@ -18,7 +18,7 @@ public interface ICanPackWithDotNetCore : IHaveBuildTarget,
     /// <summary>
     ///     dotnet pack
     /// </summary>
-    public Target CorePack => _ => _
+    public Target CorePack => d => d
                                   .Description("Packs all the NuGet packages.")
                                   .DependsOn(Build)
                                   .Executes(

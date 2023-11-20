@@ -1,4 +1,4 @@
-﻿using Nuke.Common.Tools.MSBuild;
+using Nuke.Common.Tools.MSBuild;
 
 namespace Rocket.Surgery.Nuke.MsBuild;
 
@@ -16,7 +16,7 @@ public interface ICanBuildWithMsBuild : IHaveBuildTarget,
     /// <summary>
     ///     msbuild
     /// </summary>
-    public Target NetBuild => _ => _
+    public Target NetBuild => d => d
                                   .DependsOn(Restore)
                                   .Executes(
                                        () => MSBuildTasks.MSBuild(
@@ -26,8 +26,8 @@ public interface ICanBuildWithMsBuild : IHaveBuildTarget,
                                                   .SetConfiguration(Configuration)
                                                   .SetDefaultLoggers(LogsDirectory / "build.log")
                                                   .SetGitVersionEnvironment(GitVersion)
-                                                  .SetAssemblyVersion(GitVersion?.AssemblySemVer)
-                                                  .SetPackageVersion(GitVersion?.NuGetVersionV2)
+                                                  .SetAssemblyVersion(GitVersion.AssemblySemVer)
+                                                  .SetPackageVersion(GitVersion.NuGetVersionV2)
                                        )
                                    );
 }

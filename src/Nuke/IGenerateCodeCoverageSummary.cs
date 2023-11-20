@@ -1,4 +1,4 @@
-﻿using Nuke.Common.IO;
+using Nuke.Common.IO;
 using Nuke.Common.Tools.ReportGenerator;
 
 namespace Rocket.Surgery.Nuke;
@@ -18,13 +18,13 @@ public interface IGenerateCodeCoverageSummary : ITriggerCodeCoverageReports, IGe
     // ReSharper disable once InconsistentNaming
 #pragma warning disable CS1591, CA1707
     public Target Generate_Code_Coverage_Summary =>
-        _ => _.DependsOn(GenerateCodeCoverageSummary).Unlisted();
+        d => d.DependsOn(GenerateCodeCoverageSummary).Unlisted();
 #pragma warning restore CS1591, CA1707
 
     /// <summary>
     ///     Generate a code coverage summary for the given reports
     /// </summary>
-    public Target GenerateCodeCoverageSummary => _ => _
+    public Target GenerateCodeCoverageSummary => d => d
                                                      .After(GenerateCodeCoverageReportCobertura)
                                                      .TriggeredBy(TriggerCodeCoverageReports)
                                                      .Unlisted()
@@ -35,7 +35,7 @@ public interface IGenerateCodeCoverageSummary : ITriggerCodeCoverageReports, IGe
                                                               var output = ReportGeneratorTasks.ReportGenerator(
                                                                   s => WithTag(s)
                                                                       .SetFramework(Constants.ReportGeneratorFramework)
-                                                                       // .SetToolPath(toolPath)
+                                                                      // .SetToolPath(toolPath)
                                                                       .SetReports(InputReports)
                                                                       .SetTargetDirectory(CoverageSummaryDirectory)
                                                                       .SetReportTypes(

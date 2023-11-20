@@ -1,4 +1,4 @@
-﻿using Nuke.Common.Tools.DotNet;
+using Nuke.Common.Tools.DotNet;
 
 namespace Rocket.Surgery.Nuke.MsBuild;
 
@@ -17,7 +17,7 @@ public interface ICanTestWithXUnit : IHaveTestTarget,
     /// <summary>
     ///     xunit test
     /// </summary>
-    public Target NetTest => _ => _
+    public Target NetTest => d => d
                                  .DependsOn(Build)
                                  .Executes(
                                       () =>

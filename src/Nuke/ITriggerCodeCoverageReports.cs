@@ -1,4 +1,4 @@
-﻿using Nuke.Common.IO;
+using Nuke.Common.IO;
 using Nuke.Common.Tools.ReportGenerator;
 using static Nuke.Common.IO.FileSystemTasks;
 
@@ -26,13 +26,13 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
     [Obsolete("Legacy target has been renamed to TriggerCodeCoverageReports")]
     // ReSharper disable once InconsistentNaming
 #pragma warning disable CS1591, CA1707
-    public Target Trigger_Code_Coverage_Reports => _ => _.DependsOn(TriggerCodeCoverageReports).Unlisted();
+    public Target Trigger_Code_Coverage_Reports => d => d.DependsOn(TriggerCodeCoverageReports).Unlisted();
 #pragma warning restore CS1591, CA1707
 
     /// <summary>
     ///     This will generate code coverage reports from emitted coverage data
     /// </summary>
-    public Target TriggerCodeCoverageReports => _ => _
+    public Target TriggerCodeCoverageReports => d => d
                                                     .TriggeredBy(Test)
                                                     .After(Test)
                                                     .Description("Generates code coverage reports")
@@ -43,14 +43,14 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
     // ReSharper disable once InconsistentNaming
 #pragma warning disable CS1591, CA1707
     public Target Generate_Code_Coverage_Report_Cobertura =>
-        _ => _.DependsOn(GenerateCodeCoverageReportCobertura).Unlisted();
+        d => d.DependsOn(GenerateCodeCoverageReportCobertura).Unlisted();
 #pragma warning restore CS1591, CA1707
 
 
     /// <summary>
     ///     This will generate code coverage reports from emitted coverage data
     /// </summary>
-    public Target GenerateCodeCoverageReportCobertura => _ => _
+    public Target GenerateCodeCoverageReportCobertura => d => d
                                                              .TriggeredBy(TriggerCodeCoverageReports)
                                                              .Unlisted()
                                                              .OnlyWhenDynamic(() => InputReports.Any())
@@ -82,7 +82,7 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                                       // var toolPath = ToolPathResolver.GetPackageExecutable("ReportGenerator", "ReportGenerator.dll", framework: "netcoreapp3.0");
                                                                       ReportGeneratorTasks.ReportGenerator(
                                                                           s => WithTag(s)
-                                                                               // .SetToolPath(toolPath)
+                                                                              // .SetToolPath(toolPath)
                                                                               .SetFramework(
                                                                                    Constants.ReportGeneratorFramework
                                                                                )
@@ -118,7 +118,7 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
     {
         return ( this switch
         {
-            IHaveGitVersion gitVersion => settings.SetTag(gitVersion.GitVersion?.InformationalVersion),
+            IHaveGitVersion gitVersion => settings.SetTag(gitVersion.GitVersion.InformationalVersion),
             IHaveGitRepository { GitRepository: { } } gitRepository => settings.SetTag(
                 gitRepository.GitRepository.Head
             ),

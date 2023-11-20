@@ -81,9 +81,10 @@ public static class TestMethodExtensions
                     // ReSharper disable once StringLiteralTypo
                     runsettings = NukeBuild.TemporaryDirectory / "default.runsettings";
                     await using var tempFile = File.Open(runsettings, runsettings.FileExists() ? FileMode.Truncate : FileMode.CreateNew);
-                    typeof(ICanTestWithDotNetCore)
+                    await typeof(ICanTestWithDotNetCore)
                        .Assembly
-                       .GetManifestResourceStream("Rocket.Surgery.Nuke.default.runsettings")!.CopyTo(tempFile);
+                       // ReSharper disable once NullableWarningSuppressionIsUsed
+                       .GetManifestResourceStream("Rocket.Surgery.Nuke.default.runsettings")!.CopyToAsync(tempFile);
                 }
             }
         );

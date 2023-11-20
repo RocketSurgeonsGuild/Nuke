@@ -28,7 +28,7 @@ public static class CustomFileWriterExtensions
     private static void WriteValue(CustomFileWriter writer, KeyValuePair<string, string> kvp)
     {
         var (key, value) = kvp;
-        if (value.StartsWith(">", StringComparison.Ordinal) || value.StartsWith("|", StringComparison.Ordinal))
+        if (value.StartsWith('>') || value.StartsWith('|'))
         {
             var values = value.Split('\n');
             writer.WriteLine($"{key}: {values[0].TrimEnd()}");

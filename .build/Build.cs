@@ -26,6 +26,8 @@ public partial class Pipeline : NukeBuild,
                                 ICanPackWithDotNetCore,
                                 IHaveDataCollector,
                                 ICanClean,
+                                ICanDotNetFormat,
+                                IHavePublicApis,
                                 ICanUpdateReadme,
                                 IGenerateCodeCoverageReport,
                                 IGenerateCodeCoverageSummary,
@@ -51,6 +53,7 @@ public partial class Pipeline : NukeBuild,
                                   .DependsOn(Restore)
                                   .DependsOn(Build)
                                   .DependsOn(Test)
+                                  .DependsOn(Lint)
                                   .DependsOn(Pack);
 
     public Target Build => _ => _.Inherit<ICanBuildWithDotNetCore>(x => x.CoreBuild);
@@ -60,6 +63,7 @@ public partial class Pipeline : NukeBuild,
 
 
     public Target Clean => _ => _.Inherit<ICanClean>(x => x.Clean);
+    public Target Lint => _ => _.Inherit<ICanLint>(x => x.Lint);
     public Target Restore => _ => _.Inherit<ICanRestoreWithDotNetCore>(x => x.CoreRestore);
     public Target Test => _ => _.Inherit<ICanTestWithDotNetCore>(x => x.CoreTest);
 
@@ -69,6 +73,8 @@ public partial class Pipeline : NukeBuild,
 
     [Solution(GenerateProjects = true)] private Solution Solution { get; } = null!;
     Nuke.Common.ProjectModel.Solution IHaveSolution.Solution => Solution;
+    [ComputedGitVersion] public GitVersion GitVersion { get; } = null!;
+    [OptionalGitRepository] public GitRepository? GitRepository { get; }
     [Parameter] public string? GitHubToken { get; }
     [Parameter("Configuration to build")] public Configuration Configuration { get; } = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 }

@@ -1,4 +1,4 @@
-﻿using Nuke.Common.Tooling;
+using Nuke.Common.Tooling;
 
 namespace Rocket.Surgery.Nuke;
 

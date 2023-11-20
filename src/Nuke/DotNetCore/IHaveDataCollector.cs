@@ -1,4 +1,4 @@
-﻿#pragma warning disable CA1033
+#pragma warning disable CA1033
 namespace Rocket.Surgery.Nuke.DotNetCore;
 
 /// <summary>

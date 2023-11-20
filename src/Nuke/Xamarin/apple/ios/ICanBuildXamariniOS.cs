@@ -1,4 +1,4 @@
-﻿using Nuke.Common.Tools.MSBuild;
+using Nuke.Common.Tools.MSBuild;
 using static Nuke.Common.Tools.MSBuild.MSBuildTasks;
 
 #pragma warning disable CA1304
@@ -22,7 +22,7 @@ public interface ICanBuildXamariniOS : IXamarinAppleTarget,
     /// <summary>
     ///     msbuild
     /// </summary>
-    public Target BuildiPhone => _ => _
+    public Target BuildiPhone => d => d
                                      .DependsOn(Restore)
                                      .Executes(
                                           () => MSBuild(

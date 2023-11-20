@@ -1,4 +1,4 @@
-﻿namespace Rocket.Surgery.Nuke.Temp.LiquidReporter;
+namespace Rocket.Surgery.Nuke.Temp.LiquidReporter;
 
 /// <summary>
 ///     Constants for Cli tool.

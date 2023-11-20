@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 
 // ReSharper disable MemberCanBeProtected.Global
 #pragma warning disable CA1308
@@ -43,10 +43,10 @@ public class UsingStep : BaseGitHubActionsStep
             With?.Add(
                 transformName(property.Name), value switch
                 {
-                    null     => "",
-                    bool b   => b.ToString().ToLowerInvariant(),
+                    null => "",
+                    bool b => b.ToString().ToLowerInvariant(),
                     string s => s,
-                    _        => value.ToString() ?? ""
+                    _ => value.ToString() ?? ""
                 }
             );
         }

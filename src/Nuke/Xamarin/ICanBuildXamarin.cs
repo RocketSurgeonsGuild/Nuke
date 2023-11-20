@@ -1,4 +1,4 @@
-﻿using Nuke.Common.Tools.MSBuild;
+using Nuke.Common.Tools.MSBuild;
 using static Nuke.Common.Tools.MSBuild.MSBuildTasks;
 
 namespace Rocket.Surgery.Nuke.Xamarin;
@@ -16,7 +16,7 @@ public interface ICanBuildXamarin : IHaveRestoreTarget,
     /// <summary>
     ///     msbuild
     /// </summary>
-    public Target Build => _ => _
+    public Target Build => d => d
                                .DependsOn(Restore)
                                .Executes(
                                     () => MSBuild(

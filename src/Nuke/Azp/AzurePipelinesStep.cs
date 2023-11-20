@@ -2,6 +2,7 @@ using Nuke.Common.CI.AzurePipelines.Configuration;
 
 namespace Rocket.Surgery.Nuke.Azp;
 
+// ReSharper disable NullableWarningSuppressionIsUsed
 /// <summary>
 ///     An azure pipelines step
 /// </summary>

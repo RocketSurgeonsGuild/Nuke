@@ -1,0 +1,782 @@
+#nullable enable
+override Rocket.Surgery.Nuke.Azp.AzurePipelinesParameter.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
+override Rocket.Surgery.Nuke.Azp.AzurePipelinesSteps.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
+override Rocket.Surgery.Nuke.AzurePipelinesStepsAttribute.ConfigurationFile.get -> Nuke.Common.IO.AbsolutePath!
+override Rocket.Surgery.Nuke.AzurePipelinesStepsAttribute.CreateWriter(System.IO.StreamWriter! streamWriter) -> Nuke.Common.Utilities.CustomFileWriter!
+override Rocket.Surgery.Nuke.AzurePipelinesStepsAttribute.GeneratedFiles.get -> System.Collections.Generic.IEnumerable<Nuke.Common.IO.AbsolutePath!>!
+override Rocket.Surgery.Nuke.AzurePipelinesStepsAttribute.GetConfiguration(System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! relevantTargets) -> Nuke.Common.CI.ConfigurationEntity!
+override Rocket.Surgery.Nuke.AzurePipelinesStepsAttribute.HostType.get -> System.Type!
+override Rocket.Surgery.Nuke.AzurePipelinesStepsAttribute.RelevantTargetNames.get -> System.Collections.Generic.IEnumerable<string!>!
+override Rocket.Surgery.Nuke.ComputedGitVersionAttribute.GetValue(System.Reflection.MemberInfo! member, object! instance) -> object!
+override Rocket.Surgery.Nuke.ContinuousIntegration.PrintBuildVersionAttribute.Priority.get -> float
+override Rocket.Surgery.Nuke.ContinuousIntegration.PrintBuildVersionAttribute.Priority.set -> void
+override Rocket.Surgery.Nuke.ContinuousIntegration.PrintCIEnvironmentAttribute.Priority.get -> float
+override Rocket.Surgery.Nuke.ContinuousIntegration.PrintCIEnvironmentAttribute.Priority.set -> void
+override Rocket.Surgery.Nuke.ContinuousIntegration.UploadLogsAttribute.Priority.get -> float
+override Rocket.Surgery.Nuke.ContinuousIntegration.UploadLogsAttribute.Priority.set -> void
+override Rocket.Surgery.Nuke.DotnetToolAttribute.GetRequirement(System.Reflection.MemberInfo! member) -> Nuke.Common.Tooling.ToolRequirement!
+override Rocket.Surgery.Nuke.DotnetToolAttribute.GetValue(System.Reflection.MemberInfo! member, object! instance) -> object!
+override Rocket.Surgery.Nuke.DownloadFileAttribute.Priority.get -> float
+override Rocket.Surgery.Nuke.DownloadFileAttribute.Priority.set -> void
+override Rocket.Surgery.Nuke.EnsureReadmeIsUpdatedAttribute.Priority.get -> float
+override Rocket.Surgery.Nuke.EnsureReadmeIsUpdatedAttribute.Priority.set -> void
+override Rocket.Surgery.Nuke.GithubActions.BaseGitHubActionsStep.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
+override Rocket.Surgery.Nuke.GithubActions.CheckoutStep.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
+override Rocket.Surgery.Nuke.GithubActions.DownloadArtifactSet.ComputeStepName(string! name) -> string!
+override Rocket.Surgery.Nuke.GithubActions.DownloadArtifactSet.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
+override Rocket.Surgery.Nuke.GithubActions.GithubActionCondition.ToString() -> string?
+override Rocket.Surgery.Nuke.GithubActions.GithubActionShell.ToString() -> string!
+override Rocket.Surgery.Nuke.GithubActions.GithubActionsNukeParameter.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
+override Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepOutput.ToString() -> string!
+override Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepsAttribute.GeneratedFiles.get -> System.Collections.Generic.IEnumerable<Nuke.Common.IO.AbsolutePath!>!
+override Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepsAttribute.GetConfiguration(System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! relevantTargets) -> Nuke.Common.CI.ConfigurationEntity!
+override Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepsAttribute.IdPostfix.get -> string!
+override Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepsAttribute.RelevantTargetNames.get -> System.Collections.Generic.IEnumerable<string!>!
+override Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.ConfigurationFile.get -> Nuke.Common.IO.AbsolutePath!
+override Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.CreateWriter(System.IO.StreamWriter! streamWriter) -> Nuke.Common.Utilities.CustomFileWriter!
+override Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.HostType.get -> System.Type!
+override Rocket.Surgery.Nuke.GithubActions.GitHubActionsWorkflowOutput.ToString() -> string!
+override Rocket.Surgery.Nuke.GithubActions.HeadlessRunStep.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
+override Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
+override Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsVcsTrigger.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
+override Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsWorkflowTrigger.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
+override Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
+override Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
+override Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubWorkflowJob.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
+override Rocket.Surgery.Nuke.GithubActions.RunStep.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
+override Rocket.Surgery.Nuke.GithubActions.SetupDotNetStep.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
+override Rocket.Surgery.Nuke.GithubActions.UploadArtifactStep.ComputeStepName(string! name) -> string!
+override Rocket.Surgery.Nuke.GithubActions.UploadArtifactStep.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
+override Rocket.Surgery.Nuke.GithubActions.UsingStep.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
+override Rocket.Surgery.Nuke.LocalBuildConventionsAttribute.Priority.get -> float
+override Rocket.Surgery.Nuke.LocalBuildConventionsAttribute.Priority.set -> void
+override Rocket.Surgery.Nuke.OptionalGitRepositoryAttribute.GetValue(System.Reflection.MemberInfo! member, object! instance) -> object?
+override Rocket.Surgery.Nuke.Xamarin.TargetPlatform.ToString() -> string!
+override Rocket.Surgery.Nuke.Xamarin.XamarinConfiguration.ToString() -> string!
+Rocket.Surgery.Nuke.Azp.AzurePipelinesParameter
+Rocket.Surgery.Nuke.Azp.AzurePipelinesParameter.AzurePipelinesParameter() -> void
+Rocket.Surgery.Nuke.Azp.AzurePipelinesParameter.Default.get -> string!
+Rocket.Surgery.Nuke.Azp.AzurePipelinesParameter.Default.set -> void
+Rocket.Surgery.Nuke.Azp.AzurePipelinesParameter.Name.get -> string!
+Rocket.Surgery.Nuke.Azp.AzurePipelinesParameter.Name.set -> void
+Rocket.Surgery.Nuke.Azp.AzurePipelinesStep
+Rocket.Surgery.Nuke.Azp.AzurePipelinesStep.AzurePipelinesStep() -> void
+Rocket.Surgery.Nuke.Azp.AzurePipelinesStep.DisplayName.get -> string!
+Rocket.Surgery.Nuke.Azp.AzurePipelinesStep.DisplayName.set -> void
+Rocket.Surgery.Nuke.Azp.AzurePipelinesStep.InvokedTargets.get -> System.Collections.Generic.IEnumerable<string!>!
+Rocket.Surgery.Nuke.Azp.AzurePipelinesStep.InvokedTargets.set -> void
+Rocket.Surgery.Nuke.Azp.AzurePipelinesStep.Name.get -> string!
+Rocket.Surgery.Nuke.Azp.AzurePipelinesStep.Name.set -> void
+Rocket.Surgery.Nuke.Azp.AzurePipelinesStep.ScriptPath.get -> string!
+Rocket.Surgery.Nuke.Azp.AzurePipelinesStep.ScriptPath.set -> void
+Rocket.Surgery.Nuke.Azp.AzurePipelinesStep.Write(Nuke.Common.Utilities.CustomFileWriter! writer, string! parameters) -> void
+Rocket.Surgery.Nuke.Azp.AzurePipelinesSteps
+Rocket.Surgery.Nuke.Azp.AzurePipelinesSteps.AzurePipelinesSteps() -> void
+Rocket.Surgery.Nuke.Azp.AzurePipelinesSteps.Parameters.get -> System.Collections.Generic.IReadOnlyList<Rocket.Surgery.Nuke.Azp.AzurePipelinesParameter!>!
+Rocket.Surgery.Nuke.Azp.AzurePipelinesSteps.Parameters.set -> void
+Rocket.Surgery.Nuke.Azp.AzurePipelinesSteps.Steps.get -> System.Collections.Generic.IReadOnlyList<Rocket.Surgery.Nuke.Azp.AzurePipelinesStep!>!
+Rocket.Surgery.Nuke.Azp.AzurePipelinesSteps.Steps.set -> void
+Rocket.Surgery.Nuke.Azp.AzurePipelinesTasks
+Rocket.Surgery.Nuke.Azp.AzurePipelinesTasks.AzurePipelinesTasks() -> void
+Rocket.Surgery.Nuke.AzurePipelinesStepsAttribute
+Rocket.Surgery.Nuke.AzurePipelinesStepsAttribute.AzurePipelinesStepsAttribute() -> void
+Rocket.Surgery.Nuke.AzurePipelinesStepsAttribute.InvokeTargets.get -> string![]!
+Rocket.Surgery.Nuke.AzurePipelinesStepsAttribute.InvokeTargets.set -> void
+Rocket.Surgery.Nuke.AzurePipelinesStepsAttribute.Parameters.get -> string![]!
+Rocket.Surgery.Nuke.AzurePipelinesStepsAttribute.Parameters.set -> void
+Rocket.Surgery.Nuke.ComputedGitVersionAttribute
+Rocket.Surgery.Nuke.ComputedGitVersionAttribute.ComputedGitVersionAttribute() -> void
+Rocket.Surgery.Nuke.ComputedGitVersionAttribute.ComputedGitVersionAttribute(string! frameworkVersion) -> void
+Rocket.Surgery.Nuke.ComputedGitVersionAttribute.DisableOnUnix.get -> bool
+Rocket.Surgery.Nuke.ComputedGitVersionAttribute.DisableOnUnix.set -> void
+Rocket.Surgery.Nuke.ComputedGitVersionAttribute.UpdateAssemblyInfo.get -> bool
+Rocket.Surgery.Nuke.ComputedGitVersionAttribute.UpdateAssemblyInfo.set -> void
+Rocket.Surgery.Nuke.ContinuousIntegration.ContinuousIntegrationConventionsAttribute
+Rocket.Surgery.Nuke.ContinuousIntegration.ContinuousIntegrationConventionsAttribute.ContinuousIntegrationConventionsAttribute() -> void
+Rocket.Surgery.Nuke.ContinuousIntegration.ContinuousIntegrationConventionsAttribute.OnBuildFinished() -> void
+Rocket.Surgery.Nuke.ContinuousIntegration.ICIEnvironment
+Rocket.Surgery.Nuke.ContinuousIntegration.ICIEnvironment.CIEnvironment.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.ContinuousIntegration.ICIEnvironment.WellKnownEnvironmentVariablePrefixes.get -> System.Collections.Generic.IEnumerable<string!>!
+Rocket.Surgery.Nuke.ContinuousIntegration.PrintBuildVersionAttribute
+Rocket.Surgery.Nuke.ContinuousIntegration.PrintBuildVersionAttribute.OnBuildInitialized(System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! executableTargets, System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! executionPlan) -> void
+Rocket.Surgery.Nuke.ContinuousIntegration.PrintBuildVersionAttribute.PrintBuildVersionAttribute() -> void
+Rocket.Surgery.Nuke.ContinuousIntegration.PrintCIEnvironmentAttribute
+Rocket.Surgery.Nuke.ContinuousIntegration.PrintCIEnvironmentAttribute.OnBuildFinished() -> void
+Rocket.Surgery.Nuke.ContinuousIntegration.PrintCIEnvironmentAttribute.OnBuildInitialized(System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! executableTargets, System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! executionPlan) -> void
+Rocket.Surgery.Nuke.ContinuousIntegration.PrintCIEnvironmentAttribute.PrintCIEnvironmentAttribute(params string![]! additionalPrefixes) -> void
+Rocket.Surgery.Nuke.ContinuousIntegration.UploadLogsAttribute
+Rocket.Surgery.Nuke.ContinuousIntegration.UploadLogsAttribute.OnBuildFinished() -> void
+Rocket.Surgery.Nuke.ContinuousIntegration.UploadLogsAttribute.UploadLogsAttribute() -> void
+Rocket.Surgery.Nuke.DotNetCore.ICanBuildWithDotNetCore
+Rocket.Surgery.Nuke.DotNetCore.ICanBuildWithDotNetCore.CoreBuild.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.DotNetCore.ICanPackWithDotNetCore
+Rocket.Surgery.Nuke.DotNetCore.ICanPackWithDotNetCore.CorePack.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.DotNetCore.ICanRestoreWithDotNetCore
+Rocket.Surgery.Nuke.DotNetCore.ICanRestoreWithDotNetCore.CoreRestore.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.DotNetCore.ICanRestoreWithDotNetCore.DotnetToolRestore.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.DotNetCore.ICanTestWithDotNetCore
+Rocket.Surgery.Nuke.DotNetCore.ICanTestWithDotNetCore.CoreTest.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.DotNetCore.ICanTestWithDotNetCoreBuild
+Rocket.Surgery.Nuke.DotNetCore.ICanTestWithDotNetCoreBuild.CoreTest.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.DotNetCore.IHaveCollectCoverage
+Rocket.Surgery.Nuke.DotNetCore.IHaveCollectCoverage.CollectCoverage.get -> bool
+Rocket.Surgery.Nuke.DotNetCore.IHaveDataCollector
+Rocket.Surgery.Nuke.DotNetCore.IHaveMsBuildCoverage
+Rocket.Surgery.Nuke.DotNetTool
+Rocket.Surgery.Nuke.DotnetToolAttribute
+Rocket.Surgery.Nuke.DotnetToolAttribute.DotnetToolAttribute(string! command) -> void
+Rocket.Surgery.Nuke.DownloadFileAttribute
+Rocket.Surgery.Nuke.DownloadFileAttribute.DownloadFileAttribute(string! url, string! filePath) -> void
+Rocket.Surgery.Nuke.DownloadFileAttribute.OnBuildInitialized(System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! executableTargets, System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! executionPlan) -> void
+Rocket.Surgery.Nuke.DownloadFileAttribute.Type.get -> string!
+Rocket.Surgery.Nuke.DownloadFileAttribute.Type.set -> void
+Rocket.Surgery.Nuke.EnsureGitHooksAttribute
+Rocket.Surgery.Nuke.EnsureGitHooksAttribute.EnsureGitHooksAttribute(params Rocket.Surgery.Nuke.GitHook[]! hookNames) -> void
+Rocket.Surgery.Nuke.EnsureGitHooksAttribute.HookNames.get -> string![]!
+Rocket.Surgery.Nuke.EnsureGitHooksAttribute.OnBuildCreated(System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! executableTargets) -> void
+Rocket.Surgery.Nuke.EnsurePackageSourceHasCredentialsAttribute
+Rocket.Surgery.Nuke.EnsurePackageSourceHasCredentialsAttribute.EnsurePackageSourceHasCredentialsAttribute(string! sourceName) -> void
+Rocket.Surgery.Nuke.EnsurePackageSourceHasCredentialsAttribute.OnBuildCreated(System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! executableTargets) -> void
+Rocket.Surgery.Nuke.EnsurePackageSourceHasCredentialsAttribute.SourceName.get -> string!
+Rocket.Surgery.Nuke.EnsureReadmeIsUpdatedAttribute
+Rocket.Surgery.Nuke.EnsureReadmeIsUpdatedAttribute.EnsureReadmeIsUpdatedAttribute() -> void
+Rocket.Surgery.Nuke.EnsureReadmeIsUpdatedAttribute.EnsureReadmeIsUpdatedAttribute(string! fileName) -> void
+Rocket.Surgery.Nuke.EnsureReadmeIsUpdatedAttribute.OnBuildInitialized(System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! executableTargets, System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! executionPlan) -> void
+Rocket.Surgery.Nuke.EnsureReadmeIsUpdatedAttribute.ReadmeFilePath.get -> string!
+Rocket.Surgery.Nuke.EnsureReadmeIsUpdatedAttribute.ReadmeFilePath.set -> void
+Rocket.Surgery.Nuke.Extensions
+Rocket.Surgery.Nuke.FilePathExtensions
+Rocket.Surgery.Nuke.GitHook
+Rocket.Surgery.Nuke.GitHook.ApplypatchMsg = 0 -> Rocket.Surgery.Nuke.GitHook
+Rocket.Surgery.Nuke.GitHook.CommitMsg = 1 -> Rocket.Surgery.Nuke.GitHook
+Rocket.Surgery.Nuke.GitHook.PostApplypatch = 2 -> Rocket.Surgery.Nuke.GitHook
+Rocket.Surgery.Nuke.GitHook.PostCheckout = 3 -> Rocket.Surgery.Nuke.GitHook
+Rocket.Surgery.Nuke.GitHook.PostCommit = 4 -> Rocket.Surgery.Nuke.GitHook
+Rocket.Surgery.Nuke.GitHook.PostMerge = 5 -> Rocket.Surgery.Nuke.GitHook
+Rocket.Surgery.Nuke.GitHook.PostReceive = 6 -> Rocket.Surgery.Nuke.GitHook
+Rocket.Surgery.Nuke.GitHook.PostRewrite = 7 -> Rocket.Surgery.Nuke.GitHook
+Rocket.Surgery.Nuke.GitHook.PostUpdate = 8 -> Rocket.Surgery.Nuke.GitHook
+Rocket.Surgery.Nuke.GitHook.PreApplypatch = 9 -> Rocket.Surgery.Nuke.GitHook
+Rocket.Surgery.Nuke.GitHook.PreAutoGc = 10 -> Rocket.Surgery.Nuke.GitHook
+Rocket.Surgery.Nuke.GitHook.PreCommit = 11 -> Rocket.Surgery.Nuke.GitHook
+Rocket.Surgery.Nuke.GitHook.PrepareCommitMsg = 12 -> Rocket.Surgery.Nuke.GitHook
+Rocket.Surgery.Nuke.GitHook.PrePush = 13 -> Rocket.Surgery.Nuke.GitHook
+Rocket.Surgery.Nuke.GitHook.PreRebase = 14 -> Rocket.Surgery.Nuke.GitHook
+Rocket.Surgery.Nuke.GitHook.PreReceive = 15 -> Rocket.Surgery.Nuke.GitHook
+Rocket.Surgery.Nuke.GitHook.PushToCheckout = 16 -> Rocket.Surgery.Nuke.GitHook
+Rocket.Surgery.Nuke.GitHook.SendemailValidate = 17 -> Rocket.Surgery.Nuke.GitHook
+Rocket.Surgery.Nuke.GitHook.Update = 18 -> Rocket.Surgery.Nuke.GitHook
+Rocket.Surgery.Nuke.GithubActions.BaseGitHubActionsStep
+Rocket.Surgery.Nuke.GithubActions.BaseGitHubActionsStep.BaseGitHubActionsStep(string! name) -> void
+Rocket.Surgery.Nuke.GithubActions.BaseGitHubActionsStep.ContinueOnError.get -> bool
+Rocket.Surgery.Nuke.GithubActions.BaseGitHubActionsStep.ContinueOnError.set -> void
+Rocket.Surgery.Nuke.GithubActions.BaseGitHubActionsStep.Environment.get -> System.Collections.Generic.Dictionary<string!, string!>!
+Rocket.Surgery.Nuke.GithubActions.BaseGitHubActionsStep.Environment.set -> void
+Rocket.Surgery.Nuke.GithubActions.BaseGitHubActionsStep.Id.get -> string?
+Rocket.Surgery.Nuke.GithubActions.BaseGitHubActionsStep.Id.set -> void
+Rocket.Surgery.Nuke.GithubActions.BaseGitHubActionsStep.If.get -> Rocket.Surgery.Nuke.GithubActions.GithubActionCondition?
+Rocket.Surgery.Nuke.GithubActions.BaseGitHubActionsStep.If.set -> void
+Rocket.Surgery.Nuke.GithubActions.BaseGitHubActionsStep.Outputs.get -> System.Collections.Generic.List<Rocket.Surgery.Nuke.GithubActions.GitHubActionsOutput!>!
+Rocket.Surgery.Nuke.GithubActions.BaseGitHubActionsStep.Outputs.set -> void
+Rocket.Surgery.Nuke.GithubActions.BaseGitHubActionsStep.StepName.get -> string!
+Rocket.Surgery.Nuke.GithubActions.CheckoutStep
+Rocket.Surgery.Nuke.GithubActions.CheckoutStep.CheckoutStep(string! name) -> void
+Rocket.Surgery.Nuke.GithubActions.CheckoutStep.Clean.get -> bool
+Rocket.Surgery.Nuke.GithubActions.CheckoutStep.Clean.set -> void
+Rocket.Surgery.Nuke.GithubActions.CheckoutStep.FetchDepth.get -> int?
+Rocket.Surgery.Nuke.GithubActions.CheckoutStep.FetchDepth.set -> void
+Rocket.Surgery.Nuke.GithubActions.CheckoutStep.Lfs.get -> string?
+Rocket.Surgery.Nuke.GithubActions.CheckoutStep.Lfs.set -> void
+Rocket.Surgery.Nuke.GithubActions.CheckoutStep.Path.get -> string?
+Rocket.Surgery.Nuke.GithubActions.CheckoutStep.Path.set -> void
+Rocket.Surgery.Nuke.GithubActions.CheckoutStep.PersistCredentials.get -> bool?
+Rocket.Surgery.Nuke.GithubActions.CheckoutStep.PersistCredentials.set -> void
+Rocket.Surgery.Nuke.GithubActions.CheckoutStep.Ref.get -> string?
+Rocket.Surgery.Nuke.GithubActions.CheckoutStep.Ref.set -> void
+Rocket.Surgery.Nuke.GithubActions.CheckoutStep.Repository.get -> string?
+Rocket.Surgery.Nuke.GithubActions.CheckoutStep.Repository.set -> void
+Rocket.Surgery.Nuke.GithubActions.CheckoutStep.SshKey.get -> string?
+Rocket.Surgery.Nuke.GithubActions.CheckoutStep.SshKey.set -> void
+Rocket.Surgery.Nuke.GithubActions.CheckoutStep.SshKnownHosts.get -> string?
+Rocket.Surgery.Nuke.GithubActions.CheckoutStep.SshKnownHosts.set -> void
+Rocket.Surgery.Nuke.GithubActions.CheckoutStep.SshStrict.get -> bool?
+Rocket.Surgery.Nuke.GithubActions.CheckoutStep.SshStrict.set -> void
+Rocket.Surgery.Nuke.GithubActions.CheckoutStep.Submodules.get -> string?
+Rocket.Surgery.Nuke.GithubActions.CheckoutStep.Submodules.set -> void
+Rocket.Surgery.Nuke.GithubActions.CheckoutStep.Token.get -> string?
+Rocket.Surgery.Nuke.GithubActions.CheckoutStep.Token.set -> void
+Rocket.Surgery.Nuke.GithubActions.CustomFileWriterExtensions
+Rocket.Surgery.Nuke.GithubActions.DownloadArtifactSet
+Rocket.Surgery.Nuke.GithubActions.DownloadArtifactSet.DownloadArtifactSet(string! name) -> void
+Rocket.Surgery.Nuke.GithubActions.DownloadArtifactSet.Name.get -> string?
+Rocket.Surgery.Nuke.GithubActions.DownloadArtifactSet.Name.set -> void
+Rocket.Surgery.Nuke.GithubActions.DownloadArtifactSet.Path.get -> string?
+Rocket.Surgery.Nuke.GithubActions.DownloadArtifactSet.Path.set -> void
+Rocket.Surgery.Nuke.GithubActions.GithubActionCondition
+Rocket.Surgery.Nuke.GithubActions.GithubActionCondition.Condition.get -> string?
+Rocket.Surgery.Nuke.GithubActions.GithubActionCondition.GithubActionCondition(string! condition) -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsEnvironmentVariable
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsEnvironmentVariable.Alias.get -> string?
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsEnvironmentVariable.Alias.init -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsEnvironmentVariable.Default.get -> string?
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsEnvironmentVariable.Default.init -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsEnvironmentVariable.Description.get -> string?
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsEnvironmentVariable.GitHubActionsEnvironmentVariable(string! Name, string? Default = null, string? Alias = null) -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsEnvironmentVariable.Name.get -> string!
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsEnvironmentVariable.Name.init -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsEnvironmentVariable.Prefix.get -> string!
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsEnvironmentVariableAttribute
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsEnvironmentVariableAttribute.Alias.get -> string?
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsEnvironmentVariableAttribute.Alias.set -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsEnvironmentVariableAttribute.Default.get -> string?
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsEnvironmentVariableAttribute.Default.set -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsEnvironmentVariableAttribute.GitHubActionsEnvironmentVariableAttribute(string! name) -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsEnvironmentVariableAttribute.Name.get -> string!
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsEnvironmentVariableAttribute.ToEnvironmentVariable() -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsEnvironmentVariable!
+Rocket.Surgery.Nuke.GithubActions.GithubActionsExtensions
+Rocket.Surgery.Nuke.GithubActions.GithubActionShell
+Rocket.Surgery.Nuke.GithubActions.GithubActionShell.GithubActionShell(string! shell) -> void
+Rocket.Surgery.Nuke.GithubActions.GithubActionShell.Shell.get -> string!
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsInput
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsInput.Alias.get -> string?
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsInput.Alias.init -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsInput.Default.get -> string?
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsInput.Default.init -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsInput.Description.get -> string?
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsInput.Description.init -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsInput.GitHubActionsInput(string! Name, Rocket.Surgery.Nuke.GithubActions.GitHubActionsInputType Type = Rocket.Surgery.Nuke.GithubActions.GitHubActionsInputType.String, string? Default = null, string? Description = null, bool? Required = null, string? Alias = null) -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsInput.Name.get -> string!
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsInput.Name.init -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsInput.Prefix.get -> string!
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsInput.Required.get -> bool?
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsInput.Required.init -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsInput.Type.get -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsInputType
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsInput.Type.init -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsInputAttribute
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsInputAttribute.GitHubActionsInputAttribute(string! name) -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsInputAttribute.Required.get -> bool?
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsInputAttribute.Required.set -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsInputAttribute.ToInput() -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsInput!
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsInputAttribute.Type.get -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsInputType
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsInputAttribute.Type.set -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsInputType
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsInputType.Boolean = 1 -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsInputType
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsInputType.Number = 2 -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsInputType
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsInputType.String = 0 -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsInputType
+Rocket.Surgery.Nuke.GithubActions.GithubActionsNukeParameter
+Rocket.Surgery.Nuke.GithubActions.GithubActionsNukeParameter.Default.get -> string!
+Rocket.Surgery.Nuke.GithubActions.GithubActionsNukeParameter.Default.set -> void
+Rocket.Surgery.Nuke.GithubActions.GithubActionsNukeParameter.GithubActionsNukeParameter() -> void
+Rocket.Surgery.Nuke.GithubActions.GithubActionsNukeParameter.Name.get -> string!
+Rocket.Surgery.Nuke.GithubActions.GithubActionsNukeParameter.Name.set -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsOutput
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsOutput.Description.get -> string?
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsOutput.Description.init -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsOutput.GitHubActionsOutput(string! OutputName, string? Description = null) -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsOutput.OutputName.get -> string!
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsOutput.OutputName.init -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsOutput.ToStep(string! stepName) -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepOutput!
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsSecret
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsSecret.Alias.get -> string?
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsSecret.Alias.init -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsSecret.Default.get -> string?
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsSecret.Description.get -> string?
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsSecret.Description.init -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsSecret.GitHubActionsSecret(string! Name, string? Description = null, bool? Required = null, string? Alias = null) -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsSecret.Name.get -> string!
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsSecret.Name.init -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsSecret.Prefix.get -> string!
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsSecret.Required.get -> bool?
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsSecret.Required.init -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsSecretAttribute
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsSecretAttribute.GitHubActionsSecretAttribute(string! name) -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsSecretAttribute.Required.get -> bool?
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsSecretAttribute.Required.set -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsSecretAttribute.ToSecret() -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsSecret!
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepOutput
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepOutput.Description.get -> string?
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepOutput.Description.init -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepOutput.GitHubActionsStepOutput(string! StepName, string! OutputName, string? Description = null) -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepOutput.OutputName.get -> string!
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepOutput.OutputName.init -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepOutput.StepName.get -> string!
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepOutput.StepName.init -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepOutput.ToWorkflow(string! jobName) -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsWorkflowOutput!
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepsAttribute
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepsAttribute.GitHubActionsStepsAttribute(string! name, Nuke.Common.CI.GitHubActions.GitHubActionsImage image, params Nuke.Common.CI.GitHubActions.GitHubActionsImage[]! images) -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepsAttribute.GitHubActionsStepsAttribute(string! name, string! image, params string![]! images) -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepsAttribute.InvokedTargets.get -> string![]!
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepsAttribute.InvokedTargets.set -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepsAttribute.Parameters.get -> string![]!
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepsAttribute.Parameters.set -> void
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.ApplyEnhancements(Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration! config) -> void
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.Enhancements.get -> string![]!
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.Enhancements.set -> void
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.GithubActionsStepsAttributeBase(string! name) -> void
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.Name.get -> string!
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.On.get -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsTrigger[]!
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.On.set -> void
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnCronSchedule.get -> string?
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnCronSchedule.set -> void
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPullRequestBranches.get -> string![]!
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPullRequestBranches.set -> void
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPullRequestExcludePaths.get -> string![]!
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPullRequestExcludePaths.set -> void
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPullRequestIncludePaths.get -> string![]!
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPullRequestIncludePaths.set -> void
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPullRequestTags.get -> string![]!
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPullRequestTags.set -> void
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPushBranches.get -> string![]!
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPushBranches.set -> void
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPushExcludePaths.get -> string![]!
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPushExcludePaths.set -> void
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPushIncludePaths.get -> string![]!
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPushIncludePaths.set -> void
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPushTags.get -> string![]!
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPushTags.set -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsVariable
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsVariable.Alias.get -> string?
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsVariable.Alias.init -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsVariable.Default.get -> string?
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsVariable.Description.get -> string?
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsVariable.Description.init -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsVariable.GitHubActionsVariable(string! Name, string? Description = null, string? Alias = null) -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsVariable.Name.get -> string!
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsVariable.Name.init -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsVariable.Prefix.get -> string!
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsVariableAttribute
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsVariableAttribute.GitHubActionsVariableAttribute(string! name) -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsVariableAttribute.Required.get -> bool?
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsVariableAttribute.Required.set -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsVariableAttribute.ToVariable() -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsVariable!
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsWorkflowOutput
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsWorkflowOutput.Description.get -> string?
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsWorkflowOutput.Description.init -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsWorkflowOutput.GitHubActionsWorkflowOutput(string! JobName, string! OutputName, string? Description = null) -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsWorkflowOutput.JobName.get -> string!
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsWorkflowOutput.JobName.init -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsWorkflowOutput.OutputName.get -> string!
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsWorkflowOutput.OutputName.init -> void
+Rocket.Surgery.Nuke.GithubActions.HeadlessRunStep
+Rocket.Surgery.Nuke.GithubActions.HeadlessRunStep.HeadlessRunStep(string! name) -> void
+Rocket.Surgery.Nuke.GithubActions.HeadlessRunStep.Options.get -> string?
+Rocket.Surgery.Nuke.GithubActions.HeadlessRunStep.Options.set -> void
+Rocket.Surgery.Nuke.GithubActions.HeadlessRunStep.Run.get -> string!
+Rocket.Surgery.Nuke.GithubActions.HeadlessRunStep.Run.set -> void
+Rocket.Surgery.Nuke.GithubActions.HeadlessRunStep.WorkingDirectory.get -> string?
+Rocket.Surgery.Nuke.GithubActions.HeadlessRunStep.WorkingDirectory.set -> void
+Rocket.Surgery.Nuke.GithubActions.ITriggerValue
+Rocket.Surgery.Nuke.GithubActions.ITriggerValue.Alias.get -> string?
+Rocket.Surgery.Nuke.GithubActions.ITriggerValue.Default.get -> string?
+Rocket.Surgery.Nuke.GithubActions.ITriggerValue.Description.get -> string?
+Rocket.Surgery.Nuke.GithubActions.ITriggerValue.Name.get -> string!
+Rocket.Surgery.Nuke.GithubActions.ITriggerValue.Prefix.get -> string!
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.DetailedTriggers.get -> System.Collections.Generic.List<Nuke.Common.CI.GitHubActions.Configuration.GitHubActionsDetailedTrigger!>!
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.DetailedTriggers.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.Environment.get -> System.Collections.Generic.Dictionary<string!, string!>!
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.Environment.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.Jobs.get -> System.Collections.Generic.List<Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase!>!
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.Jobs.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.Name.get -> string!
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.Name.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.RocketSurgeonGitHubActionsConfiguration() -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.ShortTriggers.get -> System.Collections.Generic.List<Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsTrigger>!
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.ShortTriggers.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsTrigger
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsTrigger.PullRequest = 1 -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsTrigger
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsTrigger.Push = 0 -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsTrigger
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsTrigger.WorkflowCall = 3 -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsTrigger
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsTrigger.WorkflowDispatch = 2 -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsTrigger
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsVcsTrigger
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsVcsTrigger.Branches.get -> string![]!
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsVcsTrigger.Branches.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsVcsTrigger.ExcludePaths.get -> string![]!
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsVcsTrigger.ExcludePaths.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsVcsTrigger.IncludePaths.get -> string![]!
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsVcsTrigger.IncludePaths.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsVcsTrigger.Kind.get -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsTrigger
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsVcsTrigger.Kind.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsVcsTrigger.RocketSurgeonGitHubActionsVcsTrigger() -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsVcsTrigger.Tags.get -> string![]!
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsVcsTrigger.Tags.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsWorkflowTrigger
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsWorkflowTrigger.Inputs.get -> System.Collections.Generic.List<Rocket.Surgery.Nuke.GithubActions.GitHubActionsInput!>!
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsWorkflowTrigger.Inputs.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsWorkflowTrigger.Kind.get -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsTrigger
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsWorkflowTrigger.Kind.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsWorkflowTrigger.Outputs.get -> System.Collections.Generic.List<Rocket.Surgery.Nuke.GithubActions.GitHubActionsWorkflowOutput!>!
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsWorkflowTrigger.Outputs.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsWorkflowTrigger.RocketSurgeonGitHubActionsWorkflowTrigger() -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsWorkflowTrigger.Secrets.get -> System.Collections.Generic.List<Rocket.Surgery.Nuke.GithubActions.GitHubActionsSecret!>!
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsWorkflowTrigger.Secrets.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob.FailFast.get -> bool
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob.FailFast.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob.Matrix.get -> System.Collections.Generic.IEnumerable<string!>!
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob.Matrix.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob.RocketSurgeonsGithubActionsJob(string! name) -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob.RunsOn.get -> System.Collections.Generic.IEnumerable<string!>!
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob.RunsOn.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob.Steps.get -> System.Collections.Generic.List<Nuke.Common.CI.GitHubActions.Configuration.GitHubActionsStep!>!
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob.Steps.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.Environment.get -> System.Collections.Generic.Dictionary<string!, string!>!
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.Environment.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.If.get -> Rocket.Surgery.Nuke.GithubActions.GithubActionCondition?
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.If.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.Name.get -> string!
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.Needs.get -> System.Collections.Generic.List<string!>!
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.Needs.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.Outputs.get -> System.Collections.Generic.List<Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepOutput!>!
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.Outputs.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.RocketSurgeonsGithubActionsJobBase(string! name) -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubWorkflowJob
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubWorkflowJob.RocketSurgeonsGithubWorkflowJob(string! name) -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubWorkflowJob.Secrets.get -> System.Collections.Generic.Dictionary<string!, string!>!
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubWorkflowJob.Secrets.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubWorkflowJob.Uses.get -> string?
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubWorkflowJob.Uses.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubWorkflowJob.With.get -> System.Collections.Generic.Dictionary<string!, string!>!
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubWorkflowJob.With.set -> void
+Rocket.Surgery.Nuke.GithubActions.RunStep
+Rocket.Surgery.Nuke.GithubActions.RunStep.Run.get -> string!
+Rocket.Surgery.Nuke.GithubActions.RunStep.Run.set -> void
+Rocket.Surgery.Nuke.GithubActions.RunStep.RunStep(string! name) -> void
+Rocket.Surgery.Nuke.GithubActions.RunStep.Shell.get -> Rocket.Surgery.Nuke.GithubActions.GithubActionShell?
+Rocket.Surgery.Nuke.GithubActions.RunStep.Shell.set -> void
+Rocket.Surgery.Nuke.GithubActions.RunStep.WorkingDirectory.get -> string?
+Rocket.Surgery.Nuke.GithubActions.RunStep.WorkingDirectory.set -> void
+Rocket.Surgery.Nuke.GithubActions.SetupDotNetStep
+Rocket.Surgery.Nuke.GithubActions.SetupDotNetStep.ConfigFile.get -> string?
+Rocket.Surgery.Nuke.GithubActions.SetupDotNetStep.ConfigFile.set -> void
+Rocket.Surgery.Nuke.GithubActions.SetupDotNetStep.DotNetVersion.get -> string?
+Rocket.Surgery.Nuke.GithubActions.SetupDotNetStep.DotNetVersion.set -> void
+Rocket.Surgery.Nuke.GithubActions.SetupDotNetStep.NuGetAuthToken.get -> string?
+Rocket.Surgery.Nuke.GithubActions.SetupDotNetStep.NuGetAuthToken.set -> void
+Rocket.Surgery.Nuke.GithubActions.SetupDotNetStep.Owner.get -> string?
+Rocket.Surgery.Nuke.GithubActions.SetupDotNetStep.Owner.set -> void
+Rocket.Surgery.Nuke.GithubActions.SetupDotNetStep.SetupDotNetStep(string! name) -> void
+Rocket.Surgery.Nuke.GithubActions.SetupDotNetStep.SourceUrl.get -> string?
+Rocket.Surgery.Nuke.GithubActions.SetupDotNetStep.SourceUrl.set -> void
+Rocket.Surgery.Nuke.GithubActions.TriggerValueAttribute
+Rocket.Surgery.Nuke.GithubActions.TriggerValueAttribute.Alias.get -> string?
+Rocket.Surgery.Nuke.GithubActions.TriggerValueAttribute.Alias.set -> void
+Rocket.Surgery.Nuke.GithubActions.TriggerValueAttribute.Default.get -> string?
+Rocket.Surgery.Nuke.GithubActions.TriggerValueAttribute.Default.set -> void
+Rocket.Surgery.Nuke.GithubActions.TriggerValueAttribute.Description.get -> string?
+Rocket.Surgery.Nuke.GithubActions.TriggerValueAttribute.Description.set -> void
+Rocket.Surgery.Nuke.GithubActions.TriggerValueAttribute.Name.get -> string!
+Rocket.Surgery.Nuke.GithubActions.TriggerValueAttribute.TriggerValueAttribute(string! name) -> void
+Rocket.Surgery.Nuke.GithubActions.UploadArtifactStep
+Rocket.Surgery.Nuke.GithubActions.UploadArtifactStep.Name.get -> string?
+Rocket.Surgery.Nuke.GithubActions.UploadArtifactStep.Name.set -> void
+Rocket.Surgery.Nuke.GithubActions.UploadArtifactStep.Path.get -> string?
+Rocket.Surgery.Nuke.GithubActions.UploadArtifactStep.Path.set -> void
+Rocket.Surgery.Nuke.GithubActions.UploadArtifactStep.UploadArtifactStep(string! name) -> void
+Rocket.Surgery.Nuke.GithubActions.UsingStep
+Rocket.Surgery.Nuke.GithubActions.UsingStep.Uses.get -> string?
+Rocket.Surgery.Nuke.GithubActions.UsingStep.Uses.set -> void
+Rocket.Surgery.Nuke.GithubActions.UsingStep.UsingStep(string! name) -> void
+Rocket.Surgery.Nuke.GithubActions.UsingStep.With.get -> System.Collections.Generic.Dictionary<string!, string!>!
+Rocket.Surgery.Nuke.GithubActions.UsingStep.With.set -> void
+Rocket.Surgery.Nuke.GithubActions.UsingStep.WithProperties(System.Func<string!, string!>! transformName) -> void
+Rocket.Surgery.Nuke.GitVersionFunctions
+Rocket.Surgery.Nuke.Helpers
+Rocket.Surgery.Nuke.ICan
+Rocket.Surgery.Nuke.ICanClean
+Rocket.Surgery.Nuke.ICanClean.Clean.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.ICanDotNetFormat
+Rocket.Surgery.Nuke.ICanDotNetFormat.DotNetFormat.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.ICanDotNetFormat.DotNetFormatSeverity.get -> Nuke.Common.Tools.DotNet.DotNetFormatSeverity!
+Rocket.Surgery.Nuke.ICanLint
+Rocket.Surgery.Nuke.ICanLint.Lint.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.ICanUpdateReadme
+Rocket.Surgery.Nuke.ICanUpdateReadme.GenerateReadme.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.ICanUpdateReadme.Readme.get -> Rocket.Surgery.Nuke.Readme.ReadmeUpdater!
+Rocket.Surgery.Nuke.ICanUpdateReadme.ReadmeFilePath.get -> Nuke.Common.IO.AbsolutePath!
+Rocket.Surgery.Nuke.IComprehend
+Rocket.Surgery.Nuke.IComprehendSamples
+Rocket.Surgery.Nuke.IComprehendSamples.SampleDirectory.get -> Nuke.Common.IO.AbsolutePath!
+Rocket.Surgery.Nuke.IComprehendSources
+Rocket.Surgery.Nuke.IComprehendSources.SourceDirectory.get -> Nuke.Common.IO.AbsolutePath!
+Rocket.Surgery.Nuke.IComprehendTemplates
+Rocket.Surgery.Nuke.IComprehendTemplates.TemplatesDirectory.get -> Nuke.Common.IO.AbsolutePath!
+Rocket.Surgery.Nuke.IComprehendTests
+Rocket.Surgery.Nuke.IComprehendTests.RunSettings.get -> Nuke.Common.IO.AbsolutePath!
+Rocket.Surgery.Nuke.IComprehendTests.TestsDirectory.get -> Nuke.Common.IO.AbsolutePath!
+Rocket.Surgery.Nuke.IGenerate
+Rocket.Surgery.Nuke.IGenerateCodeCoverageBadges
+Rocket.Surgery.Nuke.IGenerateCodeCoverageBadges.CoverageBadgeDirectory.get -> Nuke.Common.IO.AbsolutePath!
+Rocket.Surgery.Nuke.IGenerateCodeCoverageBadges.GenerateCodeCoverageBadges.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.IGenerateCodeCoverageBadges.Generate_Code_Coverage_Badges.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.IGenerateCodeCoverageReport
+Rocket.Surgery.Nuke.IGenerateCodeCoverageReport.CoverageReportDirectory.get -> Nuke.Common.IO.AbsolutePath!
+Rocket.Surgery.Nuke.IGenerateCodeCoverageReport.GenerateCodeCoverageReport.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.IGenerateCodeCoverageReport.Generate_Code_Coverage_Report.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.IGenerateCodeCoverageSummary
+Rocket.Surgery.Nuke.IGenerateCodeCoverageSummary.CoverageSummaryDirectory.get -> Nuke.Common.IO.AbsolutePath!
+Rocket.Surgery.Nuke.IGenerateCodeCoverageSummary.GenerateCodeCoverageSummary.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.IGenerateCodeCoverageSummary.Generate_Code_Coverage_Summary.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.IGenerateDocFx
+Rocket.Surgery.Nuke.IGenerateDocFx.CoreDocs.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.IGenerateDocFx.Docfx.get -> Nuke.Common.Tooling.Tool!
+Rocket.Surgery.Nuke.IGenerateDocFx.Serve.get -> bool?
+Rocket.Surgery.Nuke.IGitHooksEngine
+Rocket.Surgery.Nuke.IGitHooksEngine.AreHooksInstalled(System.Collections.Generic.IReadOnlyCollection<string!>! hooks) -> bool
+Rocket.Surgery.Nuke.IGitHooksEngine.InstallHooks(System.Collections.Generic.IReadOnlyCollection<string!>! hooks) -> void
+Rocket.Surgery.Nuke.IHave
+Rocket.Surgery.Nuke.IHaveArtifacts
+Rocket.Surgery.Nuke.IHaveArtifacts.ArtifactsDirectory.get -> Nuke.Common.IO.AbsolutePath!
+Rocket.Surgery.Nuke.IHaveBuildTarget
+Rocket.Surgery.Nuke.IHaveBuildTarget.Build.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.IHaveBuildVersion
+Rocket.Surgery.Nuke.IHaveBuildVersion.BuildVersion.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.IHaveCleanTarget
+Rocket.Surgery.Nuke.IHaveCleanTarget.Clean.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.IHaveCodeCoverage
+Rocket.Surgery.Nuke.IHaveCodeCoverage.CoverageDirectory.get -> Nuke.Common.IO.AbsolutePath!
+Rocket.Surgery.Nuke.IHaveConfiguration
+Rocket.Surgery.Nuke.IHaveConfiguration.Configuration.get -> string!
+Rocket.Surgery.Nuke.IHaveConfiguration<T>
+Rocket.Surgery.Nuke.IHaveConfiguration<T>.Configuration.get -> T!
+Rocket.Surgery.Nuke.IHaveDocs
+Rocket.Surgery.Nuke.IHaveDocs.DocumentationDirectory.get -> Nuke.Common.IO.AbsolutePath!
+Rocket.Surgery.Nuke.IHaveDocs.DocumentationsOutputDirectory.get -> Nuke.Common.IO.AbsolutePath!
+Rocket.Surgery.Nuke.IHaveEnableRestore
+Rocket.Surgery.Nuke.IHaveEnableRestore.EnableRestore.get -> bool
+Rocket.Surgery.Nuke.IHaveGitRepository
+Rocket.Surgery.Nuke.IHaveGitRepository.GitRepository.get -> Nuke.Common.Git.GitRepository?
+Rocket.Surgery.Nuke.IHaveGitVersion
+Rocket.Surgery.Nuke.IHaveGitVersion.GitVersion.get -> Nuke.Common.Tools.GitVersion.GitVersion!
+Rocket.Surgery.Nuke.IHaveNuGetPackages
+Rocket.Surgery.Nuke.IHaveNuGetPackages.NuGetPackageDirectory.get -> Nuke.Common.IO.AbsolutePath!
+Rocket.Surgery.Nuke.IHaveOutputArtifacts
+Rocket.Surgery.Nuke.IHaveOutputArtifacts.OutputArtifactsDirectory.get -> Nuke.Common.IO.AbsolutePath!
+Rocket.Surgery.Nuke.IHaveOutputLogs
+Rocket.Surgery.Nuke.IHaveOutputLogs.LogsDirectory.get -> Nuke.Common.IO.AbsolutePath!
+Rocket.Surgery.Nuke.IHavePackTarget
+Rocket.Surgery.Nuke.IHavePackTarget.Pack.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.IHavePublicApis
+Rocket.Surgery.Nuke.IHavePublicApis.LintPublicApiAnalyzers.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.IHavePublicApis.MoveUnshippedToShipped.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.IHavePublicApis.PublicApiAnalyzerProjects.get -> System.Collections.Generic.IEnumerable<Nuke.Common.ProjectModel.Project!>!
+Rocket.Surgery.Nuke.IHavePublicApis.ShouldMoveUnshippedToShipped.get -> bool
+Rocket.Surgery.Nuke.IHavePublishArtifacts
+Rocket.Surgery.Nuke.IHavePublishArtifacts.PublishDirectory.get -> Nuke.Common.IO.AbsolutePath!
+Rocket.Surgery.Nuke.IHaveRestoreTarget
+Rocket.Surgery.Nuke.IHaveRestoreTarget.Restore.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.IHaveSolution
+Rocket.Surgery.Nuke.IHaveSolution.Solution.get -> Nuke.Common.ProjectModel.Solution!
+Rocket.Surgery.Nuke.IHaveTestArtifacts
+Rocket.Surgery.Nuke.IHaveTestArtifacts.TestResultsDirectory.get -> Nuke.Common.IO.AbsolutePath!
+Rocket.Surgery.Nuke.IHaveTestTarget
+Rocket.Surgery.Nuke.IHaveTestTarget.Test.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.IMayTheForceBeWithYou
+Rocket.Surgery.Nuke.IMayTheForceBeWithYou.Force.get -> bool
+Rocket.Surgery.Nuke.ITrigger
+Rocket.Surgery.Nuke.ITriggerCodeCoverageReports
+Rocket.Surgery.Nuke.ITriggerCodeCoverageReports.GenerateCodeCoverageReportCobertura.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.ITriggerCodeCoverageReports.Generate_Code_Coverage_Report_Cobertura.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.ITriggerCodeCoverageReports.InputReports.get -> System.Collections.Generic.IEnumerable<Nuke.Common.IO.AbsolutePath!>!
+Rocket.Surgery.Nuke.ITriggerCodeCoverageReports.TriggerCodeCoverageReports.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.ITriggerCodeCoverageReports.Trigger_Code_Coverage_Reports.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.LocalBuildConventionsAttribute
+Rocket.Surgery.Nuke.LocalBuildConventionsAttribute.LocalBuildConventionsAttribute() -> void
+Rocket.Surgery.Nuke.LocalBuildConventionsAttribute.OnBuildFinished() -> void
+Rocket.Surgery.Nuke.LocalBuildConventionsAttribute.OnBuildInitialized(System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! executableTargets, System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! executionPlan) -> void
+Rocket.Surgery.Nuke.MsBuild.ICanBuildWithMsBuild
+Rocket.Surgery.Nuke.MsBuild.ICanBuildWithMsBuild.NetBuild.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.MsBuild.ICanPackWithMsBuild
+Rocket.Surgery.Nuke.MsBuild.ICanPackWithMsBuild.NetPack.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.MsBuild.ICanPackWithMsBuild.NuspecDirectory.get -> Nuke.Common.IO.AbsolutePath!
+Rocket.Surgery.Nuke.MsBuild.ICanRestoreWithMsBuild
+Rocket.Surgery.Nuke.MsBuild.ICanRestoreWithMsBuild.NetRestore.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.MsBuild.ICanTestWithXUnit
+Rocket.Surgery.Nuke.MsBuild.ICanTestWithXUnit.NetTest.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.MSBuildBinaryLogImports
+Rocket.Surgery.Nuke.MSBuildBinaryLogImports.Embed = 3 -> Rocket.Surgery.Nuke.MSBuildBinaryLogImports
+Rocket.Surgery.Nuke.MSBuildBinaryLogImports.None = 2 -> Rocket.Surgery.Nuke.MSBuildBinaryLogImports
+Rocket.Surgery.Nuke.MSBuildBinaryLogImports.Unspecified = 0 -> Rocket.Surgery.Nuke.MSBuildBinaryLogImports
+Rocket.Surgery.Nuke.MSBuildBinaryLogImports.ZipFile = 4 -> Rocket.Surgery.Nuke.MSBuildBinaryLogImports
+Rocket.Surgery.Nuke.NuGetVerbosityMappingAttribute
+Rocket.Surgery.Nuke.NuGetVerbosityMappingAttribute.NuGetVerbosityMappingAttribute() -> void
+Rocket.Surgery.Nuke.OptionalGitRepositoryAttribute
+Rocket.Surgery.Nuke.OptionalGitRepositoryAttribute.OptionalGitRepositoryAttribute() -> void
+Rocket.Surgery.Nuke.PackageIconAttribute
+Rocket.Surgery.Nuke.PackageIconAttribute.PackageIconAttribute(string! url, string? filePath = null) -> void
+Rocket.Surgery.Nuke.Readme.Badges
+Rocket.Surgery.Nuke.Readme.Badges.Add(Rocket.Surgery.Nuke.Readme.IBadgeSection! section) -> Rocket.Surgery.Nuke.Readme.Badges!
+Rocket.Surgery.Nuke.Readme.Badges.Badges() -> void
+Rocket.Surgery.Nuke.Readme.Badges.ConfigKey.get -> string!
+Rocket.Surgery.Nuke.Readme.Badges.Name.get -> string!
+Rocket.Surgery.Nuke.Readme.Badges.Process(System.Collections.Generic.IDictionary<string!, object?>! config, Rocket.Surgery.Nuke.Readme.IMarkdownReferences! references, Rocket.Surgery.Nuke.IHaveSolution! build) -> string!
+Rocket.Surgery.Nuke.Readme.Histories
+Rocket.Surgery.Nuke.Readme.Histories.Add(Rocket.Surgery.Nuke.Readme.IHistorySection! section) -> Rocket.Surgery.Nuke.Readme.Histories!
+Rocket.Surgery.Nuke.Readme.Histories.ConfigKey.get -> string!
+Rocket.Surgery.Nuke.Readme.Histories.Histories() -> void
+Rocket.Surgery.Nuke.Readme.Histories.Name.get -> string!
+Rocket.Surgery.Nuke.Readme.Histories.Process(System.Collections.Generic.IDictionary<string!, object?>! config, Rocket.Surgery.Nuke.Readme.IMarkdownReferences! references, Rocket.Surgery.Nuke.IHaveSolution! build) -> string!
+Rocket.Surgery.Nuke.Readme.IBadgeSection
+Rocket.Surgery.Nuke.Readme.IBadgeSection.ConfigKey.get -> string!
+Rocket.Surgery.Nuke.Readme.IBadgeSection.Name.get -> string!
+Rocket.Surgery.Nuke.Readme.IBadgeSection.Process(System.Collections.Generic.IDictionary<object!, object?>! config, Rocket.Surgery.Nuke.Readme.IMarkdownReferences! references, Rocket.Surgery.Nuke.IHaveSolution! build) -> string!
+Rocket.Surgery.Nuke.Readme.IHistorySection
+Rocket.Surgery.Nuke.Readme.IHistorySection.ConfigKey.get -> string!
+Rocket.Surgery.Nuke.Readme.IHistorySection.Name.get -> string!
+Rocket.Surgery.Nuke.Readme.IHistorySection.Process(System.Collections.Generic.IDictionary<object!, object?>! config, Rocket.Surgery.Nuke.Readme.IMarkdownReferences! references, Rocket.Surgery.Nuke.IHaveSolution! build) -> (string! badge, string! history)
+Rocket.Surgery.Nuke.Readme.IMarkdownReferences
+Rocket.Surgery.Nuke.Readme.IMarkdownReferences.AddReference(string! name, string! value, string? altText = null) -> string!
+Rocket.Surgery.Nuke.Readme.IReadmeSection
+Rocket.Surgery.Nuke.Readme.IReadmeSection.ConfigKey.get -> string!
+Rocket.Surgery.Nuke.Readme.IReadmeSection.Name.get -> string!
+Rocket.Surgery.Nuke.Readme.IReadmeSection.Process(System.Collections.Generic.IDictionary<string!, object?>! config, Rocket.Surgery.Nuke.Readme.IMarkdownReferences! references, Rocket.Surgery.Nuke.IHaveSolution! build) -> string!
+Rocket.Surgery.Nuke.Readme.ReadmeUpdater
+Rocket.Surgery.Nuke.Readme.ReadmeUpdater.Badges.get -> Rocket.Surgery.Nuke.Readme.Badges!
+Rocket.Surgery.Nuke.Readme.ReadmeUpdater.History.get -> Rocket.Surgery.Nuke.Readme.Histories!
+Rocket.Surgery.Nuke.Readme.ReadmeUpdater.History.set -> void
+Rocket.Surgery.Nuke.Readme.ReadmeUpdater.Process(string! content, Rocket.Surgery.Nuke.IHaveSolution! build) -> string!
+Rocket.Surgery.Nuke.Readme.ReadmeUpdater.ReadmeUpdater() -> void
+Rocket.Surgery.Nuke.Readme.ReadmeUpdater.References.get -> Rocket.Surgery.Nuke.Readme.References!
+Rocket.Surgery.Nuke.Readme.ReadmeUpdater.Sections.get -> Rocket.Surgery.Nuke.Readme.Sections!
+Rocket.Surgery.Nuke.Readme.References
+Rocket.Surgery.Nuke.Readme.References.AddReference(string! name, string! value, string? altText = null) -> string!
+Rocket.Surgery.Nuke.Readme.References.ConfigKey.get -> string!
+Rocket.Surgery.Nuke.Readme.References.Name.get -> string!
+Rocket.Surgery.Nuke.Readme.References.Process(System.Collections.Generic.IDictionary<string!, object?>! config, Rocket.Surgery.Nuke.Readme.IMarkdownReferences! references, Rocket.Surgery.Nuke.IHaveSolution! build) -> string!
+Rocket.Surgery.Nuke.Readme.References.References() -> void
+Rocket.Surgery.Nuke.Readme.Sections
+Rocket.Surgery.Nuke.Readme.Sections.Add(Rocket.Surgery.Nuke.Readme.IReadmeSection! section) -> Rocket.Surgery.Nuke.Readme.Sections!
+Rocket.Surgery.Nuke.Readme.Sections.Sections() -> void
+Rocket.Surgery.Nuke.SolutionExtensions
+Rocket.Surgery.Nuke.SolutionUpdaterConfigurationAttribute
+Rocket.Surgery.Nuke.SolutionUpdaterConfigurationAttribute.AdditionalConfigFolderFilePatterns.get -> string![]!
+Rocket.Surgery.Nuke.SolutionUpdaterConfigurationAttribute.AdditionalRelativeFolderFilePatterns.get -> string![]!
+Rocket.Surgery.Nuke.SolutionUpdaterConfigurationAttribute.SolutionUpdaterConfigurationAttribute(string![]? additionalRelativeFolderFilePatterns = null, string![]? additionalConfigFolderFilePatterns = null) -> void
+Rocket.Surgery.Nuke.StringExtensions
+Rocket.Surgery.Nuke.Symbols
+Rocket.Surgery.Nuke.TestMethodExtensions
+Rocket.Surgery.Nuke.TitleEventsAttribute
+Rocket.Surgery.Nuke.TitleEventsAttribute.OnBuildCreated(System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! executableTargets) -> void
+Rocket.Surgery.Nuke.TitleEventsAttribute.OnBuildFinished() -> void
+Rocket.Surgery.Nuke.TitleEventsAttribute.OnBuildInitialized(System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! executableTargets, System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! executionPlan) -> void
+Rocket.Surgery.Nuke.TitleEventsAttribute.OnTargetRunning(Nuke.Common.Execution.ExecutableTarget! target) -> void
+Rocket.Surgery.Nuke.TitleEventsAttribute.TitleEventsAttribute() -> void
+Rocket.Surgery.Nuke.ToolSettingsExtensions
+Rocket.Surgery.Nuke.Xamarin.ICanArchiveiOS
+Rocket.Surgery.Nuke.Xamarin.ICanArchiveiOS.ArchiveIpa.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.Xamarin.ICanBuildXamarin
+Rocket.Surgery.Nuke.Xamarin.ICanBuildXamarin.Build.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.Xamarin.ICanBuildXamariniOS
+Rocket.Surgery.Nuke.Xamarin.ICanBuildXamariniOS.BuildiPhone.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.Xamarin.ICanBuildXamarinMac
+Rocket.Surgery.Nuke.Xamarin.ICanBuildXamarinMac.Build.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.Xamarin.ICanPackXamariniOS
+Rocket.Surgery.Nuke.Xamarin.ICanPackXamariniOS.PackiPhone.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.Xamarin.ICanRestoreXamarin
+Rocket.Surgery.Nuke.Xamarin.ICanRestoreXamarin.Restore.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.Xamarin.ICanTestXamarin
+Rocket.Surgery.Nuke.Xamarin.ICanTestXamarin.Test.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.Xamarin.IHaveBundleIdentifier
+Rocket.Surgery.Nuke.Xamarin.IHaveBundleIdentifier.BundleIdentifier.get -> string!
+Rocket.Surgery.Nuke.Xamarin.IHaveBundleIdentifier.Suffix.get -> string!
+Rocket.Surgery.Nuke.Xamarin.IHaveBundleIdentifier.Suffix.set -> void
+Rocket.Surgery.Nuke.Xamarin.IHaveInfoPlist
+Rocket.Surgery.Nuke.Xamarin.IHaveInfoPlist.InfoPlist.get -> Nuke.Common.IO.AbsolutePath!
+Rocket.Surgery.Nuke.Xamarin.IHaveiOSTargetPlatform
+Rocket.Surgery.Nuke.Xamarin.IHaveiOSTargetPlatform.iOSTargetPlatform.get -> Rocket.Surgery.Nuke.Xamarin.TargetPlatform!
+Rocket.Surgery.Nuke.Xamarin.IHaveIpa
+Rocket.Surgery.Nuke.Xamarin.IHaveIpa.IpaDirectory.get -> Nuke.Common.IO.AbsolutePath!
+Rocket.Surgery.Nuke.Xamarin.IHavePackXamarinMac
+Rocket.Surgery.Nuke.Xamarin.IHavePackXamarinMac.Package.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.Xamarin.IXamarinAndroidBuild
+Rocket.Surgery.Nuke.Xamarin.IXamarinAndroidBuild.XamarinAndroid.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.Xamarin.IXamarinAppleTarget
+Rocket.Surgery.Nuke.Xamarin.IXamarinAppleTarget.ModifyInfoPlist.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.Xamarin.TargetPlatform
+Rocket.Surgery.Nuke.Xamarin.TargetPlatform.TargetPlatform() -> void
+Rocket.Surgery.Nuke.Xamarin.XamarinConfiguration
+Rocket.Surgery.Nuke.Xamarin.XamarinConfiguration.XamarinConfiguration() -> void
+static readonly Rocket.Surgery.Nuke.Symbols.DefaultSymbols -> System.Collections.Generic.Dictionary<System.Text.RegularExpressions.Regex!, string!>!
+static readonly Rocket.Surgery.Nuke.Xamarin.TargetPlatform.AnyCPU -> Rocket.Surgery.Nuke.Xamarin.TargetPlatform!
+static readonly Rocket.Surgery.Nuke.Xamarin.TargetPlatform.iPhone -> Rocket.Surgery.Nuke.Xamarin.TargetPlatform!
+static readonly Rocket.Surgery.Nuke.Xamarin.TargetPlatform.iPhoneSimulator -> Rocket.Surgery.Nuke.Xamarin.TargetPlatform!
+static Rocket.Surgery.Nuke.Azp.AzurePipelinesTasks.IsNotRunningOnAzurePipelines.get -> System.Func<bool>!
+static Rocket.Surgery.Nuke.Azp.AzurePipelinesTasks.IsRunningOnAzurePipelines.get -> System.Func<bool>!
+static Rocket.Surgery.Nuke.ComputedGitVersionAttribute.HasGitVer() -> bool
+static Rocket.Surgery.Nuke.DotNetTool.GetTool(string! nugetPackageName) -> Nuke.Common.Tooling.Tool!
+static Rocket.Surgery.Nuke.DotNetTool.IsInstalled(string! nugetPackageName) -> bool
+static Rocket.Surgery.Nuke.Extensions.As<T>(this T value) -> T
+static Rocket.Surgery.Nuke.Extensions.CastAs<T>(this object! value) -> T
+static Rocket.Surgery.Nuke.Extensions.CreateOrCleanDirectory(this Nuke.Common.ITargetDefinition! target, Nuke.Common.IO.AbsolutePath! testResultsDirectory) -> Nuke.Common.ITargetDefinition!
+static Rocket.Surgery.Nuke.Extensions.SetReports<T>(this T! toolSettings, System.Collections.Generic.IEnumerable<Nuke.Common.IO.AbsolutePath!>! reports) -> T!
+static Rocket.Surgery.Nuke.FilePathExtensions.PickDirectory(Nuke.Common.IO.AbsolutePath! path, params Nuke.Common.IO.AbsolutePath![]! paths) -> Nuke.Common.IO.AbsolutePath!
+static Rocket.Surgery.Nuke.FilePathExtensions.PickDirectory(System.Collections.Generic.IEnumerable<Nuke.Common.IO.AbsolutePath!>! paths) -> Nuke.Common.IO.AbsolutePath!
+static Rocket.Surgery.Nuke.FilePathExtensions.PickFile(Nuke.Common.IO.AbsolutePath! path, params Nuke.Common.IO.AbsolutePath![]! paths) -> Nuke.Common.IO.AbsolutePath!
+static Rocket.Surgery.Nuke.FilePathExtensions.PickFile(System.Collections.Generic.IEnumerable<Nuke.Common.IO.AbsolutePath!>! paths) -> Nuke.Common.IO.AbsolutePath!
+static Rocket.Surgery.Nuke.GithubActions.CustomFileWriterExtensions.WriteKeyValues(this Nuke.Common.Utilities.CustomFileWriter! writer, string! key, System.Collections.Generic.IDictionary<string!, string!>! dictionary) -> void
+static Rocket.Surgery.Nuke.GithubActions.GithubActionCondition.Always.get -> Rocket.Surgery.Nuke.GithubActions.GithubActionCondition!
+static Rocket.Surgery.Nuke.GithubActions.GithubActionCondition.Cancelled.get -> Rocket.Surgery.Nuke.GithubActions.GithubActionCondition!
+static Rocket.Surgery.Nuke.GithubActions.GithubActionCondition.Failure.get -> Rocket.Surgery.Nuke.GithubActions.GithubActionCondition!
+static Rocket.Surgery.Nuke.GithubActions.GithubActionCondition.implicit operator Rocket.Surgery.Nuke.GithubActions.GithubActionCondition!(string! condition) -> Rocket.Surgery.Nuke.GithubActions.GithubActionCondition!
+static Rocket.Surgery.Nuke.GithubActions.GithubActionCondition.implicit operator string?(Rocket.Surgery.Nuke.GithubActions.GithubActionCondition? condition) -> string?
+static Rocket.Surgery.Nuke.GithubActions.GithubActionCondition.Success.get -> Rocket.Surgery.Nuke.GithubActions.GithubActionCondition!
+static Rocket.Surgery.Nuke.GithubActions.GithubActionsExtensions.AddJob(this Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration! configuration, Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase! job) -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration!
+static Rocket.Surgery.Nuke.GithubActions.GithubActionsExtensions.AddNuGetCache(this Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob! job) -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob!
+static Rocket.Surgery.Nuke.GithubActions.GithubActionsExtensions.AddNugetPublish(this Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration! configuration) -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration!
+static Rocket.Surgery.Nuke.GithubActions.GithubActionsExtensions.AddStep(this Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob! configuration, Nuke.Common.CI.GitHubActions.Configuration.GitHubActionsStep! step) -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob!
+static Rocket.Surgery.Nuke.GithubActions.GithubActionsExtensions.ConfigureForGitVersion(this Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob! job) -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob!
+static Rocket.Surgery.Nuke.GithubActions.GithubActionsExtensions.ConfigureStep<TStep>(this Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob! job, System.Action<TStep!>! configure) -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob!
+static Rocket.Surgery.Nuke.GithubActions.GithubActionsExtensions.ExcludePaths(this Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration! configuration, params string![]! paths) -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration!
+static Rocket.Surgery.Nuke.GithubActions.GithubActionsExtensions.ExcludeRepositoryConfigurationFiles(this Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration! configuration) -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration!
+static Rocket.Surgery.Nuke.GithubActions.GithubActionsExtensions.IncludePaths(this Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration! configuration, params string![]! paths) -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration!
+static Rocket.Surgery.Nuke.GithubActions.GithubActionsExtensions.IncludeRepositoryConfigurationFiles(this Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration! configuration) -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration!
+static Rocket.Surgery.Nuke.GithubActions.GithubActionsExtensions.PublishArtifacts<T>(this Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob! job) -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob!
+static Rocket.Surgery.Nuke.GithubActions.GithubActionsExtensions.PublishLogs<T>(this Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob! job) -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob!
+static Rocket.Surgery.Nuke.GithubActions.GithubActionsExtensions.SetOutput(this Nuke.Common.CI.GitHubActions.GitHubActions! instance, string! key, string? value) -> Nuke.Common.CI.GitHubActions.GitHubActions!
+static Rocket.Surgery.Nuke.GithubActions.GithubActionsExtensions.UseDotNetSdk(this Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob! job, string! version, string? exactVersion = null) -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob!
+static Rocket.Surgery.Nuke.GithubActions.GithubActionsExtensions.UseDotNetSdks(this Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob! job, params string![]! versions) -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob!
+static Rocket.Surgery.Nuke.GithubActions.GithubActionShell.Bash.get -> Rocket.Surgery.Nuke.GithubActions.GithubActionShell!
+static Rocket.Surgery.Nuke.GithubActions.GithubActionShell.Cmd.get -> Rocket.Surgery.Nuke.GithubActions.GithubActionShell!
+static Rocket.Surgery.Nuke.GithubActions.GithubActionShell.implicit operator Rocket.Surgery.Nuke.GithubActions.GithubActionShell!(string! shell) -> Rocket.Surgery.Nuke.GithubActions.GithubActionShell!
+static Rocket.Surgery.Nuke.GithubActions.GithubActionShell.implicit operator string!(Rocket.Surgery.Nuke.GithubActions.GithubActionShell! shell) -> string!
+static Rocket.Surgery.Nuke.GithubActions.GithubActionShell.Powershell.get -> Rocket.Surgery.Nuke.GithubActions.GithubActionShell!
+static Rocket.Surgery.Nuke.GithubActions.GithubActionShell.Pwsh.get -> Rocket.Surgery.Nuke.GithubActions.GithubActionShell!
+static Rocket.Surgery.Nuke.GithubActions.GithubActionShell.Python.get -> Rocket.Surgery.Nuke.GithubActions.GithubActionShell!
+static Rocket.Surgery.Nuke.GithubActions.GithubActionShell.Sh.get -> Rocket.Surgery.Nuke.GithubActions.GithubActionShell!
+static Rocket.Surgery.Nuke.GitVersionFunctions.AssemblyVersion(this Nuke.Common.Tools.GitVersion.GitVersion? gitVersion) -> string!
+static Rocket.Surgery.Nuke.GitVersionFunctions.FullSemanticVersion(this Nuke.Common.Tools.GitVersion.GitVersion? gitVersion) -> string!
+static Rocket.Surgery.Nuke.GitVersionFunctions.MajorMinorPatch(this Nuke.Common.Tools.GitVersion.GitVersion? gitVersion) -> string!
+static Rocket.Surgery.Nuke.GitVersionFunctions.PackageVersion(this Nuke.Common.Tools.GitVersion.GitVersion? gitVersion) -> string!
+static Rocket.Surgery.Nuke.Helpers.IsDotnetToolInstalled(string! nugetPackageName) -> bool
+static Rocket.Surgery.Nuke.SolutionExtensions.GetTestProjects(this Nuke.Common.ProjectModel.Solution! solution) -> System.Collections.Generic.IEnumerable<Nuke.Common.ProjectModel.Project!>!
+static Rocket.Surgery.Nuke.SolutionExtensions.WherePackable(this Nuke.Common.ProjectModel.Solution! solution) -> System.Collections.Generic.IEnumerable<Nuke.Common.ProjectModel.Project!>!
+static Rocket.Surgery.Nuke.StringExtensions.RemoveAlphaCharacters(this string! input) -> string!
+static Rocket.Surgery.Nuke.Symbols.AddSymbol(System.Text.RegularExpressions.Regex! key, string! symbol) -> void
+static Rocket.Surgery.Nuke.Symbols.StepName(string! name) -> string!
+static Rocket.Surgery.Nuke.TestMethodExtensions.CleanCoverageDirectory(this Nuke.Common.ITargetDefinition! target, Nuke.Common.IO.AbsolutePath! coverageDirectory) -> Nuke.Common.ITargetDefinition!
+static Rocket.Surgery.Nuke.TestMethodExtensions.CollectCoverage(this Nuke.Common.ITargetDefinition! target, Nuke.Common.IO.AbsolutePath! testResultsDirectory, Nuke.Common.IO.AbsolutePath! coverageDirectory) -> Nuke.Common.ITargetDefinition!
+static Rocket.Surgery.Nuke.TestMethodExtensions.EnsureRunSettingsExists(this Nuke.Common.ITargetDefinition! target, Nuke.Common.IO.AbsolutePath! runsettings) -> Nuke.Common.ITargetDefinition!
+static Rocket.Surgery.Nuke.ToolSettingsExtensions.SetBinaryLogger<T>(this T! settings, Nuke.Common.IO.AbsolutePath! path) -> T!
+static Rocket.Surgery.Nuke.ToolSettingsExtensions.SetBinaryLogger<T>(this T! settings, Nuke.Common.IO.AbsolutePath! path, Rocket.Surgery.Nuke.MSBuildBinaryLogImports imports) -> T!
+static Rocket.Surgery.Nuke.ToolSettingsExtensions.SetDefaultLoggers<T>(this T! settings, Nuke.Common.IO.AbsolutePath! path) -> T!
+static Rocket.Surgery.Nuke.ToolSettingsExtensions.SetFileLogger<T>(this T! settings, Nuke.Common.IO.AbsolutePath! path) -> T!
+static Rocket.Surgery.Nuke.ToolSettingsExtensions.SetGitVersionEnvironment<T>(this T! settings, Nuke.Common.Tools.GitVersion.GitVersion? gitVersion) -> T!
+static Rocket.Surgery.Nuke.ToolSettingsExtensions.With<T>(this Nuke.Common.ITargetDefinition! target, System.Func<Nuke.Common.ITargetDefinition!, T, Nuke.Common.ITargetDefinition!>! func, T value) -> Nuke.Common.ITargetDefinition!
+static Rocket.Surgery.Nuke.ToolSettingsExtensions.With<T>(this Nuke.Common.ITargetDefinition! target, T value, System.Func<Nuke.Common.ITargetDefinition!, T, Nuke.Common.ITargetDefinition!>! func) -> Nuke.Common.ITargetDefinition!
+static Rocket.Surgery.Nuke.Xamarin.TargetPlatform.implicit operator string!(Rocket.Surgery.Nuke.Xamarin.TargetPlatform! platform) -> string!
+static Rocket.Surgery.Nuke.Xamarin.XamarinConfiguration.DebugDev -> Rocket.Surgery.Nuke.Xamarin.XamarinConfiguration!
+static Rocket.Surgery.Nuke.Xamarin.XamarinConfiguration.DebugMock -> Rocket.Surgery.Nuke.Xamarin.XamarinConfiguration!
+static Rocket.Surgery.Nuke.Xamarin.XamarinConfiguration.DebugTest -> Rocket.Surgery.Nuke.Xamarin.XamarinConfiguration!
+static Rocket.Surgery.Nuke.Xamarin.XamarinConfiguration.Dev -> Rocket.Surgery.Nuke.Xamarin.XamarinConfiguration!
+static Rocket.Surgery.Nuke.Xamarin.XamarinConfiguration.implicit operator string!(Rocket.Surgery.Nuke.Xamarin.XamarinConfiguration! configuration) -> string!
+static Rocket.Surgery.Nuke.Xamarin.XamarinConfiguration.Mock -> Rocket.Surgery.Nuke.Xamarin.XamarinConfiguration!
+static Rocket.Surgery.Nuke.Xamarin.XamarinConfiguration.Store -> Rocket.Surgery.Nuke.Xamarin.XamarinConfiguration!
+static Rocket.Surgery.Nuke.Xamarin.XamarinConfiguration.Test -> Rocket.Surgery.Nuke.Xamarin.XamarinConfiguration!
+virtual Rocket.Surgery.Nuke.AzurePipelinesStepsAttribute.GetStep(Nuke.Common.Execution.ExecutableTarget! executableTarget, System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! relevantTargets, Nuke.Common.Utilities.Collections.LookupTable<Nuke.Common.Execution.ExecutableTarget!, Rocket.Surgery.Nuke.Azp.AzurePipelinesStep!>! jobs) -> Rocket.Surgery.Nuke.Azp.AzurePipelinesStep!
+virtual Rocket.Surgery.Nuke.AzurePipelinesStepsAttribute.GetStepName(string! name) -> string!
+virtual Rocket.Surgery.Nuke.GithubActions.BaseGitHubActionsStep.ComputeStepName(string! name) -> string!
+virtual Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepsAttribute.GetParameters(Nuke.Common.INukeBuild! build) -> System.Collections.Generic.IEnumerable<Rocket.Surgery.Nuke.GithubActions.GithubActionsNukeParameter!>!
+virtual Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.GetAllSecrets(System.Collections.Generic.IEnumerable<Rocket.Surgery.Nuke.GithubActions.GitHubActionsSecret!>! secrets, bool githubToken = true) -> System.Collections.Generic.IEnumerable<Rocket.Surgery.Nuke.GithubActions.GitHubActionsSecret!>!
+virtual Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.GetTriggers(System.Collections.Generic.IEnumerable<Rocket.Surgery.Nuke.GithubActions.GitHubActionsInput!>! inputs, System.Collections.Generic.IEnumerable<Rocket.Surgery.Nuke.GithubActions.GitHubActionsWorkflowOutput!>! outputs, System.Collections.Generic.IEnumerable<Rocket.Surgery.Nuke.GithubActions.GitHubActionsSecret!>! secrets) -> System.Collections.Generic.IEnumerable<Nuke.Common.CI.GitHubActions.Configuration.GitHubActionsDetailedTrigger!>!

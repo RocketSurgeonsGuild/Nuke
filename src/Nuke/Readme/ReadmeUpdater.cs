@@ -77,7 +77,7 @@ public class ReadmeUpdater
         var match = nukeDataRegex.Match(content);
         var yaml = string.Join(Environment.NewLine, match.Groups.Cast<Group>().Skip(1).Select(x => x.Value));
         var d = new DeserializerBuilder()
-            // .WithNamingConvention(new CamelCaseNamingConvention())
+           // .WithNamingConvention(new CamelCaseNamingConvention())
            .Build();
         using var reader = new StringReader(yaml.Trim('\n', '\r'));
         var config = d.Deserialize<ExpandoObject>(reader);
@@ -105,8 +105,8 @@ public class ReadmeUpdater
             var sectionEnd = sectionMatch.Last().Captures[0];
             var newSectionContent = section.Process(config, References, build);
             ranges.Add(
-                ( sectionStart.Index + sectionStart.Length,
-                  sectionEnd.Index - ( sectionStart.Index + sectionStart.Length ), newSectionContent )
+                (sectionStart.Index + sectionStart.Length,
+                  sectionEnd.Index - ( sectionStart.Index + sectionStart.Length ), newSectionContent)
             );
         }
 

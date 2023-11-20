@@ -1,11 +1,11 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-npx lint-staged -d -r
+npx lint-staged -d -r -p false
 dotnet nuke --generate-configuration GitHubActions_ci --host GitHubActions
 git add .github/workflows/ci.yml
 dotnet nuke --generate-configuration GitHubActions_ci-ignore --host GitHubActions
 git add .github/workflows/ci-ignore.yml
-nuke --generate-configuration GitHubActions_inputs --host GitHubActions
+dotnet nuke --generate-configuration GitHubActions_inputs --host GitHubActions
 git add .github/workflows/inputs.yml
 git add .nuke/build.schema.json

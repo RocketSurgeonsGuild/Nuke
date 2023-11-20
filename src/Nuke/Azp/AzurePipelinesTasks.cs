@@ -28,7 +28,7 @@ public class AzurePipelinesTasks
     /// <summary>
     ///     Print the azure pipelines environment
     /// </summary>
-    private Target PrintAzurePipelinesEnvironment => _ => _
+    private Target PrintAzurePipelinesEnvironment => d => d
                                                          .OnlyWhenStatic(IsRunningOnAzurePipelines)
                                                          .Executes(
                                                               () =>
@@ -78,7 +78,7 @@ public class AzurePipelinesTasks
     /// <summary>
     ///     Upload the artifacts when running in azure pipelines
     /// </summary>
-    private Target UploadAzurePipelinesArtifacts => _ => _
+    private Target UploadAzurePipelinesArtifacts => d => d
                                                         .Before(PublishAzurePipelinesTestResults)
                                                         .OnlyWhenStatic(IsRunningOnAzurePipelines)
                                                         .Executes(() => { });
@@ -86,7 +86,7 @@ public class AzurePipelinesTasks
     /// <summary>
     ///     Publish the test results
     /// </summary>
-    private Target PublishAzurePipelinesTestResults => _ => _
+    private Target PublishAzurePipelinesTestResults => d => d
                                                            .Before(PublishAzurePipelinesCodeCoverage)
                                                            .OnlyWhenStatic(IsRunningOnAzurePipelines)
                                                            .Executes(() => { });
@@ -94,7 +94,7 @@ public class AzurePipelinesTasks
     /// <summary>
     ///     Publish the code coverage
     /// </summary>
-    private Target PublishAzurePipelinesCodeCoverage => _ => _
+    private Target PublishAzurePipelinesCodeCoverage => d => d
                                                             .OnlyWhenStatic(IsRunningOnAzurePipelines)
                                                             .Executes(() => { });
 
@@ -102,7 +102,7 @@ public class AzurePipelinesTasks
     ///     Run the azure pipelines targets
     /// </summary>
     [UsedImplicitly]
-    private Target AzurePipelines => _ => _
+    private Target AzurePipelines => d => d
                                          .DependsOn(PrintAzurePipelinesEnvironment)
                                          .DependsOn(UploadAzurePipelinesArtifacts)
                                          .DependsOn(PublishAzurePipelinesTestResults)

@@ -1,9 +1,5 @@
 using Nuke.Common.IO;
-using Nuke.Common.Tooling;
 using Nuke.Common.Tools.ReportGenerator;
-using Nuke.Common.Utilities.Collections;
-using Rocket.Surgery.Nuke.DotNetCore;
-using static Nuke.Common.IO.FileSystemTasks;
 
 namespace Rocket.Surgery.Nuke;
 
@@ -19,9 +15,20 @@ public static class Extensions
     /// <param name="value"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public static T As<T>(this T value)
+    public static T As<T>(this T value) where T : notnull
     {
         return value;
+    }
+
+    /// <summary>
+    ///     Convert a given build into it's implementation interface
+    /// </summary>
+    /// <param name="value"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static T CastAs<T>(this object value) where T : notnull
+    {
+        return (T)value;
     }
 
     // ReSharper disable once CommentTypo

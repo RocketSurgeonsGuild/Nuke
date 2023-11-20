@@ -1,4 +1,4 @@
-﻿namespace Rocket.Surgery.Nuke;
+namespace Rocket.Surgery.Nuke;
 
 /// <summary>
 ///     Defines the build target

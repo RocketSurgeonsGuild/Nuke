@@ -1,4 +1,4 @@
-﻿namespace Rocket.Surgery.Nuke.ContinuousIntegration;
+namespace Rocket.Surgery.Nuke.ContinuousIntegration;
 
 // ReSharper disable InconsistentNaming
 /// <summary>
@@ -23,7 +23,7 @@ public interface ICIEnvironment : IHaveBuildVersion
     /// <summary>
     ///     Prints CI environment state for debug purposes
     /// </summary>
-    public Target CIEnvironment => _ => _
+    public Target CIEnvironment => d => d
                                        .TriggeredBy(BuildVersion)
                                        .OnlyWhenStatic(() => NukeBuild.IsServerBuild)
                                        .Executes(

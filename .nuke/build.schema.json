@@ -54,6 +54,13 @@
             "VSCode"
           ]
         },
+        "LintFiles": {
+          "type": "array",
+          "description": "The files to lint, if not given lints all files",
+          "items": {
+            "type": "string"
+          }
+        },
         "NoLogo": {
           "type": "boolean",
           "description": "Disables displaying the NUKE logo"
@@ -91,6 +98,7 @@
               "CoreRestore",
               "CoreTest",
               "Default",
+              "DotNetFormat",
               "DotnetToolRestore",
               "Generate_Code_Coverage_Badges",
               "Generate_Code_Coverage_Report",
@@ -101,6 +109,9 @@
               "GenerateCodeCoverageReportCobertura",
               "GenerateCodeCoverageSummary",
               "GenerateReadme",
+              "Lint",
+              "LintPublicApiAnalyzers",
+              "MoveUnshippedToShipped",
               "Pack",
               "Restore",
               "T",
@@ -129,6 +140,7 @@
               "CoreRestore",
               "CoreTest",
               "Default",
+              "DotNetFormat",
               "DotnetToolRestore",
               "Generate_Code_Coverage_Badges",
               "Generate_Code_Coverage_Report",
@@ -139,6 +151,9 @@
               "GenerateCodeCoverageReportCobertura",
               "GenerateCodeCoverageSummary",
               "GenerateReadme",
+              "Lint",
+              "LintPublicApiAnalyzers",
+              "MoveUnshippedToShipped",
               "Pack",
               "Restore",
               "T",

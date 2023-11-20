@@ -17,7 +17,9 @@ internal class CodacySection : IBadgeSection
             return string.Empty;
         }
 
+        // ReSharper disable once NullableWarningSuppressionIsUsed
         var github = (IDictionary<object, object>)githubObj!;
+        // ReSharper disable once NullableWarningSuppressionIsUsed
         var codacy = (IDictionary<object, object>)codacyObj!;
         var url = references.AddReference(
             "codacy",
