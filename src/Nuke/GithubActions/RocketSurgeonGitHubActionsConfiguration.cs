@@ -39,6 +39,11 @@ public class RocketSurgeonGitHubActionsConfiguration : ConfigurationEntity
     /// </summary>
     public Dictionary<string, string> Environment { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 
+    /// <summary>
+    /// The permissions of this workflow
+    /// </summary>
+    public GitHubActionsPermissions Permissions { get; set; } = new();
+
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
@@ -57,6 +62,8 @@ public class RocketSurgeonGitHubActionsConfiguration : ConfigurationEntity
                 DetailedTriggers.ForEach(x => x.Write(writer));
             }
         }
+
+        Permissions.Write(writer);
 
         writer.WriteKeyValues("env", Environment);
 

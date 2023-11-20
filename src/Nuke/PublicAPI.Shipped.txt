@@ -495,6 +495,7 @@ Rocket.Surgery.Nuke.ICanClean.Clean.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ICanLint
 Rocket.Surgery.Nuke.ICanLint.Lint.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ICanLint.PostLint.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.ICanLintStagedFiles.LintStaged.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ICanPrettier
 Rocket.Surgery.Nuke.ICanPrettier.Prettier.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ICanRegenerateBuildConfiguration

@@ -27,6 +27,7 @@ public partial class Pipeline : NukeBuild,
                                 ICanPackWithDotNetCore,
                                 IHaveDataCollector,
                                 ICanClean,
+                                ICanLintStagedFiles,
                                 ICanDotNetFormat,
                                 ICanPrettier,
                                 IHavePublicApis,
@@ -34,7 +35,6 @@ public partial class Pipeline : NukeBuild,
                                 IGenerateCodeCoverageReport,
                                 IGenerateCodeCoverageSummary,
                                 IGenerateCodeCoverageBadges,
-                                ICanRegenerateBuildConfiguration,
                                 IHaveConfiguration<Configuration>
 {
     /// <summary>

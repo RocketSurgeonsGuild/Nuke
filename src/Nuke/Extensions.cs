@@ -1,5 +1,7 @@
+using System.Collections.ObjectModel;
 using Nuke.Common.IO;
 using Nuke.Common.Tools.ReportGenerator;
+using Nuke.Common.Utilities.Collections;
 
 namespace Rocket.Surgery.Nuke;
 
@@ -53,5 +55,39 @@ public static class Extensions
     public static T SetReports<T>(this T toolSettings, IEnumerable<AbsolutePath> reports) where T : ReportGeneratorSettings
     {
         return toolSettings.SetReports(reports.Select(z => z.ToString()).ToArray());
+    }
+
+    /// <summary>
+    /// Add a value to the dictionary if it's missing
+    /// </summary>
+    /// <param name="dictionary"></param>
+    /// <param name="key"></param>
+    /// <param name="value"></param>
+    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TValue"></typeparam>
+    /// <returns></returns>
+    public static IDictionary<TKey, TValue> AddIfMissing<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue value) where TKey : notnull
+    {
+        if (dictionary.TryGetValue(key, out _)) return dictionary;
+        dictionary[key] = value;
+        return dictionary;
+    }
+
+    /// <summary>
+    /// Add a value to the dictionary if it's missing
+    /// </summary>
+    /// <param name="dictionary"></param>
+    /// <param name="key"></param>
+    /// <param name="value"></param>
+    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TValue"></typeparam>
+    /// <returns></returns>
+    public static IReadOnlyDictionary<TKey, TValue> AddIfMissing<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> dictionary, TKey key, TValue value) where TKey : notnull
+    {
+        if (dictionary.TryGetValue(key, out _)) return dictionary;
+
+        var newDictionary = dictionary.ToDictionary(z => z.Key, z => z.Value);
+        newDictionary[key] = value;
+        return new ReadOnlyDictionary<TKey, TValue>(newDictionary);
     }
 }

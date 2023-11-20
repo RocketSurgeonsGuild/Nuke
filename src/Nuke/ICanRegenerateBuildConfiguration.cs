@@ -10,7 +10,7 @@ namespace Rocket.Surgery.Nuke;
 /// </summary>
 public interface ICanRegenerateBuildConfiguration
 {
-    private Target RegenerateBuildConfigurations => t =>
+    internal Target RegenerateBuildConfigurations => t =>
         t
            .Unlisted()
            .Executes(
@@ -21,13 +21,12 @@ public interface ICanRegenerateBuildConfiguration
                                        .OfType<IConfigurationGenerator>();
 
                     allHosts
-                       .Select(z => $"""{Assembly.GetEntryAssembly().Location} --{BuildServerConfigurationGeneration.ConfigurationParameterName} {z.Id} --host {z.HostName}""")
+                        // ReSharper disable once NullableWarningSuppressionIsUsed
+                       .Select(z => $"""{Assembly.GetEntryAssembly()!.Location} --{BuildServerConfigurationGeneration.ConfigurationParameterName} {z.Id} --host {z.HostName}""")
                        .ForEach(
                             command => DotNetTasks.DotNet(
                                 command,
-                                environmentVariables: EnvironmentInfo.Variables.ContainsKey("NUKE_INTERNAL_INTERCEPTOR")
-                                    ? EnvironmentInfo.Variables
-                                    : new Dictionary<string, string> { ["NUKE_INTERNAL_INTERCEPTOR"] = "1" }.AddDictionary(EnvironmentInfo.Variables)
+                                environmentVariables: EnvironmentInfo.Variables.AddIfMissing("NUKE_INTERNAL_INTERCEPTOR", "1")
                             )
                         );
                 }

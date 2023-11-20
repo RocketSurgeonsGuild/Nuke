@@ -23,7 +23,7 @@ public abstract class RocketSurgeonsGithubActionsJobBase : ConfigurationEntity
     /// <summary>
     ///     The name of the job
     /// </summary>
-    public string Name { get; }
+    public string Name { get; set; }
 
     /// <summary>
     ///     The dependencies of this job
@@ -39,7 +39,6 @@ public abstract class RocketSurgeonsGithubActionsJobBase : ConfigurationEntity
     ///     The condition to run this job under
     /// </summary>
     public GithubActionCondition? If { get; set; }
-
 
     /// <summary>
     ///     The outputs of this job

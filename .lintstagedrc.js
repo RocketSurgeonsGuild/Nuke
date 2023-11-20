@@ -1,16 +1,10 @@
-function forEachChunk(chunks, callback, chunkSize = 50) {
-    var mappedFiles = [];
-    var files = chunks.concat();
-    while (files.length > 0) {
-        var chunk = files.splice(0, chunkSize);
-        mappedFiles = mappedFiles.concat(callback(chunk));
-    }
-    return mappedFiles;
+if (!process.env.NUKE_BUILD_ASSEMBLY) {
+    throw new Error("Environment variable 'NUKE_BUILD_ASSEMBLY' is not set.");
 }
 
 module.exports = {
-    '!(*verified|*received).cs': filenames => [`dotnet .build/bin/Debug/net6.0/.build.dll lint --lint-files ${filenames.join(' ')}`],
-    '*.{Shipped.txt,Unshipped.txt}': filenames => [`dotnet .build/bin/Debug/net6.0/.build.dll move-unshipped-to-shipped --lint-files ${filenames.join(' ')}`],
-    '*.{csproj,targets,props,xml}': filenames => forEachChunk(filenames, chunk => [`prettier --write '${chunk.join(`' '`)}'`]),
-    '*.{js,ts,jsx,tsx,json,yml,yaml}': filenames => forEachChunk(filenames, chunk => [`prettier --write '${chunk.join(`' '`)}'`]),
+    '!(*verified|*received).cs': filenames => [`dotnet ${process.env.NUKE_BUILD_ASSEMBLY} lint --lint-files ${filenames.join(' ')}`],
+    '*.{Shipped.txt,Unshipped.txt}': filenames => [`dotnet ${process.env.NUKE_BUILD_ASSEMBLY} move-unshipped-to-shipped --lint-files ${filenames.join(' ')}`],
+    '*.{csproj,targets,props,xml}': filenames => [`prettier --write '${filenames.join(`' '`)}`],
+    '*.{js,ts,jsx,tsx,json,yml,yaml}': filenames => [`prettier --write '${filenames.join(`' '`)}`],
 };

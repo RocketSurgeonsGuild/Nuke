@@ -1,9 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-dotnet nuke --help > /dev/null 2>&1 || true
-export NUKE_INTERNAL_INTERCEPTOR=1
-npx lint-staged -d -r
-dotnet .build/bin/Debug/net6.0/.build.dll regenerate-build-configurations
-git add .github/workflows/*.yml
-git add .nuke/build.schema.json
+dotnet nuke lint-staged

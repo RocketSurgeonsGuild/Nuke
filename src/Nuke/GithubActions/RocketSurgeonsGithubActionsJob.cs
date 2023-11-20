@@ -30,6 +30,11 @@ public class RocketSurgeonsGithubActionsJob : RocketSurgeonsGithubActionsJobBase
     public IEnumerable<string> RunsOn { get; set; } = Enumerable.Empty<string>();
 
     /// <summary>
+    /// The permissions of this workflow
+    /// </summary>
+    public GitHubActionsPermissions? Permissions { get; set; }
+
+    /// <summary>
     ///     The steps to run
     /// </summary>
     public List<GitHubActionsStep> Steps { get; set; } = new();
@@ -48,6 +53,8 @@ public class RocketSurgeonsGithubActionsJob : RocketSurgeonsGithubActionsJobBase
 
         using (writer.Indent())
         {
+            Permissions?.Write(writer);
+
             if (Matrix.Count() > 1 || !FailFast)
             {
                 writer.WriteLine("strategy:");
