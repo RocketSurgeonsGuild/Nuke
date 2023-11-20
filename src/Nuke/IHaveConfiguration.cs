@@ -1,4 +1,5 @@
 using Nuke.Common.Tooling;
+using Serilog;
 
 namespace Rocket.Surgery.Nuke;
 

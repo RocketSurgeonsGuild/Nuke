@@ -83,10 +83,10 @@ internal static class Plist
             case long:
                 Log.Verbose("integer: {Integer}", item);
                 return new XElement("integer", Convert.ToString(item, CultureInfo.InvariantCulture));
-            case bool when (item as bool?) == true:
+            case bool when ( item as bool? ) == true:
                 Log.Verbose("boolean: {Boolean}", item);
                 return new XElement("true");
-            case bool when (item as bool?) == false:
+            case bool when ( item as bool? ) == false:
                 Log.Verbose("boolean: {Boolean}", item);
                 return new XElement("false");
             case DateTime time:

@@ -12,7 +12,9 @@ public interface ICanPrettier : ICanLint
     /// </summary>
     public Target Prettier => d =>
         d
-           .DependentFor(PostLint)
+           .TriggeredBy(PostLint)
            .After(Lint)
+           .OnlyWhenDynamic(() => IsLocalBuild)
+           .OnlyWhenStatic(() => !LintPaths.Any())
            .Executes(() => ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npx"), "prettier . --write").AssertWaitForExit().AssertZeroExitCode());
 }

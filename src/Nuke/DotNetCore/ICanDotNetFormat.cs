@@ -17,7 +17,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint
     /// </summary>
     public Target DotNetFormat => d =>
         d
-           .DependentFor(PostLint)
+           .TriggeredBy(PostLint)
            .After(Lint)
            .OnlyWhenStatic(() => IsLocalBuild)
            .Executes(
@@ -31,7 +31,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint
     /// </summary>
     public Target JetBrainsCleanupCode => d =>
         d
-           .DependentFor(Lint)
+           .TriggeredBy(Lint)
            .Before(DotNetFormat)
            .OnlyWhenStatic(() => !LintPaths.Any())
            .OnlyWhenStatic(() => DotNetTool.IsInstalled("jb"))

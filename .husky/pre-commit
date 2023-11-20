@@ -4,10 +4,6 @@
 dotnet nuke --help > /dev/null 2>&1 || true
 export NUKE_INTERNAL_INTERCEPTOR=1
 npx lint-staged -d -r
-.build/bin/Debug/net6.0/.build --generate-configuration GitHubActions_ci --host GitHubActions
-git add .github/workflows/ci.yml
-.build/bin/Debug/net6.0/.build --generate-configuration GitHubActions_ci-ignore --host GitHubActions
-git add .github/workflows/ci-ignore.yml
-.build/bin/Debug/net6.0/.build --generate-configuration GitHubActions_inputs --host GitHubActions
-git add .github/workflows/inputs.yml
+dotnet .build/bin/Debug/net6.0/.build.dll regenerate-build-configurations
+git add .github/workflows/*.yml
 git add .nuke/build.schema.json

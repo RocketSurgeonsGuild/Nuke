@@ -34,6 +34,7 @@ public partial class Pipeline : NukeBuild,
                                 IGenerateCodeCoverageReport,
                                 IGenerateCodeCoverageSummary,
                                 IGenerateCodeCoverageBadges,
+                                ICanRegenerateBuildConfiguration,
                                 IHaveConfiguration<Configuration>
 {
     /// <summary>
@@ -52,7 +53,6 @@ public partial class Pipeline : NukeBuild,
                                   .DependsOn(Restore)
                                   .DependsOn(Build)
                                   .DependsOn(Test)
-                                  .DependsOn(Lint)
                                   .DependsOn(Pack);
 
     public Target Build => _ => _.Inherit<ICanBuildWithDotNetCore>(x => x.CoreBuild);
@@ -65,10 +65,6 @@ public partial class Pipeline : NukeBuild,
     public Target Lint => _ => _.Inherit<ICanLint>(x => x.Lint);
     public Target Restore => _ => _.Inherit<ICanRestoreWithDotNetCore>(x => x.CoreRestore);
     public Target Test => _ => _.Inherit<ICanTestWithDotNetCore>(x => x.CoreTest);
-
-    public Target BuildVersion => _ => _.Inherit<IHaveBuildVersion>(x => x.BuildVersion)
-                                        .Before(Default)
-                                        .Before(Clean);
 
     [Solution(GenerateProjects = true)] private Solution Solution { get; } = null!;
     Nuke.Common.ProjectModel.Solution IHaveSolution.Solution => Solution;

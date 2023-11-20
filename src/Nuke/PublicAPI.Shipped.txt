@@ -497,6 +497,7 @@ Rocket.Surgery.Nuke.ICanLint.Lint.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ICanLint.PostLint.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ICanPrettier
 Rocket.Surgery.Nuke.ICanPrettier.Prettier.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.ICanRegenerateBuildConfiguration
 Rocket.Surgery.Nuke.ICanUpdateReadme
 Rocket.Surgery.Nuke.ICanUpdateReadme.GenerateReadme.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ICanUpdateReadme.Readme.get -> Rocket.Surgery.Nuke.Readme.ReadmeUpdater!
@@ -564,6 +565,7 @@ Rocket.Surgery.Nuke.IHavePublicApis
 Rocket.Surgery.Nuke.IHavePublicApis.LintPublicApiAnalyzers.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.IHavePublicApis.MoveUnshippedToShipped.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.IHavePublicApis.PublicApiAnalyzerProjects.get -> System.Collections.Generic.IEnumerable<Nuke.Common.ProjectModel.Project!>!
+Rocket.Surgery.Nuke.IHavePublicApis.ShipPublicApis.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.IHavePublicApis.ShouldMoveUnshippedToShipped.get -> bool
 Rocket.Surgery.Nuke.IHavePublishArtifacts
 Rocket.Surgery.Nuke.IHavePublishArtifacts.PublishDirectory.get -> Nuke.Common.IO.AbsolutePath!

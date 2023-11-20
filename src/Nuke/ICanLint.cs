@@ -13,7 +13,7 @@ public interface ICanLint : INukeBuild
     public Target Lint => t => t;
 
     /// <summary>
-    ///     A lint target that runs first
+    ///     A lint target that runs last
     /// </summary>
     public Target PostLint => t => t.Unlisted().After(Lint).TriggeredBy(Lint);
 

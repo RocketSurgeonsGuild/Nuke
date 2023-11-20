@@ -91,7 +91,6 @@
             "type": "string",
             "enum": [
               "Build",
-              "BuildVersion",
               "Clean",
               "CoreBuild",
               "CorePack",
@@ -112,7 +111,9 @@
               "Pack",
               "PostLint",
               "Prettier",
+              "RegenerateBuildConfigurations",
               "Restore",
+              "ShipPublicApis",
               "Test",
               "TriggerCodeCoverageReports",
               "WithOutputs"
@@ -130,7 +131,6 @@
             "type": "string",
             "enum": [
               "Build",
-              "BuildVersion",
               "Clean",
               "CoreBuild",
               "CorePack",
@@ -151,7 +151,9 @@
               "Pack",
               "PostLint",
               "Prettier",
+              "RegenerateBuildConfigurations",
               "Restore",
+              "ShipPublicApis",
               "Test",
               "TriggerCodeCoverageReports",
               "WithOutputs"

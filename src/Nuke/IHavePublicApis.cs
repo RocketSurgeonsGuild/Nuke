@@ -9,7 +9,7 @@ namespace Rocket.Surgery.Nuke;
 /// <summary>
 ///     Defines targets for a library project that tracks apis using the Microsoft.CodeAnalysis.PublicApiAnalyzers package
 /// </summary>
-public interface IHavePublicApis : ICanDotNetFormat
+public interface IHavePublicApis : IHaveSolution, ICanLint
 {
     /// <summary>
     ///     Determine if Unshipped apis should always be pushed the Shipped file used in lint-staged to automatically update the shipped file
@@ -22,7 +22,7 @@ public interface IHavePublicApis : ICanDotNetFormat
     public IEnumerable<Project> PublicApiAnalyzerProjects => Solution
                                                             .AllProjects
                                                             .Where(z => z.HasPackageReference("Microsoft.CodeAnalysis.PublicApiAnalyzers"))
-                                                            .Where(z => !LintPaths.Any() || LintPaths.Any(x => z.Directory.Contains(x)));
+                                                            .Where(z => !LintPaths.Any() || LintPaths.Any(path => z.Directory.Contains(path)));
 #pragma warning restore CA1860
 
 
@@ -39,10 +39,17 @@ public interface IHavePublicApis : ICanDotNetFormat
     /// <summary>
     ///     Setup to lint the public api projects
     /// </summary>
+    public Target ShipPublicApis => d =>
+        d.Triggers(LintPublicApiAnalyzers);
+
+    /// <summary>
+    ///     Setup to lint the public api projects
+    /// </summary>
     [UsedImplicitly]
     public Target LintPublicApiAnalyzers => d =>
         d
-           .DependentFor(Lint)
+           .TriggeredBy(Lint)
+           .OnlyWhenDynamic(() => IsLocalBuild)
            .Unlisted()
            .Executes(
                 async () =>
@@ -82,7 +89,7 @@ public interface IHavePublicApis : ICanDotNetFormat
     public Target MoveUnshippedToShipped => d =>
         d
            .After(LintPublicApiAnalyzers)
-           .DependentFor(Lint)
+           .TriggeredBy(LintPublicApiAnalyzers)
            .OnlyWhenDynamic(() => ShouldMoveUnshippedToShipped)
            .Executes(
                 async () =>
