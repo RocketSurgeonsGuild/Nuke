@@ -87,7 +87,7 @@ public static class DotNetTool
         public Tool GetTool(string nugetPackageName) => CommandDefinitions.TryGetValue(nugetPackageName, out var tool)
             ? (arguments, directory, variables, timeout, output, invocation, logger, handler) =>
             {
-                var args = arguments.ToStringAndClear().TrimMatchingDoubleQuotes();
+                var args = arguments.ToStringAndClear();
                 args = args.StartsWith('"')
                     ? string.Concat("\"", tool.Command, " ", args.AsSpan(1))
                     : string.Concat(tool.Command, " ", args);

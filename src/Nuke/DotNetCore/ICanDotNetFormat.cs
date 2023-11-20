@@ -31,14 +31,14 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint
     public Target JetBrainsCodeCleanup => d =>
         d
            .DependentFor(Lint)
-           .OnlyWhenStatic(() => IsLocalBuild)
+           .OnlyWhenStatic(() => false)
            .OnlyWhenStatic(() => !LintPaths.Any())
            .OnlyWhenStatic(() => DotNetTool.IsInstalled("jb"))
            .Executes(
                 () =>
                 {
                     DotNetTool.GetTool("jb")(
-                        $""""cleanupcode {Solution.Path} --profile="Full Cleanup" --disable-settings-layers=GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal""""
+                        $""""cleanupcode {Solution.Path} --profile='Full Cleanup' --disable-settings-layers='GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal'""""
                     );
                 }
             );
