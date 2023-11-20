@@ -1,5 +1,7 @@
 using Nuke.Common.CI;
 
+#pragma warning disable CA2227 // Collection properties should be read only
+#pragma warning disable CA1002 // Do not expose generic lists
 namespace Rocket.Surgery.Nuke.GithubActions;
 
 /// <summary>
@@ -50,7 +52,7 @@ public abstract class RocketSurgeonsGithubActionsJobBase : ConfigurationEntity
         writer.WriteLine($"{Name}:");
         using (writer.Indent())
         {
-            if (Needs.Any())
+            if (Needs.Count > 0)
             {
                 writer.WriteLine("needs:");
                 using (writer.Indent())

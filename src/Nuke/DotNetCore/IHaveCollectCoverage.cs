@@ -1,4 +1,4 @@
-﻿namespace Rocket.Surgery.Nuke.DotNetCore;
+namespace Rocket.Surgery.Nuke.DotNetCore;
 
 /// <summary>
 ///     Defines the `CollectCoverage` property

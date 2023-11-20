@@ -1,8 +1,6 @@
-﻿using Nuke.Common.IO;
+using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
-using Nuke.Common.Utilities.Collections;
-using static Nuke.Common.IO.FileSystemTasks;
 
 namespace Rocket.Surgery.Nuke.DotNetCore;
 
@@ -23,8 +21,9 @@ public interface ICanTestWithDotNetCore : IHaveCollectCoverage,
     /// <summary>
     ///     dotnet test
     /// </summary>
-    public Target CoreTest => _ => _
+    public Target CoreTest => d => d
                                   .Description("Executes all the unit tests.")
+                                  .Unlisted()
                                   .After(Build)
                                   .OnlyWhenDynamic(() => TestsDirectory.GlobFiles("**/*.csproj").Count > 0)
                                   .WhenSkipped(DependencyBehavior.Execute)
@@ -51,7 +50,7 @@ public interface ICanTestWithDotNetCore : IHaveCollectCoverage,
                                                .EnableNoRestore()
                                                .EnableNoBuild()
                                                .SetLoggers("trx")
-                                                // DeterministicSourcePaths being true breaks coverlet!
+                                               // DeterministicSourcePaths being true breaks coverlet!
                                                .SetProperty("DeterministicSourcePaths", "false")
                                                .SetResultsDirectory(TestResultsDirectory)
                                                .When(

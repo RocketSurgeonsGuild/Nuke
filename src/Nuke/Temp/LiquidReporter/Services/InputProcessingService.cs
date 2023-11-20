@@ -1,4 +1,4 @@
-﻿using LiquidTestReports.Cli.adapters;
+using LiquidTestReports.Cli.adapters;
 using LiquidTestReports.Core.Drops;
 using LiquidTestReports.Core.Models;
 using Rocket.Surgery.Nuke.Temp.LiquidReporter.Loaders;

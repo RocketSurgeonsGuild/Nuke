@@ -1,4 +1,4 @@
-﻿using Nuke.Common.Git;
+using Nuke.Common.Git;
 
 namespace Rocket.Surgery.Nuke;
 
@@ -13,6 +13,5 @@ public interface IHaveGitRepository : IHave
     /// <summary>
     ///     The Git Repository currently being built
     /// </summary>
-    [OptionalGitRepository]
-    public GitRepository? GitRepository => null;
+    GitRepository? GitRepository { get; }
 }

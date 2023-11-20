@@ -1,4 +1,4 @@
-﻿using Nuke.Common.IO;
+using Nuke.Common.IO;
 using Rocket.Surgery.Nuke.Readme;
 
 namespace Rocket.Surgery.Nuke;
@@ -23,7 +23,7 @@ public interface ICanUpdateReadme : IHaveSolution
     ///     Loops through the Readme to update sections that are automated to give nuget packages, build histories and more, while
     ///     keeping the rest of the readme correct.
     /// </summary>
-    public Target GenerateReadme => _ => _
+    public Target GenerateReadme => d => d
                                         .Unlisted()
                                         .OnlyWhenStatic(() => NukeBuild.IsLocalBuild)
                                         .Executes(

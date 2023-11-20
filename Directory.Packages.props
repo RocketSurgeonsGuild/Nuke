@@ -1,48 +1,48 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Project>
-  <ItemGroup>
-    <!-- <PackageVersion Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="2.9.8" /> -->
-    <PackageVersion Include="Docfx.App" Version="2.73.2" />
-    <PackageVersion Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" />
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-    <PackageVersion Include="Rocket.Surgery.MSBuild.CI" Version="1.1.5" />
-    <PackageVersion Include="Rocket.Surgery.MSBuild.GitVersion" Version="1.1.5" />
-    <PackageVersion Include="Rocket.Surgery.MSBuild.JetBrains.Annotations" Version="1.1.5" Condition="'$(MSBuildProjectName)'!='.build'" />
-    <PackageVersion Include="Rocket.Surgery.MSBuild.Metadata" Version="1.1.0" />
-    <PackageVersion Include="Rocket.Surgery.MSBuild.SourceLink" Version="1.1.5" />
-    <PackageVersion Include="Roslynator.Analyzers" Version="4.6.2" />
-    <PackageVersion Include="Roslynator.Formatting.Analyzers" Version="4.6.2" />
-    <PackageVersion Include="Roslynator.CodeAnalysis.Analyzers" Version="4.6.2" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageVersion Include="Buildalyzer" Version="5.0.1" />
-    <PackageVersion Include="GitVersion.Tool" Version="5.12.0" />
-    <PackageVersion Include="Humanizer.Core" Version="2.14.1" />
-    <PackageVersion Include="Nuke.Common" Version="7.0.6" />
-    <PackageVersion Include="ReportGenerator" Version="5.2.0" />
-    <PackageVersion Include="YamlDotNet" Version="13.7.1" />
-    <PackageVersion Include="JetBrains.ReSharper.GlobalTools" Version="2023.2.3" />
-    <PackageVersion Include="LiquidTestReports.Core" Version="1.3.2-beta" />
-    <PackageVersion Include="System.Collections.Immutable" Version="8.0.0" />
-    <PackageVersion Include="System.Interactive" Version="6.0.1" />
-    <PackageVersion Include="System.Interactive.Async" Version="6.0.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageVersion Include="Bogus" Version="34.0.2" />
-    <PackageVersion Include="coverlet.collector" Version="6.0.0" />
-    <PackageVersion Include="coverlet.msbuild" Version="6.0.0" />
-    <PackageVersion Include="FakeItEasy" Version="8.0.0" />
-    <PackageVersion Include="FakeItEasy.Analyzer.CSharp" Version="6.1.1" />
-    <PackageVersion Include="FluentAssertions" Version="6.12.0" />
-    <PackageVersion Include="FluentAssertions.Analyzers" Version="0.26.0" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
-    <PackageVersion Include="Rocket.Surgery.Extensions.Testing.FakeItEasy" Version="8.0.3" />
-    <PackageVersion Include="Rocket.Surgery.Extensions.Testing.XUnit" Version="8.0.3" />
-    <PackageVersion Include="xunit" Version="2.6.2" />
-    <PackageVersion Include="xunit.analyzers" Version="1.6.0" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.4" />
-  </ItemGroup>
-  <Import
+    <ItemGroup>
+        <PackageVersion Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" />
+        <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+        <PackageVersion Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="3.3.4" />
+        <PackageVersion Include="Rocket.Surgery.MSBuild.CI" Version="1.1.5" />
+        <PackageVersion Include="Rocket.Surgery.MSBuild.GitVersion" Version="1.1.5" />
+        <PackageVersion Include="Rocket.Surgery.MSBuild.JetBrains.Annotations" Version="1.1.5" Condition="'$(MSBuildProjectName)'!='.build'" />
+        <PackageVersion Include="Rocket.Surgery.MSBuild.SourceLink" Version="1.1.5" />
+        <PackageVersion Include="Polyfill" Version="1.32.1" />
+        <PackageVersion Include="Roslynator.Analyzers" Version="4.6.2" />
+        <PackageVersion Include="Roslynator.Formatting.Analyzers" Version="4.6.2" />
+        <PackageVersion Include="Roslynator.CodeAnalysis.Analyzers" Version="4.6.2" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageVersion Include="Docfx.App" Version="2.73.2" />
+        <PackageVersion Include="Buildalyzer" Version="5.0.1" />
+        <PackageVersion Include="GitVersion.Tool" Version="5.12.0" />
+        <PackageVersion Include="Humanizer.Core" Version="2.14.1" />
+        <PackageVersion Include="Nuke.Common" Version="7.0.6" />
+        <PackageVersion Include="ReportGenerator" Version="5.2.0" />
+        <PackageVersion Include="YamlDotNet" Version="13.7.1" />
+        <PackageVersion Include="JetBrains.ReSharper.GlobalTools" Version="2023.2.3" />
+        <PackageVersion Include="LiquidTestReports.Core" Version="1.3.2-beta" />
+        <PackageVersion Include="System.Collections.Immutable" Version="8.0.0" />
+        <PackageVersion Include="System.Interactive" Version="6.0.1" />
+        <PackageVersion Include="System.Interactive.Async" Version="6.0.1" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageVersion Include="Bogus" Version="34.0.2" />
+        <PackageVersion Include="coverlet.collector" Version="6.0.0" />
+        <PackageVersion Include="coverlet.msbuild" Version="6.0.0" />
+        <PackageVersion Include="FakeItEasy" Version="8.0.0" />
+        <PackageVersion Include="FakeItEasy.Analyzer.CSharp" Version="6.1.1" />
+        <PackageVersion Include="FluentAssertions" Version="6.12.0" />
+        <PackageVersion Include="FluentAssertions.Analyzers" Version="0.26.0" />
+        <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+        <PackageVersion Include="Rocket.Surgery.Extensions.Testing.FakeItEasy" Version="8.0.3" />
+        <PackageVersion Include="Rocket.Surgery.Extensions.Testing.XUnit" Version="8.0.3" />
+        <PackageVersion Include="xunit" Version="2.6.1" />
+        <PackageVersion Include="xunit.analyzers" Version="1.5.0" />
+        <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.3" />
+    </ItemGroup>
+    <Import
         Project="$(MSBuildThisFileDirectory)/Directory.Packages.support.props"
         Condition="Exists('$(MSBuildThisFileDirectory)/Directory.Packages.support.props')"
     />

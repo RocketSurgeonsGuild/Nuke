@@ -1,4 +1,4 @@
-﻿using Nuke.Common.CI.GitHubActions.Configuration;
+using Nuke.Common.CI.GitHubActions.Configuration;
 
 // ReSharper disable MemberCanBePrivate.Global
 #pragma warning disable CA2227
@@ -48,7 +48,9 @@ public abstract class BaseGitHubActionsStep : GitHubActionsStep
     /// <summary>
     ///     The outputs of this step
     /// </summary>
+#pragma warning disable CA1002
     public List<GitHubActionsOutput> Outputs { get; set; } = new();
+#pragma warning restore CA1002
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)

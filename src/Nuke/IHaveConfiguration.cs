@@ -1,4 +1,5 @@
-﻿using Nuke.Common.Tooling;
+using Nuke.Common.Tooling;
+using Serilog;
 
 namespace Rocket.Surgery.Nuke;
 
@@ -17,7 +18,7 @@ public interface IHaveConfiguration : IHave
 ///     Defines the configuration as strongly typed enumeration
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public interface IHaveConfiguration<T> : IHaveConfiguration
+public interface IHaveConfiguration<out T> : IHaveConfiguration
     where T : Enumeration
 {
     /// <summary>

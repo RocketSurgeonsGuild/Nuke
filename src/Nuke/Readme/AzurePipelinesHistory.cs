@@ -31,6 +31,6 @@ internal class AzurePipelinesHistory : IHistorySection
             "Azure Pipelines History"
         );
 
-        return ( $"[!{badge}]{url}", $"[!{historyBadge}]{historyUrl}" );
+        return ($"[!{badge}]{url}", $"[!{historyBadge}]{historyUrl}");
     }
 }

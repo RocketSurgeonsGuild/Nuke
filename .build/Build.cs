@@ -3,6 +3,7 @@ using Nuke.Common;
 using Nuke.Common.CI;
 using Nuke.Common.Execution;
 using Nuke.Common.Git;
+using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
@@ -26,10 +27,14 @@ public partial class Pipeline : NukeBuild,
                                 ICanPackWithDotNetCore,
                                 IHaveDataCollector,
                                 ICanClean,
+                                ICanDotNetFormat,
+                                ICanPrettier,
+                                IHavePublicApis,
                                 ICanUpdateReadme,
                                 IGenerateCodeCoverageReport,
                                 IGenerateCodeCoverageSummary,
                                 IGenerateCodeCoverageBadges,
+                                ICanRegenerateBuildConfiguration,
                                 IHaveConfiguration<Configuration>
 {
     /// <summary>
@@ -44,9 +49,6 @@ public partial class Pipeline : NukeBuild,
         return Execute<Pipeline>(x => x.Default);
     }
 
-
-    private Target T => _ => _.Executes(() => Solution);
-
     private Target Default => _ => _
                                   .DependsOn(Restore)
                                   .DependsOn(Build)
@@ -60,15 +62,14 @@ public partial class Pipeline : NukeBuild,
 
 
     public Target Clean => _ => _.Inherit<ICanClean>(x => x.Clean);
+    public Target Lint => _ => _.Inherit<ICanLint>(x => x.Lint);
     public Target Restore => _ => _.Inherit<ICanRestoreWithDotNetCore>(x => x.CoreRestore);
     public Target Test => _ => _.Inherit<ICanTestWithDotNetCore>(x => x.CoreTest);
 
-    public Target BuildVersion => _ => _.Inherit<IHaveBuildVersion>(x => x.BuildVersion)
-                                        .Before(Default)
-                                        .Before(Clean);
-
     [Solution(GenerateProjects = true)] private Solution Solution { get; } = null!;
     Nuke.Common.ProjectModel.Solution IHaveSolution.Solution => Solution;
+    [ComputedGitVersion] public GitVersion GitVersion { get; } = null!;
+    [OptionalGitRepository] public GitRepository? GitRepository { get; }
     [Parameter] public string? GitHubToken { get; }
     [Parameter("Configuration to build")] public Configuration Configuration { get; } = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 }

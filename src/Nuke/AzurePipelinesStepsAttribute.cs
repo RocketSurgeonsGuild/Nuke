@@ -99,7 +99,7 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
 
         var lookupTable = new LookupTable<ExecutableTarget, AzurePipelinesStep>();
         var steps = relevantTargets
-                   .Select(x => ( ExecutableTarget: x, Job: GetStep(x, relevantTargets, lookupTable) ))
+                   .Select(x => (ExecutableTarget: x, Job: GetStep(x, relevantTargets, lookupTable)))
                    .ForEachLazy(x => lookupTable.Add(x.ExecutableTarget, x.Job))
                    .Select(x => x.Job).ToArray();
 
@@ -124,7 +124,7 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
     )
     {
         var chainLinkNames = GetInvokedTargets(executableTarget, relevantTargets).Select(z => z.Name).ToArray();
-        var tool = DotnetTool.IsInstalled("codecov.tool") ? "dotnet nuke" : "nuke";
+        var tool = DotNetTool.IsInstalled("codecov.tool") ? "dotnet nuke" : "nuke";
 
         return new AzurePipelinesStep
         {

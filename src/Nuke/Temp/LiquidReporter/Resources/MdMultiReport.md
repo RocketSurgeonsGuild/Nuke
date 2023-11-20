@@ -15,7 +15,9 @@
 {%- else -%}
 {%- assign overall = '❌ Fail' *-%}
 {%- endif -%}
+
 # {{ library.parameters.Title }}
+
 ### Run Summary
 
 <p>
@@ -62,11 +64,14 @@
 {%- else -%}
 {%- assign set_outcome = '❌ Fail' *-%}
 {%- endif -%}
+
 #### {{ set.source }}
+
 <strong>Group Result:</strong> {{set_outcome}} <br />
 <strong>Pass Rate:</strong> {{ passed_total | divide_by_decimal: group_total | times: 100.0 | round: 2 }}% <br />
 <strong>Tests:</strong> {{ set.results | size }} <br />
 <strong>Duration:</strong> {{ set.duration | format_duration }} <br />
+
 <details open>
 <summary><strong>Results:</strong></summary>
 {%- if passed_total > 0 -%}

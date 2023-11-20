@@ -21,6 +21,7 @@ internal static class SolutionUpdater
         IEnumerable<string> additionalConfigFolderFilePatterns
     )
     {
+        if (EnvironmentInfo.GetVariable("NUKE_INTERNAL_INTERCEPTOR") == "1") return;
         if (solution.GetSolutionFolder("config") is not { } configFolder)
         {
             configFolder = solution.AddSolutionFolder("config");
@@ -88,7 +89,7 @@ internal static class SolutionUpdater
         }
     }
 
-    private static IEnumerable<Action> AddConfigurationFiles(
+    private static List<Action> AddConfigurationFiles(
         Solution solution,
         IEnumerable<string> additionalRelativeFolderFilePatterns,
         IEnumerable<string> additionalConfigFolderFilePatterns,
@@ -143,6 +144,7 @@ internal static class SolutionUpdater
     {
         var folder = path.Parent == NukeBuild.RootDirectory
             ? configFolder
+            // ReSharper disable once NullableWarningSuppressionIsUsed
             : GetNestedFolder(solution, null, NukeBuild.RootDirectory.GetRelativePathTo(path.Parent).ToUnixRelativePath())!;
         return AddSolutionItemToFolder(folder, NukeBuild.RootDirectory.GetUnixRelativePathTo(path));
     }

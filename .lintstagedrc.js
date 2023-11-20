@@ -8,19 +8,9 @@ function forEachChunk(chunks, callback, chunkSize = 50) {
     return mappedFiles;
 }
 
-function cleanupcode(filenames) {
-    var sln = require('./.nuke/parameters.json').Solution;
-    return forEachChunk(filenames, chunk => [
-        `dotnet jb cleanupcode ${sln} "--profile=Full Cleanup" "--disable-settings-layers=GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal" "--include=${chunk.join(
-            ';'
-        )}"`,
-    ]);
-}
-
 module.exports = {
-    '!(*verified|*received).cs': filenames => {
-        return [`echo "'${filenames.join(`' '`)}'" | dotnet format --include -`]; //.concat(cleanupcode(filenames));
-    },
+    '!(*verified|*received).cs': filenames => [`dotnet .build/bin/Debug/net6.0/.build.dll lint --lint-files ${filenames.join(' ')}`],
+    '*.{Shipped.txt,Unshipped.txt}': filenames => [`dotnet .build/bin/Debug/net6.0/.build.dll move-unshipped-to-shipped --lint-files ${filenames.join(' ')}`],
     '*.{csproj,targets,props,xml}': filenames => forEachChunk(filenames, chunk => [`prettier --write '${chunk.join(`' '`)}'`]),
     '*.{js,ts,jsx,tsx,json,yml,yaml}': filenames => forEachChunk(filenames, chunk => [`prettier --write '${chunk.join(`' '`)}'`]),
 };

@@ -1,4 +1,4 @@
-﻿using Nuke.Common.Execution;
+using Nuke.Common.Execution;
 using Nuke.Common.Utilities.Collections;
 using Serilog;
 
@@ -72,5 +72,6 @@ public sealed class PrintCIEnvironmentAttribute : BuildExtensionAttributeBase, I
         new ContinuousIntegrationConventionsAttribute().OnBuildFinished();
     }
 
+    /// <inheritdoc />
     public override float Priority { get; set; } = -1000;
 }

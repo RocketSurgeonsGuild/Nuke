@@ -1,4 +1,4 @@
-﻿using Nuke.Common.CI.GitHubActions.Configuration;
+using Nuke.Common.CI.GitHubActions.Configuration;
 
 #pragma warning disable CA1002
 #pragma warning disable CA2227

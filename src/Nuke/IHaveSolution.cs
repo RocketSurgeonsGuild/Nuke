@@ -1,4 +1,4 @@
-﻿using Nuke.Common.ProjectModel;
+using Nuke.Common.ProjectModel;
 
 namespace Rocket.Surgery.Nuke;
 

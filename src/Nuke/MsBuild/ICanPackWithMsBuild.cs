@@ -1,4 +1,4 @@
-﻿using Nuke.Common.IO;
+using Nuke.Common.IO;
 using Nuke.Common.Tools.NuGet;
 
 namespace Rocket.Surgery.Nuke.MsBuild;
@@ -22,8 +22,9 @@ public interface ICanPackWithMsBuild : IHavePackTarget,
     /// <summary>
     ///     nuget pack
     /// </summary>
-    public Target NetPack => _ => _
+    public Target NetPack => d => d
                                  .DependsOn(Build)
+                                 .Unlisted()
                                  .After(Test)
                                  .Executes(
                                       () =>
@@ -37,7 +38,7 @@ public interface ICanPackWithMsBuild : IHavePackTarget,
                                                              .SetTargetPath(project)
                                                              .SetConfiguration(Configuration)
                                                              .SetGitVersionEnvironment(GitVersion)
-                                                             .SetVersion(GitVersion?.NuGetVersionV2)
+                                                             .SetVersion(GitVersion.NuGetVersionV2)
                                                              .SetOutputDirectory(NuGetPackageDirectory)
                                                              .EnableSymbols()
                                                   );

@@ -68,7 +68,7 @@ public partial class Pipeline
 {
     public static RocketSurgeonGitHubActionsConfiguration CiIgnoreMiddleware(RocketSurgeonGitHubActionsConfiguration configuration)
     {
-        ((RocketSurgeonsGithubActionsJob)configuration.Jobs[0]).Steps = new List<GitHubActionsStep>
+        ( (RocketSurgeonsGithubActionsJob)configuration.Jobs[0] ).Steps = new List<GitHubActionsStep>
         {
             new RunStep("N/A")
             {
@@ -83,6 +83,7 @@ public partial class Pipeline
                                         .Requires(() => ThisIsAInput)
                                         .Executes(() => GitHubActions.Instance?.SetOutput("iSetAThing", "myValue"));
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     [Parameter] public string ThisIsAInput { get; set; }
     [Parameter] public string ThisIsAnotherInput { get; set; }
     [Parameter] public string ThisIsADifferentOutput { get; set; }
@@ -91,6 +92,7 @@ public partial class Pipeline
     [Parameter(Name = "THIS_IS_A_VARIABLE")] public string ThisIsAVariable { get; set; }
     [Parameter] public string ThisIsAEnv { get; set; }
     [Parameter] public string ThisIsASecret { get; set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
     public static RocketSurgeonGitHubActionsConfiguration CiMiddleware(RocketSurgeonGitHubActionsConfiguration configuration)
     {

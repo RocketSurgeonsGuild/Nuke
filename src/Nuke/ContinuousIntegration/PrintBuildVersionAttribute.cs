@@ -1,4 +1,4 @@
-﻿using Nuke.Common.Execution;
+using Nuke.Common.Execution;
 using Serilog;
 
 // ReSharper disable SuspiciousTypeConversion.Global
@@ -24,7 +24,7 @@ public sealed class PrintBuildVersionAttribute : BuildExtensionAttributeBase, IO
         {
             Log.Logger.Information(
                 "Building version {InformationalVersion} of {SolutionName} ({Configuration}) using version {NukeVersion} of Nuke",
-                gitVersion.GitVersion?.InformationalVersion,
+                gitVersion.GitVersion.InformationalVersion,
                 solution.Solution.Name,
                 configuration.Configuration,
                 typeof(NukeBuild).Assembly.GetVersionText()
@@ -32,5 +32,6 @@ public sealed class PrintBuildVersionAttribute : BuildExtensionAttributeBase, IO
         }
     }
 
+    /// <inheritdoc />
     public override float Priority { get; set; } = -1000;
 }

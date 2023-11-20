@@ -1,4 +1,4 @@
-﻿namespace Rocket.Surgery.Nuke;
+namespace Rocket.Surgery.Nuke;
 
 /// <summary>
 ///     Includes a force flag that can be used to ensure caches or the disk is cleaned up more than is normally required

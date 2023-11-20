@@ -10,8 +10,9 @@ public interface ICanRestoreWithMsBuild : IHaveRestoreTarget, IHaveCleanTarget, 
     /// <summary>
     ///     nuget restore
     /// </summary>
-    public Target NetRestore => _ => _
+    public Target NetRestore => d => d
                                     .DependsOn(Clean)
+                                    .Unlisted()
                                     .Executes(
                                          () => NuGetTasks
                                             .NuGetRestore(

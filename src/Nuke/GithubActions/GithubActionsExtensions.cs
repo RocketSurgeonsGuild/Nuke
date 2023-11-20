@@ -42,7 +42,7 @@ public static class GithubActionsExtensions
         return configuration;
     }
 
-    private static string[] _pathsIgnore =
+    private static readonly string[] _pathsIgnore =
     {
         ".codecov.yml",
         ".editorconfig",
@@ -120,7 +120,7 @@ public static class GithubActionsExtensions
     {
         foreach (var item in configuration.DetailedTriggers.OfType<RocketSurgeonGitHubActionsVcsTrigger>())
         {
-            item.IncludePaths = Enumerable.Concat(item.IncludePaths ?? Array.Empty<string>(), paths).Distinct().ToArray();
+            item.IncludePaths = Enumerable.Concat(item.IncludePaths, paths).Distinct().ToArray();
         }
 
         return configuration;
@@ -136,7 +136,7 @@ public static class GithubActionsExtensions
     {
         foreach (var item in configuration.DetailedTriggers.OfType<RocketSurgeonGitHubActionsVcsTrigger>())
         {
-            item.ExcludePaths = Enumerable.Concat(item.IncludePaths ?? Array.Empty<string>(), paths).Distinct().ToArray();
+            item.ExcludePaths = Enumerable.Concat(item.IncludePaths, paths).Distinct().ToArray();
         }
 
         return configuration;
@@ -245,7 +245,7 @@ public static class GithubActionsExtensions
                 }
             );
 
-            if (DotnetTool.IsInstalled("codecov.tool"))
+            if (DotNetTool.IsInstalled("codecov.tool"))
             {
                 AddStep(
                     job,
@@ -352,12 +352,16 @@ public static class GithubActionsExtensions
     }
 
 
-    private static ConcurrentDictionary<ITargetDefinition, List<GitHubActionsOutput>> outputPaths = new();
-    private static PropertyInfo DefinitionProperty = typeof(ExecutableTarget).GetProperty("Definition", BindingFlags.Instance | BindingFlags.NonPublic)!;
+    private static readonly ConcurrentDictionary<ITargetDefinition, List<GitHubActionsOutput>> outputPaths = new();
+
+    // ReSharper disable once NullableWarningSuppressionIsUsed
+    private static readonly PropertyInfo DefinitionProperty =
+        typeof(ExecutableTarget).GetProperty("Definition", BindingFlags.Instance | BindingFlags.NonPublic)!;
 
 
     internal static List<GitHubActionsOutput> GetGithubActionsOutput(ExecutableTarget target)
     {
+        // ReSharper disable once NullableWarningSuppressionIsUsed
         var def = (ITargetDefinition)DefinitionProperty.GetValue(target)!;
         if (outputPaths.TryGetValue(def, out var paths))
         {
@@ -369,6 +373,13 @@ public static class GithubActionsExtensions
         return paths;
     }
 
+    /// <summary>
+    ///     Set an output for github actions
+    /// </summary>
+    /// <param name="instance"></param>
+    /// <param name="key"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
     public static GitHubActions SetOutput(this GitHubActions instance, string key, string? value)
     {
         var outputFile = EnvironmentInfo.GetVariable<string>("GITHUB_OUTPUT");
@@ -376,7 +387,14 @@ public static class GithubActionsExtensions
         return instance;
     }
 
-    public static ITargetDefinition ProducesGithubActionsOutput(this ITargetDefinition target, string outputName, string? descrption = null)
+    /// <summary>
+    ///     Defines a target that produces a certian github actions output
+    /// </summary>
+    /// <param name="target"></param>
+    /// <param name="outputName"></param>
+    /// <param name="description"></param>
+    /// <returns></returns>
+    public static ITargetDefinition ProducesGithubActionsOutput(this ITargetDefinition target, string outputName, string? description = null)
     {
         if (!outputPaths.TryGetValue(target, out var paths))
         {
@@ -384,7 +402,7 @@ public static class GithubActionsExtensions
             outputPaths[target] = paths;
         }
 
-        paths.Add(new GitHubActionsOutput(outputName, descrption));
+        paths.Add(new GitHubActionsOutput(outputName, description));
         return target;
     }
 }

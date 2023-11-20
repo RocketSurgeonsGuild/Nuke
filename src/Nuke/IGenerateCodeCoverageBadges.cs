@@ -1,4 +1,4 @@
-﻿using Nuke.Common.IO;
+using Nuke.Common.IO;
 using Nuke.Common.Tools.ReportGenerator;
 
 namespace Rocket.Surgery.Nuke;
@@ -13,17 +13,10 @@ public interface IGenerateCodeCoverageBadges : ITriggerCodeCoverageReports, IGen
     /// </summary>
     public AbsolutePath CoverageBadgeDirectory => CoverageDirectory / "badges";
 
-    [Obsolete("Legacy target has been renamed to GenerateCodeCoverageBadges")]
-    // ReSharper disable once InconsistentNaming
-#pragma warning disable CS1591, CA1707
-    public Target Generate_Code_Coverage_Badges =>
-        _ => _.DependsOn(GenerateCodeCoverageBadges).Unlisted();
-#pragma warning restore CS1591, CA1707
-
     /// <summary>
     ///     Generate a code coverage badges for the given reports
     /// </summary>
-    public Target GenerateCodeCoverageBadges => _ => _
+    public Target GenerateCodeCoverageBadges => d => d
                                                     .After(GenerateCodeCoverageReportCobertura)
                                                     .TriggeredBy(TriggerCodeCoverageReports)
                                                     .Unlisted()
@@ -31,7 +24,7 @@ public interface IGenerateCodeCoverageBadges : ITriggerCodeCoverageReports, IGen
                                                     .Executes(
                                                          () => ReportGeneratorTasks.ReportGenerator(
                                                              s => WithTag(s)
-                                                                  // .SetToolPath(toolPath)
+                                                                 // .SetToolPath(toolPath)
                                                                  .SetFramework(Constants.ReportGeneratorFramework)
                                                                  .SetReports(InputReports)
                                                                  .SetTargetDirectory(CoverageBadgeDirectory)

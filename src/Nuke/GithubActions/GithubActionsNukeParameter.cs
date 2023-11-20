@@ -8,11 +8,13 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// </summary>
 public class GithubActionsNukeParameter : ConfigurationEntity
 {
+    // ReSharper disable once NullableWarningSuppressionIsUsed
     /// <summary>
     ///     The name
     /// </summary>
     public string Name { get; set; } = null!;
 
+    // ReSharper disable once NullableWarningSuppressionIsUsed
     /// <summary>
     ///     The default value of the parameter
     /// </summary>

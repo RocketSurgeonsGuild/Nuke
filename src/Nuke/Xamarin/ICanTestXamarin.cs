@@ -1,4 +1,4 @@
-﻿using Nuke.Common.IO;
+using Nuke.Common.IO;
 using Nuke.Common.Tools.DotNet;
 
 namespace Rocket.Surgery.Nuke.Xamarin;
@@ -20,7 +20,7 @@ public interface ICanTestXamarin : IHaveTestTarget,
     /// <summary>
     ///     test
     /// </summary>
-    public new Target Test => _ => _
+    public new Target Test => d => d
                                   .DependsOn(Build)
                                   .OnlyWhenStatic(() => TestsDirectory.DirectoryExists())
                                   .CreateOrCleanDirectory(TestResultsDirectory)

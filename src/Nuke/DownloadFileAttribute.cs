@@ -1,7 +1,6 @@
 using Nuke.Common.Execution;
 using Nuke.Common.IO;
 using Serilog;
-using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.IO.HttpTasks;
 
 #pragma warning disable CA1019
@@ -48,18 +47,17 @@ public class DownloadFileAttribute : BuildExtensionAttributeBase, IOnBuildInitia
             Log.Verbose(
                 "Downloading {Type} {Url} to {Path}",
                 Type,
-                _url,
-                GetRelativePath(NukeBuild.RootDirectory, _filePath)
+                _url, NukeBuild.RootDirectory.GetRelativePathTo(_filePath)
             );
             HttpDownloadFile(_url, _filePath);
             Log.Information(
                 "Downloaded {Type} {Url} to {Path}",
                 Type,
-                _url,
-                GetRelativePath(NukeBuild.RootDirectory, _filePath)
+                _url, NukeBuild.RootDirectory.GetRelativePathTo(_filePath)
             );
         }
     }
 
+    /// <inheritdoc />
     public override float Priority { get; set; } = -1000;
 }

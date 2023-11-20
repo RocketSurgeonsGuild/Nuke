@@ -13,10 +13,10 @@ public sealed class LocalBuildConventionsAttribute : BuildExtensionAttributeBase
     /// <inheritdoc />
     public void OnBuildFinished()
     {
-        if (Build is not (INukeBuild nukeBuild and IHaveSolution haveSolution)) return;
+        if (Build is not ( { } nukeBuild and IHaveSolution )) return;
         if (nukeBuild.IsServerBuild) return;
 
-//        EnsureSolutionIsUptoDate(nukeBuild, haveSolution);
+        //        EnsureSolutionIsUptoDate(nukeBuild, haveSolution);
     }
 
     private static void EnsureSolutionIsUptoDate(INukeBuild nukeBuild, IHaveSolution haveSolution)
@@ -46,11 +46,12 @@ public sealed class LocalBuildConventionsAttribute : BuildExtensionAttributeBase
     /// <inheritdoc />
     public void OnBuildInitialized(IReadOnlyCollection<ExecutableTarget> executableTargets, IReadOnlyCollection<ExecutableTarget> executionPlan)
     {
-        if (Build is not (INukeBuild nukeBuild and IHaveSolution haveSolution)) return;
+        if (Build is not ( INukeBuild nukeBuild and IHaveSolution haveSolution )) return;
         if (nukeBuild.IsServerBuild) return;
 
         EnsureSolutionIsUptoDate(nukeBuild, haveSolution);
     }
 
+    /// <inheritdoc />
     public override float Priority { get; set; } = -1000;
 }

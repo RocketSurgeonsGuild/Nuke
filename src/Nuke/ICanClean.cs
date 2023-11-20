@@ -1,6 +1,5 @@
-﻿using Nuke.Common.IO;
+using Nuke.Common.IO;
 using Nuke.Common.Utilities.Collections;
-using static Nuke.Common.IO.FileSystemTasks;
 
 // ReSharper disable SuspiciousTypeConversion.Global
 
@@ -14,43 +13,43 @@ public interface ICanClean : IHaveCleanTarget, IHaveBuildTarget
     /// <summary>
     ///     clean all artifact directories
     /// </summary>
-    public new Target Clean => _ => _
+    public new Target Clean => d => d
                                    .Before(Build)
                                    .Executes(
                                         () =>
                                         {
                                             if (this is IHaveArtifacts artifacts)
                                             {
-                                                EnsureCleanDirectory(artifacts.ArtifactsDirectory);
+                                                artifacts.ArtifactsDirectory.CreateOrCleanDirectory();
                                                 if (artifacts is IHaveOutputLogs logs)
                                                 {
-                                                    EnsureExistingDirectory(logs.LogsDirectory);
+                                                    logs.LogsDirectory.CreateDirectory();
                                                 }
 
                                                 if (artifacts is IHaveTestArtifacts testArtifacts)
                                                 {
-                                                    EnsureExistingDirectory(testArtifacts.TestResultsDirectory);
+                                                    testArtifacts.TestResultsDirectory.CreateDirectory();
                                                 }
 
                                                 if (artifacts is IHaveNuGetPackages nuGetArtifacts)
                                                 {
-                                                    EnsureExistingDirectory(nuGetArtifacts.NuGetPackageDirectory);
+                                                    nuGetArtifacts.NuGetPackageDirectory.CreateDirectory();
                                                 }
 
                                                 if (artifacts is IHavePublishArtifacts publishArtifacts)
                                                 {
-                                                    EnsureExistingDirectory(publishArtifacts.PublishDirectory);
+                                                    publishArtifacts.PublishDirectory.CreateDirectory();
                                                 }
 
                                                 if (artifacts is IHaveOutputArtifacts outputArtifacts)
                                                 {
-                                                    EnsureExistingDirectory(outputArtifacts.OutputArtifactsDirectory);
+                                                    outputArtifacts.OutputArtifactsDirectory.CreateDirectory();
                                                 }
                                             }
 
                                             if (this is IHaveCodeCoverage codeCoverage)
                                             {
-                                                EnsureCleanDirectory(codeCoverage.CoverageDirectory);
+                                                codeCoverage.CoverageDirectory.CreateOrCleanDirectory();
                                             }
 
                                             // ReSharper disable SuspiciousTypeConversion.Global
@@ -58,22 +57,23 @@ public interface ICanClean : IHaveCleanTarget, IHaveBuildTarget
                                             {
                                                 if (this is IComprehendSamples samples && samples.SampleDirectory.DirectoryExists())
                                                 {
-                                                    samples.SampleDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+                                                    samples.SampleDirectory.GlobDirectories("**/bin", "**/obj").ForEach(AbsolutePathExtensions.DeleteDirectory);
                                                 }
 
                                                 if (this is IComprehendSources sources && sources.SourceDirectory.DirectoryExists())
                                                 {
-                                                    sources.SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+                                                    sources.SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(AbsolutePathExtensions.DeleteDirectory);
                                                 }
 
                                                 if (this is IComprehendTemplates templates && templates.TemplatesDirectory.DirectoryExists())
                                                 {
-                                                    templates.TemplatesDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+                                                    templates.TemplatesDirectory.GlobDirectories("**/bin", "**/obj")
+                                                             .ForEach(AbsolutePathExtensions.DeleteDirectory);
                                                 }
 
                                                 if (this is IComprehendTests tests && tests.TestsDirectory.DirectoryExists())
                                                 {
-                                                    tests.TestsDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+                                                    tests.TestsDirectory.GlobDirectories("**/bin", "**/obj").ForEach(AbsolutePathExtensions.DeleteDirectory);
                                                 }
                                             }
                                         } // ReSharper restore SuspiciousTypeConversion.Global

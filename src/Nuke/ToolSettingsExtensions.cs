@@ -108,11 +108,13 @@ public static class ToolSettingsExtensions
         var verbosity = MSBuildVerbosity.Normal;
 
         var nukeAssembly = typeof(VerbosityMappingAttribute).Assembly;
+        // ReSharper disable once NullableWarningSuppressionIsUsed
         var verbosityMappingType = nukeAssembly.GetType("Nuke.Common.Tooling.VerbosityMapping")!;
         var mappings = (LookupTable<Type, (Verbosity Verbosity, object MappedVerbosity)>)verbosityMappingType.GetRuntimeFields()
-           .Single(z => z.Name == "Mappings")
-           .NotNull()
-           .GetValue(null)!;
+                                                                                                             .Single(z => z.Name == "Mappings")
+                                                                                                             .NotNull()
+                                                                                                             // ReSharper disable once NullableWarningSuppressionIsUsed
+                                                                                                             .GetValue(null)!;
 
         if (mappings.Contains(typeof(MSBuildVerbosity)))
         {

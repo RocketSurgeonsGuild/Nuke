@@ -17,7 +17,7 @@ public interface ICanRestoreWithDotNetCore : IHaveCleanTarget,
     /// <summary>
     ///     This will ensure that all local dotnet tools are installed
     /// </summary>
-    public Target DotnetToolRestore => _ => _
+    public Target DotnetToolRestore => d => d
                                            .After(Clean)
                                            .OnlyWhenStatic(() => ( NukeBuild.RootDirectory / ".config" / "dotnet-tools.json" ).FileExists())
                                            .Unlisted()
@@ -26,7 +26,7 @@ public interface ICanRestoreWithDotNetCore : IHaveCleanTarget,
     /// <summary>
     ///     dotnet restore
     /// </summary>
-    public Target CoreRestore => _ => _
+    public Target CoreRestore => d => d
                                      .Description("Restores the dependencies.")
                                      .Unlisted()
                                      .After(Clean)

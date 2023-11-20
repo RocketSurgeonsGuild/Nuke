@@ -1,4 +1,4 @@
-﻿using Nuke.Common.Tools.GitVersion;
+using Nuke.Common.Tools.GitVersion;
 
 namespace Rocket.Surgery.Nuke;
 
@@ -11,5 +11,5 @@ public interface IHaveGitVersion : IHave
     ///     The current version as defined by GitVersion
     /// </summary>
     [ComputedGitVersion]
-    public GitVersion GitVersion => null!;
+    GitVersion GitVersion { get; }
 }

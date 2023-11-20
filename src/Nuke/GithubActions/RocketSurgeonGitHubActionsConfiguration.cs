@@ -13,6 +13,7 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// </summary>
 public class RocketSurgeonGitHubActionsConfiguration : ConfigurationEntity
 {
+    // ReSharper disable once NullableWarningSuppressionIsUsed
     /// <summary>
     ///     The name of the build
     /// </summary>

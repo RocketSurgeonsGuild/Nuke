@@ -1,7 +1,5 @@
-﻿using Nuke.Common.IO;
+using Nuke.Common.IO;
 using Nuke.Common.Tooling;
-using Nuke.Common.Tools.DocFX;
-using Nuke.Common.Tools.DotNet;
 
 namespace Rocket.Surgery.Nuke;
 
@@ -15,21 +13,23 @@ public interface IGenerateDocFx : IHaveDocs
     /// </summary>
     [Parameter("serve the docs")]
     public bool? Serve => EnvironmentInfo.GetVariable<bool?>("Serve")
-                          // ?? ValueInjectionUtility.TryGetValue(() => Serve)
+                       // ?? ValueInjectionUtility.TryGetValue(() => Serve)
                        ?? false;
-    
-    public Tool Docfx => DotnetTool.GetTool("docfx"); 
+
+    /// <summary>
+    ///     The docfx tool
+    /// </summary>
+    public Tool Docfx => DotNetTool.GetTool("docfx");
 
     /// <summary>
     ///     The core docs to generate documentation
     /// </summary>
-    public Target CoreDocs => _ => _
+    public Target CoreDocs => d => d
                                   .OnlyWhenStatic(() => DocumentationDirectory.DirectoryExists())
                                   .OnlyWhenStatic(() => ( DocumentationDirectory / "docfx.json" ).FileExists())
                                   .Executes(
                                        () =>
                                        {
-                                           
                                            if (Serve == true)
                                            {
                                                Task.Run(() => Docfx($"{DocumentationDirectory / "docfx.json"} --serve"));

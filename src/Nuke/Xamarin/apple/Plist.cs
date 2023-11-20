@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Globalization;
 using System.Xml.Linq;
 using Nuke.Common.IO;
@@ -22,6 +22,7 @@ internal static class Plist
         using var stream = File.OpenRead(plist);
         var document = XDocument.Load(stream);
 
+        // ReSharper disable once NullableWarningSuppressionIsUsed
         return DeserializeXml(document.Root!);
     }
 
@@ -82,10 +83,10 @@ internal static class Plist
             case long:
                 Log.Verbose("integer: {Integer}", item);
                 return new XElement("integer", Convert.ToString(item, CultureInfo.InvariantCulture));
-            case bool when item as bool? == true:
+            case bool when ( item as bool? ) == true:
                 Log.Verbose("boolean: {Boolean}", item);
                 return new XElement("true");
-            case bool when item as bool? == false:
+            case bool when ( item as bool? ) == false:
                 Log.Verbose("boolean: {Boolean}", item);
                 return new XElement("false");
             case DateTime time:
@@ -98,33 +99,35 @@ internal static class Plist
                 Log.Verbose("DateTimeOffset: {DateTimeOffset}", item);
                 return new XElement("data", Convert.ToBase64String(bytes));
             case IDictionary dictionary:
-            {
-                var dict = new XElement("dict");
-
-                var enumerator = dictionary.GetEnumerator();
-
-                while (enumerator.MoveNext())
                 {
-                    dict.Add(new XElement("key", enumerator.Key));
-                    dict.Add(SerializeObject(enumerator.Value!));
-                }
+                    var dict = new XElement("dict");
 
-                Log.Verbose("Dictionary: {Dictionary}", item);
-                return dict;
-            }
+                    var enumerator = dictionary.GetEnumerator();
+
+                    while (enumerator.MoveNext())
+                    {
+                        dict.Add(new XElement("key", enumerator.Key));
+                        // ReSharper disable once NullableWarningSuppressionIsUsed
+                        dict.Add(SerializeObject(enumerator.Value!));
+                    }
+
+                    Log.Verbose("Dictionary: {Dictionary}", item);
+                    return dict;
+                }
 
             case IEnumerable enumerable:
-            {
-                var array = new XElement("array");
-
-                foreach (var itm in enumerable)
                 {
-                    array.Add(SerializeObject(itm!));
-                }
+                    var array = new XElement("array");
 
-                Log.Verbose("Array: {Array}", item);
-                return array;
-            }
+                    foreach (var itm in enumerable)
+                    {
+                        // ReSharper disable once NullableWarningSuppressionIsUsed
+                        array.Add(SerializeObject(itm!));
+                    }
+
+                    Log.Verbose("Array: {Array}", item);
+                    return array;
+                }
 
             default:
                 return null;
@@ -152,50 +155,51 @@ internal static class Plist
             case "data":
                 return Convert.FromBase64String(element.Value);
             case "array":
-            {
-                if (!element.HasElements)
                 {
-                    return Array.Empty<object>();
-                }
-
-                var rawArray = element.Elements().Select(DeserializeXml).ToArray();
-
-                var type = rawArray[0].GetType();
-                if (rawArray.Any(val => val.GetType() != type))
-                {
-                    return rawArray;
-                }
-
-                var typedArray = Array.CreateInstance(type, rawArray.Length);
-                rawArray.CopyTo(typedArray, 0);
-
-                return typedArray;
-            }
-
-            case "dict":
-            {
-                var dictionary = new Dictionary<string, object>();
-
-                var inner = element.Elements().ToArray();
-
-                for (var idx = 0; idx < inner.Length; idx++)
-                {
-                    var key = inner[idx];
-                    if (key.Name.LocalName != "key")
+                    if (!element.HasElements)
                     {
-#pragma warning disable CA2201
-                        throw new Exception("Even items need to be keys");
-#pragma warning restore CA2201
+                        return Array.Empty<object>();
                     }
 
-                    idx++;
-                    dictionary[key.Value] = DeserializeXml(inner[idx]);
+                    var rawArray = element.Elements().Select(DeserializeXml).ToArray();
+
+                    var type = rawArray[0].GetType();
+                    if (rawArray.Any(val => val.GetType() != type))
+                    {
+                        return rawArray;
+                    }
+
+                    var typedArray = Array.CreateInstance(type, rawArray.Length);
+                    rawArray.CopyTo(typedArray, 0);
+
+                    return typedArray;
                 }
 
-                return dictionary;
-            }
+            case "dict":
+                {
+                    var dictionary = new Dictionary<string, object>();
+
+                    var inner = element.Elements().ToArray();
+
+                    for (var idx = 0; idx < inner.Length; idx++)
+                    {
+                        var key = inner[idx];
+                        if (key.Name.LocalName != "key")
+                        {
+#pragma warning disable CA2201
+                            throw new Exception("Even items need to be keys");
+#pragma warning restore CA2201
+                        }
+
+                        idx++;
+                        dictionary[key.Value] = DeserializeXml(inner[idx]);
+                    }
+
+                    return dictionary;
+                }
 
             default:
+                // ReSharper disable once NullableWarningSuppressionIsUsed
                 return null!;
         }
     }

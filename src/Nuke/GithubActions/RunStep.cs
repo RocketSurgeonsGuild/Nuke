@@ -14,6 +14,7 @@ public class RunStep : BaseGitHubActionsStep
     {
     }
 
+    // ReSharper disable once NullableWarningSuppressionIsUsed
     /// <summary>
     ///     The script to run
     /// </summary>
@@ -29,6 +30,8 @@ public class RunStep : BaseGitHubActionsStep
     /// </summary>
     public string? WorkingDirectory { get; set; }
 
+    private static readonly string[] separator = { "\r\n", "\n" };
+
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
@@ -42,7 +45,7 @@ public class RunStep : BaseGitHubActionsStep
             writer.WriteLine("run: |");
             using (writer.Indent())
             {
-                foreach (var line in Run.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries))
+                foreach (var line in Run.Split(separator, StringSplitOptions.RemoveEmptyEntries))
                 {
                     writer.WriteLine(line.Trim());
                 }

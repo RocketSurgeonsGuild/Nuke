@@ -66,17 +66,14 @@ public class ComputedGitVersionAttribute : ValueInjectionAttributeBase
     /// <inheritdoc />
     public override object GetValue(MemberInfo member, object instance)
     {
-        var rootDirectory = FileSystemTasks.FindParentDirectory(
-            NukeBuild.RootDirectory,
-            x => x.GetDirectories(".git").Any()
-        );
+        var rootDirectory = NukeBuild.RootDirectory.FindParentOrSelf(x => x.GetDirectories(".git").Any());
         if (rootDirectory == null)
         {
             Log.Warning("N git repository found, GitVersion will not be accurate");
             return new GitVersion();
         }
 
-        var gitVersion = GetGitVersion();
+        var gitVersion = GetGitVersion(_frameworkVersion, UpdateAssemblyInfo);
 
         AzurePipelines.Instance?.UpdateBuildNumber(gitVersion.FullSemVer);
         TeamCity.Instance?.SetBuildNumber(gitVersion.FullSemVer);
@@ -85,20 +82,20 @@ public class ComputedGitVersionAttribute : ValueInjectionAttributeBase
         return gitVersion;
     }
 
-    private GitVersion GetGitVersion()
+    internal static GitVersion GetGitVersion(string frameworkVersion, bool updateAssemblyInfo)
     {
         if (!HasGitVer())
         {
             return GitVersionTasks.GitVersion(
                                        s => s
-                                           .SetFramework(_frameworkVersion)
+                                           .SetFramework(frameworkVersion)
                                            .DisableProcessLogOutput()
-                                           .SetUpdateAssemblyInfo(UpdateAssemblyInfo)
+                                           .SetUpdateAssemblyInfo(updateAssemblyInfo)
                                            .SetProcessToolPath(
                                                 NuGetToolPathResolver.GetPackageExecutable(
                                                     "GitVersion.Tool|GitVersion.CommandLine",
                                                     "gitversion.dll|gitversion.exe",
-                                                    framework: Constants.GitVersionFramework
+                                                    framework: frameworkVersion
                                                 )
                                             )
                                    )
@@ -110,11 +107,12 @@ public class ComputedGitVersionAttribute : ValueInjectionAttributeBase
                                  new JObject(),
                                  (acc, record) =>
                                  {
-                                     var key = record.Key.Substring("GITVERSION_".Length);
+                                     var key = record.Key["GITVERSION_".Length..];
                                      acc[key] = record.Value;
                                      return acc;
                                  }
                              );
+        // ReSharper disable once NullableWarningSuppressionIsUsed
         return json.ToObject<GitVersion>(
             new JsonSerializer { ContractResolver = new AllWritableContractResolver() }
         )!;

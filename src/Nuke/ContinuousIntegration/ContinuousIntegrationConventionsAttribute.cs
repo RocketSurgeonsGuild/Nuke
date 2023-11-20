@@ -36,19 +36,19 @@ public class ContinuousIntegrationConventionsAttribute : BuildExtensionAttribute
         if (build.ExecutionPlan.Any(z => z.Name == nameof(IHaveTestTarget.Test))
          && build is IHaveTestArtifacts testResultReports
          && testResultReports.TestResultsDirectory.GlobFiles("**/*.trx") is
-                { Count: > 0 } results)
+         { Count: > 0 } results)
         {
-            FileSystemTasks.Touch(summary);
+            summary.TouchFile();
             var reporter = new LiquidReporter(results.Select(z => z.ToString()), Log.Logger);
             var report = reporter.Run("Test results");
-            TextTasks.WriteAllText(summary, TextTasks.ReadAllText(summary).TrimStart() + "\n" + report);
-//            DotNet(
-//                new Arguments()
-//                   .Add("liquid")
-//                   .Add("--inputs {0}", results.Select(z => "File=" + z), ' ', quoteMultiple: true)
-//                   .Add("--output {0}", EnvironmentInfo.GetVariable<string>("GITHUB_STEP_SUMMARY"))
-//                   .ToString()
-//            );
+            summary.WriteAllText(summary.ReadAllText().TrimStart() + "\n" + report);
+            //            DotNet(
+            //                new Arguments()
+            //                   .Add("liquid")
+            //                   .Add("--inputs {0}", results.Select(z => "File=" + z), ' ', quoteMultiple: true)
+            //                   .Add("--output {0}", EnvironmentInfo.GetVariable<string>("GITHUB_STEP_SUMMARY"))
+            //                   .ToString()
+            //            );
         }
 
         // ReSharper disable once SuspiciousTypeConversion.Global
@@ -56,14 +56,14 @@ public class ContinuousIntegrationConventionsAttribute : BuildExtensionAttribute
          && build is IGenerateCodeCoverageSummary codeCoverage
          && ( codeCoverage.CoverageSummaryDirectory / "Summary.md" ).FileExists())
         {
-            FileSystemTasks.Touch(summary);
-            var coverageSummary = TextTasks.ReadAllText(codeCoverage.CoverageSummaryDirectory / "Summary.md");
+            summary.TouchFile();
+            var coverageSummary = ( codeCoverage.CoverageSummaryDirectory / "Summary.md" ).ReadAllText();
             if (coverageSummary.IndexOf("|**Name**", StringComparison.Ordinal) is > -1 and var index)
             {
                 coverageSummary = coverageSummary[..( index - 1 )];
             }
 
-            TextTasks.WriteAllText(summary, TextTasks.ReadAllText(summary).TrimStart() + "\n" + coverageSummary);
+            summary.WriteAllText(summary.ReadAllText().TrimStart() + "\n" + coverageSummary);
         }
     }
 }

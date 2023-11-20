@@ -1,3 +1,4 @@
+#pragma warning disable CA2227
 namespace Rocket.Surgery.Nuke.GithubActions;
 
 /// <summary>
