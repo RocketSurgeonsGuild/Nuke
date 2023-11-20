@@ -11,7 +11,7 @@ function forEachChunk(chunks, callback, chunkSize = 50) {
 function cleanupcode(filenames) {
     var sln = require('./.nuke/parameters.json').Solution;
     return forEachChunk(filenames, chunk => [
-        `dotnet jb cleanupcode ${sln} "--profile=Full Cleanup" "--disable-settings-layers=GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal" "--include=${chunk.join(
+        `dotnet jb cleanupcode "--profile=Full Cleanup" "--disable-settings-layers=GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal" "--include=${chunk.join(
             ';'
         )}"`,
     ]);

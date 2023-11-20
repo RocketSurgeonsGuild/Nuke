@@ -54,7 +54,7 @@
             "VSCode"
           ]
         },
-        "LintFiles": {
+        "lint-files": {
           "type": "array",
           "description": "The files to lint, if not given lints all files",
           "items": {
@@ -109,6 +109,7 @@
               "GenerateCodeCoverageReportCobertura",
               "GenerateCodeCoverageSummary",
               "GenerateReadme",
+              "JetBrainsCodeCleanup",
               "Lint",
               "LintPublicApiAnalyzers",
               "MoveUnshippedToShipped",
@@ -151,6 +152,7 @@
               "GenerateCodeCoverageReportCobertura",
               "GenerateCodeCoverageSummary",
               "GenerateReadme",
+              "JetBrainsCodeCleanup",
               "Lint",
               "LintPublicApiAnalyzers",
               "MoveUnshippedToShipped",

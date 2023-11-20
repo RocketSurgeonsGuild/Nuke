@@ -487,12 +487,8 @@ Rocket.Surgery.Nuke.Helpers
 Rocket.Surgery.Nuke.ICan
 Rocket.Surgery.Nuke.ICanClean
 Rocket.Surgery.Nuke.ICanClean.Clean.get -> Nuke.Common.Target!
-Rocket.Surgery.Nuke.ICanDotNetFormat
-Rocket.Surgery.Nuke.ICanDotNetFormat.DotNetFormat.get -> Nuke.Common.Target!
-Rocket.Surgery.Nuke.ICanDotNetFormat.DotNetFormatSeverity.get -> Nuke.Common.Tools.DotNet.DotNetFormatSeverity!
 Rocket.Surgery.Nuke.ICanLint
 Rocket.Surgery.Nuke.ICanLint.Lint.get -> Nuke.Common.Target!
-Rocket.Surgery.Nuke.ICanLint.LintFiles.get -> System.Collections.Generic.IReadOnlyList<string!>!
 Rocket.Surgery.Nuke.ICanUpdateReadme
 Rocket.Surgery.Nuke.ICanUpdateReadme.GenerateReadme.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ICanUpdateReadme.Readme.get -> Rocket.Surgery.Nuke.Readme.ReadmeUpdater!

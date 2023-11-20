@@ -1,6 +1,7 @@
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tools.DotNet;
+using Rocket.Surgery.Nuke.DotNetCore;
 
 namespace Rocket.Surgery.Nuke;
 
@@ -23,7 +24,9 @@ public interface IHavePublicApis : ICanDotNetFormat
 
     private IEnumerable<AbsolutePath> LintPublicApiShippedFiles => PublicApiAnalyzerProjects
                                                                  .SelectMany(project => new[] { GetShippedFilePath(project.Directory), GetUnshippedFilePath(project.Directory) })
-        .Where(file => LintFiles is { Count: 0 } || LintFiles.Any(z => z == file));
+#pragma warning disable CA1860
+                                                                  .Where(file => !LintPaths.Any() || LintPaths.Any(z => z == file));
+#pragma warning restore CA1860
 
 
     private static AbsolutePath GetShippedFilePath(AbsolutePath directory) => directory / "PublicAPI.Shipped.txt";
@@ -53,9 +56,11 @@ public interface IHavePublicApis : ICanDotNetFormat
                             await File.WriteAllTextAsync(unshippedFilePath, "#nullable enable");
                         }
 
-                        if (LintFiles.Count > 0)
+#pragma warning disable CA1860
+                        if (LintPaths.Any())
+#pragma warning restore CA1860
                         {
-                            DotNetTasks.DotNet($"format {project.Path} --diagnostics=RS0016 --include {string.Join(",", LintFiles)}");
+                            DotNetTasks.DotNet($"format {project.Path} --diagnostics=RS0016 --include {string.Join(",", LintPaths)}");
                         }
                         else
                         {

@@ -1,3 +1,5 @@
+using Nuke.Common.IO;
+
 namespace Rocket.Surgery.Nuke;
 
 /// <summary>
@@ -13,6 +15,13 @@ public interface ICanLint : INukeBuild
     /// <summary>
     /// The files to lint, if not given lints all files
     /// </summary>
-    [Parameter("The files to lint, if not given lints all files", Separator = " ")]
-    public IReadOnlyList<string> LintFiles => TryGetValue(() => LintFiles) ?? Array.Empty<string>();
+    [Parameter("The files to lint, if not given lints all files", Separator = " ", Name = "lint-files")]
+#pragma warning disable CA1819
+    private string[] PrivateLintFiles => TryGetValue(() => PrivateLintFiles) ?? Array.Empty<string>();
+#pragma warning restore CA1819
+
+    /// <summary>
+    /// The lint paths rooted as an absolute path.
+    /// </summary>
+    protected internal IEnumerable<AbsolutePath> LintPaths => PrivateLintFiles.Select(z => Path.IsPathRooted(z) ? (AbsolutePath)z : RootDirectory / z);
 }
