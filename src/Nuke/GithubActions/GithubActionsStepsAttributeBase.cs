@@ -80,6 +80,26 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     public string[] OnPullRequestExcludePaths { get; set; } = Array.Empty<string>();
 
     /// <summary>
+    ///     The branches for pull requests
+    /// </summary>
+    public string[] OnPullRequestTargetBranches { get; set; } = Array.Empty<string>();
+
+    /// <summary>
+    ///     The tags for pull requests
+    /// </summary>
+    public string[] OnPullRequestTargetTags { get; set; } = Array.Empty<string>();
+
+    /// <summary>
+    ///     The paths to include for pull requests
+    /// </summary>
+    public string[] OnPullRequestTargetIncludePaths { get; set; } = Array.Empty<string>();
+
+    /// <summary>
+    ///     The paths to exclude for pull requests
+    /// </summary>
+    public string[] OnPullRequestTargetExcludePaths { get; set; } = Array.Empty<string>();
+
+    /// <summary>
     ///     The schedule to run on
     /// </summary>
     public string? OnCronSchedule { get; set; }
@@ -222,6 +242,21 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
                 Tags = OnPullRequestTags,
                 IncludePaths = OnPullRequestIncludePaths,
                 ExcludePaths = OnPullRequestExcludePaths
+            };
+        }
+
+        if (OnPullRequestTargetBranches.Length > 0 ||
+            OnPullRequestTargetTags.Length > 0 ||
+            OnPullRequestTargetIncludePaths.Length > 0 ||
+            OnPullRequestTargetExcludePaths.Length > 0)
+        {
+            yield return new RocketSurgeonGitHubActionsVcsTrigger
+            {
+                Kind = RocketSurgeonGitHubActionsTrigger.PullRequestTarget,
+                Branches = OnPullRequestTargetBranches,
+                Tags = OnPullRequestTargetTags,
+                IncludePaths = OnPullRequestTargetIncludePaths,
+                ExcludePaths = OnPullRequestTargetExcludePaths
             };
         }
 

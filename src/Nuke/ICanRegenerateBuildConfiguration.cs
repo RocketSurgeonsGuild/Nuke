@@ -21,7 +21,8 @@ public interface ICanRegenerateBuildConfiguration
                                        .OfType<IConfigurationGenerator>();
 
                     allHosts
-                       .Select(z => $"""{Assembly.GetEntryAssembly().Location} --{BuildServerConfigurationGeneration.ConfigurationParameterName} {z.Id} --host {z.HostName}""")
+                        // ReSharper disable once NullableWarningSuppressionIsUsed
+                       .Select(z => $"""{Assembly.GetEntryAssembly()!.Location} --{BuildServerConfigurationGeneration.ConfigurationParameterName} {z.Id} --host {z.HostName}""")
                        .ForEach(
                             command => DotNetTasks.DotNet(
                                 command,

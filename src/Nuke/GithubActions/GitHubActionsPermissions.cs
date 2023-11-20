@@ -132,6 +132,10 @@ public record GitHubActionsPermissions
     /// </summary>
     public GitHubActionsPermission Statuses { get; set; } = GitHubActionsPermission.Write;
 
+    /// <summary>
+    /// Write the permissions to the given yaml file
+    /// </summary>
+    /// <param name="writer"></param>
     public void Write(CustomFileWriter writer)
     {
         if (this == None)

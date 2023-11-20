@@ -58,7 +58,8 @@ public interface ICanLintStagedFiles : ICanRegenerateBuildConfiguration, INukeBu
                     $"lint-staged -r {( LintStagedIsPullRequest ? $"""--diff="origin/{GitHubActions.Instance.BaseRef}...origin/{GitHubActions.Instance.HeadRef}" """ : "" )}",
                     environmentVariables: EnvironmentInfo.Variables
                                                          .AddIfMissing("NUKE_INTERNAL_INTERCEPTOR", "1")
-                                                         .AddIfMissing("NUKE_BUILD_ASSEMBLY", RootDirectory.GetRelativePathTo(Assembly.GetEntryAssembly().Location)),
+                                                          // ReSharper disable once NullableWarningSuppressionIsUsed
+                                                         .AddIfMissing("NUKE_BUILD_ASSEMBLY", RootDirectory.GetRelativePathTo(Assembly.GetEntryAssembly()!.Location)),
                     logOutput: true,
                     logger: (type, s) =>
                     {

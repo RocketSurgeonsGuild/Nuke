@@ -50,7 +50,7 @@ using Rocket.Surgery.Nuke.GithubActions;
     "lint",
     GitHubActionsImage.UbuntuLatest,
     AutoGenerate = false,
-    OnPullRequestBranches = new[] { "master", "main", "next" },
+    OnPullRequestTargetBranches = new[] { "master", "main", "next" },
     Enhancements = new[] { nameof(LintStagedMiddleware) }
 )]
 [GitHubActionsSteps(

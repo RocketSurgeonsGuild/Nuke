@@ -1,6 +1,7 @@
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
+#pragma warning disable CA1019
 
 namespace Rocket.Surgery.Nuke.GithubActions;
 
@@ -9,7 +10,7 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// </summary>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-public class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
+public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
 {
     /// <summary>
     ///     The default constructor
