@@ -66,6 +66,7 @@ using Rocket.Surgery.Nuke.GithubActions;
 [GitHubActionsInput("THIS_IS_ANOTHER_INPUT" /*, Alias = "ThisIsAInput"*/)]
 [GitHubActionsEnvironmentVariable("THIS_IS_A_ENV" /*, Alias = "ThisIsAEnv"*/, Default = "'test'")]
 [GitHubActionsSecret("THIS_IS_A_SECRET" /*, Alias = "ThisIsASecret"*/)]
+[GitHubActionsSecret("RSG_BOT_TOKEN")]
 [PrintBuildVersion]
 [PrintCIEnvironment]
 [UploadLogs]
@@ -99,7 +100,6 @@ public partial class Pipeline
     [Parameter(Name = "THIS_IS_A_VARIABLE")] public string ThisIsAVariable { get; set; }
     [Parameter] public string ThisIsAEnv { get; set; }
     [Parameter] public string ThisIsASecret { get; set; }
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
     public static RocketSurgeonGitHubActionsConfiguration CiMiddleware(RocketSurgeonGitHubActionsConfiguration configuration)
     {

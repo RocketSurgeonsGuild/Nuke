@@ -272,6 +272,8 @@ Rocket.Surgery.Nuke.GithubActions.GitHubActionsInputType.String = 0 -> Rocket.Su
 Rocket.Surgery.Nuke.GithubActions.GitHubActionsLintAttribute
 Rocket.Surgery.Nuke.GithubActions.GitHubActionsLintAttribute.GitHubActionsLintAttribute(string! name, Nuke.Common.CI.GitHubActions.GitHubActionsImage image, params Nuke.Common.CI.GitHubActions.GitHubActionsImage[]! images) -> void
 Rocket.Surgery.Nuke.GithubActions.GitHubActionsLintAttribute.GitHubActionsLintAttribute(string! name, string! image, params string![]! images) -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsLintAttribute.TokenSecret.get -> string!
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsLintAttribute.TokenSecret.set -> void
 Rocket.Surgery.Nuke.GithubActions.GithubActionsNukeParameter
 Rocket.Surgery.Nuke.GithubActions.GithubActionsNukeParameter.Default.get -> string!
 Rocket.Surgery.Nuke.GithubActions.GithubActionsNukeParameter.Default.set -> void
