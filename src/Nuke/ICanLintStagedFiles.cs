@@ -24,7 +24,7 @@ public interface ICanLintStagedFiles : INukeBuild
            .Executes(
                 () => ProcessTasks.StartProcess(
                     ToolPathResolver.GetPathExecutable("npx"),
-                    GitHubActions.Instance.IsPullRequest() ? $"lint-staged -r --diff=\"origin/{GitHubActions.Instance.BaseRef}...origin/{GitHubActions.Instance.HeadRef}\"" : "lint-staged -r -d -v",
+                    GitHubActions.Instance.IsPullRequest() ? $"lint-staged -r --diff=\"origin/{GitHubActions.Instance.BaseRef}...origin/{GitHubActions.Instance.HeadRef}\"" : "lint-staged -r",
                     environmentVariables: EnvironmentInfo.Variables
                                                          .AddIfMissing("NUKE_INTERNAL_INTERCEPTOR", "1")
                                                          .ReplaceIfSet("TERM", "dumb") // ensure lint staged doesn't try to use it's fancy renderer
