@@ -1,6 +1,8 @@
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
+using Nuke.Common.Utilities.Collections;
+
 #pragma warning disable CA1019
 
 namespace Rocket.Surgery.Nuke.GithubActions;
@@ -74,7 +76,11 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
                 }
             );
 
-        configuration.Jobs.ForEach(z => z.If = "github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]'");
+        configuration.Jobs
+                     .OfType<RocketSurgeonsGithubActionsJob>()
+                     .SelectMany(z => z.Steps)
+                     .OfType<BaseGitHubActionsStep>()
+                     .ForEach(z => z.If = "github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]'");
 
         buildJob.Name = "lint";
 

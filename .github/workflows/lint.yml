@@ -39,10 +39,10 @@ permissions:
 
 jobs:
   lint:
-    if: github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
+        if: github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]'
         uses: actions/checkout@v4
         with:
           repository: '${{ github.event.pull_request.head.repo.full_name }}'
@@ -50,25 +50,31 @@ jobs:
           clean: 'false'
           fetch-depth: '0'
       - name: 🔨 Use .NET Core 6.0 SDK
+        if: github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]'
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x'
       - name: 🔨 Use .NET Core 8.0 SDK
+        if: github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]'
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.0.x'
       - name: 🎁 dotnet tool restore
+        if: github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]'
         run: |
           dotnet tool restore
       - name: Regenerate Build Configurations
         id: regenerateBuildConfigurations
+        if: github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]'
         run: |
           dotnet nuke RegenerateBuildConfigurations --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
       - name: Lint Staged
         id: lintStaged
+        if: github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]'
         run: |
           dotnet nuke LintStaged --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
       - name: Add & Commit
+        if: github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]'
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: 'Automatically linting code'
