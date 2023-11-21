@@ -79,7 +79,7 @@ public static class GithubActionsExtensions
     }
 
     /// <summary>
-    ///     Adds a new step to the current step
+    ///     Adds a new step to the current job
     /// </summary>
     /// <param name="configuration"></param>
     /// <param name="step"></param>
@@ -88,6 +88,24 @@ public static class GithubActionsExtensions
     {
         configuration.Steps.Add(step);
         return configuration;
+    }
+
+    /// <summary>
+    ///     Adds a new step after the checkout step
+    /// </summary>
+    /// <param name="job"></param>
+    /// <param name="step"></param>
+    /// <returns></returns>
+    public static RocketSurgeonsGithubActionsJob InsertAfterCheckOut(this RocketSurgeonsGithubActionsJob job, GitHubActionsStep step)
+    {
+        job.Steps.Insert(getCheckStepIndex(job) + 1, step);
+        return job;
+
+        static int getCheckStepIndex(RocketSurgeonsGithubActionsJob job)
+        {
+            var checkoutStep = job.Steps.OfType<CheckoutStep>().SingleOrDefault();
+            return checkoutStep is null ? 1 : job.Steps.IndexOf(checkoutStep);
+        }
     }
 
     /// <summary>
@@ -150,8 +168,7 @@ public static class GithubActionsExtensions
     public static RocketSurgeonsGithubActionsJob AddNuGetCache(this RocketSurgeonsGithubActionsJob job)
     {
         job.Environment["NUGET_PACKAGES"] = "${{ github.workspace }}/.nuget/packages";
-        job.Steps.Insert(
-            GetCheckStepIndex(job) + 1,
+        job.InsertAfterCheckOut(
             new UsingStep("NuGet Cache")
             {
                 Uses = "actions/cache@v2",
@@ -175,14 +192,7 @@ public static class GithubActionsExtensions
     /// <returns></returns>
     public static RocketSurgeonsGithubActionsJob ConfigureForGitVersion(this RocketSurgeonsGithubActionsJob job)
     {
-        var checkoutStep = job.Steps.OfType<CheckoutStep>().SingleOrDefault();
-        if (checkoutStep is null) return job;
-        job.Steps.Insert(
-            job.Steps.IndexOf(checkoutStep), new RunStep("Fetch all history for all tags and branches")
-            {
-                Run = "git fetch --prune"
-            }
-        );
+        job.InsertAfterCheckOut(new RunStep("Fetch all history for all tags and branches") { Run = "git fetch --prune" });
         return job;
     }
 
@@ -325,12 +335,6 @@ public static class GithubActionsExtensions
         return job;
     }
 
-    private static int GetCheckStepIndex(RocketSurgeonsGithubActionsJob job)
-    {
-        var checkoutStep = job.Steps.OfType<CheckoutStep>().SingleOrDefault();
-        return checkoutStep is null ? 1 : job.Steps.IndexOf(checkoutStep);
-    }
-
     /// <summary>
     ///     Use a specific dotnet sdk
     /// </summary>
@@ -341,16 +345,9 @@ public static class GithubActionsExtensions
     public static RocketSurgeonsGithubActionsJob UseDotNetSdk(this RocketSurgeonsGithubActionsJob job, string version, string? exactVersion = null)
     {
         exactVersion ??= version + ".x";
-        job.Steps.Insert(
-            GetCheckStepIndex(job) + 1,
-            new SetupDotNetStep($"Use .NET Core {version} SDK")
-            {
-                DotNetVersion = exactVersion
-            }
-        );
+        job.InsertAfterCheckOut(new SetupDotNetStep($"Use .NET Core {version} SDK") { DotNetVersion = exactVersion });
         return job;
     }
-
 
     private static readonly ConcurrentDictionary<ITargetDefinition, List<GitHubActionsOutput>> outputPaths = new();
 

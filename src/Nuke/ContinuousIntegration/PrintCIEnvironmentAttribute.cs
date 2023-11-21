@@ -1,3 +1,7 @@
+using Nuke.Common.CI.AzurePipelines;
+using Nuke.Common.CI.GitHubActions;
+using Nuke.Common.CI.GitLab;
+using Nuke.Common.CI.TeamCity;
 using Nuke.Common.Execution;
 using Nuke.Common.Utilities.Collections;
 using Serilog;
@@ -48,6 +52,11 @@ public sealed class PrintCIEnvironmentAttribute : BuildExtensionAttributeBase, I
         if (NukeBuild.IsLocalBuild)
             return;
 
+        GitHubActions.Instance?.Group("PrintCIEnvironment");
+        AzurePipelines.Instance?.Group("PrintCIEnvironment");
+        GitLab.Instance?.BeginSection("PrintCIEnvironment");
+        TeamCity.Instance?.OpenBlock("PrintCIEnvironment");
+
         Log.Information("CI: {CI}", EnvironmentInfo.GetVariable<string>("CI"));
 
         foreach (var variable in WellKnownEnvironmentVariablePrefixes
@@ -60,6 +69,11 @@ public sealed class PrintCIEnvironmentAttribute : BuildExtensionAttributeBase, I
         {
             Log.Information("{Key}: {Value}", variable, EnvironmentInfo.Variables[variable]);
         }
+
+        TeamCity.Instance?.CloseBlock("PrintCIEnvironment");
+        GitLab.Instance?.EndSection("PrintCIEnvironment");
+        AzurePipelines.Instance?.EndGroup("PrintCIEnvironment");
+        GitHubActions.Instance?.EndGroup("PrintCIEnvironment");
     }
 
     /// <inheritdoc />
