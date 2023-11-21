@@ -1,6 +1,8 @@
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
+using Nuke.Common.Utilities.Collections;
+
 #pragma warning disable CA1019
 
 namespace Rocket.Surgery.Nuke.GithubActions;
@@ -57,8 +59,6 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
 
         configuration.Permissions.Contents = GitHubActionsPermission.Write;
 
-        buildJob.If = "github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]'";
-
         buildJob
            .ConfigureStep<CheckoutStep>(
                 step =>
@@ -75,6 +75,12 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
                     With = { ["commit_message"] = "Automatically linting code", }
                 }
             );
+
+        configuration.Jobs
+                     .OfType<RocketSurgeonsGithubActionsJob>()
+                     .SelectMany(z => z.Steps)
+                     .OfType<BaseGitHubActionsStep>()
+                     .ForEach(z => z.If = "github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]'");
 
         buildJob.Name = "lint";
 
