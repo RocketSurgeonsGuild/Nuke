@@ -552,6 +552,7 @@ Rocket.Surgery.Nuke.ICanLintStagedFiles.LintStaged.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ICanPrettier
 Rocket.Surgery.Nuke.ICanPrettier.Prettier.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ICanRegenerateBuildConfiguration
+Rocket.Surgery.Nuke.ICanRegenerateBuildConfiguration.RegenerateBuildConfigurations.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ICanUpdateReadme
 Rocket.Surgery.Nuke.ICanUpdateReadme.GenerateReadme.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ICanUpdateReadme.Readme.get -> Rocket.Surgery.Nuke.Readme.ReadmeUpdater!
@@ -769,6 +770,8 @@ static Rocket.Surgery.Nuke.Extensions.As<T>(this T value) -> T
 static Rocket.Surgery.Nuke.Extensions.CastAs<T>(this object! value) -> T
 static Rocket.Surgery.Nuke.Extensions.CreateOrCleanDirectory(this Nuke.Common.ITargetDefinition! target, Nuke.Common.IO.AbsolutePath! testResultsDirectory) -> Nuke.Common.ITargetDefinition!
 static Rocket.Surgery.Nuke.Extensions.IsPullRequest(this Nuke.Common.CI.GitHubActions.GitHubActions? actions) -> bool
+static Rocket.Surgery.Nuke.Extensions.ReplaceIfSet<TKey, TValue>(this System.Collections.Generic.IDictionary<TKey, TValue>! dictionary, TKey key, TValue value) -> System.Collections.Generic.IDictionary<TKey, TValue>!
+static Rocket.Surgery.Nuke.Extensions.ReplaceIfSet<TKey, TValue>(this System.Collections.Generic.IReadOnlyDictionary<TKey, TValue>! dictionary, TKey key, TValue value) -> System.Collections.Generic.IReadOnlyDictionary<TKey, TValue>!
 static Rocket.Surgery.Nuke.Extensions.SetReports<T>(this T! toolSettings, System.Collections.Generic.IEnumerable<Nuke.Common.IO.AbsolutePath!>! reports) -> T!
 static Rocket.Surgery.Nuke.FilePathExtensions.PickDirectory(Nuke.Common.IO.AbsolutePath! path, params Nuke.Common.IO.AbsolutePath![]! paths) -> Nuke.Common.IO.AbsolutePath!
 static Rocket.Surgery.Nuke.FilePathExtensions.PickDirectory(System.Collections.Generic.IEnumerable<Nuke.Common.IO.AbsolutePath!>! paths) -> Nuke.Common.IO.AbsolutePath!

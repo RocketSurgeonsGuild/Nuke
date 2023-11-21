@@ -8,12 +8,14 @@ namespace Rocket.Surgery.Nuke;
 /// <summary>
 /// Defines an interface that can regenerate all of the build configurations
 /// </summary>
-public interface ICanRegenerateBuildConfiguration
+public interface ICanRegenerateBuildConfiguration : ICanLint
 {
-    internal Target RegenerateBuildConfigurations => t =>
+    public Target RegenerateBuildConfigurations => t =>
         t
            .TryDependentFor<ICanLintStagedFiles>(static z => z.LintStaged)
            .TryTriggeredBy<ICanLint>(static z => z.Lint)
+           // We run during LintStaged, no need to run again during the lint that lint-staged kicks off.
+           .OnlyWhenDynamic(() => !EnvironmentInfo.HasVariable("NUKE_INTERNAL_INTERCEPTOR"))
            .Unlisted()
            .Executes(
                 () =>

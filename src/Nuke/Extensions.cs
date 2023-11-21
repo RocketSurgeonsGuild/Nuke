@@ -98,4 +98,35 @@ public static class Extensions
         newDictionary[key] = value;
         return new ReadOnlyDictionary<TKey, TValue>(newDictionary);
     }
+
+    /// <summary>
+    /// Add a value to the dictionary if it's missing and replace it if it's set
+    /// </summary>
+    /// <param name="dictionary"></param>
+    /// <param name="key"></param>
+    /// <param name="value"></param>
+    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TValue"></typeparam>
+    /// <returns></returns>
+    public static IDictionary<TKey, TValue> ReplaceIfSet<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue value) where TKey : notnull
+    {
+        dictionary[key] = value;
+        return dictionary;
+    }
+
+    /// <summary>
+    /// Add a value to the dictionary if it's missing and replace it if it's set
+    /// </summary>
+    /// <param name="dictionary"></param>
+    /// <param name="key"></param>
+    /// <param name="value"></param>
+    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TValue"></typeparam>
+    /// <returns></returns>
+    public static IReadOnlyDictionary<TKey, TValue> ReplaceIfSet<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> dictionary, TKey key, TValue value) where TKey : notnull
+    {
+        var newDictionary = dictionary.ToDictionary(z => z.Key, z => z.Value);
+        newDictionary[key] = value;
+        return new ReadOnlyDictionary<TKey, TValue>(newDictionary);
+    }
 }
