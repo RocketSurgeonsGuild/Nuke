@@ -38,12 +38,12 @@ public interface ICanLintStagedFiles : INukeBuild
                         if (type == OutputType.Std)
                         {
                             // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-                            Log.Information(s);
+                            Console.Out.WriteLine(s);
                         }
                         else
                         {
                             // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-                            Log.Error(s);
+                            Console.Error.WriteLine(s);
                         }
                     }
                 ).AssertWaitForExit().AssertZeroExitCode()
