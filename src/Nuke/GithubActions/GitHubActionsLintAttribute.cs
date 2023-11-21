@@ -57,6 +57,8 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
 
         configuration.Permissions.Contents = GitHubActionsPermission.Write;
 
+        buildJob.If = "github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]'";
+
         buildJob
            .ConfigureStep<CheckoutStep>(
                 step =>
