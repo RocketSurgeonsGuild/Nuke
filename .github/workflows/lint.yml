@@ -50,6 +50,10 @@ jobs:
           token: '${{ secrets.RSG_BOT_TOKEN }}'
           clean: 'false'
           fetch-depth: '0'
+      - name: npm install
+        if: github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]'
+        run: |
+          npm install
       - name: 🔨 Use .NET Core 6.0 SDK
         if: github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]'
         uses: actions/setup-dotnet@v3

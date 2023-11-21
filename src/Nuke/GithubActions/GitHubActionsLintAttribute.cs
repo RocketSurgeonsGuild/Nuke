@@ -77,6 +77,7 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
                     step.Ref = "${{ github.event.pull_request.head.ref }}";
                 }
             )
+           .InsertAfterCheckOut(new RunStep("npm install") { Run = "npm install", })
            .AddStep(
                 new UsingStep("Add & Commit")
                 {
