@@ -14,7 +14,7 @@ public interface IHavePublicApis : IHaveSolution, ICanLint
     /// <summary>
     ///     Determine if Unshipped apis should always be pushed the Shipped file used in lint-staged to automatically update the shipped file
     /// </summary>
-    public bool ShouldMoveUnshippedToShipped => IsLocalBuild;
+    public bool ShouldMoveUnshippedToShipped => true;
 
     /// <summary>
     ///     All the projects that depend on the Microsoft.CodeAnalysis.PublicApiAnalyzers package
@@ -49,7 +49,6 @@ public interface IHavePublicApis : IHaveSolution, ICanLint
     public Target LintPublicApiAnalyzers => d =>
         d
            .TriggeredBy(Lint)
-           .OnlyWhenDynamic(() => IsLocalBuild)
            .Unlisted()
            .Executes(
                 async () =>
@@ -68,16 +67,7 @@ public interface IHavePublicApis : IHaveSolution, ICanLint
                             await File.WriteAllTextAsync(unshippedFilePath, "#nullable enable");
                         }
 
-#pragma warning disable CA1860
-                        if (LintPaths.Any())
-#pragma warning restore CA1860
-                        {
-                            DotNetTasks.DotNet($"format {project.Path} --diagnostics=RS0016 --include {string.Join(",", LintPaths)}");
-                        }
-                        else
-                        {
-                            DotNetTasks.DotNet($"format {project.Path} --diagnostics=RS0016");
-                        }
+                        DotNetTasks.DotNet($"format {project.Path} --diagnostics=RS0016");
                     }
                 }
             );
@@ -88,7 +78,7 @@ public interface IHavePublicApis : IHaveSolution, ICanLint
     [UsedImplicitly]
     public Target MoveUnshippedToShipped => d =>
         d
-           .After(LintPublicApiAnalyzers)
+           .DependsOn(LintPublicApiAnalyzers)
            .TriggeredBy(LintPublicApiAnalyzers)
            .OnlyWhenDynamic(() => ShouldMoveUnshippedToShipped)
            .Executes(

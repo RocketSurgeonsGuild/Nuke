@@ -25,7 +25,7 @@ public interface ICanUpdateReadme : IHaveSolution
     /// </summary>
     public Target GenerateReadme => d => d
                                         .Unlisted()
-                                        .OnlyWhenStatic(() => NukeBuild.IsLocalBuild)
+                                        .OnlyWhenStatic(() => IsLocalBuild)
                                         .Executes(
                                              () =>
                                              {

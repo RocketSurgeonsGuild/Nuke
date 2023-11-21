@@ -12,16 +12,18 @@ public interface ICanRegenerateBuildConfiguration
 {
     internal Target RegenerateBuildConfigurations => t =>
         t
+           .TryDependentFor<ICanLintStagedFiles>(static z => z.LintStaged)
+           .TryTriggeredBy<ICanLint>(static z => z.Lint)
            .Unlisted()
            .Executes(
                 () =>
                 {
-                    var allHosts = this.GetType()
+                    var allHosts = GetType()
                                        .GetCustomAttributes<ConfigurationAttributeBase>()
                                        .OfType<IConfigurationGenerator>();
 
                     allHosts
-                        // ReSharper disable once NullableWarningSuppressionIsUsed
+                       // ReSharper disable once NullableWarningSuppressionIsUsed
                        .Select(z => $"""{Assembly.GetEntryAssembly()!.Location} --{BuildServerConfigurationGeneration.ConfigurationParameterName} {z.Id} --host {z.HostName}""")
                        .ForEach(
                             command => DotNetTasks.DotNet(
