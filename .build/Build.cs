@@ -71,8 +71,10 @@ public partial class Pipeline : NukeBuild,
 
     [Solution(GenerateProjects = true)] private Solution Solution { get; } = null!;
     Nuke.Common.ProjectModel.Solution IHaveSolution.Solution => Solution;
-    [ComputedGitVersion] public GitVersion GitVersion { get; } = null!;
+
     [OptionalGitRepository] public GitRepository? GitRepository { get; }
-    [Parameter] public string? GitHubToken { get; }
+    [ComputedGitVersion] public GitVersion GitVersion { get; } = null!;
     [Parameter("Configuration to build")] public Configuration Configuration { get; } = IsLocalBuild ? Configuration.Debug : Configuration.Release;
+
+    [Parameter] public string? GitHubToken { get; }
 }

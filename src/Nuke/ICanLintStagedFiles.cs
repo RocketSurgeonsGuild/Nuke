@@ -27,6 +27,9 @@ public interface ICanLintStagedFiles : INukeBuild
                     GitHubActions.Instance.IsPullRequest() ? $"lint-staged -r --diff=\"origin/{GitHubActions.Instance.BaseRef}...origin/{GitHubActions.Instance.HeadRef}\"" : "lint-staged -r",
                     environmentVariables: EnvironmentInfo.Variables
                                                          .AddIfMissing("NUKE_INTERNAL_INTERCEPTOR", "1")
+                                                         .ReplaceIfSet("TERM", "dumb") // ensure lint staged doesn't try to use it's fancy renderer
+                                                         .ReplaceIfSet("LISTR_FORCE_UNICODE", "1")
+                                                         .ReplaceIfSet("FORCE_COLOR", "1")
                                                          // ReSharper disable once NullableWarningSuppressionIsUsed
                                                          .AddIfMissing("NUKE_BUILD_ASSEMBLY", RootDirectory.GetRelativePathTo(Assembly.GetEntryAssembly()!.Location)),
                     logOutput: true,
