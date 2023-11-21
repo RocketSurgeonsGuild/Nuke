@@ -69,6 +69,9 @@
           "type": "string",
           "description": "Partition to use on CI"
         },
+        "PatToken": {
+          "type": "string"
+        },
         "Plan": {
           "type": "boolean",
           "description": "Shows the execution plan (HTML)"

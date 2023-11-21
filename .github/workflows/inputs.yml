@@ -25,6 +25,8 @@ on:
     secrets:
       THIS_IS_A_SECRET:
         required: False
+      RSG_BOT_TOKEN:
+        required: False
     outputs:
       withOutputsISetAThing:
         description: 'Some output value'
@@ -60,4 +62,4 @@ jobs:
       - name: With Outputs
         id: withOutputs
         run: |
-          dotnet nuke WithOutputs --skip --thisisainput '${{ inputs.THIS_IS_A_INPUT }}' --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
+          dotnet nuke WithOutputs --skip --thisisainput '${{ inputs.THIS_IS_A_INPUT }}' --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --pattoken '${{ secrets.RSG_BOT_TOKEN }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
