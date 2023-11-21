@@ -43,6 +43,14 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
     {
     }
 
+    /// <summary>
+    /// The PAT token that is used to access the repository
+    /// </summary>
+    /// <remarks>
+    /// Should be in the format of the name of the secret eg RSG_BOT_TOKEN
+    /// </remarks>
+    public string TokenSecret { get; set; } = "RSG_BOT_TOKEN";
+
     /// <inheritdoc />
     public override ConfigurationEntity GetConfiguration(IReadOnlyCollection<ExecutableTarget> relevantTargets)
     {
@@ -63,6 +71,7 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
            .ConfigureStep<CheckoutStep>(
                 step =>
                 {
+                    step.Token = "${{ secrets.RSG_BOT_TOKEN }}";
                     step.FetchDepth = 0;
                     step.Repository = "${{ github.event.pull_request.head.repo.full_name }}";
                     step.Ref = "${{ github.event.pull_request.head.ref }}";

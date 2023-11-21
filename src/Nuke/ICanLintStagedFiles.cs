@@ -16,8 +16,6 @@ namespace Rocket.Surgery.Nuke;
 /// </remarks>
 public interface ICanLintStagedFiles : INukeBuild
 {
-    string LintStagedGithubToken { get; }
-
     /// <summary>
     /// Run staged lint tasks
     /// </summary>
