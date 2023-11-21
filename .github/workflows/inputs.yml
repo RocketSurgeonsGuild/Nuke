@@ -25,8 +25,6 @@ on:
     secrets:
       THIS_IS_A_SECRET:
         required: False
-      RSG_BOT_TOKEN:
-        required: False
     outputs:
       withOutputsISetAThing:
         description: 'Some output value'

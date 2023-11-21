@@ -22,8 +22,6 @@ on:
     secrets:
       THIS_IS_A_SECRET:
         required: False
-      RSG_BOT_TOKEN:
-        required: False
       RSG_NUGET_API_KEY:
         required: False
       RSG_AZURE_DEVOPS:

@@ -71,26 +71,28 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
            .ConfigureStep<CheckoutStep>(
                 step =>
                 {
-                    step.Token = "${{ secrets.RSG_BOT_TOKEN }}";
+                    step.Token = $$$"""${{ secrets.{{{TokenSecret}}} }}""";
                     step.FetchDepth = 0;
                     step.Repository = "${{ github.event.pull_request.head.repo.full_name }}";
                     step.Ref = "${{ github.event.pull_request.head.ref }}";
                 }
             )
-           .InsertAfterCheckOut(new RunStep("npm install") { Run = "npm install", })
+           .InsertAfterCheckOut(new RunStep("npm ci") { Run = "npm ci", })
            .AddStep(
                 new UsingStep("Add & Commit")
                 {
                     Uses = "stefanzweifel/git-auto-commit-action@v5",
-                    With = { ["commit_message"] = "Automatically linting code", }
+                    With = { ["commit_message"] = "Automatically linting code", },
+                    If = "github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]'"
                 }
             );
 
-        configuration.Jobs
-                     .OfType<RocketSurgeonsGithubActionsJob>()
-                     .SelectMany(z => z.Steps)
-                     .OfType<BaseGitHubActionsStep>()
-                     .ForEach(z => z.If = "github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]'");
+        foreach (var workflowTrigger in configuration.DetailedTriggers
+                                                     .OfType<RocketSurgeonGitHubActionsWorkflowTrigger>())
+        {
+            if (workflowTrigger.Secrets.Any(z => z.Name == TokenSecret || z.Alias == TokenSecret)) continue;
+            workflowTrigger.Secrets.Add(new(TokenSecret, "The token used to commit back when linting", true));
+        }
 
         buildJob.Name = "lint";
 
