@@ -14,7 +14,7 @@ public static class SolutionExtensions
     /// <returns>An enumerable of projects.</returns>
     public static IEnumerable<Project> WherePackable(this Solution solution)
     {
-        return solution.AllProjects.Where(z => z.GetProperty<bool>("IsPackable"));
+        return solution.AllProjects.Where(z => z.GetProperty<bool?>("IsPackable") == true && z.GetProperty<bool?>("IsTestProject") != true);
     }
 
     /// <summary>
@@ -24,6 +24,6 @@ public static class SolutionExtensions
     /// <returns></returns>
     public static IEnumerable<Project> GetTestProjects(this Solution solution)
     {
-        return solution.AllProjects.Where(z => z.GetProperty<bool>("IsTestProject"));
+        return solution.AllProjects.Where(z => z.GetProperty<bool?>("IsTestProject") == true);
     }
 }
