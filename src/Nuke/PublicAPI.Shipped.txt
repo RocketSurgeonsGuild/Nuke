@@ -483,25 +483,6 @@ Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.If.set -> v
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.Name.get -> string!
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.Name.set -> void
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.Needs.get -> System.Collections.Generic.List<string!>!
-Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.Needs.set -> void
-Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.Outputs.get -> System.Collections.Generic.List<Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepOutput!>!
-Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.Outputs.set -> void
-Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.RocketSurgeonsGithubActionsJobBase(string! name) -> void
-Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubWorkflowJob
-Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubWorkflowJob.RocketSurgeonsGithubWorkflowJob(string! name) -> void
-Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubWorkflowJob.Secrets.get -> System.Collections.Generic.Dictionary<string!, string!>!
-Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubWorkflowJob.Secrets.set -> void
-Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubWorkflowJob.Uses.get -> string?
-Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubWorkflowJob.Uses.set -> void
-Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubWorkflowJob.With.get -> System.Collections.Generic.Dictionary<string!, string!>!
-Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubWorkflowJob.With.set -> void
-Rocket.Surgery.Nuke.GithubActions.RunStep
-Rocket.Surgery.Nuke.GithubActions.RunStep.Run.get -> string!
-Rocket.Surgery.Nuke.GithubActions.RunStep.Run.set -> void
-Rocket.Surgery.Nuke.GithubActions.RunStep.RunStep(string! name) -> void
-Rocket.Surgery.Nuke.GithubActions.RunStep.Shell.get -> Rocket.Surgery.Nuke.GithubActions.GithubActionShell?
-Rocket.Surgery.Nuke.GithubActions.RunStep.Shell.set -> void
-Rocket.Surgery.Nuke.GithubActions.RunStep.WorkingDirectory.get -> string?
 Rocket.Surgery.Nuke.GithubActions.RunStep.WorkingDirectory.set -> void
 Rocket.Surgery.Nuke.GithubActions.SetupDotNetStep
 Rocket.Surgery.Nuke.GithubActions.SetupDotNetStep.ConfigFile.get -> string?
