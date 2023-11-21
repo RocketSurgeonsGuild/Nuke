@@ -71,7 +71,7 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
     {
         public bool AreHooksInstalled(IReadOnlyCollection<string> hooks)
         {
-            if (NukeBuild.IsServerBuild) return true; 
+            if (NukeBuild.IsServerBuild) return true;
             try
             {
                 var hooksOutput = GitTasks.Git($"config --get core.hookspath", logOutput: false, logInvocation: false);
