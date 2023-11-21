@@ -26,6 +26,7 @@ override Rocket.Surgery.Nuke.GithubActions.DownloadArtifactSet.ComputeStepName(s
 override Rocket.Surgery.Nuke.GithubActions.DownloadArtifactSet.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
 override Rocket.Surgery.Nuke.GithubActions.GithubActionCondition.ToString() -> string?
 override Rocket.Surgery.Nuke.GithubActions.GithubActionShell.ToString() -> string!
+override Rocket.Surgery.Nuke.GithubActions.GitHubActionsLintAttribute.GetConfiguration(System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! relevantTargets) -> Nuke.Common.CI.ConfigurationEntity!
 override Rocket.Surgery.Nuke.GithubActions.GithubActionsNukeParameter.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
 override Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepOutput.ToString() -> string!
 override Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepsAttribute.GeneratedFiles.get -> System.Collections.Generic.IEnumerable<Nuke.Common.IO.AbsolutePath!>!
@@ -268,6 +269,9 @@ Rocket.Surgery.Nuke.GithubActions.GitHubActionsInputType
 Rocket.Surgery.Nuke.GithubActions.GitHubActionsInputType.Boolean = 1 -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsInputType
 Rocket.Surgery.Nuke.GithubActions.GitHubActionsInputType.Number = 2 -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsInputType
 Rocket.Surgery.Nuke.GithubActions.GitHubActionsInputType.String = 0 -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsInputType
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsLintAttribute
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsLintAttribute.GitHubActionsLintAttribute(string! name, Nuke.Common.CI.GitHubActions.GitHubActionsImage image, params Nuke.Common.CI.GitHubActions.GitHubActionsImage[]! images) -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsLintAttribute.GitHubActionsLintAttribute(string! name, string! image, params string![]! images) -> void
 Rocket.Surgery.Nuke.GithubActions.GithubActionsNukeParameter
 Rocket.Surgery.Nuke.GithubActions.GithubActionsNukeParameter.Default.get -> string!
 Rocket.Surgery.Nuke.GithubActions.GithubActionsNukeParameter.Default.set -> void
@@ -281,6 +285,38 @@ Rocket.Surgery.Nuke.GithubActions.GitHubActionsOutput.GitHubActionsOutput(string
 Rocket.Surgery.Nuke.GithubActions.GitHubActionsOutput.OutputName.get -> string!
 Rocket.Surgery.Nuke.GithubActions.GitHubActionsOutput.OutputName.init -> void
 Rocket.Surgery.Nuke.GithubActions.GitHubActionsOutput.ToStep(string! stepName) -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepOutput!
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermission
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermission.None = 0 -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermission
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermission.Read = 1 -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermission
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermission.Write = 2 -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermission
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.Actions.get -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermission
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.Actions.set -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.Checks.get -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermission
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.Checks.set -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.Contents.get -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermission
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.Contents.set -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.Deployments.get -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermission
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.Deployments.set -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.Discussions.get -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermission
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.Discussions.set -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.IdToken.get -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermission
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.IdToken.set -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.Issues.get -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermission
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.Issues.set -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.Packages.get -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermission
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.Packages.set -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.Pages.get -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermission
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.Pages.set -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.PullRequests.get -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermission
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.PullRequests.set -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.RepositoryProjects.get -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermission
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.RepositoryProjects.set -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.SecurityEvents.get -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermission
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.SecurityEvents.set -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.Statuses.get -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermission
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.Statuses.set -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
 Rocket.Surgery.Nuke.GithubActions.GitHubActionsSecret
 Rocket.Surgery.Nuke.GithubActions.GitHubActionsSecret.Alias.get -> string?
 Rocket.Surgery.Nuke.GithubActions.GitHubActionsSecret.Alias.init -> void
@@ -332,6 +368,14 @@ Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPullRequestI
 Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPullRequestIncludePaths.set -> void
 Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPullRequestTags.get -> string![]!
 Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPullRequestTags.set -> void
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPullRequestTargetBranches.get -> string![]!
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPullRequestTargetBranches.set -> void
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPullRequestTargetExcludePaths.get -> string![]!
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPullRequestTargetExcludePaths.set -> void
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPullRequestTargetIncludePaths.get -> string![]!
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPullRequestTargetIncludePaths.set -> void
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPullRequestTargetTags.get -> string![]!
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPullRequestTargetTags.set -> void
 Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPushBranches.get -> string![]!
 Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPushBranches.set -> void
 Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnPushExcludePaths.get -> string![]!
@@ -386,11 +430,14 @@ Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.Jobs.g
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.Jobs.set -> void
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.Name.get -> string!
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.Name.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.Permissions.get -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions!
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.Permissions.set -> void
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.RocketSurgeonGitHubActionsConfiguration() -> void
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.ShortTriggers.get -> System.Collections.Generic.List<Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsTrigger>!
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.ShortTriggers.set -> void
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsTrigger
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsTrigger.PullRequest = 1 -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsTrigger
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsTrigger.PullRequestTarget = 4 -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsTrigger
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsTrigger.Push = 0 -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsTrigger
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsTrigger.WorkflowCall = 3 -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsTrigger
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsTrigger.WorkflowDispatch = 2 -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsTrigger
@@ -421,6 +468,8 @@ Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob.FailFast.get ->
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob.FailFast.set -> void
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob.Matrix.get -> System.Collections.Generic.IEnumerable<string!>!
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob.Matrix.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob.Permissions.get -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions?
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob.Permissions.set -> void
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob.RocketSurgeonsGithubActionsJob(string! name) -> void
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob.RunsOn.get -> System.Collections.Generic.IEnumerable<string!>!
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob.RunsOn.set -> void
@@ -432,6 +481,7 @@ Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.Environment
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.If.get -> Rocket.Surgery.Nuke.GithubActions.GithubActionCondition?
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.If.set -> void
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.Name.get -> string!
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.Name.set -> void
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.Needs.get -> System.Collections.Generic.List<string!>!
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.Needs.set -> void
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.Outputs.get -> System.Collections.Generic.List<Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepOutput!>!
@@ -495,6 +545,7 @@ Rocket.Surgery.Nuke.ICanClean.Clean.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ICanLint
 Rocket.Surgery.Nuke.ICanLint.Lint.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ICanLint.PostLint.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.ICanLintStagedFiles
 Rocket.Surgery.Nuke.ICanLintStagedFiles.LintStaged.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ICanPrettier
 Rocket.Surgery.Nuke.ICanPrettier.Prettier.get -> Nuke.Common.Target!
@@ -710,9 +761,12 @@ static Rocket.Surgery.Nuke.Azp.AzurePipelinesTasks.IsRunningOnAzurePipelines.get
 static Rocket.Surgery.Nuke.ComputedGitVersionAttribute.HasGitVer() -> bool
 static Rocket.Surgery.Nuke.DotNetTool.GetTool(string! nugetPackageName) -> Nuke.Common.Tooling.Tool!
 static Rocket.Surgery.Nuke.DotNetTool.IsInstalled(string! nugetPackageName) -> bool
+static Rocket.Surgery.Nuke.Extensions.AddIfMissing<TKey, TValue>(this System.Collections.Generic.IDictionary<TKey, TValue>! dictionary, TKey key, TValue value) -> System.Collections.Generic.IDictionary<TKey, TValue>!
+static Rocket.Surgery.Nuke.Extensions.AddIfMissing<TKey, TValue>(this System.Collections.Generic.IReadOnlyDictionary<TKey, TValue>! dictionary, TKey key, TValue value) -> System.Collections.Generic.IReadOnlyDictionary<TKey, TValue>!
 static Rocket.Surgery.Nuke.Extensions.As<T>(this T value) -> T
 static Rocket.Surgery.Nuke.Extensions.CastAs<T>(this object! value) -> T
 static Rocket.Surgery.Nuke.Extensions.CreateOrCleanDirectory(this Nuke.Common.ITargetDefinition! target, Nuke.Common.IO.AbsolutePath! testResultsDirectory) -> Nuke.Common.ITargetDefinition!
+static Rocket.Surgery.Nuke.Extensions.IsPullRequest(this Nuke.Common.CI.GitHubActions.GitHubActions? actions) -> bool
 static Rocket.Surgery.Nuke.Extensions.SetReports<T>(this T! toolSettings, System.Collections.Generic.IEnumerable<Nuke.Common.IO.AbsolutePath!>! reports) -> T!
 static Rocket.Surgery.Nuke.FilePathExtensions.PickDirectory(Nuke.Common.IO.AbsolutePath! path, params Nuke.Common.IO.AbsolutePath![]! paths) -> Nuke.Common.IO.AbsolutePath!
 static Rocket.Surgery.Nuke.FilePathExtensions.PickDirectory(System.Collections.Generic.IEnumerable<Nuke.Common.IO.AbsolutePath!>! paths) -> Nuke.Common.IO.AbsolutePath!
@@ -749,6 +803,9 @@ static Rocket.Surgery.Nuke.GithubActions.GithubActionShell.Powershell.get -> Roc
 static Rocket.Surgery.Nuke.GithubActions.GithubActionShell.Pwsh.get -> Rocket.Surgery.Nuke.GithubActions.GithubActionShell!
 static Rocket.Surgery.Nuke.GithubActions.GithubActionShell.Python.get -> Rocket.Surgery.Nuke.GithubActions.GithubActionShell!
 static Rocket.Surgery.Nuke.GithubActions.GithubActionShell.Sh.get -> Rocket.Surgery.Nuke.GithubActions.GithubActionShell!
+static Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.None.get -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions!
+static Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.ReadAll.get -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions!
+static Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions.WriteAll.get -> Rocket.Surgery.Nuke.GithubActions.GitHubActionsPermissions!
 static Rocket.Surgery.Nuke.GitVersionFunctions.AssemblyVersion(this Nuke.Common.Tools.GitVersion.GitVersion? gitVersion) -> string!
 static Rocket.Surgery.Nuke.GitVersionFunctions.FullSemanticVersion(this Nuke.Common.Tools.GitVersion.GitVersion? gitVersion) -> string!
 static Rocket.Surgery.Nuke.GitVersionFunctions.MajorMinorPatch(this Nuke.Common.Tools.GitVersion.GitVersion? gitVersion) -> string!

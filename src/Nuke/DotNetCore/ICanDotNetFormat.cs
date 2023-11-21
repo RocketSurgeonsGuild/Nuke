@@ -19,7 +19,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint
         d
            .TriggeredBy(PostLint)
            .After(Lint)
-           .OnlyWhenStatic(() => IsLocalBuild)
+           .OnlyWhenStatic(() => IsLocalBuild || LintPaths.Any())
            .Executes(
                 () => LintPaths.Any()
                     ? DotNetTasks.DotNet($"format --severity {DotNetFormatSeverity} --include {string.Join(",", LintPaths)}")

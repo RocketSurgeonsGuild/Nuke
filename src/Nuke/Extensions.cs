@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.IO;
 using Nuke.Common.Tools.ReportGenerator;
 using Nuke.Common.Utilities.Collections;
@@ -56,6 +57,13 @@ public static class Extensions
     {
         return toolSettings.SetReports(reports.Select(z => z.ToString()).ToArray());
     }
+
+    /// <summary>
+    /// Determine if there is a pullrequest happening or not.
+    /// </summary>
+    /// <param name="actions"></param>
+    /// <returns></returns>
+    public static bool IsPullRequest(this GitHubActions? actions) => actions?.EventName is "pull_request" or "pull_request_target";
 
     /// <summary>
     /// Add a value to the dictionary if it's missing

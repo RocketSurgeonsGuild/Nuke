@@ -61,6 +61,7 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
            .ConfigureStep<CheckoutStep>(
                 step =>
                 {
+                    step.FetchDepth = 0;
                     step.Repository = "${{ github.event.pull_request.head.repo.full_name }}";
                     step.Ref = "${{ github.event.pull_request.head.ref }}";
                 }
@@ -68,8 +69,8 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
            .AddStep(
                 new UsingStep("Add & Commit")
                 {
-                    Uses = "EndBug/add-and-commit@v9",
-                    With = { ["message"] = "Automatically linting code", }
+                    Uses = "stefanzweifel/git-auto-commit-action@v5",
+                    With = { ["commit_message"] = "Automatically linting code", }
                 }
             );
 

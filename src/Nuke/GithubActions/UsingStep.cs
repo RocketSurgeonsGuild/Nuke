@@ -43,7 +43,7 @@ public class UsingStep : BaseGitHubActionsStep
             With?.Add(
                 transformName(property.Name), value switch
                 {
-                    null => "",
+                    null => string.Empty,
                     bool b => b.ToString().ToLowerInvariant(),
                     string s => s,
                     _ => value.ToString() ?? ""

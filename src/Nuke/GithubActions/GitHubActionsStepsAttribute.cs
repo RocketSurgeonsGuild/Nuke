@@ -139,9 +139,9 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
 
         var environmentVariables =
             GetAllSecrets(secrets)
-                // ReSharper disable once CoVariantArrayConversion
+               // ReSharper disable once CoVariantArrayConversion
                .Concat<ITriggerValue>(variables)
-                // ReSharper disable once CoVariantArrayConversion
+               // ReSharper disable once CoVariantArrayConversion
                .Concat(environmentAttributes)
                .SelectMany(
                     z =>
@@ -183,8 +183,8 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         var lookupTable = new LookupTable<ExecutableTarget, ExecutableTarget[]>();
         foreach (var (execute, targets) in relevantTargets
                                           .Select(
-                                               x => ( ExecutableTarget: x,
-                                                      Targets: GetInvokedTargets(x, relevantTargets).ToArray() )
+                                               x => (ExecutableTarget: x,
+                                                      Targets: GetInvokedTargets(x, relevantTargets).ToArray())
                                            )
                                           .ForEachLazy(x => lookupTable.Add(x.ExecutableTarget, x.Targets.ToArray()))
                 )

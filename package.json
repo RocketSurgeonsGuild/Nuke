@@ -7,7 +7,7 @@
         "prettier": "^3.0.0"
     },
     "scripts": {
-        "prepare": "husky install"
+        "husky": "husky install"
     },
     "dependencies": {
         "which": "^4.0.0"

@@ -61,11 +61,9 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
         if (( NukeBuild.RootDirectory / "package.json" ).FileExists() && !NukeBuild.RootDirectory.ContainsDirectory("node_modules"))
         {
             Log.Information("package.json found running npm install to see if that installs any hooks");
-            ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npm"), "install", workingDirectory: NukeBuild.RootDirectory)
+            ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npm"), NukeBuild.IsLocalBuild ? "install" : "ci", workingDirectory: NukeBuild.RootDirectory)
                         .AssertWaitForExit()
                         .AssertZeroExitCode();
-            ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npm"), "run prepare", workingDirectory: NukeBuild.RootDirectory)
-                        .AssertWaitForExit();
         }
     }
 
@@ -73,6 +71,7 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
     {
         public bool AreHooksInstalled(IReadOnlyCollection<string> hooks)
         {
+            if (NukeBuild.IsServerBuild) return true;
             try
             {
                 var hooksOutput = GitTasks.Git($"config --get core.hookspath", logOutput: false, logInvocation: false);
@@ -96,8 +95,11 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
                 ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npm"), "install", workingDirectory: NukeBuild.RootDirectory)
                             .AssertWaitForExit()
                             .AssertZeroExitCode();
-                ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npm"), "run prepare", workingDirectory: NukeBuild.RootDirectory)
-                            .AssertWaitForExit();
+                if (NukeBuild.IsLocalBuild)
+                {
+                    ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npm"), "run husky", workingDirectory: NukeBuild.RootDirectory)
+                                .AssertWaitForExit();
+                }
             }
 
             if (!AreHooksInstalled(hooks))

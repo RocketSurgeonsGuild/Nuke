@@ -20,7 +20,9 @@ using Rocket.Surgery.Nuke.DotNetCore;
 [NuGetVerbosityMapping]
 [ShutdownDotNetAfterServerBuild]
 [LocalBuildConventions]
+#pragma warning disable CA1050
 public partial class Pipeline : NukeBuild,
+#pragma warning restore CA1050
                                 ICanRestoreWithDotNetCore,
                                 ICanBuildWithDotNetCore,
                                 ICanTestWithDotNetCore,
@@ -35,6 +37,7 @@ public partial class Pipeline : NukeBuild,
                                 IGenerateCodeCoverageReport,
                                 IGenerateCodeCoverageSummary,
                                 IGenerateCodeCoverageBadges,
+                                ICanRegenerateBuildConfiguration,
                                 IHaveConfiguration<Configuration>
 {
     /// <summary>
