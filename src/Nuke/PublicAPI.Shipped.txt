@@ -552,6 +552,7 @@ Rocket.Surgery.Nuke.ICanLintStagedFiles.LintStaged.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ICanPrettier
 Rocket.Surgery.Nuke.ICanPrettier.Prettier.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ICanRegenerateBuildConfiguration
+Rocket.Surgery.Nuke.ICanRegenerateBuildConfiguration.RegenerateBuildConfigurations.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ICanUpdateReadme
 Rocket.Surgery.Nuke.ICanUpdateReadme.GenerateReadme.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ICanUpdateReadme.Readme.get -> Rocket.Surgery.Nuke.Readme.ReadmeUpdater!
