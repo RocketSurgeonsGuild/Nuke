@@ -66,7 +66,6 @@ using Rocket.Surgery.Nuke.GithubActions;
 [GitHubActionsInput("THIS_IS_ANOTHER_INPUT" /*, Alias = "ThisIsAInput"*/)]
 [GitHubActionsEnvironmentVariable("THIS_IS_A_ENV" /*, Alias = "ThisIsAEnv"*/, Default = "'test'")]
 [GitHubActionsSecret("THIS_IS_A_SECRET" /*, Alias = "ThisIsASecret"*/)]
-[GitHubActionsSecret("RSG_BOT_TOKEN")]
 [PrintBuildVersion]
 [PrintCIEnvironment]
 [UploadLogs]
@@ -110,7 +109,7 @@ public partial class Pipeline
            .First(z => z.Name.Equals("Build", StringComparison.OrdinalIgnoreCase))
            .UseDotNetSdks("6.0", "8.0")
            .AddNuGetCache()
-           // .ConfigureForGitVersion()
+            // .ConfigureForGitVersion()
            .ConfigureStep<CheckoutStep>(step => step.FetchDepth = 0)
            .PublishLogs<Pipeline>();
 
