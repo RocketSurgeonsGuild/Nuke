@@ -114,6 +114,7 @@ Rocket.Surgery.Nuke.DotNetCore.ICanDotNetFormat
 Rocket.Surgery.Nuke.DotNetCore.ICanDotNetFormat.DotNetFormat.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.DotNetCore.ICanDotNetFormat.DotNetFormatSeverity.get -> Nuke.Common.Tools.DotNet.DotNetFormatSeverity!
 Rocket.Surgery.Nuke.DotNetCore.ICanDotNetFormat.JetBrainsCleanupCode.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.DotNetCore.ICanDotNetFormat.JetBrainsCleanupCodeProfile.get -> string!
 Rocket.Surgery.Nuke.DotNetCore.ICanPackWithDotNetCore
 Rocket.Surgery.Nuke.DotNetCore.ICanPackWithDotNetCore.CorePack.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.DotNetCore.ICanRestoreWithDotNetCore
@@ -546,6 +547,7 @@ Rocket.Surgery.Nuke.ICanClean
 Rocket.Surgery.Nuke.ICanClean.Clean.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ICanLint
 Rocket.Surgery.Nuke.ICanLint.Lint.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.ICanLint.LintPaths.get -> System.Collections.Generic.IEnumerable<Nuke.Common.IO.AbsolutePath!>!
 Rocket.Surgery.Nuke.ICanLint.PostLint.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ICanLintStagedFiles
 Rocket.Surgery.Nuke.ICanLintStagedFiles.LintStaged.get -> Nuke.Common.Target!

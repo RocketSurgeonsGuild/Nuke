@@ -109,7 +109,7 @@ public partial class Pipeline
            .First(z => z.Name.Equals("Build", StringComparison.OrdinalIgnoreCase))
            .UseDotNetSdks("6.0", "8.0")
            .AddNuGetCache()
-           // .ConfigureForGitVersion()
+            // .ConfigureForGitVersion()
            .ConfigureStep<CheckoutStep>(step => step.FetchDepth = 0)
            .PublishLogs<Pipeline>();
 

@@ -1,5 +1,4 @@
 using Nuke.Common.IO;
-using Nuke.Common.Utilities.Collections;
 
 namespace Rocket.Surgery.Nuke;
 
@@ -29,5 +28,5 @@ public interface ICanLint : INukeBuild
     /// <summary>
     ///     The lint paths rooted as an absolute path.
     /// </summary>
-    protected internal IEnumerable<AbsolutePath> LintPaths => PrivateLintFiles.Select(z => Path.IsPathRooted(z) ? (AbsolutePath)z : RootDirectory / z);
+    public IEnumerable<AbsolutePath> LintPaths => PrivateLintFiles.Select(z => Path.IsPathRooted(z) ? (AbsolutePath)z : RootDirectory / z);
 }

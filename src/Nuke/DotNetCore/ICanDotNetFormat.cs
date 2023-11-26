@@ -1,3 +1,4 @@
+using Nuke.Common.IO;
 using Nuke.Common.Tools.DotNet;
 
 namespace Rocket.Surgery.Nuke.DotNetCore;
@@ -11,6 +12,11 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint
     ///     The default severity to use for DotNetFormat
     /// </summary>
     public DotNetFormatSeverity DotNetFormatSeverity => DotNetFormatSeverity.warn;
+
+    /// <summary>
+    ///     The default profile to use for JetBrainsCleanupCode
+    /// </summary>
+    public string JetBrainsCleanupCodeProfile => "Full Cleanup";
 
     /// <summary>
     ///     The dotnet format target
@@ -31,15 +37,22 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint
     /// </summary>
     public Target JetBrainsCleanupCode => d =>
         d
-           .TriggeredBy(Lint)
-           .Before(DotNetFormat)
-           .OnlyWhenStatic(() => !LintPaths.Any())
+           .TriggeredBy(PostLint)
+           .After(DotNetFormat)
+           .OnlyWhenStatic(() => IsLocalBuild || LintPaths.Any())
            .OnlyWhenStatic(() => DotNetTool.IsInstalled("jb"))
            .Executes(
-                () => DotNetTasks.DotNet(
-                    $""""jb cleanupcode "{Solution.Path}" --profile="Full Cleanup" --disable-settings-layers="GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal" """",
-                    RootDirectory,
-                    logOutput: true
-                )
+                () => LintPaths.Any()
+                    ? DotNetTasks.DotNet(
+                        $""""jb cleanupcode "{Solution.Path}" --profile={JetBrainsCleanupCodeProfile} --disable-settings-layers="GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal" --include={string.Join(";", LintPaths.Select(z => RootDirectory.GetRelativePathTo(z)))} """",
+                        RootDirectory,
+                        logOutput: true
+                    )
+                    : DotNetTasks.DotNet(
+                        $""""jb cleanupcode "{Solution.Path}" --profile={JetBrainsCleanupCodeProfile} --disable-settings-layers="GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal" """",
+                        RootDirectory,
+                        logOutput: true
+                    )
             );
+    // --include
 }
