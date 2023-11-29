@@ -1,17 +1,16 @@
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
-using Nuke.Common.Utilities.Collections;
 
 #pragma warning disable CA1019
 
 namespace Rocket.Surgery.Nuke.GithubActions;
 
 /// <summary>
-/// An attribute to help adding the lint workflow
+///     An attribute to help adding the lint workflow
 /// </summary>
 [PublicAPI]
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+[AttributeUsage(AttributeTargets.Class)]
 public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
 {
     /// <summary>
@@ -21,12 +20,12 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
     /// <param name="image"></param>
     /// <param name="images"></param>
     public GitHubActionsLintAttribute(
-        string name,
-        GitHubActionsImage image,
+        string                      name,
+        GitHubActionsImage          image,
         params GitHubActionsImage[] images
     ) : base(name, image, images)
     {
-        InvokedTargets = new[] { nameof(ICanLintStagedFiles.LintStaged) };
+        InvokedTargets = new[] { nameof(ICanLintStagedFiles.LintStaged), };
     }
 
     /// <summary>
@@ -36,18 +35,16 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
     /// <param name="image"></param>
     /// <param name="images"></param>
     public GitHubActionsLintAttribute(
-        string name,
-        string image,
+        string          name,
+        string          image,
         params string[] images
-    ) : base(name, image, images)
-    {
-    }
+    ) : base(name, image, images) { }
 
     /// <summary>
-    /// The PAT token that is used to access the repository
+    ///     The PAT token that is used to access the repository
     /// </summary>
     /// <remarks>
-    /// Should be in the format of the name of the secret eg RSG_BOT_TOKEN
+    ///     Should be in the format of the name of the secret eg RSG_BOT_TOKEN
     /// </remarks>
     public string TokenSecret { get; set; } = "RSG_BOT_TOKEN";
 
@@ -83,7 +80,6 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
                 {
                     Uses = "stefanzweifel/git-auto-commit-action@v5",
                     With = { ["commit_message"] = "Automatically linting code", },
-                    If = "github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]'"
                 }
             );
 
