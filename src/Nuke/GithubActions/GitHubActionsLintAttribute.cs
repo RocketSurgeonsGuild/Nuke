@@ -64,6 +64,8 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
 
         configuration.Permissions.Contents = GitHubActionsPermission.Write;
 
+        const string commitMessage = "Automatically linting code";
+
         buildJob
            .ConfigureStep<CheckoutStep>(
                 step =>
@@ -75,11 +77,15 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
                 }
             )
            .InsertAfterCheckOut(new RunStep("npm ci") { Run = "npm ci", })
+           .InsertAfterCheckOut(
+                new RunStep("Get Head Commit Message") { Id = "commit-message", Run = "echo \"message=$(git show -s --format=%s)\" >> \"$GITHUB_OUTPUT\"", }
+            )
            .AddStep(
                 new UsingStep("Add & Commit")
                 {
+                    If = $$$""" "'${{ steps.commit-message.outputs.message }}' == '{{{commitMessage}}}'" """.Trim(),
                     Uses = "stefanzweifel/git-auto-commit-action@v5",
-                    With = { ["commit_message"] = "Automatically linting code", },
+                    With = { ["commit_message"] = commitMessage, },
                 }
             );
 
