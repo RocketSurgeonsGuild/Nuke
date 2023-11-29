@@ -643,6 +643,7 @@ Rocket.Surgery.Nuke.ITriggerCodeCoverageReports.InputReports.get -> System.Colle
 Rocket.Surgery.Nuke.ITriggerCodeCoverageReports.TriggerCodeCoverageReports.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.LocalBuildConventionsAttribute
 Rocket.Surgery.Nuke.LocalBuildConventionsAttribute.LocalBuildConventionsAttribute() -> void
+Rocket.Surgery.Nuke.LocalBuildConventionsAttribute.OnBuildCreated(System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! executableTargets) -> void
 Rocket.Surgery.Nuke.LocalBuildConventionsAttribute.OnBuildFinished() -> void
 Rocket.Surgery.Nuke.LocalBuildConventionsAttribute.OnBuildInitialized(System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! executableTargets, System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! executionPlan) -> void
 Rocket.Surgery.Nuke.MsBuild.ICanBuildWithMsBuild
