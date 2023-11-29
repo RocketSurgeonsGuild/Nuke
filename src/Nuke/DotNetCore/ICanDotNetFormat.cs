@@ -44,7 +44,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint
                                                  .Executes(
                                                       () => LintPaths.Any()
                                                           ? DotNetTasks.DotNet(
-                                                              $""""jb cleanupcode "{Solution.Path}" --profile={JetBrainsCleanupCodeProfile} --disable-settings-layers="GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal" --include={string.Join(";", LintPaths.Select(z => RootDirectory.GetRelativePathTo(z)))} """",
+                                                              $""""jb cleanupcode "{Solution.Path}" --profile={JetBrainsCleanupCodeProfile} --disable-settings-layers="GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal" --include="{string.Join(";", LintPaths.Select(z => RootDirectory.GetRelativePathTo(z)))}" """",
                                                               RootDirectory,
                                                               logOutput: true
                                                           )
