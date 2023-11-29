@@ -1,6 +1,5 @@
 using Nuke.Common;
 using Nuke.Common.CI.GitHubActions;
-using Nuke.Common.CI.GitHubActions.Configuration;
 using Rocket.Surgery.Nuke.ContinuousIntegration;
 using Rocket.Surgery.Nuke.DotNetCore;
 using Rocket.Surgery.Nuke.GithubActions;
@@ -12,11 +11,11 @@ using Rocket.Surgery.Nuke.GithubActions;
     GitHubActionsImage.WindowsLatest,
     GitHubActionsImage.UbuntuLatest,
     AutoGenerate = false,
-    On = new[] { RocketSurgeonGitHubActionsTrigger.Push },
-    OnPushTags = new[] { "v*" },
-    OnPushBranches = new[] { "master", "main", "next" },
-    OnPullRequestBranches = new[] { "master", "main", "next" },
-    Enhancements = new[] { nameof(CiIgnoreMiddleware) }
+    On = new[] { RocketSurgeonGitHubActionsTrigger.Push, },
+    OnPushTags = new[] { "v*", },
+    OnPushBranches = new[] { "master", "main", "next", },
+    OnPullRequestBranches = new[] { "master", "main", "next", },
+    Enhancements = new[] { nameof(CiIgnoreMiddleware), }
 )]
 [GitHubActionsSteps(
     "ci",
@@ -25,40 +24,40 @@ using Rocket.Surgery.Nuke.GithubActions;
     GitHubActionsImage.UbuntuLatest,
     AutoGenerate = false,
     On = new[]
-    {
-        RocketSurgeonGitHubActionsTrigger.WorkflowCall,
-        RocketSurgeonGitHubActionsTrigger.WorkflowDispatch
-    },
-    OnPushTags = new[] { "v*" },
-    OnPushBranches = new[] { "master", "main", "next" },
-    OnPullRequestBranches = new[] { "master", "main", "next" },
-    InvokedTargets = new[] { nameof(Default) },
+         {
+             RocketSurgeonGitHubActionsTrigger.WorkflowCall,
+             RocketSurgeonGitHubActionsTrigger.WorkflowDispatch,
+         },
+    OnPushTags = new[] { "v*", },
+    OnPushBranches = new[] { "master", "main", "next", },
+    OnPullRequestBranches = new[] { "master", "main", "next", },
+    InvokedTargets = new[] { nameof(Default), },
     NonEntryTargets = new[]
-    {
-        nameof(ICIEnvironment.CIEnvironment),
-        nameof(ITriggerCodeCoverageReports.TriggerCodeCoverageReports),
-        nameof(ITriggerCodeCoverageReports.GenerateCodeCoverageReportCobertura),
-        nameof(IGenerateCodeCoverageBadges.GenerateCodeCoverageBadges),
-        nameof(IGenerateCodeCoverageReport.GenerateCodeCoverageReport),
-        nameof(IGenerateCodeCoverageSummary.GenerateCodeCoverageSummary),
-        nameof(Default)
-    },
-    ExcludedTargets = new[] { nameof(ICanClean.Clean), nameof(ICanRestoreWithDotNetCore.DotnetToolRestore) },
-    Enhancements = new[] { nameof(CiMiddleware) }
+                      {
+                          nameof(ICIEnvironment.CIEnvironment),
+                          nameof(ITriggerCodeCoverageReports.TriggerCodeCoverageReports),
+                          nameof(ITriggerCodeCoverageReports.GenerateCodeCoverageReportCobertura),
+                          nameof(IGenerateCodeCoverageBadges.GenerateCodeCoverageBadges),
+                          nameof(IGenerateCodeCoverageReport.GenerateCodeCoverageReport),
+                          nameof(IGenerateCodeCoverageSummary.GenerateCodeCoverageSummary),
+                          nameof(Default),
+                      },
+    ExcludedTargets = new[] { nameof(ICanClean.Clean), nameof(ICanRestoreWithDotNetCore.DotnetToolRestore), },
+    Enhancements = new[] { nameof(CiMiddleware), }
 )]
 [GitHubActionsLint(
     "lint",
     GitHubActionsImage.UbuntuLatest,
     AutoGenerate = false,
-    OnPullRequestTargetBranches = new[] { "master", "main", "next" },
-    Enhancements = new[] { nameof(LintStagedMiddleware) }
+    OnPullRequestTargetBranches = new[] { "master", "main", "next", },
+    Enhancements = new[] { nameof(LintStagedMiddleware), }
 )]
 [GitHubActionsSteps(
     "inputs",
     GitHubActionsImage.UbuntuLatest,
     AutoGenerate = false,
-    On = new[] { RocketSurgeonGitHubActionsTrigger.WorkflowCall },
-    InvokedTargets = new[] { nameof(WithOutputs) }
+    On = new[] { RocketSurgeonGitHubActionsTrigger.WorkflowCall, },
+    InvokedTargets = new[] { nameof(WithOutputs), }
 )]
 [GitHubActionsVariable("THIS_IS_A_VARIABLE", Alias = "ThisIsAOtherVariable")]
 [GitHubActionsVariable("THIS_IS_ANOTHER_VARIABLE")]
@@ -75,30 +74,45 @@ public partial class Pipeline
 {
     public static RocketSurgeonGitHubActionsConfiguration CiIgnoreMiddleware(RocketSurgeonGitHubActionsConfiguration configuration)
     {
-        ( (RocketSurgeonsGithubActionsJob)configuration.Jobs[0] ).Steps = new List<GitHubActionsStep>
-        {
-            new RunStep("N/A")
-            {
-                Run = "echo \"No build required\""
-            }
-        };
+        ( (RocketSurgeonsGithubActionsJob)configuration.Jobs[0] ).Steps = new()
+                                                                          {
+                                                                              new RunStep("N/A")
+                                                                              {
+                                                                                  Run = "echo \"No build required\"",
+                                                                              },
+                                                                          };
 
         return configuration.IncludeRepositoryConfigurationFiles();
     }
 
-    private Target WithOutputs => _ => _.ProducesGithubActionsOutput("iSetAThing", "Some output value")
-                                        .Requires(() => ThisIsAInput)
-                                        .Executes(() => GitHubActions.Instance?.SetOutput("iSetAThing", "myValue"));
+    private Target WithOutputs => _ => _
+                                      .ProducesGithubActionsOutput("iSetAThing", "Some output value")
+                                      .Requires(() => ThisIsAInput)
+                                      .Executes(() => GitHubActions.Instance?.SetOutput("iSetAThing", "myValue"));
+    #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    [Parameter]
+    public string ThisIsAInput { get; set; }
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-    [Parameter] public string ThisIsAInput { get; set; }
-    [Parameter] public string ThisIsAnotherInput { get; set; }
-    [Parameter] public string ThisIsADifferentOutput { get; set; }
-    [Parameter] public string ThisIsAOtherVariable { get; set; }
-    [Parameter] public string ThisIsAnotherVariable { get; set; }
-    [Parameter(Name = "THIS_IS_A_VARIABLE")] public string ThisIsAVariable { get; set; }
-    [Parameter] public string ThisIsAEnv { get; set; }
-    [Parameter] public string ThisIsASecret { get; set; }
+    [Parameter]
+    public string ThisIsAnotherInput { get; set; }
+
+    [Parameter]
+    public string ThisIsADifferentOutput { get; set; }
+
+    [Parameter]
+    public string ThisIsAOtherVariable { get; set; }
+
+    [Parameter]
+    public string ThisIsAnotherVariable { get; set; }
+
+    [Parameter(Name = "THIS_IS_A_VARIABLE")]
+    public string ThisIsAVariable { get; set; }
+
+    [Parameter]
+    public string ThisIsAEnv { get; set; }
+
+    [Parameter]
+    public string ThisIsASecret { get; set; }
 
     public static RocketSurgeonGitHubActionsConfiguration CiMiddleware(RocketSurgeonGitHubActionsConfiguration configuration)
     {

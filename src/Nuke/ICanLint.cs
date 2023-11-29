@@ -18,15 +18,15 @@ public interface ICanLint : INukeBuild
     public Target PostLint => t => t.Unlisted().After(Lint).TriggeredBy(Lint);
 
     /// <summary>
-    ///     The files to lint, if not given lints all files
-    /// </summary>
-    [Parameter("The files to lint, if not given lints all files", Separator = " ", Name = "lint-files")]
-#pragma warning disable CA1819
-    private string[] PrivateLintFiles => TryGetValue(() => PrivateLintFiles) ?? Array.Empty<string>();
-#pragma warning restore CA1819
-
-    /// <summary>
     ///     The lint paths rooted as an absolute path.
     /// </summary>
     public IEnumerable<AbsolutePath> LintPaths => PrivateLintFiles.Select(z => Path.IsPathRooted(z) ? (AbsolutePath)z : RootDirectory / z);
+
+    /// <summary>
+    ///     The files to lint, if not given lints all files
+    /// </summary>
+    [Parameter("The files to lint, if not given lints all files", Separator = " ", Name = "lint-files")]
+    #pragma warning disable CA1819
+    private string[] PrivateLintFiles => TryGetValue(() => PrivateLintFiles) ?? Array.Empty<string>();
+    #pragma warning restore CA1819
 }
