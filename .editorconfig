@@ -1,42 +1,46 @@
 root = true
 
 [*.{cs, cshtml}]
-charset = utf-8
 indent_style = space
 indent_size = 4
-max_line_length = 200
-insert_final_newline = true
+trim_trailing_whitespace = true
 
 [*.{js, ts, vue}]
 indent_style = space
 indent_size = 4
-insert_final_newline = true
-max_line_length = 200
+trim_trailing_whitespace = true
 
 [*.{json, xml, yml, yaml}]
 indent_style = space
 indent_size = 2
-insert_final_newline = true
-max_line_length = 200
+trim_trailing_whitespace = true
 
 [{*.graphqlconfig,*.graphqlrc,*.har,*.jsb2,*.jsb3,*.json,*.jsonc,*.postman_collection,*.postman_collection.json,*.postman_environment,*.postman_environment.json,.babelrc,.eslintrc,.prettierrc,.stylelintrc,bowerrc,jest.config}]
 indent_style = space
 indent_size = 2
+trim_trailing_whitespace = true
 
 [{*.yaml,*.yml}]
 indent_style = space
 indent_size = 2
+trim_trailing_whitespace = true
 
 [{*.bash,*.sh,*.zsh}]
 indent_style = space
 indent_size = 2
+trim_trailing_whitespace = true
 
 [*.{appxmanifest,asax,ascx,aspx,axaml,build,c,c++,c++m,cc,ccm,cginc,compute,cp,cpp,cppm,cs,cshtml,cu,cuh,cxx,cxxm,dtd,fs,fsi,fsscript,fsx,fx,fxh,h,hh,hlsl,hlsli,hlslinc,hpp,hxx,inc,inl,ino,ipp,ixx,master,ml,mli,mpp,mq4,mq5,mqh,mxx,nuspec,paml,razor,resw,resx,skin,tpp,usf,ush,vb,xaml,xamlx,xoml,xsd}]
 indent_style = space
 indent_size = 4
 tab_width = 4
+trim_trailing_whitespace = true
 
 [*]
+charset = utf-8
+insert_final_newline = true
+max_line_length = 200
+
 # style options
 csharp_prefer_braces = true
 # Applicable to: IDE0011
@@ -473,18 +477,18 @@ csharp_space_between_square_brackets = false
 
 
 # global severity
-# dotnet_analyzer_diagnostic.category-CodeQuality.severity = 
-# dotnet_analyzer_diagnostic.category-Design.severity = 
-# dotnet_analyzer_diagnostic.category-Documentation.severity = 
-# dotnet_analyzer_diagnostic.category-Globalization.severity = 
-# dotnet_analyzer_diagnostic.category-Interoperability.severity = 
-# dotnet_analyzer_diagnostic.category-Maintainability.severity = 
-# dotnet_analyzer_diagnostic.category-Naming.severity = 
-# dotnet_analyzer_diagnostic.category-Performance.severity = 
-# dotnet_analyzer_diagnostic.category-Reliability.severity = 
-# dotnet_analyzer_diagnostic.category-Security.severity = 
-# dotnet_analyzer_diagnostic.category-Style.severity = 
-# dotnet_analyzer_diagnostic.category-Usage.severity = 
+# dotnet_analyzer_diagnostic.category-CodeQuality.severity =
+# dotnet_analyzer_diagnostic.category-Design.severity =
+# dotnet_analyzer_diagnostic.category-Documentation.severity =
+# dotnet_analyzer_diagnostic.category-Globalization.severity =
+# dotnet_analyzer_diagnostic.category-Interoperability.severity =
+# dotnet_analyzer_diagnostic.category-Maintainability.severity =
+# dotnet_analyzer_diagnostic.category-Naming.severity =
+# dotnet_analyzer_diagnostic.category-Performance.severity =
+# dotnet_analyzer_diagnostic.category-Reliability.severity =
+# dotnet_analyzer_diagnostic.category-Security.severity =
+# dotnet_analyzer_diagnostic.category-Style.severity =
+# dotnet_analyzer_diagnostic.category-Usage.severity =
 
 #### Naming styles ####
 
@@ -824,8 +828,8 @@ dotnet_code_quality.CA1000.api_surface = public # public, internal, friend, all
 # CA1001: Types that own disposable fields should be disposable
 dotnet_diagnostic.CA1001.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA1001.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA1001.excluded_symbol_names = 
+# dotnet_code_quality.CA1001.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA1001.excluded_symbol_names =
 
 # CA1002: Do not expose generic lists
 dotnet_diagnostic.CA1002.severity = none
@@ -900,7 +904,7 @@ dotnet_code_quality.CA1030.api_surface = public # public, internal, friend, all
 # CA1031: Do not catch general exception types
 dotnet_diagnostic.CA1031.severity = none
 # Options: disallowed_symbol_names
-# dotnet_code_quality.CA1031.disallowed_symbol_names = 
+# dotnet_code_quality.CA1031.disallowed_symbol_names =
 
 # CA1032: Implement standard exception constructors
 dotnet_diagnostic.CA1032.severity = none
@@ -971,22 +975,22 @@ dotnet_diagnostic.CA1053.severity = none
 dotnet_diagnostic.CA1054.severity = none
 # Options: api_surface, excluded_symbol_names, excluded_type_names_with_derived_types
 dotnet_code_quality.CA1054.api_surface = public # public, internal, friend, all
-# dotnet_code_quality.CA1054.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA1054.excluded_symbol_names = 
+# dotnet_code_quality.CA1054.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA1054.excluded_symbol_names =
 
 # CA1055: URI return values should not be strings
 dotnet_diagnostic.CA1055.severity = none
 # Options: api_surface, excluded_symbol_names, excluded_type_names_with_derived_types
 dotnet_code_quality.CA1055.api_surface = public # public, internal, friend, all
-# dotnet_code_quality.CA1055.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA1055.excluded_symbol_names = 
+# dotnet_code_quality.CA1055.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA1055.excluded_symbol_names =
 
 # CA1056: URI properties should not be strings
 dotnet_diagnostic.CA1056.severity = none
 # Options: api_surface, excluded_symbol_names, excluded_type_names_with_derived_types
 dotnet_code_quality.CA1056.api_surface = public # public, internal, friend, all
-# dotnet_code_quality.CA1056.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA1056.excluded_symbol_names = 
+# dotnet_code_quality.CA1056.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA1056.excluded_symbol_names =
 
 # CA1058: Types should not extend certain base types
 dotnet_diagnostic.CA1058.severity = none
@@ -1004,9 +1008,9 @@ dotnet_diagnostic.CA1062.severity = none
 # Options: api_surface, excluded_symbol_names, excluded_type_names_with_derived_types, exclude_extension_method_this_parameter, null_check_validation_methods
 dotnet_code_quality.CA1062.api_surface = public # public, internal, friend, all
 dotnet_code_quality.CA1062.exclude_extension_method_this_parameter = false # true, false
-# dotnet_code_quality.CA1062.null_check_validation_methods = 
-# dotnet_code_quality.CA1062.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA1062.excluded_symbol_names = 
+# dotnet_code_quality.CA1062.null_check_validation_methods =
+# dotnet_code_quality.CA1062.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA1062.excluded_symbol_names =
 
 # CA1063: Implement IDisposable correctly
 dotnet_diagnostic.CA1063.severity = none
@@ -1029,8 +1033,8 @@ dotnet_diagnostic.CA1067.severity = none
 dotnet_diagnostic.CA1068.severity = none
 # Options: api_surface, excluded_symbol_names, excluded_type_names_with_derived_types
 dotnet_code_quality.CA1068.api_surface = public # public, internal, friend, all
-# dotnet_code_quality.CA1068.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA1068.excluded_symbol_names = 
+# dotnet_code_quality.CA1068.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA1068.excluded_symbol_names =
 
 # CA1069: Enums should not have duplicate values
 dotnet_diagnostic.CA1069.severity = none
@@ -1046,20 +1050,20 @@ dotnet_diagnostic.CA1200.severity = none
 # CA1303: Do not pass literals as localized parameters
 dotnet_diagnostic.CA1303.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types, use_naming_heuristic
-# dotnet_code_quality.CA1303.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA1303.excluded_symbol_names = 
+# dotnet_code_quality.CA1303.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA1303.excluded_symbol_names =
 
 # CA1304: Specify CultureInfo
 dotnet_diagnostic.CA1304.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA1304.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA1304.excluded_symbol_names = 
+# dotnet_code_quality.CA1304.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA1304.excluded_symbol_names =
 
 # CA1305: Specify IFormatProvider
 dotnet_diagnostic.CA1305.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA1305.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA1305.excluded_symbol_names = 
+# dotnet_code_quality.CA1305.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA1305.excluded_symbol_names =
 
 # CA1307: Specify StringComparison for clarity
 dotnet_diagnostic.CA1307.severity = none
@@ -1119,8 +1123,8 @@ dotnet_diagnostic.CA1507.severity = none
 # CA1508: Avoid dead conditional code
 dotnet_diagnostic.CA1508.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA1508.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA1508.excluded_symbol_names = 
+# dotnet_code_quality.CA1508.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA1508.excluded_symbol_names =
 
 # CA1509: Invalid entry in code metrics configuration file
 dotnet_diagnostic.CA1509.severity = none
@@ -1223,7 +1227,7 @@ dotnet_code_quality.CA1801.api_surface = public # public, internal, friend, all
 dotnet_diagnostic.CA1802.severity = none
 # Options: api_surface, required_modifiers
 dotnet_code_quality.CA1802.api_surface = public # public, internal, friend, all
-# dotnet_code_quality.CA1802.required_modifiers = 
+# dotnet_code_quality.CA1802.required_modifiers =
 
 # CA1805: Do not initialize unnecessarily
 dotnet_diagnostic.CA1805.severity = none
@@ -1419,8 +1423,8 @@ dotnet_diagnostic.CA1870.severity = warning
 # CA2000: Dispose objects before losing scope
 dotnet_diagnostic.CA2000.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA2000.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA2000.excluded_symbol_names = 
+# dotnet_code_quality.CA2000.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA2000.excluded_symbol_names =
 
 # CA2002: Do not lock on objects with weak identity
 dotnet_diagnostic.CA2002.severity = none
@@ -1473,8 +1477,8 @@ dotnet_diagnostic.CA2021.severity = warning
 # CA2100: Review SQL queries for security vulnerabilities
 dotnet_diagnostic.CA2100.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA2100.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA2100.excluded_symbol_names = 
+# dotnet_code_quality.CA2100.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA2100.excluded_symbol_names =
 
 # CA2101: Specify marshalling for P/Invoke string arguments
 dotnet_diagnostic.CA2101.severity = none
@@ -1566,7 +1570,7 @@ dotnet_diagnostic.CA2237.severity = none
 # CA2241: Provide correct arguments to formatting methods
 dotnet_diagnostic.CA2241.severity = none
 # Options: additional_string_formatting_methods, try_determine_additional_string_formatting_methods_automatically
-# dotnet_code_quality.CA2241.additional_string_formatting_methods = 
+# dotnet_code_quality.CA2241.additional_string_formatting_methods =
 
 # CA2242: Test for NaN correctly
 dotnet_diagnostic.CA2242.severity = none
@@ -1634,14 +1638,14 @@ dotnet_diagnostic.CA2300.severity = none
 # CA2301: Do not call BinaryFormatter.Deserialize without first setting BinaryFormatter.Binder
 dotnet_diagnostic.CA2301.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA2301.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA2301.excluded_symbol_names = 
+# dotnet_code_quality.CA2301.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA2301.excluded_symbol_names =
 
 # CA2302: Ensure BinaryFormatter.Binder is set before calling BinaryFormatter.Deserialize
 dotnet_diagnostic.CA2302.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA2302.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA2302.excluded_symbol_names = 
+# dotnet_code_quality.CA2302.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA2302.excluded_symbol_names =
 
 # CA2305: Do not use insecure deserializer LosFormatter
 dotnet_diagnostic.CA2305.severity = none
@@ -1652,14 +1656,14 @@ dotnet_diagnostic.CA2310.severity = none
 # CA2311: Do not deserialize without first setting NetDataContractSerializer.Binder
 dotnet_diagnostic.CA2311.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA2311.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA2311.excluded_symbol_names = 
+# dotnet_code_quality.CA2311.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA2311.excluded_symbol_names =
 
 # CA2312: Ensure NetDataContractSerializer.Binder is set before deserializing
 dotnet_diagnostic.CA2312.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA2312.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA2312.excluded_symbol_names = 
+# dotnet_code_quality.CA2312.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA2312.excluded_symbol_names =
 
 # CA2315: Do not use insecure deserializer ObjectStateFormatter
 dotnet_diagnostic.CA2315.severity = none
@@ -1667,14 +1671,14 @@ dotnet_diagnostic.CA2315.severity = none
 # CA2321: Do not deserialize with JavaScriptSerializer using a SimpleTypeResolver
 dotnet_diagnostic.CA2321.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA2321.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA2321.excluded_symbol_names = 
+# dotnet_code_quality.CA2321.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA2321.excluded_symbol_names =
 
 # CA2322: Ensure JavaScriptSerializer is not initialized with SimpleTypeResolver before deserializing
 dotnet_diagnostic.CA2322.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA2322.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA2322.excluded_symbol_names = 
+# dotnet_code_quality.CA2322.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA2322.excluded_symbol_names =
 
 # CA2326: Do not use TypeNameHandling values other than None
 dotnet_diagnostic.CA2326.severity = none
@@ -1682,26 +1686,26 @@ dotnet_diagnostic.CA2326.severity = none
 # CA2327: Do not use insecure JsonSerializerSettings
 dotnet_diagnostic.CA2327.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA2327.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA2327.excluded_symbol_names = 
+# dotnet_code_quality.CA2327.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA2327.excluded_symbol_names =
 
 # CA2328: Ensure that JsonSerializerSettings are secure
 dotnet_diagnostic.CA2328.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA2328.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA2328.excluded_symbol_names = 
+# dotnet_code_quality.CA2328.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA2328.excluded_symbol_names =
 
 # CA2329: Do not deserialize with JsonSerializer using an insecure configuration
 dotnet_diagnostic.CA2329.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA2329.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA2329.excluded_symbol_names = 
+# dotnet_code_quality.CA2329.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA2329.excluded_symbol_names =
 
 # CA2330: Ensure that JsonSerializer has a secure configuration when deserializing
 dotnet_diagnostic.CA2330.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA2330.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA2330.excluded_symbol_names = 
+# dotnet_code_quality.CA2330.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA2330.excluded_symbol_names =
 
 # CA2350: Ensure DataTable.ReadXml()'s input is trusted
 dotnet_diagnostic.CA2350.severity = none
@@ -1733,74 +1737,74 @@ dotnet_diagnostic.CA2362.severity = none
 # CA3001: Review code for SQL injection vulnerabilities
 dotnet_diagnostic.CA3001.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA3001.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA3001.excluded_symbol_names = 
+# dotnet_code_quality.CA3001.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA3001.excluded_symbol_names =
 
 # CA3002: Review code for XSS vulnerabilities
 dotnet_diagnostic.CA3002.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA3002.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA3002.excluded_symbol_names = 
+# dotnet_code_quality.CA3002.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA3002.excluded_symbol_names =
 
 # CA3003: Review code for file path injection vulnerabilities
 dotnet_diagnostic.CA3003.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA3003.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA3003.excluded_symbol_names = 
+# dotnet_code_quality.CA3003.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA3003.excluded_symbol_names =
 
 # CA3004: Review code for information disclosure vulnerabilities
 dotnet_diagnostic.CA3004.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA3004.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA3004.excluded_symbol_names = 
+# dotnet_code_quality.CA3004.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA3004.excluded_symbol_names =
 
 # CA3005: Review code for LDAP injection vulnerabilities
 dotnet_diagnostic.CA3005.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA3005.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA3005.excluded_symbol_names = 
+# dotnet_code_quality.CA3005.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA3005.excluded_symbol_names =
 
 # CA3006: Review code for process command injection vulnerabilities
 dotnet_diagnostic.CA3006.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA3006.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA3006.excluded_symbol_names = 
+# dotnet_code_quality.CA3006.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA3006.excluded_symbol_names =
 
 # CA3007: Review code for open redirect vulnerabilities
 dotnet_diagnostic.CA3007.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA3007.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA3007.excluded_symbol_names = 
+# dotnet_code_quality.CA3007.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA3007.excluded_symbol_names =
 
 # CA3008: Review code for XPath injection vulnerabilities
 dotnet_diagnostic.CA3008.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA3008.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA3008.excluded_symbol_names = 
+# dotnet_code_quality.CA3008.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA3008.excluded_symbol_names =
 
 # CA3009: Review code for XML injection vulnerabilities
 dotnet_diagnostic.CA3009.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA3009.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA3009.excluded_symbol_names = 
+# dotnet_code_quality.CA3009.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA3009.excluded_symbol_names =
 
 # CA3010: Review code for XAML injection vulnerabilities
 dotnet_diagnostic.CA3010.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA3010.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA3010.excluded_symbol_names = 
+# dotnet_code_quality.CA3010.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA3010.excluded_symbol_names =
 
 # CA3011: Review code for DLL injection vulnerabilities
 dotnet_diagnostic.CA3011.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA3011.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA3011.excluded_symbol_names = 
+# dotnet_code_quality.CA3011.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA3011.excluded_symbol_names =
 
 # CA3012: Review code for regex injection vulnerabilities
 dotnet_diagnostic.CA3012.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA3012.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA3012.excluded_symbol_names = 
+# dotnet_code_quality.CA3012.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA3012.excluded_symbol_names =
 
 # CA3061: Do not add schema by URL
 dotnet_diagnostic.CA3061.severity = none
@@ -1835,8 +1839,8 @@ dotnet_diagnostic.CA5360.severity = none
 # CA5361: Do not disable SChannel use of strong crypto
 dotnet_diagnostic.CA5361.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA5361.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA5361.excluded_symbol_names = 
+# dotnet_code_quality.CA5361.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA5361.excluded_symbol_names =
 
 # CA5362: Potential reference cycle in deserialized object graph
 dotnet_diagnostic.CA5362.severity = none
@@ -1883,20 +1887,20 @@ dotnet_diagnostic.CA5375.severity = none
 # CA5376: Use SharedAccessProtocol HttpsOnly
 dotnet_diagnostic.CA5376.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA5376.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA5376.excluded_symbol_names = 
+# dotnet_code_quality.CA5376.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA5376.excluded_symbol_names =
 
 # CA5377: Use container level access policy
 dotnet_diagnostic.CA5377.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA5377.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA5377.excluded_symbol_names = 
+# dotnet_code_quality.CA5377.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA5377.excluded_symbol_names =
 
 # CA5378: Do not disable ServicePointManagerSecurityProtocols
 dotnet_diagnostic.CA5378.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA5378.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA5378.excluded_symbol_names = 
+# dotnet_code_quality.CA5378.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA5378.excluded_symbol_names =
 
 # CA5379: Ensure key derivation function algorithm is sufficiently strong
 dotnet_diagnostic.CA5379.severity = none
@@ -1904,32 +1908,32 @@ dotnet_diagnostic.CA5379.severity = none
 # CA5380: Do not add certificates to root store
 dotnet_diagnostic.CA5380.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA5380.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA5380.excluded_symbol_names = 
+# dotnet_code_quality.CA5380.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA5380.excluded_symbol_names =
 
 # CA5381: Ensure certificates are not added to root store
 dotnet_diagnostic.CA5381.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA5381.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA5381.excluded_symbol_names = 
+# dotnet_code_quality.CA5381.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA5381.excluded_symbol_names =
 
 # CA5382: Use secure cookies in ASP.NET Core
 dotnet_diagnostic.CA5382.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA5382.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA5382.excluded_symbol_names = 
+# dotnet_code_quality.CA5382.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA5382.excluded_symbol_names =
 
 # CA5383: Ensure use secure cookies in ASP.NET Core
 dotnet_diagnostic.CA5383.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA5383.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA5383.excluded_symbol_names = 
+# dotnet_code_quality.CA5383.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA5383.excluded_symbol_names =
 
 # CA5384: Do not use digital signature algorithm (DSA)
 dotnet_diagnostic.CA5384.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA5384.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA5384.excluded_symbol_names = 
+# dotnet_code_quality.CA5384.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA5384.excluded_symbol_names =
 
 # CA5385: Use Rivest–Shamir–Adleman (RSA) algorithm with sufficient key size
 dotnet_diagnostic.CA5385.severity = none
@@ -1940,26 +1944,26 @@ dotnet_diagnostic.CA5386.severity = none
 # CA5387: Do not use weak key derivation function with insufficient iteration count
 dotnet_diagnostic.CA5387.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA5387.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA5387.excluded_symbol_names = 
+# dotnet_code_quality.CA5387.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA5387.excluded_symbol_names =
 
 # CA5388: Ensure sufficient iteration count when using weak key derivation function
 dotnet_diagnostic.CA5388.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA5388.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA5388.excluded_symbol_names = 
+# dotnet_code_quality.CA5388.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA5388.excluded_symbol_names =
 
 # CA5389: Do not add archive item's path to the target file system path
 dotnet_diagnostic.CA5389.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA5389.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA5389.excluded_symbol_names = 
+# dotnet_code_quality.CA5389.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA5389.excluded_symbol_names =
 
 # CA5390: Do not hard-code encryption key
 dotnet_diagnostic.CA5390.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA5390.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA5390.excluded_symbol_names = 
+# dotnet_code_quality.CA5390.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA5390.excluded_symbol_names =
 
 # CA5391: Use antiforgery tokens in ASP.NET Core MVC controllers
 dotnet_diagnostic.CA5391.severity = none
@@ -1990,14 +1994,14 @@ dotnet_diagnostic.CA5398.severity = none
 # CA5399: Enable HttpClient certificate revocation list check
 dotnet_diagnostic.CA5399.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA5399.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA5399.excluded_symbol_names = 
+# dotnet_code_quality.CA5399.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA5399.excluded_symbol_names =
 
 # CA5400: Ensure HttpClient certificate revocation list check is not disabled
 dotnet_diagnostic.CA5400.severity = none
 # Options: excluded_symbol_names, excluded_type_names_with_derived_types
-# dotnet_code_quality.CA5400.excluded_type_names_with_derived_types = 
-# dotnet_code_quality.CA5400.excluded_symbol_names = 
+# dotnet_code_quality.CA5400.excluded_type_names_with_derived_types =
+# dotnet_code_quality.CA5400.excluded_symbol_names =
 
 # CA5401: Do not use CreateEncryptor with non-default IV
 dotnet_diagnostic.CA5401.severity = none
@@ -3469,6 +3473,126 @@ roslynator_compiler_diagnostic_fix.cs8618.enabled = true
 roslynator_compiler_diagnostic_fix.cs8625.enabled = true
 roslynator_compiler_diagnostic_fix.cs8632.enabled = true
 
+ij_continuation_indent_size = 4
+ij_formatter_off_tag = @formatter:off
+ij_formatter_on_tag = @formatter:on
+ij_formatter_tags_enabled = true
+ij_smart_tabs = false
+ij_visual_guides = 120,160,200
+ij_wrap_on_typing = false
+
+ij_css_align_closing_brace_with_properties = false
+ij_css_blank_lines_around_nested_selector = 1
+ij_css_blank_lines_between_blocks = 1
+ij_css_block_comment_add_space = false
+ij_css_brace_placement = end_of_line
+ij_css_enforce_quotes_on_format = false
+ij_css_hex_color_long_format = false
+ij_css_hex_color_lower_case = false
+ij_css_hex_color_short_format = false
+ij_css_hex_color_upper_case = false
+ij_css_keep_blank_lines_in_code = 2
+ij_css_keep_indents_on_empty_lines = false
+ij_css_keep_single_line_blocks = false
+ij_css_properties_order = font,font-family,font-size,font-weight,font-style,font-variant,font-size-adjust,font-stretch,line-height,position,z-index,top,right,bottom,left,display,visibility,float,clear,overflow,overflow-x,overflow-y,clip,zoom,align-content,align-items,align-self,flex,flex-flow,flex-basis,flex-direction,flex-grow,flex-shrink,flex-wrap,justify-content,order,box-sizing,width,min-width,max-width,height,min-height,max-height,margin,margin-top,margin-right,margin-bottom,margin-left,padding,padding-top,padding-right,padding-bottom,padding-left,table-layout,empty-cells,caption-side,border-spacing,border-collapse,list-style,list-style-position,list-style-type,list-style-image,content,quotes,counter-reset,counter-increment,resize,cursor,user-select,nav-index,nav-up,nav-right,nav-down,nav-left,transition,transition-delay,transition-timing-function,transition-duration,transition-property,transform,transform-origin,animation,animation-name,animation-duration,animation-play-state,animation-timing-function,animation-delay,animation-iteration-count,animation-direction,text-align,text-align-last,vertical-align,white-space,text-decoration,text-emphasis,text-emphasis-color,text-emphasis-style,text-emphasis-position,text-indent,text-justify,letter-spacing,word-spacing,text-outline,text-transform,text-wrap,text-overflow,text-overflow-ellipsis,text-overflow-mode,word-wrap,word-break,tab-size,hyphens,pointer-events,opacity,color,border,border-width,border-style,border-color,border-top,border-top-width,border-top-style,border-top-color,border-right,border-right-width,border-right-style,border-right-color,border-bottom,border-bottom-width,border-bottom-style,border-bottom-color,border-left,border-left-width,border-left-style,border-left-color,border-radius,border-top-left-radius,border-top-right-radius,border-bottom-right-radius,border-bottom-left-radius,border-image,border-image-source,border-image-slice,border-image-width,border-image-outset,border-image-repeat,outline,outline-width,outline-style,outline-color,outline-offset,background,background-color,background-image,background-repeat,background-attachment,background-position,background-position-x,background-position-y,background-clip,background-origin,background-size,box-decoration-break,box-shadow,text-shadow
+ij_css_space_after_colon = true
+ij_css_space_before_opening_brace = true
+ij_css_use_double_quotes = true
+ij_css_value_alignment = do_not_align
+
+ij_csv_keep_indents_on_empty_lines = true
+ij_csv_wrap_long_lines = false
+
+ij_less_align_closing_brace_with_properties = false
+ij_less_blank_lines_around_nested_selector = 1
+ij_less_blank_lines_between_blocks = 1
+ij_less_block_comment_add_space = false
+ij_less_brace_placement = 0
+ij_less_enforce_quotes_on_format = false
+ij_less_hex_color_long_format = false
+ij_less_hex_color_lower_case = false
+ij_less_hex_color_short_format = false
+ij_less_hex_color_upper_case = false
+ij_less_keep_blank_lines_in_code = 2
+ij_less_keep_indents_on_empty_lines = false
+ij_less_keep_single_line_blocks = false
+ij_less_line_comment_add_space = false
+ij_less_line_comment_at_first_column = false
+ij_less_properties_order = font,font-family,font-size,font-weight,font-style,font-variant,font-size-adjust,font-stretch,line-height,position,z-index,top,right,bottom,left,display,visibility,float,clear,overflow,overflow-x,overflow-y,clip,zoom,align-content,align-items,align-self,flex,flex-flow,flex-basis,flex-direction,flex-grow,flex-shrink,flex-wrap,justify-content,order,box-sizing,width,min-width,max-width,height,min-height,max-height,margin,margin-top,margin-right,margin-bottom,margin-left,padding,padding-top,padding-right,padding-bottom,padding-left,table-layout,empty-cells,caption-side,border-spacing,border-collapse,list-style,list-style-position,list-style-type,list-style-image,content,quotes,counter-reset,counter-increment,resize,cursor,user-select,nav-index,nav-up,nav-right,nav-down,nav-left,transition,transition-delay,transition-timing-function,transition-duration,transition-property,transform,transform-origin,animation,animation-name,animation-duration,animation-play-state,animation-timing-function,animation-delay,animation-iteration-count,animation-direction,text-align,text-align-last,vertical-align,white-space,text-decoration,text-emphasis,text-emphasis-color,text-emphasis-style,text-emphasis-position,text-indent,text-justify,letter-spacing,word-spacing,text-outline,text-transform,text-wrap,text-overflow,text-overflow-ellipsis,text-overflow-mode,word-wrap,word-break,tab-size,hyphens,pointer-events,opacity,color,border,border-width,border-style,border-color,border-top,border-top-width,border-top-style,border-top-color,border-right,border-right-width,border-right-style,border-right-color,border-bottom,border-bottom-width,border-bottom-style,border-bottom-color,border-left,border-left-width,border-left-style,border-left-color,border-radius,border-top-left-radius,border-top-right-radius,border-bottom-right-radius,border-bottom-left-radius,border-image,border-image-source,border-image-slice,border-image-width,border-image-outset,border-image-repeat,outline,outline-width,outline-style,outline-color,outline-offset,background,background-color,background-image,background-repeat,background-attachment,background-position,background-position-x,background-position-y,background-clip,background-origin,background-size,box-decoration-break,box-shadow,text-shadow
+ij_less_space_after_colon = true
+ij_less_space_before_opening_brace = true
+ij_less_use_double_quotes = true
+ij_less_value_alignment = 0
+
+ij_properties_align_group_field_declarations = false
+ij_properties_keep_blank_lines = false
+ij_properties_key_value_delimiter = equals
+ij_properties_spaces_around_key_value_delimiter = false
+
+ij_protobuf_keep_blank_lines_in_code = 2
+ij_protobuf_keep_indents_on_empty_lines = false
+ij_protobuf_keep_line_breaks = true
+ij_protobuf_space_after_comma = true
+ij_protobuf_space_before_comma = false
+ij_protobuf_spaces_around_assignment_operators = true
+ij_protobuf_spaces_within_braces = false
+ij_protobuf_spaces_within_brackets = false
+
+ij_sass_align_closing_brace_with_properties = false
+ij_sass_blank_lines_around_nested_selector = 1
+ij_sass_blank_lines_between_blocks = 1
+ij_sass_brace_placement = 0
+ij_sass_enforce_quotes_on_format = false
+ij_sass_hex_color_long_format = false
+ij_sass_hex_color_lower_case = false
+ij_sass_hex_color_short_format = false
+ij_sass_hex_color_upper_case = false
+ij_sass_keep_blank_lines_in_code = 2
+ij_sass_keep_indents_on_empty_lines = false
+ij_sass_keep_single_line_blocks = false
+ij_sass_line_comment_add_space = false
+ij_sass_line_comment_at_first_column = false
+ij_sass_properties_order = font,font-family,font-size,font-weight,font-style,font-variant,font-size-adjust,font-stretch,line-height,position,z-index,top,right,bottom,left,display,visibility,float,clear,overflow,overflow-x,overflow-y,clip,zoom,align-content,align-items,align-self,flex,flex-flow,flex-basis,flex-direction,flex-grow,flex-shrink,flex-wrap,justify-content,order,box-sizing,width,min-width,max-width,height,min-height,max-height,margin,margin-top,margin-right,margin-bottom,margin-left,padding,padding-top,padding-right,padding-bottom,padding-left,table-layout,empty-cells,caption-side,border-spacing,border-collapse,list-style,list-style-position,list-style-type,list-style-image,content,quotes,counter-reset,counter-increment,resize,cursor,user-select,nav-index,nav-up,nav-right,nav-down,nav-left,transition,transition-delay,transition-timing-function,transition-duration,transition-property,transform,transform-origin,animation,animation-name,animation-duration,animation-play-state,animation-timing-function,animation-delay,animation-iteration-count,animation-direction,text-align,text-align-last,vertical-align,white-space,text-decoration,text-emphasis,text-emphasis-color,text-emphasis-style,text-emphasis-position,text-indent,text-justify,letter-spacing,word-spacing,text-outline,text-transform,text-wrap,text-overflow,text-overflow-ellipsis,text-overflow-mode,word-wrap,word-break,tab-size,hyphens,pointer-events,opacity,color,border,border-width,border-style,border-color,border-top,border-top-width,border-top-style,border-top-color,border-right,border-right-width,border-right-style,border-right-color,border-bottom,border-bottom-width,border-bottom-style,border-bottom-color,border-left,border-left-width,border-left-style,border-left-color,border-radius,border-top-left-radius,border-top-right-radius,border-bottom-right-radius,border-bottom-left-radius,border-image,border-image-source,border-image-slice,border-image-width,border-image-outset,border-image-repeat,outline,outline-width,outline-style,outline-color,outline-offset,background,background-color,background-image,background-repeat,background-attachment,background-position,background-position-x,background-position-y,background-clip,background-origin,background-size,box-decoration-break,box-shadow,text-shadow
+ij_sass_space_after_colon = true
+ij_sass_space_before_opening_brace = true
+ij_sass_use_double_quotes = true
+ij_sass_value_alignment = 0
+
+ij_scss_align_closing_brace_with_properties = false
+ij_scss_blank_lines_around_nested_selector = 1
+ij_scss_blank_lines_between_blocks = 1
+ij_scss_block_comment_add_space = false
+ij_scss_brace_placement = 0
+ij_scss_enforce_quotes_on_format = false
+ij_scss_hex_color_long_format = false
+ij_scss_hex_color_lower_case = false
+ij_scss_hex_color_short_format = false
+ij_scss_hex_color_upper_case = false
+ij_scss_keep_blank_lines_in_code = 2
+ij_scss_keep_indents_on_empty_lines = false
+ij_scss_keep_single_line_blocks = false
+ij_scss_line_comment_add_space = false
+ij_scss_line_comment_at_first_column = false
+ij_scss_properties_order = font,font-family,font-size,font-weight,font-style,font-variant,font-size-adjust,font-stretch,line-height,position,z-index,top,right,bottom,left,display,visibility,float,clear,overflow,overflow-x,overflow-y,clip,zoom,align-content,align-items,align-self,flex,flex-flow,flex-basis,flex-direction,flex-grow,flex-shrink,flex-wrap,justify-content,order,box-sizing,width,min-width,max-width,height,min-height,max-height,margin,margin-top,margin-right,margin-bottom,margin-left,padding,padding-top,padding-right,padding-bottom,padding-left,table-layout,empty-cells,caption-side,border-spacing,border-collapse,list-style,list-style-position,list-style-type,list-style-image,content,quotes,counter-reset,counter-increment,resize,cursor,user-select,nav-index,nav-up,nav-right,nav-down,nav-left,transition,transition-delay,transition-timing-function,transition-duration,transition-property,transform,transform-origin,animation,animation-name,animation-duration,animation-play-state,animation-timing-function,animation-delay,animation-iteration-count,animation-direction,text-align,text-align-last,vertical-align,white-space,text-decoration,text-emphasis,text-emphasis-color,text-emphasis-style,text-emphasis-position,text-indent,text-justify,letter-spacing,word-spacing,text-outline,text-transform,text-wrap,text-overflow,text-overflow-ellipsis,text-overflow-mode,word-wrap,word-break,tab-size,hyphens,pointer-events,opacity,color,border,border-width,border-style,border-color,border-top,border-top-width,border-top-style,border-top-color,border-right,border-right-width,border-right-style,border-right-color,border-bottom,border-bottom-width,border-bottom-style,border-bottom-color,border-left,border-left-width,border-left-style,border-left-color,border-radius,border-top-left-radius,border-top-right-radius,border-bottom-right-radius,border-bottom-left-radius,border-image,border-image-source,border-image-slice,border-image-width,border-image-outset,border-image-repeat,outline,outline-width,outline-style,outline-color,outline-offset,background,background-color,background-image,background-repeat,background-attachment,background-position,background-position-x,background-position-y,background-clip,background-origin,background-size,box-decoration-break,box-shadow,text-shadow
+ij_scss_space_after_colon = true
+ij_scss_space_before_opening_brace = true
+ij_scss_use_double_quotes = true
+ij_scss_value_alignment = 0
+
+ij_editorconfig_align_group_field_declarations = true
+ij_editorconfig_space_after_colon = false
+ij_editorconfig_space_after_comma = true
+ij_editorconfig_space_before_colon = false
+ij_editorconfig_space_before_comma = false
+ij_editorconfig_spaces_around_assignment_operators = true
+
+ij_vue_indent_children_of_top_level = template
+ij_vue_interpolation_new_line_after_start_delimiter = true
+ij_vue_interpolation_new_line_before_end_delimiter = true
+ij_vue_interpolation_wrap = off
+ij_vue_keep_indents_on_empty_lines = false
+ij_vue_spaces_within_interpolation_expressions = true
+
 ij_xml_align_attributes = true
 ij_xml_align_text = false
 ij_xml_attribute_wrap = normal
@@ -3483,8 +3607,562 @@ ij_xml_keep_whitespaces_inside_cdata = false
 ij_xml_line_comment_at_first_column = true
 ij_xml_space_after_tag_name = false
 ij_xml_space_around_equals_in_attribute = false
-ij_xml_space_inside_empty_tag = true
-ij_xml_text_wrap = off
+ij_xml_space_inside_empty_tag = false
+ij_xml_text_wrap = normal
+ij_xml_use_custom_settings = false
+
+ij_typescript_align_imports = false
+ij_typescript_align_multiline_array_initializer_expression = false
+ij_typescript_align_multiline_binary_operation = false
+ij_typescript_align_multiline_chained_methods = false
+ij_typescript_align_multiline_extends_list = false
+ij_typescript_align_multiline_for = true
+ij_typescript_align_multiline_parameters = true
+ij_typescript_align_multiline_parameters_in_calls = false
+ij_typescript_align_multiline_ternary_operation = false
+ij_typescript_align_object_properties = 0
+ij_typescript_align_union_types = false
+ij_typescript_align_var_statements = 0
+ij_typescript_array_initializer_new_line_after_left_brace = false
+ij_typescript_array_initializer_right_brace_on_new_line = false
+ij_typescript_array_initializer_wrap = off
+ij_typescript_assignment_wrap = off
+ij_typescript_binary_operation_sign_on_next_line = false
+ij_typescript_binary_operation_wrap = off
+ij_typescript_blacklist_imports = rxjs/Rx,node_modules/**,**/node_modules/**,@angular/material,@angular/material/typings/**
+ij_typescript_blank_lines_after_imports = 1
+ij_typescript_blank_lines_around_class = 1
+ij_typescript_blank_lines_around_field = 0
+ij_typescript_blank_lines_around_field_in_interface = 0
+ij_typescript_blank_lines_around_function = 1
+ij_typescript_blank_lines_around_method = 1
+ij_typescript_blank_lines_around_method_in_interface = 1
+ij_typescript_block_brace_style = end_of_line
+ij_typescript_block_comment_add_space = false
+ij_typescript_block_comment_at_first_column = true
+ij_typescript_call_parameters_new_line_after_left_paren = false
+ij_typescript_call_parameters_right_paren_on_new_line = false
+ij_typescript_call_parameters_wrap = off
+ij_typescript_catch_on_new_line = false
+ij_typescript_chained_call_dot_on_new_line = true
+ij_typescript_class_brace_style = end_of_line
+ij_typescript_comma_on_new_line = false
+ij_typescript_do_while_brace_force = never
+ij_typescript_else_on_new_line = false
+ij_typescript_enforce_trailing_comma = keep
+ij_typescript_enum_constants_wrap = on_every_item
+ij_typescript_extends_keyword_wrap = off
+ij_typescript_extends_list_wrap = off
+ij_typescript_field_prefix = _
+ij_typescript_file_name_style = relaxed
+ij_typescript_finally_on_new_line = false
+ij_typescript_for_brace_force = never
+ij_typescript_for_statement_new_line_after_left_paren = false
+ij_typescript_for_statement_right_paren_on_new_line = false
+ij_typescript_for_statement_wrap = off
+ij_typescript_force_quote_style = false
+ij_typescript_force_semicolon_style = false
+ij_typescript_function_expression_brace_style = end_of_line
+ij_typescript_if_brace_force = never
+ij_typescript_import_merge_members = global
+ij_typescript_import_prefer_absolute_path = global
+ij_typescript_import_sort_members = true
+ij_typescript_import_sort_module_name = false
+ij_typescript_import_use_node_resolution = true
+ij_typescript_imports_wrap = on_every_item
+ij_typescript_indent_case_from_switch = true
+ij_typescript_indent_chained_calls = true
+ij_typescript_indent_package_children = 0
+ij_typescript_jsdoc_include_types = false
+ij_typescript_jsx_attribute_value = braces
+ij_typescript_keep_blank_lines_in_code = 2
+ij_typescript_keep_first_column_comment = true
+ij_typescript_keep_indents_on_empty_lines = false
+ij_typescript_keep_line_breaks = true
+ij_typescript_keep_simple_blocks_in_one_line = false
+ij_typescript_keep_simple_methods_in_one_line = false
+ij_typescript_line_comment_add_space = true
+ij_typescript_line_comment_at_first_column = false
+ij_typescript_method_brace_style = end_of_line
+ij_typescript_method_call_chain_wrap = off
+ij_typescript_method_parameters_new_line_after_left_paren = false
+ij_typescript_method_parameters_right_paren_on_new_line = false
+ij_typescript_method_parameters_wrap = off
+ij_typescript_object_literal_wrap = on_every_item
+ij_typescript_object_types_wrap = on_every_item
+ij_typescript_parentheses_expression_new_line_after_left_paren = false
+ij_typescript_parentheses_expression_right_paren_on_new_line = false
+ij_typescript_place_assignment_sign_on_next_line = false
+ij_typescript_prefer_as_type_cast = false
+ij_typescript_prefer_explicit_types_function_expression_returns = false
+ij_typescript_prefer_explicit_types_function_returns = false
+ij_typescript_prefer_explicit_types_vars_fields = false
+ij_typescript_prefer_parameters_wrap = false
+ij_typescript_property_prefix =
+ij_typescript_reformat_c_style_comments = false
+ij_typescript_space_after_colon = true
+ij_typescript_space_after_comma = true
+ij_typescript_space_after_dots_in_rest_parameter = false
+ij_typescript_space_after_generator_mult = true
+ij_typescript_space_after_property_colon = true
+ij_typescript_space_after_quest = true
+ij_typescript_space_after_type_colon = true
+ij_typescript_space_after_unary_not = false
+ij_typescript_space_before_async_arrow_lparen = true
+ij_typescript_space_before_catch_keyword = true
+ij_typescript_space_before_catch_left_brace = true
+ij_typescript_space_before_catch_parentheses = true
+ij_typescript_space_before_class_lbrace = true
+ij_typescript_space_before_class_left_brace = true
+ij_typescript_space_before_colon = true
+ij_typescript_space_before_comma = false
+ij_typescript_space_before_do_left_brace = true
+ij_typescript_space_before_else_keyword = true
+ij_typescript_space_before_else_left_brace = true
+ij_typescript_space_before_finally_keyword = true
+ij_typescript_space_before_finally_left_brace = true
+ij_typescript_space_before_for_left_brace = true
+ij_typescript_space_before_for_parentheses = true
+ij_typescript_space_before_for_semicolon = false
+ij_typescript_space_before_function_left_parenth = true
+ij_typescript_space_before_generator_mult = false
+ij_typescript_space_before_if_left_brace = true
+ij_typescript_space_before_if_parentheses = true
+ij_typescript_space_before_method_call_parentheses = false
+ij_typescript_space_before_method_left_brace = true
+ij_typescript_space_before_method_parentheses = false
+ij_typescript_space_before_property_colon = false
+ij_typescript_space_before_quest = true
+ij_typescript_space_before_switch_left_brace = true
+ij_typescript_space_before_switch_parentheses = true
+ij_typescript_space_before_try_left_brace = true
+ij_typescript_space_before_type_colon = false
+ij_typescript_space_before_unary_not = false
+ij_typescript_space_before_while_keyword = true
+ij_typescript_space_before_while_left_brace = true
+ij_typescript_space_before_while_parentheses = true
+ij_typescript_spaces_around_additive_operators = true
+ij_typescript_spaces_around_arrow_function_operator = true
+ij_typescript_spaces_around_assignment_operators = true
+ij_typescript_spaces_around_bitwise_operators = true
+ij_typescript_spaces_around_equality_operators = true
+ij_typescript_spaces_around_logical_operators = true
+ij_typescript_spaces_around_multiplicative_operators = true
+ij_typescript_spaces_around_relational_operators = true
+ij_typescript_spaces_around_shift_operators = true
+ij_typescript_spaces_around_unary_operator = false
+ij_typescript_spaces_within_array_initializer_brackets = false
+ij_typescript_spaces_within_brackets = false
+ij_typescript_spaces_within_catch_parentheses = false
+ij_typescript_spaces_within_for_parentheses = false
+ij_typescript_spaces_within_if_parentheses = false
+ij_typescript_spaces_within_imports = false
+ij_typescript_spaces_within_interpolation_expressions = false
+ij_typescript_spaces_within_method_call_parentheses = false
+ij_typescript_spaces_within_method_parentheses = false
+ij_typescript_spaces_within_object_literal_braces = false
+ij_typescript_spaces_within_object_type_braces = true
+ij_typescript_spaces_within_parentheses = false
+ij_typescript_spaces_within_switch_parentheses = false
+ij_typescript_spaces_within_type_assertion = false
+ij_typescript_spaces_within_union_types = true
+ij_typescript_spaces_within_while_parentheses = false
+ij_typescript_special_else_if_treatment = true
+ij_typescript_ternary_operation_signs_on_next_line = false
+ij_typescript_ternary_operation_wrap = off
+ij_typescript_union_types_wrap = on_every_item
+ij_typescript_use_chained_calls_group_indents = false
+ij_typescript_use_double_quotes = true
+ij_typescript_use_explicit_js_extension = auto
+ij_typescript_use_import_type = auto
+ij_typescript_use_path_mapping = always
+ij_typescript_use_public_modifier = false
+ij_typescript_use_semicolon_after_statement = true
+ij_typescript_var_declaration_wrap = normal
+ij_typescript_while_brace_force = never
+ij_typescript_while_on_new_line = false
+ij_typescript_wrap_comments = false
+
+ij_shell_binary_ops_start_line = false
+ij_shell_keep_column_alignment_padding = false
+ij_shell_minify_program = false
+ij_shell_redirect_followed_by_space = false
+ij_shell_switch_cases_indented = false
+ij_shell_use_unix_line_separator = true
+
+ij_javascript_align_imports = false
+ij_javascript_align_multiline_array_initializer_expression = false
+ij_javascript_align_multiline_binary_operation = false
+ij_javascript_align_multiline_chained_methods = false
+ij_javascript_align_multiline_extends_list = false
+ij_javascript_align_multiline_for = true
+ij_javascript_align_multiline_parameters = true
+ij_javascript_align_multiline_parameters_in_calls = false
+ij_javascript_align_multiline_ternary_operation = false
+ij_javascript_align_object_properties = 0
+ij_javascript_align_union_types = false
+ij_javascript_align_var_statements = 0
+ij_javascript_array_initializer_new_line_after_left_brace = false
+ij_javascript_array_initializer_right_brace_on_new_line = false
+ij_javascript_array_initializer_wrap = off
+ij_javascript_assignment_wrap = off
+ij_javascript_binary_operation_sign_on_next_line = false
+ij_javascript_binary_operation_wrap = off
+ij_javascript_blacklist_imports = rxjs/Rx,node_modules/**,**/node_modules/**,@angular/material,@angular/material/typings/**
+ij_javascript_blank_lines_after_imports = 1
+ij_javascript_blank_lines_around_class = 1
+ij_javascript_blank_lines_around_field = 0
+ij_javascript_blank_lines_around_function = 1
+ij_javascript_blank_lines_around_method = 1
+ij_javascript_block_brace_style = end_of_line
+ij_javascript_block_comment_add_space = false
+ij_javascript_block_comment_at_first_column = true
+ij_javascript_call_parameters_new_line_after_left_paren = false
+ij_javascript_call_parameters_right_paren_on_new_line = false
+ij_javascript_call_parameters_wrap = off
+ij_javascript_catch_on_new_line = false
+ij_javascript_chained_call_dot_on_new_line = true
+ij_javascript_class_brace_style = end_of_line
+ij_javascript_comma_on_new_line = false
+ij_javascript_do_while_brace_force = never
+ij_javascript_else_on_new_line = false
+ij_javascript_enforce_trailing_comma = keep
+ij_javascript_extends_keyword_wrap = off
+ij_javascript_extends_list_wrap = off
+ij_javascript_field_prefix = _
+ij_javascript_file_name_style = relaxed
+ij_javascript_finally_on_new_line = false
+ij_javascript_for_brace_force = never
+ij_javascript_for_statement_new_line_after_left_paren = false
+ij_javascript_for_statement_right_paren_on_new_line = false
+ij_javascript_for_statement_wrap = off
+ij_javascript_force_quote_style = false
+ij_javascript_force_semicolon_style = false
+ij_javascript_function_expression_brace_style = end_of_line
+ij_javascript_if_brace_force = never
+ij_javascript_import_merge_members = global
+ij_javascript_import_prefer_absolute_path = global
+ij_javascript_import_sort_members = true
+ij_javascript_import_sort_module_name = false
+ij_javascript_import_use_node_resolution = true
+ij_javascript_imports_wrap = on_every_item
+ij_javascript_indent_case_from_switch = true
+ij_javascript_indent_chained_calls = true
+ij_javascript_indent_package_children = 0
+ij_javascript_jsx_attribute_value = braces
+ij_javascript_keep_blank_lines_in_code = 2
+ij_javascript_keep_first_column_comment = true
+ij_javascript_keep_indents_on_empty_lines = false
+ij_javascript_keep_line_breaks = true
+ij_javascript_keep_simple_blocks_in_one_line = false
+ij_javascript_keep_simple_methods_in_one_line = false
+ij_javascript_line_comment_add_space = true
+ij_javascript_line_comment_at_first_column = false
+ij_javascript_method_brace_style = end_of_line
+ij_javascript_method_call_chain_wrap = off
+ij_javascript_method_parameters_new_line_after_left_paren = false
+ij_javascript_method_parameters_right_paren_on_new_line = false
+ij_javascript_method_parameters_wrap = off
+ij_javascript_object_literal_wrap = on_every_item
+ij_javascript_object_types_wrap = on_every_item
+ij_javascript_parentheses_expression_new_line_after_left_paren = false
+ij_javascript_parentheses_expression_right_paren_on_new_line = false
+ij_javascript_place_assignment_sign_on_next_line = false
+ij_javascript_prefer_as_type_cast = false
+ij_javascript_prefer_explicit_types_function_expression_returns = false
+ij_javascript_prefer_explicit_types_function_returns = false
+ij_javascript_prefer_explicit_types_vars_fields = false
+ij_javascript_prefer_parameters_wrap = false
+ij_javascript_property_prefix =
+ij_javascript_reformat_c_style_comments = false
+ij_javascript_space_after_colon = true
+ij_javascript_space_after_comma = true
+ij_javascript_space_after_dots_in_rest_parameter = false
+ij_javascript_space_after_generator_mult = true
+ij_javascript_space_after_property_colon = true
+ij_javascript_space_after_quest = true
+ij_javascript_space_after_type_colon = true
+ij_javascript_space_after_unary_not = false
+ij_javascript_space_before_async_arrow_lparen = true
+ij_javascript_space_before_catch_keyword = true
+ij_javascript_space_before_catch_left_brace = true
+ij_javascript_space_before_catch_parentheses = true
+ij_javascript_space_before_class_lbrace = true
+ij_javascript_space_before_class_left_brace = true
+ij_javascript_space_before_colon = true
+ij_javascript_space_before_comma = false
+ij_javascript_space_before_do_left_brace = true
+ij_javascript_space_before_else_keyword = true
+ij_javascript_space_before_else_left_brace = true
+ij_javascript_space_before_finally_keyword = true
+ij_javascript_space_before_finally_left_brace = true
+ij_javascript_space_before_for_left_brace = true
+ij_javascript_space_before_for_parentheses = true
+ij_javascript_space_before_for_semicolon = false
+ij_javascript_space_before_function_left_parenth = true
+ij_javascript_space_before_generator_mult = false
+ij_javascript_space_before_if_left_brace = true
+ij_javascript_space_before_if_parentheses = true
+ij_javascript_space_before_method_call_parentheses = false
+ij_javascript_space_before_method_left_brace = true
+ij_javascript_space_before_method_parentheses = false
+ij_javascript_space_before_property_colon = false
+ij_javascript_space_before_quest = true
+ij_javascript_space_before_switch_left_brace = true
+ij_javascript_space_before_switch_parentheses = true
+ij_javascript_space_before_try_left_brace = true
+ij_javascript_space_before_type_colon = false
+ij_javascript_space_before_unary_not = false
+ij_javascript_space_before_while_keyword = true
+ij_javascript_space_before_while_left_brace = true
+ij_javascript_space_before_while_parentheses = true
+ij_javascript_spaces_around_additive_operators = true
+ij_javascript_spaces_around_arrow_function_operator = true
+ij_javascript_spaces_around_assignment_operators = true
+ij_javascript_spaces_around_bitwise_operators = true
+ij_javascript_spaces_around_equality_operators = true
+ij_javascript_spaces_around_logical_operators = true
+ij_javascript_spaces_around_multiplicative_operators = true
+ij_javascript_spaces_around_relational_operators = true
+ij_javascript_spaces_around_shift_operators = true
+ij_javascript_spaces_around_unary_operator = false
+ij_javascript_spaces_within_array_initializer_brackets = false
+ij_javascript_spaces_within_brackets = false
+ij_javascript_spaces_within_catch_parentheses = false
+ij_javascript_spaces_within_for_parentheses = false
+ij_javascript_spaces_within_if_parentheses = false
+ij_javascript_spaces_within_imports = false
+ij_javascript_spaces_within_interpolation_expressions = false
+ij_javascript_spaces_within_method_call_parentheses = false
+ij_javascript_spaces_within_method_parentheses = false
+ij_javascript_spaces_within_object_literal_braces = false
+ij_javascript_spaces_within_object_type_braces = true
+ij_javascript_spaces_within_parentheses = false
+ij_javascript_spaces_within_switch_parentheses = false
+ij_javascript_spaces_within_type_assertion = false
+ij_javascript_spaces_within_union_types = true
+ij_javascript_spaces_within_while_parentheses = false
+ij_javascript_special_else_if_treatment = true
+ij_javascript_ternary_operation_signs_on_next_line = false
+ij_javascript_ternary_operation_wrap = off
+ij_javascript_union_types_wrap = on_every_item
+ij_javascript_use_chained_calls_group_indents = false
+ij_javascript_use_double_quotes = true
+ij_javascript_use_explicit_js_extension = auto
+ij_javascript_use_import_type = auto
+ij_javascript_use_path_mapping = always
+ij_javascript_use_public_modifier = false
+ij_javascript_use_semicolon_after_statement = true
+ij_javascript_var_declaration_wrap = normal
+ij_javascript_while_brace_force = never
+ij_javascript_while_on_new_line = false
+ij_javascript_wrap_comments = false
+
+ij_json_array_wrapping = split_into_lines
+ij_json_keep_blank_lines_in_code = 0
+ij_json_keep_indents_on_empty_lines = false
+ij_json_keep_line_breaks = true
+ij_json_keep_trailing_comma = false
+ij_json_object_wrapping = split_into_lines
+ij_json_property_alignment = do_not_align
+ij_json_space_after_colon = true
+ij_json_space_after_comma = true
+ij_json_space_before_colon = false
+ij_json_space_before_comma = false
+ij_json_spaces_within_braces = false
+ij_json_spaces_within_brackets = false
+ij_json_wrap_long_lines = false
+
+ij_hcl_array_wrapping = normal
+ij_hcl_keep_blank_lines_in_code = 2
+ij_hcl_keep_indents_on_empty_lines = false
+ij_hcl_keep_line_breaks = true
+ij_hcl_object_wrapping = normal
+ij_hcl_property_alignment = 2
+ij_hcl_property_line_commenter_character = 1
+ij_hcl_space_after_comma = true
+ij_hcl_space_before_comma = false
+ij_hcl_spaces_around_assignment_operators = true
+ij_hcl_spaces_within_braces = false
+ij_hcl_spaces_within_brackets = false
+ij_hcl_wrap_long_lines = false
+
+ij_html_add_new_line_before_tags = body,div,p,form,h1,h2,h3
+ij_html_align_attributes = true
+ij_html_align_text = false
+ij_html_attribute_wrap = normal
+ij_html_block_comment_add_space = false
+ij_html_block_comment_at_first_column = true
+ij_html_do_not_align_children_of_min_lines = 0
+ij_html_do_not_break_if_inline_tags = title,h1,h2,h3,h4,h5,h6,p
+ij_html_do_not_indent_children_of_tags = html,body,thead,tbody,tfoot
+ij_html_enforce_quotes = false
+ij_html_inline_tags = a,abbr,acronym,b,basefont,bdo,big,br,cite,cite,code,dfn,em,font,i,img,input,kbd,label,q,s,samp,select,small,span,strike,strong,sub,sup,textarea,tt,u,var
+ij_html_keep_blank_lines = 2
+ij_html_keep_indents_on_empty_lines = false
+ij_html_keep_line_breaks = true
+ij_html_keep_line_breaks_in_text = true
+ij_html_keep_whitespaces = false
+ij_html_keep_whitespaces_inside = span,pre,textarea
+ij_html_line_comment_at_first_column = true
+ij_html_new_line_after_last_attribute = never
+ij_html_new_line_before_first_attribute = never
+ij_html_quote_style = double
+ij_html_remove_new_line_before_tags = br
+ij_html_space_after_tag_name = false
+ij_html_space_around_equality_in_attribute = false
+ij_html_space_inside_empty_tag = false
+ij_html_text_wrap = normal
+
+ij_http-request_call_parameters_wrap = normal
+ij_http-request_method_parameters_wrap = split_into_lines
+ij_http-request_space_before_comma = true
+ij_http-request_spaces_around_assignment_operators = true
+
+ij_markdown_force_one_space_after_blockquote_symbol = true
+ij_markdown_force_one_space_after_header_symbol = true
+ij_markdown_force_one_space_after_list_bullet = true
+ij_markdown_force_one_space_between_words = true
+ij_markdown_format_tables = true
+ij_markdown_insert_quote_arrows_on_wrap = true
+ij_markdown_keep_indents_on_empty_lines = false
+ij_markdown_keep_line_breaks_inside_text_blocks = true
+ij_markdown_max_lines_around_block_elements = 1
+ij_markdown_max_lines_around_header = 1
+ij_markdown_max_lines_between_paragraphs = 1
+ij_markdown_min_lines_around_block_elements = 1
+ij_markdown_min_lines_around_header = 1
+ij_markdown_min_lines_between_paragraphs = 1
+ij_markdown_wrap_text_if_long = true
+ij_markdown_wrap_text_inside_blockquotes = true
+
+ij_prototext_keep_blank_lines_in_code = 2
+ij_prototext_keep_indents_on_empty_lines = false
+ij_prototext_keep_line_breaks = true
+ij_prototext_space_after_colon = true
+ij_prototext_space_after_comma = true
+ij_prototext_space_before_colon = false
+ij_prototext_space_before_comma = false
+ij_prototext_spaces_within_braces = true
+ij_prototext_spaces_within_brackets = false
+
+ij_powershell_align_multiline_binary_operation = false
+ij_powershell_align_multiline_chained_methods = false
+ij_powershell_align_multiline_for = true
+ij_powershell_align_multiline_parameters = true
+ij_powershell_align_multiline_parameters_in_calls = false
+ij_powershell_binary_operation_wrap = off
+ij_powershell_block_brace_style = next_line
+ij_powershell_call_parameters_new_line_after_left_paren = false
+ij_powershell_call_parameters_right_paren_on_new_line = false
+ij_powershell_call_parameters_wrap = off
+ij_powershell_catch_on_new_line = true
+ij_powershell_class_annotation_wrap = split_into_lines
+ij_powershell_class_brace_style = next_line
+ij_powershell_else_on_new_line = true
+ij_powershell_field_annotation_wrap = off
+ij_powershell_finally_on_new_line = true
+ij_powershell_for_statement_new_line_after_left_paren = false
+ij_powershell_for_statement_right_paren_on_new_line = false
+ij_powershell_for_statement_wrap = off
+ij_powershell_keep_blank_lines_in_code = 2
+ij_powershell_keep_first_column_comment = true
+ij_powershell_keep_line_breaks = true
+ij_powershell_keep_simple_blocks_in_one_line = false
+ij_powershell_keep_simple_classes_in_one_line = false
+ij_powershell_keep_simple_lambdas_in_one_line = true
+ij_powershell_keep_simple_methods_in_one_line = false
+ij_powershell_method_annotation_wrap = split_into_lines
+ij_powershell_method_brace_style = next_line
+ij_powershell_method_call_chain_wrap = off
+ij_powershell_method_parameters_new_line_after_left_paren = false
+ij_powershell_method_parameters_right_paren_on_new_line = false
+ij_powershell_method_parameters_wrap = off
+ij_powershell_parameter_annotation_wrap = off
+ij_powershell_parentheses_expression_new_line_after_left_paren = false
+ij_powershell_parentheses_expression_right_paren_on_new_line = false
+ij_powershell_space_after_colon = true
+ij_powershell_space_after_comma = true
+ij_powershell_space_after_for_semicolon = true
+ij_powershell_space_after_type_cast = false
+ij_powershell_space_before_annotation_parameter_list = false
+ij_powershell_space_before_array_initializer_left_brace = true
+ij_powershell_space_before_catch_keyword = true
+ij_powershell_space_before_catch_left_brace = true
+ij_powershell_space_before_class_left_brace = true
+ij_powershell_space_before_colon = true
+ij_powershell_space_before_comma = false
+ij_powershell_space_before_do_left_brace = true
+ij_powershell_space_before_else_keyword = true
+ij_powershell_space_before_else_left_brace = true
+ij_powershell_space_before_finally_keyword = true
+ij_powershell_space_before_finally_left_brace = true
+ij_powershell_space_before_for_left_brace = true
+ij_powershell_space_before_for_parentheses = true
+ij_powershell_space_before_for_semicolon = false
+ij_powershell_space_before_if_left_brace = true
+ij_powershell_space_before_if_parentheses = true
+ij_powershell_space_before_method_call_parentheses = false
+ij_powershell_space_before_method_left_brace = true
+ij_powershell_space_before_method_parentheses = false
+ij_powershell_space_before_switch_left_brace = true
+ij_powershell_space_before_switch_parentheses = true
+ij_powershell_space_before_try_left_brace = true
+ij_powershell_space_before_while_keyword = true
+ij_powershell_space_before_while_left_brace = true
+ij_powershell_space_before_while_parentheses = true
+ij_powershell_space_within_empty_method_call_parentheses = false
+ij_powershell_space_within_empty_method_parentheses = false
+ij_powershell_spaces_around_additive_operators = true
+ij_powershell_spaces_around_assignment_operators = true
+ij_powershell_spaces_around_bitwise_operators = true
+ij_powershell_spaces_around_logical_operators = true
+ij_powershell_spaces_around_method_ref_dbl_colon = false
+ij_powershell_spaces_around_multiplicative_operators = true
+ij_powershell_spaces_around_relational_operators = true
+ij_powershell_spaces_around_unary_operator = false
+ij_powershell_spaces_within_annotation_parentheses = false
+ij_powershell_spaces_within_braces = true
+ij_powershell_spaces_within_brackets = false
+ij_powershell_spaces_within_cast_parentheses = false
+ij_powershell_spaces_within_for_parentheses = false
+ij_powershell_spaces_within_if_parentheses = false
+ij_powershell_spaces_within_method_call_parentheses = false
+ij_powershell_spaces_within_method_parentheses = false
+ij_powershell_spaces_within_parentheses = false
+ij_powershell_spaces_within_switch_parentheses = false
+ij_powershell_spaces_within_while_parentheses = false
+ij_powershell_special_else_if_treatment = true
+ij_powershell_while_on_new_line = false
+ij_powershell_wrap_first_method_in_call_chain = false
+ij_powershell_wrap_long_lines = false
+
+ij_hcl-terraform_array_wrapping = normal
+ij_hcl-terraform_keep_blank_lines_in_code = 2
+ij_hcl-terraform_keep_indents_on_empty_lines = false
+ij_hcl-terraform_keep_line_breaks = true
+ij_hcl-terraform_object_wrapping = normal
+ij_hcl-terraform_property_alignment = 2
+ij_hcl-terraform_property_line_commenter_character = 1
+ij_hcl-terraform_space_after_comma = true
+ij_hcl-terraform_space_before_comma = false
+ij_hcl-terraform_spaces_around_assignment_operators = true
+ij_hcl-terraform_spaces_within_braces = false
+ij_hcl-terraform_spaces_within_brackets = false
+ij_hcl-terraform_wrap_long_lines = false
+
+ij_toml_keep_indents_on_empty_lines = false
+
+ij_yaml_align_values_properties = do_not_align
+ij_yaml_autoinsert_sequence_marker = true
+ij_yaml_block_mapping_on_new_line = false
+ij_yaml_indent_sequence_value = true
+ij_yaml_keep_indents_on_empty_lines = false
+ij_yaml_keep_line_breaks = true
+ij_yaml_sequence_on_new_line = false
+ij_yaml_space_before_colon = false
+ij_yaml_spaces_within_braces = true
+ij_yaml_spaces_within_brackets = true
 
 resharper_accessor_owner_body = expression_body
 resharper_alignment_tab_fill_style = use_spaces
@@ -3599,7 +4277,7 @@ resharper_csharp_align_multiline_extends_list = false
 resharper_csharp_align_multiline_parameter = false
 resharper_csharp_align_multiple_declaration = false
 resharper_csharp_empty_block_style = together_same_line
-# resharper_csharp_insert_final_newline = true
+resharper_csharp_insert_final_newline = false
 resharper_csharp_int_align_comments = true
 resharper_csharp_keep_nontrivial_alias = false
 resharper_csharp_max_line_length = 160
@@ -3654,7 +4332,7 @@ resharper_formatter_tags_enabled = true
 resharper_format_leading_spaces_decl = false
 resharper_free_block_braces = next_line
 resharper_fsharp_empty_block_style = together_same_line
-# resharper_fsharp_insert_final_newline = true
+resharper_fsharp_insert_final_newline = false
 resharper_fsharp_max_line_length = 160
 resharper_fsharp_place_comments_at_first_column = false
 resharper_fsharp_type_declaration_braces = pico
@@ -3664,7 +4342,7 @@ resharper_function_definition_return_type_style = do_not_change
 resharper_generator_mode = false
 resharper_html_attribute_indent = align_by_first_attribute
 resharper_html_attribute_style = do_not_touch
-# resharper_html_insert_final_newline = true
+resharper_html_insert_final_newline = false
 resharper_html_linebreak_before_elements = body,div,p,form,h1,h2,h3
 resharper_html_max_blank_lines_between_tags = 2
 resharper_html_max_line_length = 160
@@ -3694,7 +4372,7 @@ resharper_indent_nested_lock_stmt = false
 resharper_indent_nested_usings_stmt = false
 resharper_indent_nested_while_stmt = false
 resharper_indent_pars = inside
-resharper_indent_preprocessor_directives = normal
+resharper_indent_preprocessor_directives = none
 resharper_indent_preprocessor_if = usual_indent
 resharper_indent_preprocessor_other = usual_indent
 resharper_indent_preprocessor_region = usual_indent
@@ -3708,18 +4386,18 @@ resharper_indent_type_constraints = true
 resharper_indent_wrapped_function_names = false
 resharper_instance_members_qualify_declared_in = this_class, base_class
 resharper_int_align_assignments = false
-resharper_int_align_binary_expressions = true
+resharper_int_align_binary_expressions = false
 resharper_int_align_bitfield_sizes = false
 resharper_int_align_declaration_names = false
 resharper_int_align_enum_initializers = false
 resharper_int_align_eq = false
-resharper_int_align_fields = true
+resharper_int_align_fields = false
 resharper_int_align_fix_in_adjacent = true
 resharper_int_align_invocations = false
-resharper_int_align_methods = true
+resharper_int_align_methods = false
 resharper_int_align_nested_ternary = true
-resharper_int_align_parameters = true
-resharper_int_align_properties = true
+resharper_int_align_parameters = false
+resharper_int_align_properties = false
 resharper_int_align_property_patterns = false
 resharper_int_align_switch_expressions = true
 resharper_int_align_switch_sections = true
@@ -3831,7 +4509,7 @@ resharper_remove_unused_only_aliases = false
 resharper_requires_expression_braces = next_line
 resharper_resx_attribute_indent = single_indent
 resharper_resx_attribute_style = do_not_touch
-# resharper_resx_insert_final_newline = true
+resharper_resx_insert_final_newline = false
 resharper_resx_linebreak_before_elements =
 resharper_resx_max_blank_lines_between_tags = 0
 resharper_resx_max_line_length = 2147483647
@@ -3988,7 +4666,7 @@ resharper_static_members_qualify_members = none
 resharper_static_members_qualify_with = declared_type
 resharper_stick_comment = true
 resharper_support_vs_event_naming_pattern = true
-# resharper_T4_insert_final_newline = true
+resharper_T4_insert_final_newline = false
 resharper_T4_max_line_length = 160
 resharper_T4_wrap_lines = true
 resharper_toplevel_function_declaration_return_type_style = do_not_change
@@ -4049,7 +4727,7 @@ resharper_wrap_ternary_expr_style = chop_if_long
 resharper_wrap_verbatim_interpolated_strings = no_wrap
 resharper_xmldoc_attribute_indent = single_indent
 resharper_xmldoc_attribute_style = on_single_line
-# resharper_xmldoc_insert_final_newline = true
+resharper_xmldoc_insert_final_newline = false
 resharper_xmldoc_linebreak_before_elements = summary,remarks,example,returns,param,typeparam,value,para
 resharper_xmldoc_max_blank_lines_between_tags = 0
 resharper_xmldoc_max_line_length = 160
@@ -4061,7 +4739,7 @@ resharper_xmldoc_wrap_tags_and_pi = true
 resharper_xmldoc_wrap_text = true
 resharper_xml_attribute_indent = align_by_first_attribute
 resharper_xml_attribute_style = do_not_touch
-# resharper_xml_insert_final_newline = true
+resharper_xml_insert_final_newline = false
 resharper_xml_linebreak_before_elements =
 resharper_xml_max_blank_lines_between_tags = 2
 resharper_xml_max_line_length = 160
