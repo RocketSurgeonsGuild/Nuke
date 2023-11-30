@@ -14,7 +14,7 @@ public class SetupDotNetStep : UsingStep
     public SetupDotNetStep(string name) : base(name)
     {
         // temporary to deal with sxs issue roll back once https://github.com/actions/setup-dotnet/pull/71 is merged
-        Uses = "actions/setup-dotnet@v1";
+        Uses = "actions/setup-dotnet@v3";
     }
 
     /// <summary>SDK version to use. Example: 2.2.104</summary>

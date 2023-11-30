@@ -20,49 +20,29 @@ public static class GithubActionsExtensions
     /// <returns></returns>
     public static RocketSurgeonGitHubActionsConfiguration AddNugetPublish(this RocketSurgeonGitHubActionsConfiguration configuration)
     {
-        configuration.DetailedTriggers.OfType<RocketSurgeonGitHubActionsWorkflowTrigger>().ForEach(
-            trigger =>
-            {
-                trigger.Secrets.Add(new GitHubActionsSecret("RSG_NUGET_API_KEY"));
-                trigger.Secrets.Add(new GitHubActionsSecret("RSG_AZURE_DEVOPS"));
-            }
-        );
+        configuration
+           .DetailedTriggers.OfType<RocketSurgeonGitHubActionsWorkflowTrigger>()
+           .ForEach(
+                trigger =>
+                {
+                    trigger.Secrets.Add(new("RSG_NUGET_API_KEY"));
+                    trigger.Secrets.Add(new("RSG_AZURE_DEVOPS"));
+                }
+            );
         configuration.Jobs.Add(
             new RocketSurgeonsGithubWorkflowJob("Publish")
             {
-                Needs = { "Build" },
+                Needs = { "Build", },
                 Uses = "RocketSurgeonsGuild/actions/.github/workflows/publish-nuget.yml@v0.3.0",
-                Secrets = new Dictionary<string, string>
-                {
-                    ["RSG_NUGET_API_KEY"] = "${{ secrets.RSG_NUGET_API_KEY }}",
-                    ["RSG_AZURE_DEVOPS"] = "${{ secrets.RSG_AZURE_DEVOPS }}",
-                }
+                Secrets = new()
+                          {
+                              ["RSG_NUGET_API_KEY"] = "${{ secrets.RSG_NUGET_API_KEY }}",
+                              ["RSG_AZURE_DEVOPS"] = "${{ secrets.RSG_AZURE_DEVOPS }}",
+                          },
             }
         );
         return configuration;
     }
-
-    private static readonly string[] _pathsIgnore =
-    {
-        ".codecov.yml",
-        ".editorconfig",
-        ".gitattributes",
-        ".gitignore",
-        ".gitmodules",
-        ".lintstagedrc.js",
-        ".prettierignore",
-        ".prettierrc",
-        "LICENSE",
-        "nukeeper.settings.json",
-        "omnisharp.json",
-        "package-lock.json",
-        "package.json",
-        "Readme.md",
-        ".github/dependabot.yml",
-        ".github/labels.yml",
-        ".github/release.yml",
-        ".github/renovate.json",
-    };
 
     /// <summary>
     ///     Adds a new step to the current configuration
@@ -71,7 +51,8 @@ public static class GithubActionsExtensions
     /// <param name="job"></param>
     /// <returns></returns>
     public static RocketSurgeonGitHubActionsConfiguration AddJob(
-        this RocketSurgeonGitHubActionsConfiguration configuration, RocketSurgeonsGithubActionsJobBase job
+        this RocketSurgeonGitHubActionsConfiguration configuration,
+        RocketSurgeonsGithubActionsJobBase job
     )
     {
         configuration.Jobs.Add(job);
@@ -171,15 +152,15 @@ public static class GithubActionsExtensions
         job.InsertAfterCheckOut(
             new UsingStep("NuGet Cache")
             {
-                Uses = "actions/cache@v2",
+                Uses = "actions/cache@v3",
                 With =
                 {
                     ["path"] = "${{ github.workspace }}/.nuget/packages",
                     // keep in mind using central package versioning here
                     ["key"] = "${{ runner.os }}-nuget-${{ hashFiles('**/Directory.Packages.props') }}-${{ hashFiles('**/Directory.Packages.support.props') }}",
                     ["restore-keys"] = @"|
-              ${{ runner.os }}-nuget-"
-                }
+              ${{ runner.os }}-nuget-",
+                },
             }
         );
         return job;
@@ -192,7 +173,7 @@ public static class GithubActionsExtensions
     /// <returns></returns>
     public static RocketSurgeonsGithubActionsJob ConfigureForGitVersion(this RocketSurgeonsGithubActionsJob job)
     {
-        job.InsertAfterCheckOut(new RunStep("Fetch all history for all tags and branches") { Run = "git fetch --prune" });
+        job.InsertAfterCheckOut(new RunStep("Fetch all history for all tags and branches") { Run = "git fetch --prune", });
         return job;
     }
 
@@ -213,7 +194,7 @@ public static class GithubActionsExtensions
                 {
                     Name = "nuget",
                     Path = "artifacts/nuget/",
-                    If = "always()"
+                    If = "always()",
                 }
             );
             job.InternalData[typeof(IHaveNuGetPackages)] = true;
@@ -251,7 +232,7 @@ public static class GithubActionsExtensions
                 {
                     Name = "coverage",
                     Path = "coverage/",
-                    If = "always()"
+                    If = "always()",
                 }
             );
 
@@ -261,10 +242,10 @@ public static class GithubActionsExtensions
                     job,
                     new UsingStep("Publish Coverage")
                     {
-                        Uses = "codecov/codecov-action@v1",
+                        Uses = "codecov/codecov-action@v3",
                         If =
                             "(github.event_name != 'pull_request' && github.event_name != 'pull_request_target') || ((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]')",
-                        With = new() { ["name"] = "actions-${{ matrix.os }}" }
+                        With = new() { ["name"] = "actions-${{ matrix.os }}", },
                     }
                 );
             }
@@ -278,7 +259,7 @@ public static class GithubActionsExtensions
                 {
                     Name = "logs",
                     Path = "artifacts/logs/",
-                    If = "always()"
+                    If = "always()",
                 }
             );
         }
@@ -291,7 +272,7 @@ public static class GithubActionsExtensions
                 {
                     Name = "test data",
                     Path = "artifacts/test/",
-                    If = "always()"
+                    If = "always()",
                 }
             );
         }
@@ -345,29 +326,8 @@ public static class GithubActionsExtensions
     public static RocketSurgeonsGithubActionsJob UseDotNetSdk(this RocketSurgeonsGithubActionsJob job, string version, string? exactVersion = null)
     {
         exactVersion ??= version + ".x";
-        job.InsertAfterCheckOut(new SetupDotNetStep($"Use .NET Core {version} SDK") { DotNetVersion = exactVersion });
+        job.InsertAfterCheckOut(new SetupDotNetStep($"Use .NET Core {version} SDK") { DotNetVersion = exactVersion, });
         return job;
-    }
-
-    private static readonly ConcurrentDictionary<ITargetDefinition, List<GitHubActionsOutput>> outputPaths = new();
-
-    // ReSharper disable once NullableWarningSuppressionIsUsed
-    private static readonly PropertyInfo DefinitionProperty =
-        typeof(ExecutableTarget).GetProperty("Definition", BindingFlags.Instance | BindingFlags.NonPublic)!;
-
-
-    internal static List<GitHubActionsOutput> GetGithubActionsOutput(ExecutableTarget target)
-    {
-        // ReSharper disable once NullableWarningSuppressionIsUsed
-        var def = (ITargetDefinition)DefinitionProperty.GetValue(target)!;
-        if (outputPaths.TryGetValue(def, out var paths))
-        {
-            return paths;
-        }
-
-        paths = new();
-        outputPaths[def] = paths;
-        return paths;
     }
 
     /// <summary>
@@ -399,7 +359,50 @@ public static class GithubActionsExtensions
             outputPaths[target] = paths;
         }
 
-        paths.Add(new GitHubActionsOutput(outputName, description));
+        paths.Add(new(outputName, description));
         return target;
     }
+
+
+    internal static List<GitHubActionsOutput> GetGithubActionsOutput(ExecutableTarget target)
+    {
+        // ReSharper disable once NullableWarningSuppressionIsUsed
+        var def = (ITargetDefinition)DefinitionProperty.GetValue(target)!;
+        if (outputPaths.TryGetValue(def, out var paths))
+        {
+            return paths;
+        }
+
+        paths = new();
+        outputPaths[def] = paths;
+        return paths;
+    }
+
+    private static readonly string[] _pathsIgnore =
+    {
+        ".codecov.yml",
+        ".editorconfig",
+        ".gitattributes",
+        ".gitignore",
+        ".gitmodules",
+        ".lintstagedrc.js",
+        ".prettierignore",
+        ".prettierrc",
+        "LICENSE",
+        "nukeeper.settings.json",
+        "omnisharp.json",
+        "package-lock.json",
+        "package.json",
+        "Readme.md",
+        ".github/dependabot.yml",
+        ".github/labels.yml",
+        ".github/release.yml",
+        ".github/renovate.json",
+    };
+
+    private static readonly ConcurrentDictionary<ITargetDefinition, List<GitHubActionsOutput>> outputPaths = new();
+
+    // ReSharper disable once NullableWarningSuppressionIsUsed
+    private static readonly PropertyInfo DefinitionProperty =
+        typeof(ExecutableTarget).GetProperty("Definition", BindingFlags.Instance | BindingFlags.NonPublic)!;
 }
