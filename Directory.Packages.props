@@ -14,7 +14,7 @@
         <PackageVersion Include="Roslynator.CodeAnalysis.Analyzers" Version="4.6.4" />
     </ItemGroup>
     <ItemGroup>
-        <PackageVersion Include="Docfx.App" Version="2.74.0" />
+        <PackageVersion Include="Docfx.App" Version="2.74.1" />
         <PackageVersion Include="Buildalyzer" Version="5.0.1" />
         <PackageVersion Include="GitVersion.Tool" Version="5.12.0" />
         <PackageVersion Include="Humanizer.Core" Version="2.14.1" />
