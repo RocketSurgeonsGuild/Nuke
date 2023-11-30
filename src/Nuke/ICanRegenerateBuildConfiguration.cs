@@ -13,35 +13,32 @@ public interface ICanRegenerateBuildConfiguration : ICanLint
     /// <summary>
     ///     Regenerate the build configurations
     /// </summary>
-    public Target RegenerateBuildConfigurations => t =>
-                                                       t
-                                                          .TryDependentFor<ICanLintStagedFiles>(static z => z.LintStaged)
-                                                          .TryTriggeredBy<ICanLint>(static z => z.Lint)
-                                                           // We run during LintStaged, no need to run again during the lint that lint-staged kicks off.
-                                                          .OnlyWhenDynamic(() => !EnvironmentInfo.HasVariable("RSG_NUKE_LINT_STAGED"))
-                                                          .Unlisted()
-                                                          .Executes(
-                                                               () =>
-                                                               {
-                                                                   var allHosts = GetType()
-                                                                                 .GetCustomAttributes<ConfigurationAttributeBase>()
-                                                                                 .OfType<IConfigurationGenerator>();
+    public Target RegenerateBuildConfigurations =>
+        t => t
+            .TryDependentFor<ICanLintStagedFiles>(static z => z.LintStaged)
+            .TryTriggeredBy<ICanLint>(static z => z.Lint)
+             // We run during LintStaged, no need to run again during the lint that lint-staged kicks off.
+            .OnlyWhenDynamic(() => !EnvironmentInfo.HasVariable("RSG_NUKE_LINT_STAGED"))
+            .Unlisted()
+            .Executes(
+                 () =>
+                 {
+                     var allHosts = GetType()
+                                   .GetCustomAttributes<ConfigurationAttributeBase>()
+                                   .OfType<IConfigurationGenerator>();
 
-                                                                   allHosts
-                                                                       // ReSharper disable once NullableWarningSuppressionIsUsed
-                                                                      .Select(
-                                                                           z =>
-                                                                               $"""{Assembly.GetEntryAssembly()!.Location} --{BuildServerConfigurationGeneration.ConfigurationParameterName} {z.Id} --host {z.HostName}"""
-                                                                       )
-                                                                      .ForEach(
-                                                                           command => DotNetTasks.DotNet(
-                                                                               command,
-                                                                               environmentVariables: EnvironmentInfo.Variables.AddIfMissing(
-                                                                                   "NUKE_INTERNAL_INTERCEPTOR",
-                                                                                   "1"
-                                                                               )
-                                                                           )
-                                                                       );
-                                                               }
-                                                           );
+                     allHosts
+                        .Select(
+                             z =>
+                                 // ReSharper disable once NullableWarningSuppressionIsUsed
+                                 $"""{Assembly.GetEntryAssembly()!.Location} --{BuildServerConfigurationGeneration.ConfigurationParameterName} {z.Id} --host {z.HostName}"""
+                         )
+                        .ForEach(
+                             command => DotNetTasks.DotNet(
+                                 command,
+                                 environmentVariables: EnvironmentInfo.Variables.AddIfMissing("NUKE_INTERNAL_INTERCEPTOR", "1")
+                             )
+                         );
+                 }
+             );
 }

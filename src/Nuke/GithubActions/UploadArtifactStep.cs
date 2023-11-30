@@ -11,7 +11,7 @@ public class UploadArtifactStep : UsingStep
     /// <param name="name"></param>
     public UploadArtifactStep(string name) : base(name)
     {
-        Uses = "actions/upload-artifact@v2";
+        Uses = "actions/upload-artifact@v3";
     }
 
     /// <summary>
@@ -27,9 +27,9 @@ public class UploadArtifactStep : UsingStep
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
-#pragma warning disable CA1308
+        #pragma warning disable CA1308
         WithProperties(x => x.Underscore().Camelize().ToLowerInvariant());
-#pragma warning restore CA1308
+        #pragma warning restore CA1308
         base.Write(writer);
     }
 

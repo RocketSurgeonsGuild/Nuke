@@ -11,7 +11,7 @@ public class CheckoutStep : UsingStep
     /// <param name="name"></param>
     public CheckoutStep(string name) : base(name)
     {
-        Uses = "actions/checkout@v2";
+        Uses = "actions/checkout@v4";
     }
 
     /// <summary>
@@ -121,9 +121,9 @@ public class CheckoutStep : UsingStep
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
-#pragma warning disable CA1308
+        #pragma warning disable CA1308
         WithProperties(x => x.Underscore().Hyphenate().ToLowerInvariant());
-#pragma warning restore CA1308
+        #pragma warning restore CA1308
         base.Write(writer);
     }
 }
