@@ -11,6 +11,6 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       - name: auto label
-        uses: RocketSurgeonsGuild/actions/auto-label@v0.3.3
+        uses: RocketSurgeonsGuild/actions/auto-label@v0.3.4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
