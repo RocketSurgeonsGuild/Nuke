@@ -61,6 +61,12 @@
             "type": "string"
           }
         },
+        "MY_ONEPASSWORD_TEXT": {
+          "type": "string"
+        },
+        "MyOtherOnepasswordText": {
+          "type": "string"
+        },
         "NoLogo": {
           "type": "boolean",
           "description": "Disables displaying the NUKE logo"
