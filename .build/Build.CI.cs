@@ -65,6 +65,8 @@ using Rocket.Surgery.Nuke.GithubActions;
 [GitHubActionsInput("THIS_IS_ANOTHER_INPUT" /*, Alias = "ThisIsAInput"*/)]
 [GitHubActionsEnvironmentVariable("THIS_IS_A_ENV" /*, Alias = "ThisIsAEnv"*/, Default = "'test'")]
 [GitHubActionsSecret("THIS_IS_A_SECRET" /*, Alias = "ThisIsASecret"*/)]
+//[OnePasswordSecret("MY_OTHER_ONEPASSWORD_TEXT", "ONEPASSWORDITEM",  "text")]
+//[OnePasswordSecret("MY_ONEPASSWORD_TEXT", "op://somevault/someitem/text")]
 [PrintBuildVersion]
 [PrintCIEnvironment]
 [UploadLogs]
@@ -113,6 +115,12 @@ public partial class Pipeline
 
     [Parameter]
     public string ThisIsASecret { get; set; }
+
+    [Parameter(Name = "MY_ONEPASSWORD_TEXT")]
+    public string MyOnepasswordText { get; set; }
+
+    [Parameter]
+    public string MyOtherOnepasswordText { get; set; }
 
     public static RocketSurgeonGitHubActionsConfiguration CiMiddleware(RocketSurgeonGitHubActionsConfiguration configuration)
     {
