@@ -39,9 +39,7 @@ public class ComputedGitVersionAttribute : ValueInjectionAttributeBase
     ///     Computes the GitVersion for the repository.
     /// </summary>
     public ComputedGitVersionAttribute()
-        : this(null)
-    {
-    }
+        : this(null) { }
 
 
     /// <summary>
