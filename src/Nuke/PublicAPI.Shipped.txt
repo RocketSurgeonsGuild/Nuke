@@ -87,6 +87,7 @@ Rocket.Surgery.Nuke.AzurePipelinesStepsAttribute.Parameters.get -> string![]!
 Rocket.Surgery.Nuke.AzurePipelinesStepsAttribute.Parameters.set -> void
 Rocket.Surgery.Nuke.ComputedGitVersionAttribute
 Rocket.Surgery.Nuke.ComputedGitVersionAttribute.ComputedGitVersionAttribute() -> void
+Rocket.Surgery.Nuke.ComputedGitVersionAttribute.ComputedGitVersionAttribute(string? frameworkVersion) -> void
 Rocket.Surgery.Nuke.ComputedGitVersionAttribute.DisableOnUnix.get -> bool
 Rocket.Surgery.Nuke.ComputedGitVersionAttribute.DisableOnUnix.set -> void
 Rocket.Surgery.Nuke.ComputedGitVersionAttribute.UpdateAssemblyInfo.get -> bool

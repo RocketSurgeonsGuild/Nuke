@@ -33,6 +33,43 @@ public class ComputedGitVersionAttribute : ValueInjectionAttributeBase
         return Variables.Keys.Any(z => z.StartsWith("GITVERSION_", StringComparison.OrdinalIgnoreCase));
     }
 
+    internal static GitVersion GetGitVersion(string? frameworkVersion, bool updateAssemblyInfo)
+    {
+        if (!HasGitVer())
+        {
+            return GitVersionTasks.GitVersion(
+                                       s => s
+                                           .SetFramework(frameworkVersion)
+                                           .DisableProcessLogOutput()
+                                           .SetUpdateAssemblyInfo(updateAssemblyInfo)
+                                           .SetProcessToolPath(
+                                                NuGetToolPathResolver.GetPackageExecutable(
+                                                    "GitVersion.Tool|GitVersion.CommandLine",
+                                                    "gitversion.dll|gitversion.exe",
+                                                    framework: frameworkVersion
+                                                )
+                                            )
+                                   )
+                                  .Result;
+        }
+
+        var json = Variables
+                  .Where(z => z.Key.StartsWith("GITVERSION_", StringComparison.OrdinalIgnoreCase))
+                  .Aggregate(
+                       new JObject(),
+                       (acc, record) =>
+                       {
+                           var key = record.Key["GITVERSION_".Length..];
+                           acc[key] = record.Value;
+                           return acc;
+                       }
+                   );
+        // ReSharper disable once NullableWarningSuppressionIsUsed
+        return json.ToObject<GitVersion>(
+            new() { ContractResolver = new AllWritableContractResolver(), }
+        )!;
+    }
+
     private readonly string? _frameworkVersion;
 
     /// <summary>
@@ -78,42 +115,6 @@ public class ComputedGitVersionAttribute : ValueInjectionAttributeBase
         AppVeyor.Instance?.UpdateBuildVersion($"{gitVersion.FullSemVer}.build.{AppVeyor.Instance.BuildNumber}");
 
         return gitVersion;
-    }
-
-    internal static GitVersion GetGitVersion(string? frameworkVersion, bool updateAssemblyInfo)
-    {
-        if (!HasGitVer())
-        {
-            return GitVersionTasks.GitVersion(
-                                       s => s
-                                           .SetFramework(frameworkVersion)
-                                           .DisableProcessLogOutput()
-                                           .SetUpdateAssemblyInfo(updateAssemblyInfo)
-                                           .SetProcessToolPath(
-                                                NuGetToolPathResolver.GetPackageExecutable(
-                                                    "GitVersion.Tool|GitVersion.CommandLine",
-                                                    "gitversion.dll|gitversion.exe",
-                                                    framework: frameworkVersion
-                                                )
-                                            )
-                                   )
-                                  .Result;
-        }
-
-        var json = Variables.Where(z => z.Key.StartsWith("GITVERSION_", StringComparison.OrdinalIgnoreCase))
-                            .Aggregate(
-                                 new JObject(),
-                                 (acc, record) =>
-                                 {
-                                     var key = record.Key["GITVERSION_".Length..];
-                                     acc[key] = record.Value;
-                                     return acc;
-                                 }
-                             );
-        // ReSharper disable once NullableWarningSuppressionIsUsed
-        return json.ToObject<GitVersion>(
-            new JsonSerializer { ContractResolver = new AllWritableContractResolver() }
-        )!;
     }
 
     private class AllWritableContractResolver : DefaultContractResolver
