@@ -113,13 +113,21 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                     .ToDictionary(z => z.Key, z => z.Value, StringComparer.OrdinalIgnoreCase);
         var secrets = attributes.OfType<GitHubActionsSecretAttribute>().Select(z => z.ToSecret()).ToArray();
         var onePasswordSecrets = attributes.OfType<OnePasswordSecretAttribute>().Select(z => z.ToSecret()).ToArray();
+        var onePasswordConnectServerSecrets = onePasswordSecrets
+                                             .OfType<OnePasswordConnectServerSecret>()
+                                             .Concat(attributes.OfType<OnePasswordConnectServerSecretAttribute>().Select(z => z.ToSecret()))
+                                             .ToArray();
+        var onePasswordServiceAccountSecrets = onePasswordSecrets
+                                              .OfType<OnePasswordServiceAccountSecret>()
+                                              .Concat(attributes.OfType<OnePasswordServiceAccountSecretAttribute>().Select(z => z.ToSecret()))
+                                              .ToArray();
         var variables = attributes.OfType<GitHubActionsVariableAttribute>().Select(z => z.ToVariable()).ToArray();
 
-        if (onePasswordSecrets.Any())
+        if (onePasswordServiceAccountSecrets.Any())
         {
             secrets = secrets
                      .Concat(
-                          onePasswordSecrets
+                          onePasswordServiceAccountSecrets
                              .Select(z => z.Secret ?? "OP_SERVICE_ACCOUNT_TOKEN")
                              .Distinct()
                              .Select(z => new GitHubActionsSecret(z))
@@ -128,7 +136,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
 
             variables = variables
                        .Concat(
-                            onePasswordSecrets
+                            onePasswordServiceAccountSecrets
                                .DistinctBy(z => z.Variable)
                                .Where(z => !z.Path.StartsWith("op://") && !string.IsNullOrWhiteSpace(z.Variable))
                                .Select(s => new GitHubActionsVariable(s.Variable!))
@@ -136,7 +144,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                        .ToArray();
 
             steps.AddRange(
-                onePasswordSecrets
+                onePasswordServiceAccountSecrets
                    .GroupBy(z => z.Secret ?? "OP_SERVICE_ACCOUNT_TOKEN")
                    .Select(
                         static secrets => new UsingStep($"Load 1Password Secrets ({secrets.Key})")
@@ -160,6 +168,70 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                                                                     new KeyValuePair<string, string>(
                                                                         "OP_SERVICE_ACCOUNT_TOKEN",
                                                                         $$$"""${{ secrets.{{{secrets.Key}}} }}"""
+                                                                    ),
+                                                                ]
+                                                            )
+                                                           .ToDictionary(z => z.Key, z => z.Value),
+                                          }
+                    )
+            );
+        }
+
+        if (onePasswordConnectServerSecrets.Any())
+        {
+            secrets = secrets
+                     .Concat(
+                          onePasswordConnectServerSecrets
+                             .Select(z => z.ConnectToken ?? "OP_CONNECT_TOKEN")
+                             .Distinct()
+                             .Select(z => new GitHubActionsSecret(z))
+                      )
+                     .ToArray();
+
+            variables = variables
+                       .Concat(
+                            onePasswordConnectServerSecrets
+                               .Select(z => z.ConnectHost ?? "OP_CONNECT_HOST")
+                               .Distinct()
+                               .Select(z => new GitHubActionsVariable(z))
+                        )
+                       .Concat(
+                            onePasswordConnectServerSecrets
+                               .DistinctBy(z => z.Variable)
+                               .Where(z => !z.Path.StartsWith("op://") && !string.IsNullOrWhiteSpace(z.Variable))
+                               .Select(s => new GitHubActionsVariable(s.Variable!))
+                        )
+                       .ToArray();
+
+            steps.AddRange(
+                onePasswordConnectServerSecrets
+                   .GroupBy(z => ( Host: z.ConnectHost ?? "OP_CONNECT_HOST", Token: z.ConnectToken ?? "OP_CONNECT_TOKEN" ))
+                   .Select(
+                        static secrets => new UsingStep($"Load 1Password Secrets {secrets.Key}")
+                                          {
+                                              Id = "1password",
+                                              Uses = "1password/load-secrets-action@v1",
+                                              Outputs = secrets
+                                                       .Select(secret => new GitHubActionsOutput(secret.Name, secret.Description))
+                                                       .ToList(),
+                                              Environment = secrets
+                                                           .Select(
+                                                                z => new KeyValuePair<string, string>(
+                                                                    z.Name,
+                                                                    string.IsNullOrWhiteSpace(z.Variable)
+                                                                        ? $$$"""{{{z.Path}}}"""
+                                                                        : $$$"""${{ vars.{{{z.Variable}}} }}/{{{z.Path.TrimStart('/')}}}"""
+                                                                )
+                                                            )
+                                                           .Concat(
+                                                                [
+                                                                    new(
+                                                                        "OP_CONNECT_HOST",
+                                                                        $$$"""${{ vars.{{{secrets.Key.Host}}} }}"""
+                                                                    ),
+                                                                    new KeyValuePair<string, string>(
+                                                                        "OP_CONNECT_TOKEN",
+                                                                        $$$"""${{ secrets.{{{secrets.Key.Token}}} }}"""
                                                                     ),
                                                                 ]
                                                             )

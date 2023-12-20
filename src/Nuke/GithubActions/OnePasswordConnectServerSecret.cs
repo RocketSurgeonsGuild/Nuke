@@ -9,14 +9,15 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// <param name="Alias">An alias for use with parameter attributes</param>
 /// <param name="Variable">The GitHub variable to item path part for the op reference (eg. op://vault/item)</param>
 /// <param name="Secret">The secret where the OP_SERVICE_ACCOUNT_TOKEN is stored (defaults to OP_SERVICE_ACCOUNT_TOKEN)</param>
-public record OnePasswordSecret
+public record OnePasswordConnectServerSecret
 (
     string Path,
     string Name,
     string? Description = null,
     string? Alias = null,
     string? Variable = null,
-    string? Secret = null) : ITriggerValue
+    string? ConnectHost = null,
+    string? ConnectToken = null) : ITriggerValue
 {
     public string Prefix => "steps.1password.outputs";
 
