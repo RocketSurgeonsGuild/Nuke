@@ -452,6 +452,22 @@ Rocket.Surgery.Nuke.GithubActions.OnePasswordConnectServerSecretAttribute.OnePas
 Rocket.Surgery.Nuke.GithubActions.OnePasswordConnectServerSecretAttribute.Path.get -> string!
 Rocket.Surgery.Nuke.GithubActions.OnePasswordConnectServerSecretAttribute.ToSecret() -> Rocket.Surgery.Nuke.GithubActions.OnePasswordConnectServerSecret!
 Rocket.Surgery.Nuke.GithubActions.OnePasswordConnectServerSecretAttribute.Variable.get -> string?
+Rocket.Surgery.Nuke.GithubActions.OnePasswordSecret
+Rocket.Surgery.Nuke.GithubActions.OnePasswordSecret.Alias.get -> string?
+Rocket.Surgery.Nuke.GithubActions.OnePasswordSecret.Alias.init -> void
+Rocket.Surgery.Nuke.GithubActions.OnePasswordSecret.Default.get -> string?
+Rocket.Surgery.Nuke.GithubActions.OnePasswordSecret.Description.get -> string?
+Rocket.Surgery.Nuke.GithubActions.OnePasswordSecret.Description.init -> void
+Rocket.Surgery.Nuke.GithubActions.OnePasswordSecret.Name.get -> string!
+Rocket.Surgery.Nuke.GithubActions.OnePasswordSecret.Name.init -> void
+Rocket.Surgery.Nuke.GithubActions.OnePasswordSecret.OnePasswordSecret(string! Path, string! Name, string? Description = null, string? Alias = null, string? Variable = null, string? Secret = null) -> void
+Rocket.Surgery.Nuke.GithubActions.OnePasswordSecret.Path.get -> string!
+Rocket.Surgery.Nuke.GithubActions.OnePasswordSecret.Path.init -> void
+Rocket.Surgery.Nuke.GithubActions.OnePasswordSecret.Prefix.get -> string!
+Rocket.Surgery.Nuke.GithubActions.OnePasswordSecret.Secret.get -> string?
+Rocket.Surgery.Nuke.GithubActions.OnePasswordSecret.Secret.init -> void
+Rocket.Surgery.Nuke.GithubActions.OnePasswordSecret.Variable.get -> string?
+Rocket.Surgery.Nuke.GithubActions.OnePasswordSecret.Variable.init -> void
 Rocket.Surgery.Nuke.GithubActions.OnePasswordSecretAttribute
 Rocket.Surgery.Nuke.GithubActions.OnePasswordSecretAttribute.ConnectHost.get -> string?
 Rocket.Surgery.Nuke.GithubActions.OnePasswordSecretAttribute.ConnectHost.set -> void
