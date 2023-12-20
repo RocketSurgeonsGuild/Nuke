@@ -33,13 +33,13 @@ public class ComputedGitVersionAttribute : ValueInjectionAttributeBase
         return Variables.Keys.Any(z => z.StartsWith("GITVERSION_", StringComparison.OrdinalIgnoreCase));
     }
 
-    private readonly string _frameworkVersion;
+    private readonly string? _frameworkVersion;
 
     /// <summary>
     ///     Computes the GitVersion for the repository.
     /// </summary>
     public ComputedGitVersionAttribute()
-        : this(Constants.GitVersionFramework)
+        : this(null)
     {
     }
 
@@ -48,7 +48,7 @@ public class ComputedGitVersionAttribute : ValueInjectionAttributeBase
     ///     Computes the GitVersion for the repository.
     /// </summary>
     /// <param name="frameworkVersion">The framework version to use with GitVersion.</param>
-    public ComputedGitVersionAttribute(string frameworkVersion)
+    public ComputedGitVersionAttribute(string? frameworkVersion)
     {
         _frameworkVersion = frameworkVersion;
     }
@@ -82,7 +82,7 @@ public class ComputedGitVersionAttribute : ValueInjectionAttributeBase
         return gitVersion;
     }
 
-    internal static GitVersion GetGitVersion(string frameworkVersion, bool updateAssemblyInfo)
+    internal static GitVersion GetGitVersion(string? frameworkVersion, bool updateAssemblyInfo)
     {
         if (!HasGitVer())
         {
@@ -94,7 +94,8 @@ public class ComputedGitVersionAttribute : ValueInjectionAttributeBase
                                            .SetProcessToolPath(
                                                 NuGetToolPathResolver.GetPackageExecutable(
                                                     "GitVersion.Tool|GitVersion.CommandLine",
-                                                    "gitversion.dll|gitversion.exe"
+                                                    "gitversion.dll|gitversion.exe",
+                                                    framework: frameworkVersion
                                                 )
                                             )
                                    )
