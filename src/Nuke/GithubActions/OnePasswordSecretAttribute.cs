@@ -96,7 +96,7 @@ public sealed class OnePasswordSecretAttribute : TriggerValueAttribute
     ///     Convert to a secret
     /// </summary>
     /// <returns></returns>
-    public ITriggerValue ToSecret()
+    internal ITriggerValue ToSecret()
     {
         if (UseConnectServer)
         {
@@ -106,8 +106,8 @@ public sealed class OnePasswordSecretAttribute : TriggerValueAttribute
                 Description,
                 Alias,
                 Variable,
-                ConnectHost,
-                connectToken
+                ConnectHost ?? "OP_CONNECT_HOST",
+                ConnectToken ?? "OP_CONNECT_TOKEN"
             );
         }
 
@@ -117,7 +117,7 @@ public sealed class OnePasswordSecretAttribute : TriggerValueAttribute
             Description,
             Alias,
             Variable,
-            Secret
+            Secret ?? "OP_SERVICE_ACCOUNT_TOKEN"
         );
     }
 }

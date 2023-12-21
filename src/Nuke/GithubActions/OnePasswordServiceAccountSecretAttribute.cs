@@ -57,7 +57,7 @@ public sealed class OnePasswordServiceAccountSecretAttribute : TriggerValueAttri
             Description,
             Alias,
             Variable,
-            Secret
+            Secret ?? "OP_SERVICE_ACCOUNT_TOKEN"
         );
     }
 }
