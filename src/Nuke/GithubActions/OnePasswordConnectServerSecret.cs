@@ -1,3 +1,6 @@
+using System.Security.Cryptography;
+using System.Text;
+
 namespace Rocket.Surgery.Nuke.GithubActions;
 
 /// <summary>
@@ -8,7 +11,8 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// <param name="Description"></param>
 /// <param name="Alias">An alias for use with parameter attributes</param>
 /// <param name="Variable">The GitHub variable to item path part for the op reference (eg. op://vault/item)</param>
-/// <param name="Secret">The secret where the OP_SERVICE_ACCOUNT_TOKEN is stored (defaults to OP_SERVICE_ACCOUNT_TOKEN)</param>
+/// <param name="ConnectHost">The Connect Server Host (defaults to OP_CONNECT_HOST)</param>
+/// <param name="ConnectToken">The Connect Server Token (defaults to OP_CONNECT_TOKEN)</param>
 public record OnePasswordConnectServerSecret
 (
     string Path,
@@ -16,10 +20,25 @@ public record OnePasswordConnectServerSecret
     string? Description = null,
     string? Alias = null,
     string? Variable = null,
-    string? ConnectHost = null,
-    string? ConnectToken = null) : ITriggerValue
+    string ConnectHost = "OP_CONNECT_HOST",
+    string ConnectToken = "OP_CONNECT_TOKEN") : ITriggerValue
 {
-    public string Prefix => "steps.1password.outputs";
+    private static string HashId(string value)
+    {
+        var data = SHA256.HashData(Encoding.UTF8.GetBytes(value));
+        // data to a set of hex strings
+        var sBuilder = new StringBuilder();
+        foreach (var t in data)
+        {
+            sBuilder.Append(t.ToString("x2"));
+        }
+
+        return sBuilder.ToString()[..8];
+    }
+
+    public string GroupByKey = $"{ConnectHost}, {ConnectToken}";
+    public string OutputId => $"1password-{HashId(ConnectHost + ConnectToken)}";
+    public string Prefix => $"steps.{OutputId}.outputs";
 
     public string? Default => null;
 }

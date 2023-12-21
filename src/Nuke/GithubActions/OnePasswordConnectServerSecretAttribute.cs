@@ -67,8 +67,8 @@ public sealed class OnePasswordConnectServerSecretAttribute : TriggerValueAttrib
             Description,
             Alias,
             Variable,
-            ConnectHost,
-            ConnectToken
+            ConnectHost ?? "OP_CONNECT_HOST",
+            ConnectToken ?? "OP_CONNECT_TOKEN"
         );
     }
 }

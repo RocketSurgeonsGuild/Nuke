@@ -128,7 +128,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             secrets = secrets
                      .Concat(
                           onePasswordServiceAccountSecrets
-                             .Select(z => z.Secret ?? "OP_SERVICE_ACCOUNT_TOKEN")
+                             .Select(z => z.Secret)
                              .Distinct()
                              .Select(z => new GitHubActionsSecret(z))
                       )
@@ -145,11 +145,11 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
 
             steps.AddRange(
                 onePasswordServiceAccountSecrets
-                   .GroupBy(z => z.Secret ?? "OP_SERVICE_ACCOUNT_TOKEN")
+                   .GroupBy(z => z.GroupByKey)
                    .Select(
                         static secrets => new UsingStep($"Load 1Password Secrets ({secrets.Key})")
                                           {
-                                              Id = "1password",
+                                              Id = secrets.First().OutputId,
                                               Uses = "1password/load-secrets-action@v1",
                                               Outputs = secrets
                                                        .Select(secret => new GitHubActionsOutput(secret.Name, secret.Description))
@@ -167,7 +167,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                                                                 [
                                                                     new KeyValuePair<string, string>(
                                                                         "OP_SERVICE_ACCOUNT_TOKEN",
-                                                                        $$$"""${{ secrets.{{{secrets.Key}}} }}"""
+                                                                        $$$"""${{ secrets.{{{secrets.First().OutputId}}} }}"""
                                                                     ),
                                                                 ]
                                                             )
@@ -182,7 +182,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             secrets = secrets
                      .Concat(
                           onePasswordConnectServerSecrets
-                             .Select(z => z.ConnectToken ?? "OP_CONNECT_TOKEN")
+                             .Select(z => z.ConnectToken)
                              .Distinct()
                              .Select(z => new GitHubActionsSecret(z))
                       )
@@ -191,7 +191,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             variables = variables
                        .Concat(
                             onePasswordConnectServerSecrets
-                               .Select(z => z.ConnectHost ?? "OP_CONNECT_HOST")
+                               .Select(z => z.ConnectHost)
                                .Distinct()
                                .Select(z => new GitHubActionsVariable(z))
                         )
@@ -205,11 +205,11 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
 
             steps.AddRange(
                 onePasswordConnectServerSecrets
-                   .GroupBy(z => ( Host: z.ConnectHost ?? "OP_CONNECT_HOST", Token: z.ConnectToken ?? "OP_CONNECT_TOKEN" ))
+                   .GroupBy(z => z.GroupByKey)
                    .Select(
-                        static secrets => new UsingStep($"Load 1Password Secrets {secrets.Key}")
+                        static secrets => new UsingStep($"Load 1Password Secrets ({secrets.Key})")
                                           {
-                                              Id = "1password",
+                                              Id = secrets.First().OutputId,
                                               Uses = "1password/load-secrets-action@v1",
                                               Outputs = secrets
                                                        .Select(secret => new GitHubActionsOutput(secret.Name, secret.Description))
@@ -227,11 +227,11 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                                                                 [
                                                                     new(
                                                                         "OP_CONNECT_HOST",
-                                                                        $$$"""${{ vars.{{{secrets.Key.Host}}} }}"""
+                                                                        $$$"""${{ vars.{{{secrets.First().ConnectHost}}} }}"""
                                                                     ),
                                                                     new KeyValuePair<string, string>(
                                                                         "OP_CONNECT_TOKEN",
-                                                                        $$$"""${{ secrets.{{{secrets.Key.Token}}} }}"""
+                                                                        $$$"""${{ secrets.{{{secrets.First().ConnectToken}}} }}"""
                                                                     ),
                                                                 ]
                                                             )

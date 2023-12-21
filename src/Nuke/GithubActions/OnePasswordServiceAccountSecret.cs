@@ -1,3 +1,6 @@
+using System.Security.Cryptography;
+using System.Text;
+
 namespace Rocket.Surgery.Nuke.GithubActions;
 
 /// <summary>
@@ -16,9 +19,25 @@ public record OnePasswordServiceAccountSecret
     string? Description = null,
     string? Alias = null,
     string? Variable = null,
-    string? Secret = null) : ITriggerValue
+    string Secret = "OP_SERVICE_ACCOUNT_TOKEN") : ITriggerValue
 {
-    public string Prefix => "steps.1password.outputs";
+    private static string HashId(string value)
+    {
+        var data = SHA256.HashData(Encoding.UTF8.GetBytes(value));
+        // data to a set of hex strings
+        var sBuilder = new StringBuilder();
+        foreach (var t in data)
+        {
+            sBuilder.Append(t.ToString("x2"));
+        }
+
+        return sBuilder.ToString()[..8];
+    }
+
+    public string GroupByKey = Secret;
+    public string OutputId => $"1password-{HashId(Secret)}";
+    public string Prefix => $"steps.{OutputId}.outputs";
+
 
     public string? Default => null;
 }
