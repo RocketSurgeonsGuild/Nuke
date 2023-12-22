@@ -154,6 +154,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                                               Outputs = secrets
                                                        .Select(secret => new GitHubActionsOutput(secret.Name, secret.Description))
                                                        .ToList(),
+                                              With = new() { ["export-env"] = "false", },
                                               Environment = secrets
                                                            .Select(
                                                                 z => new KeyValuePair<string, string>(
@@ -214,6 +215,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                                               Outputs = secrets
                                                        .Select(secret => new GitHubActionsOutput(secret.Name, secret.Description))
                                                        .ToList(),
+                                              With = new() { ["export-env"] = "false", },
                                               Environment = secrets
                                                            .Select(
                                                                 z => new KeyValuePair<string, string>(
