@@ -37,7 +37,7 @@ public record OnePasswordConnectServerSecret
     }
 
     public string GroupByKey = $"{ConnectHost}, {ConnectToken}";
-    public string OutputId => $"1password-{HashId(ConnectHost + ConnectToken)}";
+    public string OutputId => $"op{HashId(ConnectHost + ConnectToken)}";
     public string Prefix => $"steps.{OutputId}.outputs";
 
     public string? Default => null;
