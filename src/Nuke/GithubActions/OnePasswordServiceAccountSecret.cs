@@ -35,7 +35,7 @@ public record OnePasswordServiceAccountSecret
     }
 
     public string GroupByKey = Secret;
-    public string OutputId => $"1password-{HashId(Secret)}";
+    public string OutputId => $"op{HashId(Secret)}";
     public string Prefix => $"steps.{OutputId}.outputs";
 
 
