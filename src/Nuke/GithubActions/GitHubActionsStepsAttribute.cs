@@ -275,7 +275,8 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             GetAllSecrets(secrets)
                 // ReSharper disable once CoVariantArrayConversion
                .Concat<ITriggerValue>(variables)
-               .Concat(onePasswordSecrets)
+               .Concat(onePasswordConnectServerSecrets)
+               .Concat(onePasswordServiceAccountSecrets)
                 // ReSharper disable once CoVariantArrayConversion
                .Concat(environmentAttributes)
                .SelectMany(
