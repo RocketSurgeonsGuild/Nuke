@@ -80,11 +80,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
     /// <inheritdoc />
     public override ConfigurationEntity GetConfiguration(IReadOnlyCollection<ExecutableTarget> relevantTargets)
     {
-        var steps = new List<GitHubActionsStep>
-                    {
-                        new CheckoutStep("Checkout"),
-                        // new SetupDotNetStep("Install .NET Core Sdk"),
-                    };
+        var steps = new List<GitHubActionsStep>();
 
 
         var attributes = Build.GetType().GetCustomAttributes().OfType<TriggerValueAttribute>().ToArray();
@@ -242,6 +238,8 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                     )
             );
         }
+
+        steps.Add(new CheckoutStep("Checkout"));
 
         var globalToolStep = new RunStep("Install Nuke Global Tool")
                              {
