@@ -70,7 +70,7 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
            .ConfigureStep<CheckoutStep>(
                 step =>
                 {
-                    step.Token = $$$"""${{ secrets.{{{TokenSecret}}} }}""";
+                    step.Token ??= $$$"""${{ secrets.{{{TokenSecret}}} }}""";
                     step.FetchDepth = 0;
                     step.Repository = "${{ github.event.pull_request.head.repo.full_name }}";
                     step.Ref = "${{ github.event.pull_request.head.ref }}";
