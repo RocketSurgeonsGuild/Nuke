@@ -15,7 +15,7 @@
     </ItemGroup>
     <ItemGroup>
         <PackageVersion Include="Docfx.App" Version="2.74.1" />
-        <PackageVersion Include="Buildalyzer" Version="6.0.3" />
+        <PackageVersion Include="Buildalyzer" Version="6.0.4" />
         <PackageVersion Include="GitVersion.Tool" Version="5.12.0" />
         <PackageVersion Include="Humanizer.Core" Version="2.14.1" />
         <PackageVersion Include="Nuke.Common" Version="7.0.6" />
