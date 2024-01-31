@@ -7,6 +7,23 @@ namespace Rocket.Surgery.Nuke;
 public sealed class SolutionUpdaterConfigurationAttribute : Attribute
 {
     /// <summary>
+    ///     The default constructor.
+    /// </summary>
+    /// <param name="additionalRelativeFolderFilePatterns"></param>
+    /// <param name="additionalConfigFolderFilePatterns"></param>
+    /// <param name="additionalIgnoreFolderFilePatterns"></param>
+    public SolutionUpdaterConfigurationAttribute(
+        string[]? additionalRelativeFolderFilePatterns = null,
+        string[]? additionalConfigFolderFilePatterns = null,
+        string[]? additionalIgnoreFolderFilePatterns = null
+    )
+    {
+        AdditionalRelativeFolderFilePatterns = additionalRelativeFolderFilePatterns ?? Array.Empty<string>();
+        AdditionalConfigFolderFilePatterns = additionalConfigFolderFilePatterns ?? Array.Empty<string>();
+        AdditionalIgnoreFolderFilePatterns = additionalIgnoreFolderFilePatterns ?? Array.Empty<string>();
+    }
+
+    /// <summary>
     ///     The files that will show up relative to the solution directory.
     /// </summary>
     public string[] AdditionalRelativeFolderFilePatterns { get; }
@@ -17,13 +34,7 @@ public sealed class SolutionUpdaterConfigurationAttribute : Attribute
     public string[] AdditionalConfigFolderFilePatterns { get; }
 
     /// <summary>
-    ///     The default constructor.
+    ///     The files or paths that will be ignored when updating the solution
     /// </summary>
-    /// <param name="additionalRelativeFolderFilePatterns"></param>
-    /// <param name="additionalConfigFolderFilePatterns"></param>
-    public SolutionUpdaterConfigurationAttribute(string[]? additionalRelativeFolderFilePatterns = null, string[]? additionalConfigFolderFilePatterns = null)
-    {
-        AdditionalRelativeFolderFilePatterns = additionalRelativeFolderFilePatterns ?? Array.Empty<string>();
-        AdditionalConfigFolderFilePatterns = additionalConfigFolderFilePatterns ?? Array.Empty<string>();
-    }
+    public string[] AdditionalIgnoreFolderFilePatterns { get; }
 }
