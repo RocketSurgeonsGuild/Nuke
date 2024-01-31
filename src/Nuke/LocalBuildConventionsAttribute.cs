@@ -32,7 +32,8 @@ public sealed class LocalBuildConventionsAttribute : BuildExtensionAttributeBase
         SolutionUpdater.UpdateSolution(
             haveSolution.Solution,
             attributes.SelectMany(z => z.AdditionalRelativeFolderFilePatterns),
-            attributes.SelectMany(z => z.AdditionalConfigFolderFilePatterns)
+            attributes.SelectMany(z => z.AdditionalConfigFolderFilePatterns),
+            attributes.SelectMany(z => z.AdditionalIgnoreFolderFilePatterns)
         );
         File.SetLastWriteTime(path, DateTime.Now);
     }

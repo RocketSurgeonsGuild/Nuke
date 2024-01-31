@@ -1,3 +1,4 @@
+using GlobExpressions;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Serilog;
@@ -7,9 +8,10 @@ namespace Rocket.Surgery.Nuke;
 internal static class SolutionUpdater
 {
     public static void UpdateSolution(
-        Solution            solution,
+        Solution solution,
         IEnumerable<string> additionalRelativeFolderFilePatterns,
-        IEnumerable<string> additionalConfigFolderFilePatterns
+        IEnumerable<string> additionalConfigFolderFilePatterns,
+        IEnumerable<string> additionalIgnoreFolderFilePatterns
     )
     {
         if (EnvironmentInfo.HasVariable("RSG_NUKE_LINT_STAGED")) return;
@@ -20,7 +22,15 @@ internal static class SolutionUpdater
 
         var actions = ReplaceDotBuildFolder(solution, configFolder)
                      .Concat(ReplaceDotSolutionFolder(solution, configFolder))
-                     .Concat(AddConfigurationFiles(solution, additionalRelativeFolderFilePatterns, additionalConfigFolderFilePatterns, configFolder))
+                     .Concat(
+                          AddConfigurationFiles(
+                              solution,
+                              additionalRelativeFolderFilePatterns,
+                              additionalConfigFolderFilePatterns,
+                              additionalIgnoreFolderFilePatterns,
+                              configFolder
+                          )
+                      )
                      .Concat(AddNukeBuilds(solution, configFolder))
                      .Concat(NormalizePaths(solution))
             ;
@@ -50,6 +60,8 @@ internal static class SolutionUpdater
         ".prettier*", "*lintstaged*", "NuGet.config", ".github/**/*", ".husky/*", ".vscode/**/*", "*.props", "*.targets",
         "package.json",
     };
+
+    private static readonly string[] _ignoreFolderFilePatterns = { "**node_modules/**", };
 
     private static IEnumerable<Action> AddNukeBuilds(Solution solution, SolutionFolder configFolder)
     {
@@ -93,12 +105,14 @@ internal static class SolutionUpdater
     }
 
     private static List<Action> AddConfigurationFiles(
-        Solution            solution,
+        Solution solution,
         IEnumerable<string> additionalRelativeFolderFilePatterns,
         IEnumerable<string> additionalConfigFolderFilePatterns,
-        SolutionFolder      configFolder
+        IEnumerable<string> additionalIgnoreFolderFilePatterns,
+        SolutionFolder configFolder
     )
     {
+        var ignoreGlobs = _ignoreFolderFilePatterns.Concat(additionalIgnoreFolderFilePatterns).Select(z => new Glob(z)).ToList();
         var actions = new List<Action>();
         if (solution.Directory != NukeBuild.RootDirectory) return actions;
         actions.AddRange(
@@ -113,6 +127,7 @@ internal static class SolutionUpdater
                .GlobFiles(
                     _relativeFolderFilePatterns.Concat(additionalRelativeFolderFilePatterns).ToArray()
                 )
+               .Where(path => ignoreGlobs.All(z => !z.IsMatch(path)))
                .SelectMany(path => AddSolutionItemToRelativeFolder(solution, configFolder, path))
         );
         actions.AddRange(
@@ -121,6 +136,7 @@ internal static class SolutionUpdater
                .GlobFiles(
                     _configFolderFilePatterns.Concat(additionalConfigFolderFilePatterns).ToArray()
                 )
+               .Where(path => ignoreGlobs.All(z => !z.IsMatch(path)))
                .SelectMany(path => AddSolutionItemToRelativeConfigFolder(solution, configFolder, path))
         );
 
@@ -132,12 +148,12 @@ internal static class SolutionUpdater
         foreach (var folder in solution.AllSolutionFolders)
         {
             if (folder.Items.Values.All(z => ( (RelativePath)z ).ToUnixRelativePath() == z)) continue;
-            if (folder.Items.Keys.All(z => ( (RelativePath)z ).ToUnixRelativePath()   == z)) continue;
+            if (folder.Items.Keys.All(z => ( (RelativePath)z ).ToUnixRelativePath() == z)) continue;
             yield return () =>
                          {
                              foreach (var item in folder
                                                  .Items.Where(
-                                                      z => ( (RelativePath)z.Key ).ToUnixRelativePath()  != z.Key
+                                                      z => ( (RelativePath)z.Key ).ToUnixRelativePath() != z.Key
                                                        || ( (RelativePath)z.Value ).ToUnixRelativePath() != z.Value
                                                   )
                                                  .ToArray())
@@ -180,12 +196,12 @@ internal static class SolutionUpdater
     private static IEnumerable<Action> AddSolutionItemToFolder(SolutionFolder folder, UnixRelativePath path)
     {
         if (folder.Items.Values.Select(z => ( (RelativePath)z ).ToUnixRelativePath().ToString()).Any(z => z == path)) yield break;
-        if (folder.Items.Keys.Select(z => ( (RelativePath)z ).ToUnixRelativePath().ToString()).Any(z => z   == path)) yield break;
+        if (folder.Items.Keys.Select(z => ( (RelativePath)z ).ToUnixRelativePath().ToString()).Any(z => z == path)) yield break;
         if (folder.Items.ContainsKey(path)) yield break;
         yield return () =>
                      {
                          if (folder.Items.Values.Select(z => ( (RelativePath)z ).ToUnixRelativePath().ToString()).Any(z => z == path)) return;
-                         if (folder.Items.Keys.Select(z => ( (RelativePath)z ).ToUnixRelativePath().ToString()).Any(z => z   == path)) return;
+                         if (folder.Items.Keys.Select(z => ( (RelativePath)z ).ToUnixRelativePath().ToString()).Any(z => z == path)) return;
                          if (folder.Items.ContainsKey(path)) return;
                          folder.Items.Add(path, path);
                      };
