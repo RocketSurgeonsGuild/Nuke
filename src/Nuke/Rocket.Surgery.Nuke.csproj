@@ -12,6 +12,7 @@
     <PackageReference Include="Buildalyzer" />
     <PackageReference Include="Humanizer.Core" />
     <PackageReference Include="LiquidTestReports.Core" />
+    <PackageReference Include="Polyfill" />
   </ItemGroup>
   <ItemGroup>
     <None Include="build/*.*" Pack="true" PackagePath="build" />
