@@ -19,29 +19,29 @@ using Rocket.Surgery.Nuke.GithubActions;
 )]
 [GitHubActionsSteps(
     "ci",
+    GitHubActionsImage.UbuntuLatest,
     GitHubActionsImage.MacOsLatest,
     GitHubActionsImage.WindowsLatest,
-    GitHubActionsImage.UbuntuLatest,
     AutoGenerate = false,
     On = new[]
-         {
-             RocketSurgeonGitHubActionsTrigger.WorkflowCall,
-             RocketSurgeonGitHubActionsTrigger.WorkflowDispatch,
-         },
+    {
+        RocketSurgeonGitHubActionsTrigger.WorkflowCall,
+        RocketSurgeonGitHubActionsTrigger.WorkflowDispatch,
+    },
     OnPushTags = new[] { "v*", },
     OnPushBranches = new[] { "master", "main", "next", },
     OnPullRequestBranches = new[] { "master", "main", "next", },
     InvokedTargets = new[] { nameof(Default), },
     NonEntryTargets = new[]
-                      {
-                          nameof(ICIEnvironment.CIEnvironment),
-                          nameof(ITriggerCodeCoverageReports.TriggerCodeCoverageReports),
-                          nameof(ITriggerCodeCoverageReports.GenerateCodeCoverageReportCobertura),
-                          nameof(IGenerateCodeCoverageBadges.GenerateCodeCoverageBadges),
-                          nameof(IGenerateCodeCoverageReport.GenerateCodeCoverageReport),
-                          nameof(IGenerateCodeCoverageSummary.GenerateCodeCoverageSummary),
-                          nameof(Default),
-                      },
+    {
+        nameof(ICIEnvironment.CIEnvironment),
+        nameof(ITriggerCodeCoverageReports.TriggerCodeCoverageReports),
+        nameof(ITriggerCodeCoverageReports.GenerateCodeCoverageReportCobertura),
+        nameof(IGenerateCodeCoverageBadges.GenerateCodeCoverageBadges),
+        nameof(IGenerateCodeCoverageReport.GenerateCodeCoverageReport),
+        nameof(IGenerateCodeCoverageSummary.GenerateCodeCoverageSummary),
+        nameof(Default),
+    },
     ExcludedTargets = new[] { nameof(ICanClean.Clean), nameof(ICanRestoreWithDotNetCore.DotnetToolRestore), },
     Enhancements = new[] { nameof(CiMiddleware), }
 )]
@@ -82,12 +82,12 @@ public partial class Pipeline
     public static RocketSurgeonGitHubActionsConfiguration CiIgnoreMiddleware(RocketSurgeonGitHubActionsConfiguration configuration)
     {
         ( (RocketSurgeonsGithubActionsJob)configuration.Jobs[0] ).Steps = new()
-                                                                          {
-                                                                              new RunStep("N/A")
-                                                                              {
-                                                                                  Run = "echo \"No build required\"",
-                                                                              },
-                                                                          };
+        {
+            new RunStep("N/A")
+            {
+                Run = "echo \"No build required\"",
+            },
+        };
 
         return configuration.IncludeRepositoryConfigurationFiles();
     }

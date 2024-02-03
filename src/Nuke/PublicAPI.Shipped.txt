@@ -215,10 +215,20 @@ Rocket.Surgery.Nuke.GithubActions.CheckoutStep.Token.set -> void
 Rocket.Surgery.Nuke.GithubActions.CustomFileWriterExtensions
 Rocket.Surgery.Nuke.GithubActions.DownloadArtifactSet
 Rocket.Surgery.Nuke.GithubActions.DownloadArtifactSet.DownloadArtifactSet(string! name) -> void
+Rocket.Surgery.Nuke.GithubActions.DownloadArtifactSet.GithubToken.get -> string?
+Rocket.Surgery.Nuke.GithubActions.DownloadArtifactSet.GithubToken.set -> void
+Rocket.Surgery.Nuke.GithubActions.DownloadArtifactSet.MergeMultiple.get -> bool?
+Rocket.Surgery.Nuke.GithubActions.DownloadArtifactSet.MergeMultiple.set -> void
 Rocket.Surgery.Nuke.GithubActions.DownloadArtifactSet.Name.get -> string?
 Rocket.Surgery.Nuke.GithubActions.DownloadArtifactSet.Name.set -> void
 Rocket.Surgery.Nuke.GithubActions.DownloadArtifactSet.Path.get -> string?
 Rocket.Surgery.Nuke.GithubActions.DownloadArtifactSet.Path.set -> void
+Rocket.Surgery.Nuke.GithubActions.DownloadArtifactSet.Pattern.get -> string?
+Rocket.Surgery.Nuke.GithubActions.DownloadArtifactSet.Pattern.set -> void
+Rocket.Surgery.Nuke.GithubActions.DownloadArtifactSet.Repository.get -> string?
+Rocket.Surgery.Nuke.GithubActions.DownloadArtifactSet.Repository.set -> void
+Rocket.Surgery.Nuke.GithubActions.DownloadArtifactSet.RunId.get -> string?
+Rocket.Surgery.Nuke.GithubActions.DownloadArtifactSet.RunId.set -> void
 Rocket.Surgery.Nuke.GithubActions.GithubActionCondition
 Rocket.Surgery.Nuke.GithubActions.GithubActionCondition.Condition.get -> string?
 Rocket.Surgery.Nuke.GithubActions.GithubActionCondition.GithubActionCondition(string! condition) -> void
@@ -615,10 +625,18 @@ Rocket.Surgery.Nuke.GithubActions.TriggerValueAttribute.Description.set -> void
 Rocket.Surgery.Nuke.GithubActions.TriggerValueAttribute.Name.get -> string!
 Rocket.Surgery.Nuke.GithubActions.TriggerValueAttribute.TriggerValueAttribute(string! name) -> void
 Rocket.Surgery.Nuke.GithubActions.UploadArtifactStep
-Rocket.Surgery.Nuke.GithubActions.UploadArtifactStep.Name.get -> string?
+Rocket.Surgery.Nuke.GithubActions.UploadArtifactStep.CompressionLevel.get -> int?
+Rocket.Surgery.Nuke.GithubActions.UploadArtifactStep.CompressionLevel.set -> void
+Rocket.Surgery.Nuke.GithubActions.UploadArtifactStep.IfNoFilesFound.get -> string?
+Rocket.Surgery.Nuke.GithubActions.UploadArtifactStep.IfNoFilesFound.set -> void
+Rocket.Surgery.Nuke.GithubActions.UploadArtifactStep.Name.get -> string!
 Rocket.Surgery.Nuke.GithubActions.UploadArtifactStep.Name.set -> void
-Rocket.Surgery.Nuke.GithubActions.UploadArtifactStep.Path.get -> string?
+Rocket.Surgery.Nuke.GithubActions.UploadArtifactStep.Overwrite.get -> bool?
+Rocket.Surgery.Nuke.GithubActions.UploadArtifactStep.Overwrite.set -> void
+Rocket.Surgery.Nuke.GithubActions.UploadArtifactStep.Path.get -> string!
 Rocket.Surgery.Nuke.GithubActions.UploadArtifactStep.Path.set -> void
+Rocket.Surgery.Nuke.GithubActions.UploadArtifactStep.RetentionDays.get -> int?
+Rocket.Surgery.Nuke.GithubActions.UploadArtifactStep.RetentionDays.set -> void
 Rocket.Surgery.Nuke.GithubActions.UploadArtifactStep.UploadArtifactStep(string! name) -> void
 Rocket.Surgery.Nuke.GithubActions.UsingStep
 Rocket.Surgery.Nuke.GithubActions.UsingStep.Uses.get -> string?
@@ -797,6 +815,7 @@ Rocket.Surgery.Nuke.Readme.References.References() -> void
 Rocket.Surgery.Nuke.Readme.Sections
 Rocket.Surgery.Nuke.Readme.Sections.Add(Rocket.Surgery.Nuke.Readme.IReadmeSection! section) -> Rocket.Surgery.Nuke.Readme.Sections!
 Rocket.Surgery.Nuke.Readme.Sections.Sections() -> void
+Rocket.Surgery.Nuke.Settings
 Rocket.Surgery.Nuke.SolutionExtensions
 Rocket.Surgery.Nuke.SolutionUpdaterConfigurationAttribute
 Rocket.Surgery.Nuke.SolutionUpdaterConfigurationAttribute.AdditionalConfigFolderFilePatterns.get -> string![]!
@@ -909,6 +928,8 @@ static Rocket.Surgery.Nuke.GitVersionFunctions.FullSemanticVersion(this Nuke.Com
 static Rocket.Surgery.Nuke.GitVersionFunctions.MajorMinorPatch(this Nuke.Common.Tools.GitVersion.GitVersion? gitVersion) -> string!
 static Rocket.Surgery.Nuke.GitVersionFunctions.PackageVersion(this Nuke.Common.Tools.GitVersion.GitVersion? gitVersion) -> string!
 static Rocket.Surgery.Nuke.Helpers.IsDotnetToolInstalled(string! nugetPackageName) -> bool
+static Rocket.Surgery.Nuke.Settings.DefaultGithubJobName.get -> string!
+static Rocket.Surgery.Nuke.Settings.DefaultGithubJobName.set -> void
 static Rocket.Surgery.Nuke.SolutionExtensions.GetTestProjects(this Nuke.Common.ProjectModel.Solution! solution) -> System.Collections.Generic.IEnumerable<Nuke.Common.ProjectModel.Project!>!
 static Rocket.Surgery.Nuke.SolutionExtensions.WherePackable(this Nuke.Common.ProjectModel.Solution! solution) -> System.Collections.Generic.IEnumerable<Nuke.Common.ProjectModel.Project!>!
 static Rocket.Surgery.Nuke.StringExtensions.RemoveAlphaCharacters(this string! input) -> string!

@@ -14,9 +14,7 @@ public class UsingStep : BaseGitHubActionsStep
     ///     The constructor with the display name
     /// </summary>
     /// <param name="name"></param>
-    public UsingStep(string name) : base(name)
-    {
-    }
+    public UsingStep(string name) : base(name) { }
 
     /// <summary>
     ///     The action to use.
@@ -34,20 +32,16 @@ public class UsingStep : BaseGitHubActionsStep
     /// <param name="transformName"></param>
     protected void WithProperties(Func<string, string> transformName)
     {
-        foreach (var property in GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                                          .Where(z => z.CanRead && z.CanWrite && z.DeclaringType == GetType()))
+        foreach (var property in GetType()
+                                .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                                .Where(z => z.CanRead && z.CanWrite && z.DeclaringType == GetType()))
         {
             var value = property.GetValue(this);
             if (value == null) continue;
 
-            With?.Add(
-                transformName(property.Name), value switch
-                {
-                    null => string.Empty,
-                    bool b => b.ToString().ToLowerInvariant(),
-                    string s => s,
-                    _ => value.ToString() ?? ""
-                }
+            With.TryAdd(
+                transformName(property.Name),
+                value switch { null => string.Empty, bool b => b.ToString().ToLowerInvariant(), string s => s, _ => value.ToString() ?? "", }
             );
         }
     }
