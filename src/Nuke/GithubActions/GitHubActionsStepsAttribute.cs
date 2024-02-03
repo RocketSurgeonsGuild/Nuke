@@ -410,14 +410,14 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             {
                 steps.Insert(
                     steps.IndexOf(step),
-                    new UploadArtifactStep($$$"""{{{step.Name}}} (${{ matrix.os }})""")
+                    new UploadArtifactStep($$$"""{{{step.StepName}}} (${{ matrix.os }})""")
                     {
                         If = $"matrix.os != '{mainOs}'",
                         Name = $$$"""${{ matrix.os }}-{{{step.Name}}}""",
                         Path = step.Path,
-                        Environment = step.Environment,
-                        Outputs = step.Outputs,
-                        With = step.With,
+                        Environment = step.Environment.ToDictionary(z => z.Key, z => z.Value),
+                        Outputs = step.Outputs.ToList(),
+                        With = step.With.ToDictionary(z => z.Key, z => z.Value),
                         Uses = step.Uses,
                         Overwrite = step.Overwrite,
                         CompressionLevel = step.CompressionLevel,
