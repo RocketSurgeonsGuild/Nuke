@@ -106,7 +106,7 @@ jobs:
           clean: 'false'
           fetch-depth: '0'
       - name: NuGet Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: '${{ github.workspace }}/.nuget/packages'
           key: "${{ runner.os }}-nuget-${{ hashFiles('**/Directory.Packages.props') }}-${{ hashFiles('**/Directory.Packages.support.props') }}"
@@ -153,7 +153,7 @@ jobs:
           path: 'coverage/'
       - name: 🐿 Publish Coverage
         if: (github.event_name != 'pull_request' && github.event_name != 'pull_request_target') || ((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]')
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           name: 'actions-${{ matrix.os }}'
       - name: 🏺 logs (${{ matrix.os }})
