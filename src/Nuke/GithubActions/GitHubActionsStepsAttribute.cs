@@ -528,7 +528,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
 //    public CloseMilestoneWorkflowAttribute(string name) : base(name)
 //    {
 //
-//        Uses = "RocketSurgeonsGuild/actions/.github/workflows/close-milestone.yml@v0.3.0";
+//        Uses = "RocketSurgeonsGuild/actions/.github/workflows/close-milestone6.yml@v0.3.8";
 //        Secrets = new Dictionary<string, string>()
 //        {
 //            ["GITHUB_TOKEN"] = "${{ secrets.GITHUB_TOKEN }}",
