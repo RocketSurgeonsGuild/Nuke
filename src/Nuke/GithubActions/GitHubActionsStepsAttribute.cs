@@ -271,11 +271,11 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
 
         var environmentVariables =
             GetAllSecrets(secrets)
-               // ReSharper disable once CoVariantArrayConversion
+                // ReSharper disable once CoVariantArrayConversion
                .Concat<ITriggerValue>(variables)
                .Concat(onePasswordConnectServerSecrets)
                .Concat(onePasswordServiceAccountSecrets)
-               // ReSharper disable once CoVariantArrayConversion
+                // ReSharper disable once CoVariantArrayConversion
                .Concat(environmentAttributes)
                .SelectMany(
                     z =>
@@ -306,17 +306,17 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             {
                 //                Log.Logger.Information("Found Parameter {Name}", value.Name);
                 var name = string.IsNullOrWhiteSpace(value.Prefix) ? value.Name : $"{value.Prefix}.{value.Name}";
-                stepParameters.Add(new(key, $"{name}{(string.IsNullOrWhiteSpace(value.Default) ? "" : $" || {value.Default}")}"));
+                stepParameters.Add(new(key, $"{name}{( string.IsNullOrWhiteSpace(value.Default) ? "" : $" || {value.Default}" )}"));
             }
         }
 
         var jobOutputs = new List<GitHubActionsStepOutput>();
         var requiredInputs = new List<GitHubActionsInput>();
         var lookupTable = new LookupTable<ExecutableTarget, ExecutableTarget[]>();
-        foreach ((var execute, var targets) in relevantTargets
+        foreach (( var execute, var targets ) in relevantTargets
                                                 .Select(
-                                                     x => (ExecutableTarget: x,
-                                                            Targets: GetInvokedTargets(x, relevantTargets).ToArray())
+                                                     x => ( ExecutableTarget: x,
+                                                            Targets: GetInvokedTargets(x, relevantTargets).ToArray() )
                                                  )
                                                 .ForEachLazy(x => lookupTable.Add(x.ExecutableTarget, x.Targets.ToArray()))
                 )
@@ -340,7 +340,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                             0,
                             new(
                                 key,
-                                $"{value.Prefix}.{value.Name}{(string.IsNullOrWhiteSpace(value.Default) ? "" : $" || {value.Default}")}"
+                                $"{value.Prefix}.{value.Name}{( string.IsNullOrWhiteSpace(value.Default) ? "" : $" || {value.Default}" )}"
                             )
                         );
                     }
@@ -352,7 +352,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                 {
                     Id = execute.Name.Camelize(),
                     Run =
-                        $"{(localTool ? "dotnet nuke" : "nuke")} {targets.Select(z => z.Name).JoinSpace()} --skip {localStepParameters
+                        $"{( localTool ? "dotnet nuke" : "nuke" )} {targets.Select(z => z.Name).JoinSpace()} --skip {localStepParameters
                            .GroupBy(z => z.Key, StringComparer.OrdinalIgnoreCase)
                            .Select(z => z.Last())
                            .Select(z => $$$"""--{{{z.Key.ToLowerInvariant()}}} '${{ {{{z.Value}}} }}'""").JoinSpace()}"
