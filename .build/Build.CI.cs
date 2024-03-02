@@ -20,7 +20,7 @@ using Rocket.Surgery.Nuke.GithubActions;
 [GitHubActionsSteps(
     "ci",
     GitHubActionsImage.UbuntuLatest,
-    GitHubActionsImage.MacOsLatest,
+//    GitHubActionsImage.MacOsLatest,
     GitHubActionsImage.WindowsLatest,
     AutoGenerate = false,
     On = new[]
