@@ -44,7 +44,7 @@ public class ComputedGitVersionAttribute : ValueInjectionAttributeBase
                                            .SetUpdateAssemblyInfo(updateAssemblyInfo)
                                            .SetProcessToolPath(
                                                 NuGetToolPathResolver.GetPackageExecutable(
-                                                    "GitVersion.Tool|GitVersion.CommandLine",
+                                                    "GitVersion.Tool",
                                                     "gitversion.dll|gitversion.exe",
                                                     framework: frameworkVersion
                                                 )
