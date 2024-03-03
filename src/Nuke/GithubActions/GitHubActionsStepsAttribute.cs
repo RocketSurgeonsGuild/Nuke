@@ -412,7 +412,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                     steps.IndexOf(step),
                     new UploadArtifactStep($$$"""{{{step.StepName}}} (${{ matrix.os }})""")
                     {
-                        If = $"matrix.os != '{mainOs}'",
+                        If = step.If is { } ? $"{step.If} && matrix.os != '{mainOs}'" : $"matrix.os != '{mainOs}'",
                         Name = $$$"""${{ matrix.os }}-{{{step.Name}}}""",
                         Path = step.Path,
                         Environment = step.Environment.ToDictionary(z => z.Key, z => z.Value),
@@ -426,7 +426,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                         IfNoFilesFound = step.IfNoFilesFound,
                     }
                 );
-                step.If = $"matrix.os == '{mainOs}'";
+                step.If = step.If is { } ? $"{step.If} && matrix.os == '{mainOs}'" : $"matrix.os == '{mainOs}'";
             }
         }
 
