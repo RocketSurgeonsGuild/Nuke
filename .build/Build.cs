@@ -3,7 +3,6 @@ using Nuke.Common;
 using Nuke.Common.CI;
 using Nuke.Common.Execution;
 using Nuke.Common.Git;
-using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
@@ -22,23 +21,23 @@ using Rocket.Surgery.Nuke.DotNetCore;
 [LocalBuildConventions]
 #pragma warning disable CA1050
 public partial class Pipeline : NukeBuild,
-#pragma warning restore CA1050
-                                ICanRestoreWithDotNetCore,
-                                ICanBuildWithDotNetCore,
-                                ICanTestWithDotNetCore,
-                                ICanPackWithDotNetCore,
-                                IHaveDataCollector,
-                                ICanClean,
-                                ICanLintStagedFiles,
-                                ICanDotNetFormat,
-                                ICanPrettier,
-                                IHavePublicApis,
-                                ICanUpdateReadme,
-                                IGenerateCodeCoverageReport,
-                                IGenerateCodeCoverageSummary,
-                                IGenerateCodeCoverageBadges,
-                                ICanRegenerateBuildConfiguration,
-                                IHaveConfiguration<Configuration>
+    #pragma warning restore CA1050
+    ICanRestoreWithDotNetCore,
+    ICanBuildWithDotNetCore,
+    ICanTestWithDotNetCore,
+    ICanPackWithDotNetCore,
+    IHaveDataCollector,
+    ICanClean,
+    ICanLintStagedFiles,
+    ICanDotNetFormat,
+    ICanPrettier,
+    IHavePublicApis,
+    ICanUpdateReadme,
+    IGenerateCodeCoverageReport,
+    IGenerateCodeCoverageSummary,
+    IGenerateCodeCoverageBadges,
+    ICanRegenerateBuildConfiguration,
+    IHaveConfiguration<Configuration>
 {
     /// <summary>
     ///     Support plugins are available for:
@@ -52,29 +51,38 @@ public partial class Pipeline : NukeBuild,
         return Execute<Pipeline>(x => x.Default);
     }
 
+    [OptionalGitRepository]
+    public GitRepository? GitRepository { get; }
+
+    [Parameter]
+    public string? GitHubToken { get; }
+
     private Target Default => _ => _
                                   .DependsOn(Restore)
                                   .DependsOn(Build)
                                   .DependsOn(Test)
                                   .DependsOn(Pack);
 
-    public Target Build => _ => _.Inherit<ICanBuildWithDotNetCore>(x => x.CoreBuild);
+    [Solution(GenerateProjects = true)]
+    private Solution Solution { get; } = null!;
 
-    public Target Pack => _ => _.Inherit<ICanPackWithDotNetCore>(x => x.CorePack)
-                                .DependsOn(Clean);
+    public Target Build => _ => _.Inherit<ICanBuildWithDotNetCore>(x => x.CoreBuild);
+    public Target Lint => _ => _.Inherit<ICanLint>(x => x.Lint);
+
+    public Target Pack => _ => _
+                              .Inherit<ICanPackWithDotNetCore>(x => x.CorePack)
+                              .DependsOn(Clean);
 
 
     public Target Clean => _ => _.Inherit<ICanClean>(x => x.Clean);
-    public Target Lint => _ => _.Inherit<ICanLint>(x => x.Lint);
     public Target Restore => _ => _.Inherit<ICanRestoreWithDotNetCore>(x => x.CoreRestore);
-    public Target Test => _ => _.Inherit<ICanTestWithDotNetCore>(x => x.CoreTest);
-
-    [Solution(GenerateProjects = true)] private Solution Solution { get; } = null!;
     Nuke.Common.ProjectModel.Solution IHaveSolution.Solution => Solution;
 
-    [OptionalGitRepository] public GitRepository? GitRepository { get; }
-    [ComputedGitVersion] public GitVersion GitVersion { get; } = null!;
-    [Parameter("Configuration to build")] public Configuration Configuration { get; } = IsLocalBuild ? Configuration.Debug : Configuration.Release;
+    [GitVersion(NoFetch = true)]
+    public GitVersion GitVersion { get; } = null!;
 
-    [Parameter] public string? GitHubToken { get; }
+    public Target Test => _ => _.Inherit<ICanTestWithDotNetCore>(x => x.CoreTest);
+
+    [Parameter("Configuration to build")]
+    public Configuration Configuration { get; } = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 }

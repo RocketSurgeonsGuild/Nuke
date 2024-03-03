@@ -95,10 +95,7 @@ jobs:
   build:
     env:
       NUGET_PACKAGES: '${{ github.workspace }}/.nuget/packages'
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@b32f140b0c872d58512e0a66172253c302617b90
@@ -139,14 +136,8 @@ jobs:
         id: pack
         run: |
           dotnet nuke Pack --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
-      - name: 🏺 Publish coverage data (${{ matrix.os }})
-        if: matrix.os != 'ubuntu-latest'
-        uses: actions/upload-artifact@v4
-        with:
-          name: '${{ matrix.os }}-coverage'
-          path: 'coverage/'
       - name: 🏺 Publish coverage data
-        if: matrix.os == 'ubuntu-latest'
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: 'coverage'
@@ -156,38 +147,20 @@ jobs:
         uses: codecov/codecov-action@v4
         with:
           name: 'actions-${{ matrix.os }}'
-      - name: 🏺 Publish logs (${{ matrix.os }})
-        if: matrix.os != 'ubuntu-latest'
-        uses: actions/upload-artifact@v4
-        with:
-          name: '${{ matrix.os }}-logs'
-          path: 'artifacts/logs/'
       - name: 🏺 Publish logs
-        if: matrix.os == 'ubuntu-latest'
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: 'logs'
           path: 'artifacts/logs/'
-      - name: 🏺 Publish test data (${{ matrix.os }})
-        if: matrix.os != 'ubuntu-latest'
-        uses: actions/upload-artifact@v4
-        with:
-          name: '${{ matrix.os }}-test data'
-          path: 'artifacts/test/'
       - name: 🏺 Publish test data
-        if: matrix.os == 'ubuntu-latest'
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: 'test data'
           path: 'artifacts/test/'
-      - name: 🏺 Publish NuGet Packages (${{ matrix.os }})
-        if: matrix.os != 'ubuntu-latest'
-        uses: actions/upload-artifact@v4
-        with:
-          name: '${{ matrix.os }}-nuget'
-          path: 'artifacts/nuget/'
       - name: 🏺 Publish NuGet Packages
-        if: matrix.os == 'ubuntu-latest'
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: 'nuget'
