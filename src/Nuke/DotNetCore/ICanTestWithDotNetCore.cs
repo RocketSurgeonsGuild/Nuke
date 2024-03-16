@@ -8,15 +8,15 @@ namespace Rocket.Surgery.Nuke.DotNetCore;
 ///     Defines a `dotnet test` test run with code coverage via coverlet
 /// </summary>
 public interface ICanTestWithDotNetCore : IHaveCollectCoverage,
-                                          IHaveBuildTarget,
-                                          ITriggerCodeCoverageReports,
-                                          IComprehendTests,
-                                          IHaveTestArtifacts,
-                                          IHaveGitVersion,
-                                          IHaveSolution,
-                                          IHaveConfiguration,
-                                          IHaveOutputLogs,
-                                          ICan
+    IHaveBuildTarget,
+    ITriggerCodeCoverageReports,
+    IComprehendTests,
+    IHaveTestArtifacts,
+    IHaveGitVersion,
+    IHaveSolution,
+    IHaveConfiguration,
+    IHaveOutputLogs,
+    ICan
 {
     /// <summary>
     ///     dotnet test
@@ -50,13 +50,12 @@ public interface ICanTestWithDotNetCore : IHaveCollectCoverage,
                                                .EnableNoRestore()
                                                .EnableNoBuild()
                                                .SetLoggers("trx")
-                                               // DeterministicSourcePaths being true breaks coverlet!
-                                               .SetProperty("DeterministicSourcePaths", "false")
                                                .SetResultsDirectory(TestResultsDirectory)
                                                .When(
                                                     !CollectCoverage,
-                                                    x => x.SetProperty((string)"CollectCoverage", "true")
-                                                          .SetProperty("CoverageDirectory", CoverageDirectory)
+                                                    x => x
+                                                        .SetProperty((string)"CollectCoverage", "true")
+                                                        .SetProperty("CoverageDirectory", CoverageDirectory)
                                                 )
                                                .When(
                                                     CollectCoverage,
