@@ -58,7 +58,7 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
     /// <inheritdoc />
     public void OnBuildInitialized(IReadOnlyCollection<ExecutableTarget> executableTargets, IReadOnlyCollection<ExecutableTarget> executionPlan)
     {
-        if (( NukeBuild.RootDirectory / "package.json" ).FileExists() && !NukeBuild.RootDirectory.ContainsDirectory("node_modules"))
+        if ((NukeBuild.RootDirectory / "package.json").FileExists() && !NukeBuild.RootDirectory.ContainsDirectory("node_modules"))
         {
             Log.Information("package.json found running npm install to see if that installs any hooks");
             ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npm"), NukeBuild.IsLocalBuild ? "install" : "ci", workingDirectory: NukeBuild.RootDirectory)
@@ -89,7 +89,7 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
 
         public void InstallHooks(IReadOnlyCollection<string> hooks)
         {
-            if (( NukeBuild.RootDirectory / "package.json" ).FileExists())
+            if ((NukeBuild.RootDirectory / "package.json").FileExists())
             {
                 Log.Information("package.json found running npm install to see if that installs any hooks");
                 ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npm"), "install", workingDirectory: NukeBuild.RootDirectory)
@@ -105,9 +105,9 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
             if (!AreHooksInstalled(hooks))
             {
                 Log.Information(
-                    "package.json not found or prepare script did not work correctly running npx husky install"
+                    "package.json not found or prepare script did not work correctly running npx husky"
                 );
-                ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npx"), "husky install", workingDirectory: NukeBuild.RootDirectory)
+                ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npx"), "husky", workingDirectory: NukeBuild.RootDirectory)
                             .AssertWaitForExit()
                             .AssertZeroExitCode();
             }
