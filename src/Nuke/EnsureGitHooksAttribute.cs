@@ -66,7 +66,7 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
         {
             Log.Information("package.json found running npm install to see if that installs any hooks");
             ProcessTasks
-               .StartProcess(ToolPathResolver.GetPathExecutable("npm"), NukeBuild.IsLocalBuild ? "install" : "ci", NukeBuild.RootDirectory)
+               .StartProcess(ToolPathResolver.GetPathExecutable("npm"), NukeBuild.IsLocalBuild ? "install" : "ci --ignore-scripts", NukeBuild.RootDirectory)
                .AssertWaitForExit()
                .AssertZeroExitCode();
         }
@@ -104,7 +104,7 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
                 if (NukeBuild.IsLocalBuild)
                 {
                     ProcessTasks
-                       .StartProcess(ToolPathResolver.GetPathExecutable("npm"), "run husky", NukeBuild.RootDirectory)
+                       .StartProcess(ToolPathResolver.GetPathExecutable("npm"), "prepare", NukeBuild.RootDirectory)
                        .AssertWaitForExit();
                 }
             }
