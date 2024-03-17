@@ -21,8 +21,12 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
     {
         HookNames = hookNames
                    .Select(
-                        x => x.ToString().Humanize().Replace(" ", "_", StringComparison.Ordinal).Dasherize()
-                              .ToLowerInvariant()
+                        x => x
+                            .ToString()
+                            .Humanize()
+                            .Replace(" ", "_", StringComparison.Ordinal)
+                            .Dasherize()
+                            .ToLowerInvariant()
                     )
                    .ToArray();
     }
@@ -58,12 +62,13 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
     /// <inheritdoc />
     public void OnBuildInitialized(IReadOnlyCollection<ExecutableTarget> executableTargets, IReadOnlyCollection<ExecutableTarget> executionPlan)
     {
-        if ((NukeBuild.RootDirectory / "package.json").FileExists() && !NukeBuild.RootDirectory.ContainsDirectory("node_modules"))
+        if (( NukeBuild.RootDirectory / "package.json" ).FileExists() && !NukeBuild.RootDirectory.ContainsDirectory("node_modules"))
         {
             Log.Information("package.json found running npm install to see if that installs any hooks");
-            ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npm"), NukeBuild.IsLocalBuild ? "install" : "ci", workingDirectory: NukeBuild.RootDirectory)
-                        .AssertWaitForExit()
-                        .AssertZeroExitCode();
+            ProcessTasks
+               .StartProcess(ToolPathResolver.GetPathExecutable("npm"), NukeBuild.IsLocalBuild ? "install" : "ci", NukeBuild.RootDirectory)
+               .AssertWaitForExit()
+               .AssertZeroExitCode();
         }
     }
 
@@ -77,11 +82,11 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
                 var hooksOutput = GitTasks.Git($"config --get core.hookspath", logOutput: false, logInvocation: false);
                 var hooksPath = hooksOutput.StdToText().Trim();
                 var huskyScriptPath = NukeBuild.RootDirectory / ".husky" / "_" / "husky.sh";
-                return hooksPath == ".husky" && huskyScriptPath.FileExists();
+                return hooksPath.StartsWith(".husky") && huskyScriptPath.FileExists();
             }
-#pragma warning disable CA1031
+            #pragma warning disable CA1031
             catch
-#pragma warning restore CA1031
+                #pragma warning restore CA1031
             {
                 return false;
             }
@@ -89,16 +94,18 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
 
         public void InstallHooks(IReadOnlyCollection<string> hooks)
         {
-            if ((NukeBuild.RootDirectory / "package.json").FileExists())
+            if (( NukeBuild.RootDirectory / "package.json" ).FileExists())
             {
                 Log.Information("package.json found running npm install to see if that installs any hooks");
-                ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npm"), "install", workingDirectory: NukeBuild.RootDirectory)
-                            .AssertWaitForExit()
-                            .AssertZeroExitCode();
+                ProcessTasks
+                   .StartProcess(ToolPathResolver.GetPathExecutable("npm"), "install", NukeBuild.RootDirectory)
+                   .AssertWaitForExit()
+                   .AssertZeroExitCode();
                 if (NukeBuild.IsLocalBuild)
                 {
-                    ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npm"), "run husky", workingDirectory: NukeBuild.RootDirectory)
-                                .AssertWaitForExit();
+                    ProcessTasks
+                       .StartProcess(ToolPathResolver.GetPathExecutable("npm"), "run husky", NukeBuild.RootDirectory)
+                       .AssertWaitForExit();
                 }
             }
 
@@ -107,9 +114,10 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
                 Log.Information(
                     "package.json not found or prepare script did not work correctly running npx husky"
                 );
-                ProcessTasks.StartProcess(ToolPathResolver.GetPathExecutable("npx"), "husky", workingDirectory: NukeBuild.RootDirectory)
-                            .AssertWaitForExit()
-                            .AssertZeroExitCode();
+                ProcessTasks
+                   .StartProcess(ToolPathResolver.GetPathExecutable("npx"), "husky", NukeBuild.RootDirectory)
+                   .AssertWaitForExit()
+                   .AssertZeroExitCode();
             }
         }
     }
