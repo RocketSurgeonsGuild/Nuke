@@ -20,8 +20,8 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
     /// <param name="image"></param>
     /// <param name="images"></param>
     public GitHubActionsLintAttribute(
-        string                      name,
-        GitHubActionsImage          image,
+        string name,
+        GitHubActionsImage image,
         params GitHubActionsImage[] images
     ) : base(name, image, images)
     {
@@ -35,8 +35,8 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
     /// <param name="image"></param>
     /// <param name="images"></param>
     public GitHubActionsLintAttribute(
-        string          name,
-        string          image,
+        string name,
+        string image,
         params string[] images
     ) : base(name, image, images) { }
 
@@ -76,7 +76,7 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
                     step.Ref = "${{ github.event.pull_request.head.ref }}";
                 }
             )
-           .InsertAfterCheckOut(new RunStep("npm ci") { Run = "npm ci", })
+           .InsertAfterCheckOut(new RunStep("npm ci") { Run = "npm ci --ignore-scripts", })
            .InsertAfterCheckOut(
                 new RunStep("Get Head Commit Message") { Id = "commit-message", Run = "echo \"message=$(git show -s --format=%s)\" >> \"$GITHUB_OUTPUT\"", }
             )

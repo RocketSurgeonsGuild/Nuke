@@ -55,7 +55,7 @@ jobs:
           echo "message=$(git show -s --format=%s)" >> "$GITHUB_OUTPUT"
       - name: npm ci
         run: |
-          npm ci
+          npm ci --ignore-scripts
       - name: 🔨 Use .NET Core 6.0 SDK
         uses: actions/setup-dotnet@v4
         with:
