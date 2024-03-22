@@ -82,3 +82,5 @@ jobs:
         uses: planetscale/ghcommit-action@v0.1.35
         with:
           commit_message: 'Automatically linting code'
+          repo: '${{ github.repository }}'
+          branch: '${{ github.event.pull_request.head.ref }}'
