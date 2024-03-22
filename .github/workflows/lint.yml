@@ -76,7 +76,9 @@ jobs:
         run: |
           dotnet nuke LintStaged --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
       - name: Add & Commit
+        env:
+          GITHUB_TOKEN: '${{ secrets.RSG_BOT_TOKEN }}'
         if: "'${{ steps.commit-message.outputs.message }}' == 'Automatically linting code'"
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: planetscale/ghcommit-action@v0.1.35
         with:
           commit_message: 'Automatically linting code'
