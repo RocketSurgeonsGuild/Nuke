@@ -95,8 +95,11 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
                 }
             );
 
-        foreach (var workflowTrigger in configuration.DetailedTriggers
-                                                     .OfType<RocketSurgeonGitHubActionsWorkflowTrigger>())
+        foreach (var workflowTrigger in configuration
+                                       .DetailedTriggers
+                                                     .
+                                                      OfType<RocketSurgeonGitHubActionsWorkflowTrigger>()
+                                                      )
         {
             if (workflowTrigger.Secrets.Any(z => z.Name == TokenSecret || z.Alias == TokenSecret)) continue;
             workflowTrigger.Secrets.Add(new(TokenSecret, "The token used to commit back when linting", true));
