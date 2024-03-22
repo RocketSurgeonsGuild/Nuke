@@ -84,8 +84,9 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
                 new UsingStep("Add & Commit")
                 {
                     If = $$$""" "'${{ steps.commit-message.outputs.message }}' == '{{{commitMessage}}}'" """.Trim(),
-                    Uses = "stefanzweifel/git-auto-commit-action@v5",
+                    Uses = "planetscale/ghcommit-action@v0.1.35",
                     With = { ["commit_message"] = commitMessage, },
+                    Environment = { ["GITHUB_TOKEN"] = $$$"""${{ secrets.{{{TokenSecret}}} }}""", },
                 }
             );
 
