@@ -85,7 +85,12 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
                 {
                     If = $$$""" "'${{ steps.commit-message.outputs.message }}' == '{{{commitMessage}}}'" """.Trim(),
                     Uses = "planetscale/ghcommit-action@v0.1.35",
-                    With = { ["commit_message"] = commitMessage, },
+                    With =
+                    {
+                        ["commit_message"] = commitMessage,
+                        ["repo"] = "${{ github.repository }}",
+                        ["branch"] = "${{ github.event.pull_request.head.ref }}",
+                    },
                     Environment = { ["GITHUB_TOKEN"] = $$$"""${{ secrets.{{{TokenSecret}}} }}""", },
                 }
             );
