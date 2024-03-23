@@ -104,7 +104,7 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
                 if (NukeBuild.IsLocalBuild)
                 {
                     ProcessTasks
-                       .StartProcess(ToolPathResolver.GetPathExecutable("npm"), "prepare", NukeBuild.RootDirectory)
+                       .StartProcess(ToolPathResolver.GetPathExecutable("npm"), "run prepare", NukeBuild.RootDirectory)
                        .AssertWaitForExit();
                 }
             }
