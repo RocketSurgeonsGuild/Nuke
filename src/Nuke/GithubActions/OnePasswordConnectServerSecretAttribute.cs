@@ -71,4 +71,10 @@ public sealed class OnePasswordConnectServerSecretAttribute : TriggerValueAttrib
             ConnectToken ?? "OP_CONNECT_TOKEN"
         );
     }
+
+    /// <inheritdoc />
+    public override ITriggerValue ToTriggerValue()
+    {
+        return ToSecret();
+    }
 }

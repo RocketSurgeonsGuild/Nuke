@@ -1,3 +1,4 @@
+using System.Reflection;
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
@@ -66,11 +67,27 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
 
         const string commitMessage = "Automatically linting code";
 
+        var secretPath = Build
+                        .GetType()
+                        .GetCustomAttributes()
+                        .OfType<TriggerValueAttribute>()
+                        .Where(z => z.Name == TokenSecret)
+                        .Select(z => z.ToTriggerValue())
+                        .Select(value => string.IsNullOrWhiteSpace(value.Prefix) ? value.Name : $"{value.Prefix}.{value.Name}")
+                        .FirstOrDefault()
+         ?? $$$"""secrets.{{{TokenSecret}}}""";
+
+        configuration.Concurrency = new()
+        {
+            CancelInProgress = true,
+            Group = "lint-${{ github.event.pull_request.number }}",
+        };
+
         buildJob
            .ConfigureStep<CheckoutStep>(
                 step =>
                 {
-                    step.Token ??= $$$"""${{ secrets.{{{TokenSecret}}} }}""";
+                    step.Token ??= $$$"""${{ {{{secretPath}}} }}""";
                     step.FetchDepth = 0;
                     step.Repository = "${{ github.event.pull_request.head.repo.full_name }}";
                     step.Ref = "${{ github.event.pull_request.head.ref }}";
@@ -91,7 +108,7 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
                         ["repo"] = "${{ github.repository }}",
                         ["branch"] = "${{ github.event.pull_request.head.ref }}",
                     },
-                    Environment = { ["GITHUB_TOKEN"] = $$$"""${{ secrets.{{{TokenSecret}}} }}""", },
+                    Environment = { ["GITHUB_TOKEN"] = $$$"""${{ {{{secretPath}}} }}""", },
                 }
             );
 

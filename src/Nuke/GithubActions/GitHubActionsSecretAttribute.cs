@@ -7,17 +7,15 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 public sealed class GitHubActionsSecretAttribute : TriggerValueAttribute
 {
     /// <summary>
-    ///     Is the secret required
-    /// </summary>
-    public bool? Required { get; set; }
-
-    /// <summary>
     ///     The constructor for the <see cref="GitHubActionsSecretAttribute" />
     /// </summary>
     /// <param name="name"></param>
-    public GitHubActionsSecretAttribute(string name) : base(name)
-    {
-    }
+    public GitHubActionsSecretAttribute(string name) : base(name) { }
+
+    /// <summary>
+    ///     Is the secret required
+    /// </summary>
+    public bool? Required { get; set; }
 
     /// <summary>
     ///     Convert to a secret
@@ -25,6 +23,12 @@ public sealed class GitHubActionsSecretAttribute : TriggerValueAttribute
     /// <returns></returns>
     public GitHubActionsSecret ToSecret()
     {
-        return new GitHubActionsSecret(Name, Description, Required, Alias);
+        return new(Name, Description, Required, Alias);
+    }
+
+    /// <inheritdoc />
+    public override ITriggerValue ToTriggerValue()
+    {
+        return ToSecret();
     }
 }

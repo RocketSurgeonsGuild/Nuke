@@ -1,4 +1,5 @@
 #nullable enable
+abstract Rocket.Surgery.Nuke.GithubActions.TriggerValueAttribute.ToTriggerValue() -> Rocket.Surgery.Nuke.GithubActions.ITriggerValue!
 override Rocket.Surgery.Nuke.Azp.AzurePipelinesParameter.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
 override Rocket.Surgery.Nuke.Azp.AzurePipelinesSteps.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
 override Rocket.Surgery.Nuke.AzurePipelinesStepsAttribute.ConfigurationFile.get -> Nuke.Common.IO.AbsolutePath!
@@ -26,8 +27,10 @@ override Rocket.Surgery.Nuke.GithubActions.DownloadArtifactSet.ComputeStepName(s
 override Rocket.Surgery.Nuke.GithubActions.DownloadArtifactSet.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
 override Rocket.Surgery.Nuke.GithubActions.GithubActionCondition.ToString() -> string?
 override Rocket.Surgery.Nuke.GithubActions.GithubActionShell.ToString() -> string!
+override Rocket.Surgery.Nuke.GithubActions.GitHubActionsInputAttribute.ToTriggerValue() -> Rocket.Surgery.Nuke.GithubActions.ITriggerValue!
 override Rocket.Surgery.Nuke.GithubActions.GitHubActionsLintAttribute.GetConfiguration(System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! relevantTargets) -> Nuke.Common.CI.ConfigurationEntity!
 override Rocket.Surgery.Nuke.GithubActions.GithubActionsNukeParameter.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
+override Rocket.Surgery.Nuke.GithubActions.GitHubActionsSecretAttribute.ToTriggerValue() -> Rocket.Surgery.Nuke.GithubActions.ITriggerValue!
 override Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepOutput.ToString() -> string!
 override Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepsAttribute.GeneratedFiles.get -> System.Collections.Generic.IEnumerable<Nuke.Common.IO.AbsolutePath!>!
 override Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepsAttribute.GetConfiguration(System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! relevantTargets) -> Nuke.Common.CI.ConfigurationEntity!
@@ -36,11 +39,18 @@ override Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepsAttribute.RelevantT
 override Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.ConfigurationFile.get -> Nuke.Common.IO.AbsolutePath!
 override Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.CreateWriter(System.IO.StreamWriter! streamWriter) -> Nuke.Common.Utilities.CustomFileWriter!
 override Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.HostType.get -> System.Type!
+override Rocket.Surgery.Nuke.GithubActions.GitHubActionsVariableAttribute.ToTriggerValue() -> Rocket.Surgery.Nuke.GithubActions.ITriggerValue!
 override Rocket.Surgery.Nuke.GithubActions.GitHubActionsWorkflowOutput.ToString() -> string!
 override Rocket.Surgery.Nuke.GithubActions.HeadlessRunStep.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
+override Rocket.Surgery.Nuke.GithubActions.OnePasswordConnectServerSecretAttribute.ToTriggerValue() -> Rocket.Surgery.Nuke.GithubActions.ITriggerValue!
+override Rocket.Surgery.Nuke.GithubActions.OnePasswordSecretAttribute.ToTriggerValue() -> Rocket.Surgery.Nuke.GithubActions.ITriggerValue!
+override Rocket.Surgery.Nuke.GithubActions.OnePasswordServiceAccountSecretAttribute.ToTriggerValue() -> Rocket.Surgery.Nuke.GithubActions.ITriggerValue!
 override Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
 override Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsVcsTrigger.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
 override Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsWorkflowTrigger.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
+override Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsConcurrency.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
+override Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsDefaults.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
+override Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsDefaultsRun.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
 override Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
 override Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
 override Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubWorkflowJob.Write(Nuke.Common.Utilities.CustomFileWriter! writer) -> void
@@ -522,6 +532,10 @@ Rocket.Surgery.Nuke.GithubActions.OnePasswordServiceAccountSecretAttribute.Secre
 Rocket.Surgery.Nuke.GithubActions.OnePasswordServiceAccountSecretAttribute.ToSecret() -> Rocket.Surgery.Nuke.GithubActions.OnePasswordServiceAccountSecret!
 Rocket.Surgery.Nuke.GithubActions.OnePasswordServiceAccountSecretAttribute.Variable.get -> string?
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.Concurrency.get -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsConcurrency?
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.Concurrency.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.Defaults.get -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsDefaults?
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.Defaults.set -> void
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.DetailedTriggers.get -> System.Collections.Generic.List<Nuke.Common.CI.GitHubActions.Configuration.GitHubActionsDetailedTrigger!>!
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.DetailedTriggers.set -> void
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration.Environment.get -> System.Collections.Generic.Dictionary<string!, string!>!
@@ -563,6 +577,22 @@ Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsWorkflowTrigger.Outp
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsWorkflowTrigger.RocketSurgeonGitHubActionsWorkflowTrigger() -> void
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsWorkflowTrigger.Secrets.get -> System.Collections.Generic.List<Rocket.Surgery.Nuke.GithubActions.GitHubActionsSecret!>!
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsWorkflowTrigger.Secrets.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsConcurrency
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsConcurrency.CancelInProgress.get -> bool?
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsConcurrency.CancelInProgress.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsConcurrency.Group.get -> string?
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsConcurrency.Group.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsConcurrency.RocketSurgeonsGithubActionsConcurrency() -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsDefaults
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsDefaults.RocketSurgeonsGithubActionsDefaults() -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsDefaults.Run.get -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsDefaultsRun?
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsDefaults.Run.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsDefaultsRun
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsDefaultsRun.RocketSurgeonsGithubActionsDefaultsRun() -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsDefaultsRun.Shell.get -> Rocket.Surgery.Nuke.GithubActions.GithubActionShell?
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsDefaultsRun.Shell.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsDefaultsRun.WorkingDirectory.get -> string?
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsDefaultsRun.WorkingDirectory.set -> void
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob.FailFast.get -> bool
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob.FailFast.set -> void
@@ -576,6 +606,10 @@ Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob.RunsOn.set -> v
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob.Steps.get -> System.Collections.Generic.List<Nuke.Common.CI.GitHubActions.Configuration.GitHubActionsStep!>!
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJob.Steps.set -> void
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.Concurrency.get -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsConcurrency?
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.Concurrency.set -> void
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.Defaults.get -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsDefaults?
+Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.Defaults.set -> void
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.Environment.get -> System.Collections.Generic.Dictionary<string!, string!>!
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.Environment.set -> void
 Rocket.Surgery.Nuke.GithubActions.RocketSurgeonsGithubActionsJobBase.If.get -> Rocket.Surgery.Nuke.GithubActions.GithubActionCondition?

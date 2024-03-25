@@ -7,17 +7,15 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 public sealed class GitHubActionsVariableAttribute : TriggerValueAttribute
 {
     /// <summary>
-    ///     Is the variable required
-    /// </summary>
-    public bool? Required { get; set; }
-
-    /// <summary>
     ///     The constructor for the <see cref="GitHubActionsVariableAttribute" />
     /// </summary>
     /// <param name="name"></param>
-    public GitHubActionsVariableAttribute(string name) : base(name)
-    {
-    }
+    public GitHubActionsVariableAttribute(string name) : base(name) { }
+
+    /// <summary>
+    ///     Is the variable required
+    /// </summary>
+    public bool? Required { get; set; }
 
     /// <summary>
     ///     Convert to a variable
@@ -25,6 +23,12 @@ public sealed class GitHubActionsVariableAttribute : TriggerValueAttribute
     /// <returns></returns>
     public GitHubActionsVariable ToVariable()
     {
-        return new GitHubActionsVariable(Name, Description, Alias);
+        return new(Name, Description, Alias);
+    }
+
+    /// <inheritdoc />
+    public override ITriggerValue ToTriggerValue()
+    {
+        return ToVariable();
     }
 }

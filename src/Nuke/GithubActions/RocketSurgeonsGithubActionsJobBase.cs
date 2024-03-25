@@ -41,6 +41,16 @@ public abstract class RocketSurgeonsGithubActionsJobBase : ConfigurationEntity
     public GithubActionCondition? If { get; set; }
 
     /// <summary>
+    ///     The concurrency of the job
+    /// </summary>
+    public RocketSurgeonsGithubActionsConcurrency? Concurrency { get; set; }
+
+    /// <summary>
+    ///     The defaults of the job
+    /// </summary>
+    public RocketSurgeonsGithubActionsDefaults? Defaults { get; set; }
+
+    /// <summary>
     ///     The outputs of this job
     /// </summary>
     public List<GitHubActionsStepOutput> Outputs { get; set; } = new();
@@ -65,6 +75,17 @@ public abstract class RocketSurgeonsGithubActionsJobBase : ConfigurationEntity
 
             writer.WriteKeyValues("outputs", Outputs.ToDictionary(z => $"{z.StepName}{z.OutputName.Pascalize()}".Camelize(), z => z.ToString()));
             writer.WriteKeyValues("env", Environment);
+            if (Concurrency is { } concurrency)
+            {
+                writer.WriteLine("concurrency:");
+                concurrency.Write(writer);
+            }
+
+            if (Defaults is { } defaults)
+            {
+                writer.WriteLine("defaults:");
+                defaults.Write(writer);
+            }
 
             if (!string.IsNullOrWhiteSpace(If?.ToString()))
             {
