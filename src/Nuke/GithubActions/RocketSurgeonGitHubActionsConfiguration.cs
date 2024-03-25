@@ -35,12 +35,22 @@ public class RocketSurgeonGitHubActionsConfiguration : ConfigurationEntity
     public List<RocketSurgeonsGithubActionsJobBase> Jobs { get; set; } = new();
 
     /// <summary>
-    ///     The dependencies of this job
+    ///     The dependencies of this workflow
     /// </summary>
     public Dictionary<string, string> Environment { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 
     /// <summary>
-    /// The permissions of this workflow
+    ///     The concurrency of the workflow
+    /// </summary>
+    public RocketSurgeonsGithubActionsConcurrency? Concurrency { get; set; }
+
+    /// <summary>
+    ///     The defaults of the job
+    /// </summary>
+    public RocketSurgeonsGithubActionsDefaults? Defaults { get; set; }
+
+    /// <summary>
+    ///     The permissions of this workflow
     /// </summary>
     public GitHubActionsPermissions Permissions { get; set; } = new();
 
@@ -66,6 +76,17 @@ public class RocketSurgeonGitHubActionsConfiguration : ConfigurationEntity
         Permissions.Write(writer);
 
         writer.WriteKeyValues("env", Environment);
+        if (Concurrency is { } concurrency)
+        {
+            writer.WriteLine("concurrency:");
+            concurrency.Write(writer);
+        }
+
+        if (Defaults is { } defaults)
+        {
+            writer.WriteLine("defaults:");
+            defaults.Write(writer);
+        }
 
         writer.WriteLine();
 

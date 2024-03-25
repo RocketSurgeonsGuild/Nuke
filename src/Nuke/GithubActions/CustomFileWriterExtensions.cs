@@ -25,9 +25,9 @@ public static class CustomFileWriterExtensions
         }
     }
 
-    private static void WriteValue(CustomFileWriter writer, KeyValuePair<string, string> kvp)
+    internal static void WriteValue(this CustomFileWriter writer, KeyValuePair<string, string> kvp)
     {
-        var (key, value) = kvp;
+        ( var key, var value ) = kvp;
         if (value.StartsWith('>') || value.StartsWith('|'))
         {
             var values = value.Split('\n');

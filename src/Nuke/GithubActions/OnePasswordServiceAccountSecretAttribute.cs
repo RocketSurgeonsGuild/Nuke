@@ -60,4 +60,10 @@ public sealed class OnePasswordServiceAccountSecretAttribute : TriggerValueAttri
             Secret ?? "OP_SERVICE_ACCOUNT_TOKEN"
         );
     }
+
+    /// <inheritdoc />
+    public override ITriggerValue ToTriggerValue()
+    {
+        return ToSecret();
+    }
 }

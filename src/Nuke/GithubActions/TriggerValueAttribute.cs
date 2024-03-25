@@ -7,6 +7,15 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 public abstract class TriggerValueAttribute : Attribute
 {
     /// <summary>
+    ///     The default constructor
+    /// </summary>
+    /// <param name="name"></param>
+    protected TriggerValueAttribute(string name)
+    {
+        Name = name;
+    }
+
+    /// <summary>
     ///     The name of the trigger value
     /// </summary>
     public string Name { get; }
@@ -27,11 +36,8 @@ public abstract class TriggerValueAttribute : Attribute
     public string? Default { get; set; }
 
     /// <summary>
-    ///     The default constructor
+    ///     An internal way to get access to the trigger value
     /// </summary>
-    /// <param name="name"></param>
-    protected TriggerValueAttribute(string name)
-    {
-        Name = name;
-    }
+    /// <returns></returns>
+    public abstract ITriggerValue ToTriggerValue();
 }
