@@ -61,7 +61,7 @@ internal static class SolutionUpdater
         "package.json",
     };
 
-    private static readonly string[] _ignoreFolderFilePatterns = { "**node_modules/**", };
+    private static readonly string[] _ignoreFolderFilePatterns = { "**/node_modules/**", };
 
     private static IEnumerable<Action> AddNukeBuilds(Solution solution, SolutionFolder configFolder)
     {
