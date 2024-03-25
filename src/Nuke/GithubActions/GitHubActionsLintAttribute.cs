@@ -80,7 +80,7 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
         configuration.Concurrency = new()
         {
             CancelInProgress = true,
-            Group = "lint",
+            Group = "lint-${{ github.event.pull_request.number }}",
         };
 
         buildJob

@@ -37,7 +37,7 @@ permissions:
   security-events: none
   statuses: write
 concurrency:
-  group: 'lint'
+  group: 'lint-${{ github.event.pull_request.number }}'
   cancel-in-progress: true
 
 jobs:
