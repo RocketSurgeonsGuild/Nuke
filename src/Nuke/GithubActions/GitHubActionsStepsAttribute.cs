@@ -403,6 +403,16 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                                      .ToList();
         }
 
+        // need a better way to do this more generically
+        if (buildJob.Steps.OfType<UsingStep>().Any(z => z.Uses?.StartsWith("codecov/codecov-action", StringComparison.OrdinalIgnoreCase) == true))
+        {
+            foreach (var trigger in config.DetailedTriggers.OfType<RocketSurgeonGitHubActionsWorkflowTrigger>())
+            {
+                if (trigger.Secrets.Any(s => s.Name == "CODECOV_TOKEN")) continue;
+                trigger.Secrets.Add(new("CODECOV_TOKEN", "The codecov token", Alias: "CodecovToken"));
+            }
+        }
+
         if (_isGithubHosted && _images is { Length: > 1, })
         {
             var mainOs = _images.First();

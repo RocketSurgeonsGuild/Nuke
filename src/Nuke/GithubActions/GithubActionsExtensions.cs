@@ -35,10 +35,10 @@ public static class GithubActionsExtensions
                 Needs = { "Build", },
                 Uses = "RocketSurgeonsGuild/actions/.github/workflows/publish-nuget.yml@v0.3.0",
                 Secrets = new()
-                          {
-                              ["RSG_NUGET_API_KEY"] = "${{ secrets.RSG_NUGET_API_KEY }}",
-                              ["RSG_AZURE_DEVOPS"] = "${{ secrets.RSG_AZURE_DEVOPS }}",
-                          },
+                {
+                    ["RSG_NUGET_API_KEY"] = "${{ secrets.RSG_NUGET_API_KEY }}",
+                    ["RSG_AZURE_DEVOPS"] = "${{ secrets.RSG_AZURE_DEVOPS }}",
+                },
             }
         );
         return configuration;
@@ -242,10 +242,14 @@ public static class GithubActionsExtensions
                     job,
                     new UsingStep("Publish Coverage")
                     {
-                        Uses = "codecov/codecov-action@v3",
+                        Uses = "codecov/codecov-action@v4",
                         If =
                             "(github.event_name != 'pull_request' && github.event_name != 'pull_request_target') || ((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]')",
-                        With = new() { ["name"] = "actions-${{ matrix.os }}", },
+                        With = new()
+                        {
+                            ["name"] = "actions-${{ matrix.os }}",
+                            ["token"] = "${{ secrets.CODECOV_TOKEN }}",
+                        },
                     }
                 );
             }

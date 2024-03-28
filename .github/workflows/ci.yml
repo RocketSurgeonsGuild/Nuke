@@ -26,6 +26,9 @@ on:
         required: False
       RSG_AZURE_DEVOPS:
         required: False
+      CODECOV_TOKEN:
+        description: 'The codecov token'
+        required: False
   push:
     branches:
       - 'master'
@@ -147,6 +150,7 @@ jobs:
         uses: codecov/codecov-action@v4
         with:
           name: 'actions-${{ matrix.os }}'
+          token: '${{ secrets.CODECOV_TOKEN }}'
       - name: 🏺 Publish logs
         if: always()
         uses: actions/upload-artifact@v4
