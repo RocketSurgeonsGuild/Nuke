@@ -101,7 +101,7 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
                 new UsingStep("Add & Commit")
                 {
                     If = $$$""" "'${{ steps.commit-message.outputs.message }}' == '{{{commitMessage}}}'" """.Trim(),
-                    Uses = "planetscale/ghcommit-action@v0.1.35",
+                    Uses = "planetscale/ghcommit-action@v0.1.36",
                     With =
                     {
                         ["commit_message"] = commitMessage,
