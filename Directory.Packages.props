@@ -28,7 +28,7 @@
         <PackageVersion Include="System.Interactive.Async" Version="6.0.1" />
     </ItemGroup>
     <ItemGroup>
-        <PackageVersion Include="Bogus" Version="35.5.0" />
+        <PackageVersion Include="Bogus" Version="35.5.1" />
         <PackageVersion Include="coverlet.collector" Version="6.0.2" />
         <PackageVersion Include="FakeItEasy" Version="8.2.0" />
         <PackageVersion Include="FakeItEasy.Analyzer.CSharp" Version="6.1.1" />
