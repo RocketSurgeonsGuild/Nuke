@@ -371,6 +371,7 @@ Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepsAttribute.GitHubActionsSteps
 Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepsAttribute.GitHubActionsStepsAttribute(string! name, string! image, params string![]! images) -> void
 Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepsAttribute.InvokedTargets.get -> string![]!
 Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepsAttribute.InvokedTargets.set -> void
+Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepsAttribute.NormalizeActionVersions(Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration! config) -> void
 Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepsAttribute.Parameters.get -> string![]!
 Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepsAttribute.Parameters.set -> void
 Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase

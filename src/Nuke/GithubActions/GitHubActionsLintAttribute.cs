@@ -123,6 +123,7 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
 
         buildJob.Name = "lint";
 
+        NormalizeActionVersions(configuration);
         return configuration;
     }
 }
