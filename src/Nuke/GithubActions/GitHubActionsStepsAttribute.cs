@@ -449,7 +449,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
     }
 
     /// <summary>
-    /// Method will ensure the versions defined in the actions are normalized to the same version that currently exists to allow renovate to upgrade actions.
+    ///     Method will ensure the versions defined in the actions are normalized to the same version that currently exists to allow renovate to upgrade actions.
     /// </summary>
     /// <param name="config"></param>
     protected void NormalizeActionVersions(RocketSurgeonGitHubActionsConfiguration config)
@@ -459,22 +459,25 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         var yamlStream = new YamlStream();
         yamlStream.Load(reader);
         var key = new YamlScalarNode("uses");
-        var nodeList = yamlStream.Documents
-                                 .SelectMany(z => z.AllNodes)
-                                 .OfType<YamlMappingNode>()
-                                 .Where(
-                                      z => z.Children.ContainsKey(key) && z.Children[key] is YamlScalarNode sn
-                                       && sn.Value?.Contains('@', StringComparison.OrdinalIgnoreCase) == true
-                                  )
-                                 .Select(
-                                      // ReSharper disable once NullableWarningSuppressionIsUsed
-                                      z => (name: ( (YamlScalarNode)z.Children[key] ).Value!.Split("@")[0],
-                                            value: ( (YamlScalarNode)z.Children[key] ).Value)
-                                  ).Distinct(z => z.name)
-                                 .ToDictionary(
-                                      z => z.name,
-                                      z => z.value
-                                  );
+        var nodeList = yamlStream
+                      .Documents
+                      .SelectMany(z => z.AllNodes)
+                      .OfType<YamlMappingNode>()
+                      .Where(
+                           z => z.Children.ContainsKey(key)
+                            && z.Children[key] is YamlScalarNode sn
+                            && sn.Value?.Contains('@', StringComparison.OrdinalIgnoreCase) == true
+                       )
+                      .Select(
+                           // ReSharper disable once NullableWarningSuppressionIsUsed
+                           z => ( name: ( (YamlScalarNode)z.Children[key] ).Value!.Split("@")[0],
+                                  value: ( (YamlScalarNode)z.Children[key] ).Value )
+                       )
+                      .Distinct(z => z.name)
+                      .ToDictionary(
+                           z => z.name,
+                           z => z.value
+                       );
 
         string? GetValue(string? uses)
         {

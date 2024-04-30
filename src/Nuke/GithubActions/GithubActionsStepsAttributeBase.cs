@@ -2,8 +2,6 @@ using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
 using Nuke.Common.IO;
-using Nuke.Common.Utilities.Collections;
-using YamlDotNet.RepresentationModel;
 
 #pragma warning disable CA1851
 // ReSharper disable PossibleMultipleEnumeration
@@ -14,11 +12,6 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// </summary>
 public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttributeBase
 {
-    /// <summary>
-    ///     The name of the file
-    /// </summary>
-    protected string Name { get; }
-
     /// <summary>
     ///     The default constructor given the file name
     /// </summary>
@@ -110,6 +103,11 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     public string[] Enhancements { get; set; } = Array.Empty<string>();
 
     /// <summary>
+    ///     The name of the file
+    /// </summary>
+    protected string Name { get; }
+
+    /// <summary>
     ///     Applies the given enhancements to the build
     /// </summary>
     /// <param name="config"></param>
@@ -120,9 +118,9 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
             foreach (var method in Enhancements.Join(Build.GetType().GetMethods(), z => z, z => z.Name, (_, e) => e))
             {
                 config = method.IsStatic
-                    ? method.Invoke(null, new object[] { config }) as RocketSurgeonGitHubActionsConfiguration ?? config
-                    : method.Invoke(Build, new object[] { config }) as RocketSurgeonGitHubActionsConfiguration
-                   ?? config;
+                    ? method.Invoke(null, new object[] { config, }) as RocketSurgeonGitHubActionsConfiguration ?? config
+                    : method.Invoke(Build, new object[] { config, }) as RocketSurgeonGitHubActionsConfiguration
+                 ?? config;
             }
         }
     }
@@ -130,7 +128,7 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     /// <inheritdoc />
     public override CustomFileWriter CreateWriter(StreamWriter streamWriter)
     {
-        return new CustomFileWriter(streamWriter, 2, "#");
+        return new(streamWriter, 2, "#");
     }
 
     /// <summary>
@@ -159,14 +157,11 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
                 Kind = RocketSurgeonGitHubActionsTrigger.WorkflowCall,
                 Secrets = GetAllSecrets(secrets, false).ToList(),
                 Outputs = outputs.ToList(),
-                Inputs = inputs.ToList()
+                Inputs = inputs.ToList(),
             };
         }
 
-        if (OnPushBranches.Length > 0 ||
-            OnPushTags.Length > 0 ||
-            OnPushIncludePaths.Length > 0 ||
-            OnPushExcludePaths.Length > 0)
+        if (OnPushBranches.Length > 0 || OnPushTags.Length > 0 || OnPushIncludePaths.Length > 0 || OnPushExcludePaths.Length > 0)
         {
             yield return new RocketSurgeonGitHubActionsVcsTrigger
             {
@@ -174,14 +169,11 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
                 Branches = OnPushBranches,
                 Tags = OnPushTags,
                 IncludePaths = OnPushIncludePaths,
-                ExcludePaths = OnPushExcludePaths
+                ExcludePaths = OnPushExcludePaths,
             };
         }
 
-        if (OnPullRequestBranches.Length > 0 ||
-            OnPullRequestTags.Length > 0 ||
-            OnPullRequestIncludePaths.Length > 0 ||
-            OnPullRequestExcludePaths.Length > 0)
+        if (OnPullRequestBranches.Length > 0 || OnPullRequestTags.Length > 0 || OnPullRequestIncludePaths.Length > 0 || OnPullRequestExcludePaths.Length > 0)
         {
             yield return new RocketSurgeonGitHubActionsVcsTrigger
             {
@@ -189,14 +181,14 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
                 Branches = OnPullRequestBranches,
                 Tags = OnPullRequestTags,
                 IncludePaths = OnPullRequestIncludePaths,
-                ExcludePaths = OnPullRequestExcludePaths
+                ExcludePaths = OnPullRequestExcludePaths,
             };
         }
 
-        if (OnPullRequestTargetBranches.Length > 0 ||
-            OnPullRequestTargetTags.Length > 0 ||
-            OnPullRequestTargetIncludePaths.Length > 0 ||
-            OnPullRequestTargetExcludePaths.Length > 0)
+        if (OnPullRequestTargetBranches.Length > 0
+         || OnPullRequestTargetTags.Length > 0
+         || OnPullRequestTargetIncludePaths.Length > 0
+         || OnPullRequestTargetExcludePaths.Length > 0)
         {
             yield return new RocketSurgeonGitHubActionsVcsTrigger
             {
@@ -204,12 +196,12 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
                 Branches = OnPullRequestTargetBranches,
                 Tags = OnPullRequestTargetTags,
                 IncludePaths = OnPullRequestTargetIncludePaths,
-                ExcludePaths = OnPullRequestTargetExcludePaths
+                ExcludePaths = OnPullRequestTargetExcludePaths,
             };
         }
 
         if (OnCronSchedule != null)
-            yield return new GitHubActionsScheduledTrigger { Cron = OnCronSchedule };
+            yield return new GitHubActionsScheduledTrigger { Cron = OnCronSchedule, };
     }
 
     /// <summary>
@@ -219,7 +211,7 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     protected virtual IEnumerable<GitHubActionsSecret> GetAllSecrets(IEnumerable<GitHubActionsSecret> secrets, bool githubToken = true)
     {
         if (githubToken)
-            yield return new GitHubActionsSecret("GITHUB_TOKEN", "The default github actions token", Alias: "GithubToken");
+            yield return new("GITHUB_TOKEN", "The default github actions token", Alias: "GithubToken");
         foreach (var secret in secrets)
         {
             yield return secret;
