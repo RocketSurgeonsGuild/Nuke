@@ -125,58 +125,6 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
                    ?? config;
             }
         }
-
-        // This will normalize the version numbers against the existing file.
-        if (!File.Exists(ConfigurationFile)) return;
-
-        using var readStream = File.OpenRead(ConfigurationFile);
-        using var reader = new StreamReader(readStream);
-        var yamlStream = new YamlStream();
-        yamlStream.Load(reader);
-        var key = new YamlScalarNode("uses");
-        var nodeList = yamlStream.Documents
-                                 .SelectMany(z => z.AllNodes)
-                                 .OfType<YamlMappingNode>()
-                                 .Where(
-                                      z => z.Children.ContainsKey(key) && z.Children[key] is YamlScalarNode sn
-                                                                       && sn.Value?.Contains('@', StringComparison.OrdinalIgnoreCase) == true
-                                  )
-                                 .Select(
-                                      // ReSharper disable once NullableWarningSuppressionIsUsed
-                                      z => (name: ( (YamlScalarNode)z.Children[key] ).Value!.Split("@")[0],
-                                             value: ( (YamlScalarNode)z.Children[key] ).Value)
-                                  ).Distinct(z => z.name)
-                                 .ToDictionary(
-                                      z => z.name,
-                                      z => z.value
-                                  );
-
-        string? GetValue(string? uses)
-        {
-            if (uses == null) return null;
-            var nodeKey = uses.Split('@')[0];
-            if (nodeList.TryGetValue(nodeKey, out var value))
-            {
-                return value;
-            }
-
-            return uses;
-        }
-
-        foreach (var job in config.Jobs)
-        {
-            if (job is RocketSurgeonsGithubWorkflowJob workflowJob)
-            {
-                workflowJob.Uses = GetValue(workflowJob.Uses);
-            }
-            else if (job is RocketSurgeonsGithubActionsJob actionsJob)
-            {
-                foreach (var step in actionsJob.Steps.OfType<UsingStep>())
-                {
-                    step.Uses = step.Uses = GetValue(step.Uses);
-                }
-            }
-        }
     }
 
     /// <inheritdoc />

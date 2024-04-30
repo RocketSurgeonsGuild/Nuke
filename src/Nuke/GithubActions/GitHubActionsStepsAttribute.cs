@@ -6,6 +6,7 @@ using Nuke.Common.Execution;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Utilities.Collections;
+using YamlDotNet.RepresentationModel;
 
 #pragma warning disable CA1019
 #pragma warning disable CA1308
@@ -440,7 +441,67 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             }
         }
 
+        // This will normalize the version numbers against the existing file.
+        if (!File.Exists(ConfigurationFile)) return config;
+
+        NormalizeActionVersions(config);
         return config;
+    }
+
+    /// <summary>
+    /// Method will ensure the versions defined in the actions are normalized to the same version that currently exists to allow renovate to upgrade actions.
+    /// </summary>
+    /// <param name="config"></param>
+    protected void NormalizeActionVersions(RocketSurgeonGitHubActionsConfiguration config)
+    {
+        using var readStream = File.OpenRead(ConfigurationFile);
+        using var reader = new StreamReader(readStream);
+        var yamlStream = new YamlStream();
+        yamlStream.Load(reader);
+        var key = new YamlScalarNode("uses");
+        var nodeList = yamlStream.Documents
+                                 .SelectMany(z => z.AllNodes)
+                                 .OfType<YamlMappingNode>()
+                                 .Where(
+                                      z => z.Children.ContainsKey(key) && z.Children[key] is YamlScalarNode sn
+                                       && sn.Value?.Contains('@', StringComparison.OrdinalIgnoreCase) == true
+                                  )
+                                 .Select(
+                                      // ReSharper disable once NullableWarningSuppressionIsUsed
+                                      z => (name: ( (YamlScalarNode)z.Children[key] ).Value!.Split("@")[0],
+                                            value: ( (YamlScalarNode)z.Children[key] ).Value)
+                                  ).Distinct(z => z.name)
+                                 .ToDictionary(
+                                      z => z.name,
+                                      z => z.value
+                                  );
+
+        string? GetValue(string? uses)
+        {
+            if (uses == null) return null;
+            var nodeKey = uses.Split('@')[0];
+            if (nodeList.TryGetValue(nodeKey, out var value))
+            {
+                return value;
+            }
+
+            return uses;
+        }
+
+        foreach (var job in config.Jobs)
+        {
+            if (job is RocketSurgeonsGithubWorkflowJob workflowJob)
+            {
+                workflowJob.Uses = GetValue(workflowJob.Uses);
+            }
+            else if (job is RocketSurgeonsGithubActionsJob actionsJob)
+            {
+                foreach (var step in actionsJob.Steps.OfType<UsingStep>())
+                {
+                    step.Uses = step.Uses = GetValue(step.Uses);
+                }
+            }
+        }
     }
 
     /// <summary>
