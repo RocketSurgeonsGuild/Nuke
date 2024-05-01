@@ -1,6 +1,7 @@
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
+using Nuke.Common.Execution;
 using Nuke.Common.IO;
 using Nuke.Common.Utilities.Collections;
 using Rocket.Surgery.Nuke.ContinuousIntegration;
@@ -24,6 +25,11 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     protected GithubActionsStepsAttributeBase(string name)
     {
         Name = name;
+    }
+
+    /// <inheritdoc />
+    public override ConfigurationEntity GetConfiguration(IReadOnlyCollection<ExecutableTarget> relevantTargets)
+    {
         ExcludedTargets = [];
         NonEntryTargets = [];
     }
@@ -45,6 +51,8 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
             nameof(IGenerateCodeCoverageReport.GenerateCodeCoverageReport),
             nameof(IGenerateCodeCoverageSummary.GenerateCodeCoverageSummary),
         ];
+        // This is here on purpose, this method is used for side effects only.
+        return null!;
     }
 
     /// <summary>
@@ -315,4 +323,6 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
         }
     }
 }
+
+
 
