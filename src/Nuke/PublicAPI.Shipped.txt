@@ -38,7 +38,6 @@ override Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepsAttribute.IdPostfix
 override Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepsAttribute.RelevantTargetNames.get -> System.Collections.Generic.IEnumerable<string!>!
 override Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.ConfigurationFile.get -> Nuke.Common.IO.AbsolutePath!
 override Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.CreateWriter(System.IO.StreamWriter! streamWriter) -> Nuke.Common.Utilities.CustomFileWriter!
-override Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.GetConfiguration(System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! relevantTargets) -> Nuke.Common.CI.ConfigurationEntity!
 override Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.HostType.get -> System.Type!
 override Rocket.Surgery.Nuke.GithubActions.GitHubActionsVariableAttribute.ToTriggerValue() -> Rocket.Surgery.Nuke.GithubActions.ITriggerValue!
 override Rocket.Surgery.Nuke.GithubActions.GitHubActionsWorkflowOutput.ToString() -> string!
