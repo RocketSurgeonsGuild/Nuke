@@ -1,7 +1,6 @@
 using Nuke.Common;
 using Nuke.Common.CI.GitHubActions;
 using Rocket.Surgery.Nuke.ContinuousIntegration;
-using Rocket.Surgery.Nuke.DotNetCore;
 using Rocket.Surgery.Nuke.GithubActions;
 
 #pragma warning disable CA1050
