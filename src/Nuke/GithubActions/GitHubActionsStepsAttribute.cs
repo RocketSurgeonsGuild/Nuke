@@ -256,6 +256,13 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                     Run = "dotnet tool restore",
                 }
             );
+            // TODO: Add configuration to disable this?
+            steps.Add(
+                new RunStep("dotnet workload restore")
+                {
+                    Run = "dotnet workload restore",
+                }
+            );
             if (!DotNetTool.IsInstalled("nuke"))
             {
                 steps.Add(globalToolStep);

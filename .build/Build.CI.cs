@@ -1,7 +1,6 @@
 using Nuke.Common;
 using Nuke.Common.CI.GitHubActions;
 using Rocket.Surgery.Nuke.ContinuousIntegration;
-using Rocket.Surgery.Nuke.DotNetCore;
 using Rocket.Surgery.Nuke.GithubActions;
 
 #pragma warning disable CA1050
@@ -29,16 +28,7 @@ using Rocket.Surgery.Nuke.GithubActions;
     OnPushBranches = ["master", "main", "next",],
     OnPullRequestBranches = ["master", "main", "next",],
     InvokedTargets = [nameof(Default),],
-    NonEntryTargets =
-    [
-        nameof(ICIEnvironment.CIEnvironment),
-        nameof(ITriggerCodeCoverageReports.TriggerCodeCoverageReports),
-        nameof(ITriggerCodeCoverageReports.GenerateCodeCoverageReportCobertura),
-        nameof(IGenerateCodeCoverageBadges.GenerateCodeCoverageBadges),
-        nameof(IGenerateCodeCoverageReport.GenerateCodeCoverageReport),
-        nameof(IGenerateCodeCoverageSummary.GenerateCodeCoverageSummary),
-        nameof(Default),
-    ],
+    NonEntryTargets = [nameof(Default),],
     Enhancements = [nameof(CiMiddleware),]
 )]
 [GitHubActionsLint(
