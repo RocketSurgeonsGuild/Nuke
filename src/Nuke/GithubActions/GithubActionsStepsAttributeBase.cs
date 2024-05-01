@@ -3,6 +3,7 @@ using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
 using Nuke.Common.IO;
 using Nuke.Common.Utilities.Collections;
+using Rocket.Surgery.Nuke.ContinuousIntegration;
 using Rocket.Surgery.Nuke.DotNetCore;
 using YamlDotNet.RepresentationModel;
 
@@ -28,6 +29,16 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
             nameof(ICanClean.Clean),
             nameof(ICanRestoreWithDotNetCore.DotnetToolRestore),
             nameof(ICanRestoreWithDotNetCore.DotnetWorkloadRestore),
+        ];
+        NonEntryTargets =
+        [
+            ..NonEntryTargets,
+            nameof(ICIEnvironment.CIEnvironment),
+            nameof(ITriggerCodeCoverageReports.TriggerCodeCoverageReports),
+            nameof(ITriggerCodeCoverageReports.GenerateCodeCoverageReportCobertura),
+            nameof(IGenerateCodeCoverageBadges.GenerateCodeCoverageBadges),
+            nameof(IGenerateCodeCoverageReport.GenerateCodeCoverageReport),
+            nameof(IGenerateCodeCoverageSummary.GenerateCodeCoverageSummary),
         ];
     }
 
