@@ -33,7 +33,7 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
     public override Type HostType => typeof(AzurePipelines);
 
     /// <inheritdoc />
-    public override IEnumerable<AbsolutePath> GeneratedFiles => new[] { ConfigurationFile };
+    public override IEnumerable<AbsolutePath> GeneratedFiles => new[] { ConfigurationFile, };
 
     /// <inheritdoc />
     public override IEnumerable<string> RelevantTargetNames => InvokeTargets;
@@ -51,7 +51,7 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
     /// <inheritdoc />
     public override CustomFileWriter CreateWriter(StreamWriter streamWriter)
     {
-        return new CustomFileWriter(streamWriter, 2, "#");
+        return new(streamWriter, 2, "#");
     }
 
     /// <inheritdoc />
@@ -61,24 +61,26 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
     {
         var paramList = new List<AzurePipelinesParameter>();
         var parameters =
-            Build.GetType()
-                 .GetInterfaces()
-                 .SelectMany(x => x.GetMembers())
-                 .Concat(
-                      Build.GetType()
-                           .GetMembers(
-                                BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic |
-                                BindingFlags.Public | BindingFlags.FlattenHierarchy
-                            )
-                  )
-                 .Where(x => x.GetCustomAttribute<ParameterAttribute>() != null);
+            Build
+               .GetType()
+               .GetInterfaces()
+               .SelectMany(x => x.GetMembers())
+               .Concat(
+                    Build
+                       .GetType()
+                       .GetMembers(
+                            BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy
+                        )
+                )
+               .Where(x => x.GetCustomAttribute<ParameterAttribute>() != null);
         foreach (var parameter in parameters)
         {
             if (Parameters.Any(
-                    z => z.Equals(parameter.Name, StringComparison.OrdinalIgnoreCase) || z.Equals(
-                        parameter.GetCustomAttribute<ParameterAttribute>()?.Name,
-                        StringComparison.OrdinalIgnoreCase
-                    )
+                    z => z.Equals(parameter.Name, StringComparison.OrdinalIgnoreCase)
+                     || z.Equals(
+                            parameter.GetCustomAttribute<ParameterAttribute>()?.Name,
+                            StringComparison.OrdinalIgnoreCase
+                        )
                 ))
             {
                 var value = parameter.GetValue(Build);
@@ -88,7 +90,7 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
                 }
 
                 paramList.Add(
-                    new AzurePipelinesParameter
+                    new()
                     {
                         Name = parameter.GetCustomAttribute<ParameterAttribute>()?.Name ?? parameter.Name,
                         Default = value?.ToString() ?? "",
@@ -99,14 +101,15 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
 
         var lookupTable = new LookupTable<ExecutableTarget, AzurePipelinesStep>();
         var steps = relevantTargets
-                   .Select(x => (ExecutableTarget: x, Job: GetStep(x, relevantTargets, lookupTable)))
+                   .Select(x => ( ExecutableTarget: x, Job: GetStep(x, relevantTargets, lookupTable) ))
                    .ForEachLazy(x => lookupTable.Add(x.ExecutableTarget, x.Job))
-                   .Select(x => x.Job).ToArray();
+                   .Select(x => x.Job)
+                   .ToArray();
 
         return new AzurePipelinesSteps
         {
             Parameters = paramList.ToArray(),
-            Steps = steps
+            Steps = steps,
         };
     }
 
@@ -126,7 +129,7 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
         var chainLinkNames = GetInvokedTargets(executableTarget, relevantTargets).Select(z => z.Name).ToArray();
         var tool = DotNetTool.IsInstalled("codecov.tool") ? "dotnet nuke" : "nuke";
 
-        return new AzurePipelinesStep
+        return new()
         {
             Name = executableTarget.Name,
             DisplayName = GetStepName(executableTarget.Name),

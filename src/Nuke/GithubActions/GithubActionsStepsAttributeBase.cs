@@ -28,30 +28,6 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     }
 
     /// <inheritdoc />
-    public override ConfigurationEntity GetConfiguration(IReadOnlyCollection<ExecutableTarget> relevantTargets)
-    {
-        ExcludedTargets =
-        [
-            ..ExcludedTargets,
-            nameof(ICanClean.Clean),
-            nameof(ICanRestoreWithDotNetCore.DotnetToolRestore),
-            nameof(ICanRestoreWithDotNetCore.DotnetWorkloadRestore),
-        ];
-        NonEntryTargets =
-        [
-            ..NonEntryTargets,
-            nameof(ICIEnvironment.CIEnvironment),
-            nameof(ITriggerCodeCoverageReports.TriggerCodeCoverageReports),
-            nameof(ITriggerCodeCoverageReports.GenerateCodeCoverageReportCobertura),
-            nameof(IGenerateCodeCoverageBadges.GenerateCodeCoverageBadges),
-            nameof(IGenerateCodeCoverageReport.GenerateCodeCoverageReport),
-            nameof(IGenerateCodeCoverageSummary.GenerateCodeCoverageSummary),
-        ];
-        // This is here on purpose, this method is used for side effects only.
-        return null!;
-    }
-
-    /// <inheritdoc />
     public override Type HostType { get; } = typeof(GitHubActions);
 
     /// <inheritdoc />
@@ -136,6 +112,30 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     ///     The name of the file
     /// </summary>
     protected string Name { get; }
+
+    /// <inheritdoc />
+    public override ConfigurationEntity GetConfiguration(IReadOnlyCollection<ExecutableTarget> relevantTargets)
+    {
+        ExcludedTargets =
+        [
+            ..ExcludedTargets,
+            nameof(ICanClean.Clean),
+            nameof(ICanRestoreWithDotNetCore.DotnetToolRestore),
+            nameof(ICanRestoreWithDotNetCore.DotnetWorkloadRestore),
+        ];
+        NonEntryTargets =
+        [
+            ..NonEntryTargets,
+            nameof(ICIEnvironment.CIEnvironment),
+            nameof(ITriggerCodeCoverageReports.TriggerCodeCoverageReports),
+            nameof(ITriggerCodeCoverageReports.GenerateCodeCoverageReportCobertura),
+            nameof(IGenerateCodeCoverageBadges.GenerateCodeCoverageBadges),
+            nameof(IGenerateCodeCoverageReport.GenerateCodeCoverageReport),
+            nameof(IGenerateCodeCoverageSummary.GenerateCodeCoverageSummary),
+        ];
+        // This is here on purpose, this method is used for side effects only.
+        return null!;
+    }
 
     /// <summary>
     ///     Applies the given enhancements to the build

@@ -12,9 +12,6 @@ namespace Rocket.Surgery.Nuke;
 /// </summary>
 public static class DotNetTool
 {
-    private static ResolvedToolsManifest? _toolsManifest;
-    private static Lazy<AbsolutePath> ToolsManifestLocation { get; } = new(() => NukeBuild.RootDirectory / ".config/dotnet-tools.json");
-
     /// <summary>
     ///     Determine if a dotnet tool is installed in the dotnet-tools.json
     /// </summary>
@@ -35,32 +32,37 @@ public static class DotNetTool
         return ResolveToolsManifest().GetTool(nugetPackageName);
     }
 
+    private static ResolvedToolsManifest? _toolsManifest;
+    private static Lazy<AbsolutePath> ToolsManifestLocation { get; } = new(() => NukeBuild.RootDirectory / ".config/dotnet-tools.json");
+
     private static ResolvedToolsManifest ResolveToolsManifest()
     {
-        if (_toolsManifest is not null) return _toolsManifest;
+        if (_toolsManifest is { }) return _toolsManifest;
         if (ToolsManifestLocation.Value.FileExists())
         {
-#pragma warning disable CA1869
+            #pragma warning disable CA1869
             _toolsManifest = ResolvedToolsManifest.Create(
                 // ReSharper disable once NullableWarningSuppressionIsUsed
                 JsonSerializer.Deserialize<ToolsManifset>(
-                    File.ReadAllText(ToolsManifestLocation.Value), new JsonSerializerOptions
+                    File.ReadAllText(ToolsManifestLocation.Value),
+                    new JsonSerializerOptions
                     {
                         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                     }
                 )!
             );
-#pragma warning restore CA1869
+            #pragma warning restore CA1869
         }
         else
         {
-            _toolsManifest = new ResolvedToolsManifest(ImmutableDictionary<string, FullToolCommandDefinition>.Empty);
+            _toolsManifest = new(ImmutableDictionary<string, FullToolCommandDefinition>.Empty);
         }
 
         return _toolsManifest;
     }
 
-    internal record FullToolCommandDefinition(
+    internal record FullToolCommandDefinition
+    (
         string PackageId,
         string Version,
         string Command
@@ -76,31 +78,40 @@ public static class DotNetTool
             {
                 foreach (var command in tool.Value.Commands)
                 {
-                    commandBuilder.Add(command, new FullToolCommandDefinition(tool.Key, tool.Value.Version, command));
+                    commandBuilder.Add(command, new(tool.Key, tool.Value.Version, command));
                 }
             }
 
-            return new ResolvedToolsManifest(commandBuilder.ToImmutable());
+            return new(commandBuilder.ToImmutable());
         }
 
         public bool IsInstalled(string commandName)
         {
             return CommandDefinitions.ContainsKey(commandName)
-                || CommandDefinitions.Values.Any(z => z.PackageId.Equals(commandName, StringComparison.OrdinalIgnoreCase));
+             || CommandDefinitions.Values.Any(z => z.PackageId.Equals(commandName, StringComparison.OrdinalIgnoreCase));
         }
 
         public Tool GetTool(string nugetPackageName)
         {
             return CommandDefinitions.TryGetValue(nugetPackageName, out var tool)
                 ? (arguments, directory, variables, timeout, output, invocation, logger, handler) =>
-                {
-                    var args = arguments.ToStringAndClear();
-                    args = args.StartsWith('"')
-                        ? string.Concat("\"", tool.Command, " ", args.AsSpan(1))
-                        : string.Concat(tool.Command, " ", args);
-                    return DotNetTasks.DotNet(args, directory, variables, timeout, output, invocation, logger, handler);
-                }
-            : throw new InvalidOperationException($"Tool {nugetPackageName} is not installed");
+                  {
+                      var args = arguments.ToStringAndClear();
+                      args = args.StartsWith('"')
+                          ? string.Concat("\"", tool.Command, " ", args.AsSpan(1))
+                          : string.Concat(tool.Command, " ", args);
+                      return DotNetTasks.DotNet(
+                          args,
+                          directory,
+                          variables,
+                          timeout,
+                          output,
+                          invocation,
+                          logger,
+                          handler
+                      );
+                  }
+                : throw new InvalidOperationException($"Tool {nugetPackageName} is not installed");
         }
     }
 
