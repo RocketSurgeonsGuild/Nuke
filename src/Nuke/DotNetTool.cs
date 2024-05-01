@@ -113,6 +113,6 @@ public static class DotNetTool
     {
         // ReSharper disable once NullableWarningSuppressionIsUsed
         public string Version { get; set; } = null!;
-        public string[] Commands { get; set; } = Array.Empty<string>();
+        public string[] Commands { get; set; } = [];
     }
 }

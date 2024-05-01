@@ -41,12 +41,12 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
     /// <summary>
     ///     The targets to invoke
     /// </summary>
-    public string[] InvokeTargets { get; set; } = Array.Empty<string>();
+    public string[] InvokeTargets { get; set; } = [];
 
     /// <summary>
     ///     The parameters to be used
     /// </summary>
-    public string[] Parameters { get; set; } = Array.Empty<string>();
+    public string[] Parameters { get; set; } = [];
 
     /// <inheritdoc />
     public override CustomFileWriter CreateWriter(StreamWriter streamWriter)

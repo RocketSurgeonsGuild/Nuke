@@ -61,12 +61,12 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
     /// <summary>
     ///     The targets to invoke
     /// </summary>
-    public string[] InvokedTargets { get; set; } = Array.Empty<string>();
+    public string[] InvokedTargets { get; set; } = [];
 
     /// <summary>
     ///     The parameters to import
     /// </summary>
-    public string[] Parameters { get; set; } = Array.Empty<string>();
+    public string[] Parameters { get; set; } = [];
 
     /// <inheritdoc />
     public override string IdPostfix => Name;
@@ -81,6 +81,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
     /// <inheritdoc />
     public override ConfigurationEntity GetConfiguration(IReadOnlyCollection<ExecutableTarget> relevantTargets)
     {
+        _ = base.GetConfiguration(relevantTargets);
         var steps = new List<GitHubActionsStep>();
 
 
@@ -375,8 +376,8 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         {
             Steps = steps,
             Outputs = jobOutputs,
-            RunsOn = !_isGithubHosted ? _images : Array.Empty<string>(),
-            Matrix = _isGithubHosted ? _images : Array.Empty<string>(),
+            RunsOn = !_isGithubHosted ? _images : [],
+            Matrix = _isGithubHosted ? _images : [],
             // TODO: Figure out what this looks like here
             //                    Environment = inputs
             //                                 .Concat<ITriggerValue>(GetAllSecrets(secrets))

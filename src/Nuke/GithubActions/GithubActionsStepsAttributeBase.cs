@@ -1,6 +1,7 @@
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
+using Nuke.Common.Execution;
 using Nuke.Common.IO;
 using Nuke.Common.Utilities.Collections;
 using Rocket.Surgery.Nuke.ContinuousIntegration;
@@ -14,6 +15,7 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// <summary>
 ///     Base attribute for a github actions workflow
 /// </summary>
+[PublicAPI]
 public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttributeBase
 {
     /// <summary>
@@ -23,6 +25,11 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     protected GithubActionsStepsAttributeBase(string name)
     {
         Name = name;
+    }
+
+    /// <inheritdoc />
+    public override ConfigurationEntity GetConfiguration(IReadOnlyCollection<ExecutableTarget> relevantTargets)
+    {
         ExcludedTargets =
         [
             ..ExcludedTargets,
@@ -40,6 +47,8 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
             nameof(IGenerateCodeCoverageReport.GenerateCodeCoverageReport),
             nameof(IGenerateCodeCoverageSummary.GenerateCodeCoverageSummary),
         ];
+        // This is here on purpose, this method is used for side effects only.
+        return null!;
     }
 
     /// <inheritdoc />
@@ -51,67 +60,67 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     /// <summary>
     ///     The triggers
     /// </summary>
-    public RocketSurgeonGitHubActionsTrigger[] On { get; set; } = Array.Empty<RocketSurgeonGitHubActionsTrigger>();
+    public RocketSurgeonGitHubActionsTrigger[] On { get; set; } = [];
 
     /// <summary>
     ///     The branches to run for push
     /// </summary>
-    public string[] OnPushBranches { get; set; } = Array.Empty<string>();
+    public string[] OnPushBranches { get; set; } = [];
 
     /// <summary>
     ///     The tags to run for push
     /// </summary>
-    public string[] OnPushTags { get; set; } = Array.Empty<string>();
+    public string[] OnPushTags { get; set; } = [];
 
     /// <summary>
     ///     The paths to include for pushes
     /// </summary>
-    public string[] OnPushIncludePaths { get; set; } = Array.Empty<string>();
+    public string[] OnPushIncludePaths { get; set; } = [];
 
     /// <summary>
     ///     The paths to exclude for pushes
     /// </summary>
-    public string[] OnPushExcludePaths { get; set; } = Array.Empty<string>();
+    public string[] OnPushExcludePaths { get; set; } = [];
 
     /// <summary>
     ///     The branches for pull requests
     /// </summary>
-    public string[] OnPullRequestBranches { get; set; } = Array.Empty<string>();
+    public string[] OnPullRequestBranches { get; set; } = [];
 
     /// <summary>
     ///     The tags for pull requests
     /// </summary>
-    public string[] OnPullRequestTags { get; set; } = Array.Empty<string>();
+    public string[] OnPullRequestTags { get; set; } = [];
 
     /// <summary>
     ///     The paths to include for pull requests
     /// </summary>
-    public string[] OnPullRequestIncludePaths { get; set; } = Array.Empty<string>();
+    public string[] OnPullRequestIncludePaths { get; set; } = [];
 
     /// <summary>
     ///     The paths to exclude for pull requests
     /// </summary>
-    public string[] OnPullRequestExcludePaths { get; set; } = Array.Empty<string>();
+    public string[] OnPullRequestExcludePaths { get; set; } = [];
 
     /// <summary>
     ///     The branches for pull requests
     /// </summary>
-    public string[] OnPullRequestTargetBranches { get; set; } = Array.Empty<string>();
+    public string[] OnPullRequestTargetBranches { get; set; } = [];
 
     /// <summary>
     ///     The tags for pull requests
     /// </summary>
-    public string[] OnPullRequestTargetTags { get; set; } = Array.Empty<string>();
+    public string[] OnPullRequestTargetTags { get; set; } = [];
 
     /// <summary>
     ///     The paths to include for pull requests
     /// </summary>
-    public string[] OnPullRequestTargetIncludePaths { get; set; } = Array.Empty<string>();
+    public string[] OnPullRequestTargetIncludePaths { get; set; } = [];
 
     /// <summary>
     ///     The paths to exclude for pull requests
     /// </summary>
-    public string[] OnPullRequestTargetExcludePaths { get; set; } = Array.Empty<string>();
+    public string[] OnPullRequestTargetExcludePaths { get; set; } = [];
 
     /// <summary>
     ///     The schedule to run on
@@ -121,7 +130,7 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     /// <summary>
     ///     A list of static methods that can be used for additional configurations
     /// </summary>
-    public string[] Enhancements { get; set; } = Array.Empty<string>();
+    public string[] Enhancements { get; set; } = [];
 
     /// <summary>
     ///     The name of the file

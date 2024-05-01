@@ -18,22 +18,22 @@ public class RocketSurgeonGitHubActionsVcsTrigger : GitHubActionsDetailedTrigger
     /// <summary>
     ///     The branches
     /// </summary>
-    public string[] Branches { get; set; } = Array.Empty<string>();
+    public string[] Branches { get; set; } = [];
 
     /// <summary>
     ///     The Tags
     /// </summary>
-    public string[] Tags { get; set; } = Array.Empty<string>();
+    public string[] Tags { get; set; } = [];
 
     /// <summary>
     ///     The included paths
     /// </summary>
-    public string[] IncludePaths { get; set; } = Array.Empty<string>();
+    public string[] IncludePaths { get; set; } = [];
 
     /// <summary>
     ///     The excluded paths
     /// </summary>
-    public string[] ExcludePaths { get; set; } = Array.Empty<string>();
+    public string[] ExcludePaths { get; set; } = [];
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
