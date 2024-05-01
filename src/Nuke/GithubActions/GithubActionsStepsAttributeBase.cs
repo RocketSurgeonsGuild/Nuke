@@ -25,11 +25,6 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     protected GithubActionsStepsAttributeBase(string name)
     {
         Name = name;
-    }
-
-    /// <inheritdoc />
-    public override ConfigurationEntity GetConfiguration(IReadOnlyCollection<ExecutableTarget> relevantTargets)
-    {
         ExcludedTargets = [];
         NonEntryTargets = [];
     }
@@ -51,8 +46,6 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
             nameof(IGenerateCodeCoverageReport.GenerateCodeCoverageReport),
             nameof(IGenerateCodeCoverageSummary.GenerateCodeCoverageSummary),
         ];
-        // This is here on purpose, this method is used for side effects only.
-        return null!;
     }
 
     /// <summary>
@@ -156,6 +149,30 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     ///     The name of the file
     /// </summary>
     protected string Name { get; }
+
+    /// <inheritdoc />
+    public override ConfigurationEntity GetConfiguration(IReadOnlyCollection<ExecutableTarget> relevantTargets)
+    {
+        ExcludedTargets =
+        [
+            ..ExcludedTargets,
+            nameof(ICanClean.Clean),
+            nameof(ICanRestoreWithDotNetCore.DotnetToolRestore),
+            nameof(ICanRestoreWithDotNetCore.DotnetWorkloadRestore),
+        ];
+        NonEntryTargets =
+        [
+            ..NonEntryTargets,
+            nameof(ICIEnvironment.CIEnvironment),
+            nameof(ITriggerCodeCoverageReports.TriggerCodeCoverageReports),
+            nameof(ITriggerCodeCoverageReports.GenerateCodeCoverageReportCobertura),
+            nameof(IGenerateCodeCoverageBadges.GenerateCodeCoverageBadges),
+            nameof(IGenerateCodeCoverageReport.GenerateCodeCoverageReport),
+            nameof(IGenerateCodeCoverageSummary.GenerateCodeCoverageSummary),
+        ];
+        // This is here on purpose, this method is used for side effects only.
+        return null!;
+    }
 
     /// <summary>
     ///     Applies the given enhancements to the build
@@ -323,6 +340,3 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
         }
     }
 }
-
-
-
