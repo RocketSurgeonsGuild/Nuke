@@ -120,14 +120,14 @@ jobs:
         uses: actions/setup-dotnet@v4.0.0
         with:
           dotnet-version: '8.0.x'
-      - name: 🎁 dotnet tool restore
+      - name: ⚒️ dotnet tool restore
         run: |
           dotnet tool restore
       - name: 🎁 Restore
         id: restore
         run: |
           dotnet nuke Restore --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
-      - name: ⚙ Build
+      - name: ⚙️ Build
         id: build
         run: |
           dotnet nuke Build --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
@@ -145,7 +145,7 @@ jobs:
         with:
           name: 'coverage'
           path: 'coverage/'
-      - name: 🐿 Publish Coverage
+      - name: 📫 Publish Coverage
         if: (github.event_name != 'pull_request' && github.event_name != 'pull_request_target') || ((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]')
         uses: codecov/codecov-action@v4
         with:

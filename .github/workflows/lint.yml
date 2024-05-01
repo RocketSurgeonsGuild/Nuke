@@ -67,7 +67,7 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-      - name: 🎁 dotnet tool restore
+      - name: ⚒️ dotnet tool restore
         run: |
           dotnet tool restore
       - name: Regenerate Build Configurations

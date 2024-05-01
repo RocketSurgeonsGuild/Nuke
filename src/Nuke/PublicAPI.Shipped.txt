@@ -130,6 +130,7 @@ Rocket.Surgery.Nuke.DotNetCore.ICanPackWithDotNetCore.CorePack.get -> Nuke.Commo
 Rocket.Surgery.Nuke.DotNetCore.ICanRestoreWithDotNetCore
 Rocket.Surgery.Nuke.DotNetCore.ICanRestoreWithDotNetCore.CoreRestore.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.DotNetCore.ICanRestoreWithDotNetCore.DotnetToolRestore.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.DotNetCore.ICanRestoreWithDotNetCore.DotnetWorkloadRestore.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.DotNetCore.ICanTestWithDotNetCore
 Rocket.Surgery.Nuke.DotNetCore.ICanTestWithDotNetCore.CoreTest.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.DotNetCore.ICanTestWithDotNetCoreBuild

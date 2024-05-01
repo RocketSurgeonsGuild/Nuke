@@ -2,6 +2,9 @@ using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
 using Nuke.Common.IO;
+using Nuke.Common.Utilities.Collections;
+using Rocket.Surgery.Nuke.DotNetCore;
+using YamlDotNet.RepresentationModel;
 
 #pragma warning disable CA1851
 // ReSharper disable PossibleMultipleEnumeration
@@ -19,6 +22,13 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     protected GithubActionsStepsAttributeBase(string name)
     {
         Name = name;
+        ExcludedTargets =
+        [
+            ..ExcludedTargets,
+            nameof(ICanClean.Clean),
+            nameof(ICanRestoreWithDotNetCore.DotnetToolRestore),
+            nameof(ICanRestoreWithDotNetCore.DotnetWorkloadRestore),
+        ];
     }
 
     /// <inheritdoc />
@@ -121,6 +131,61 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
                     ? method.Invoke(null, new object[] { config, }) as RocketSurgeonGitHubActionsConfiguration ?? config
                     : method.Invoke(Build, new object[] { config, }) as RocketSurgeonGitHubActionsConfiguration
                  ?? config;
+            }
+        }
+
+        // This will normalize the version numbers against the existing file.
+        if (!File.Exists(ConfigurationFile)) return;
+
+        using var readStream = File.OpenRead(ConfigurationFile);
+        using var reader = new StreamReader(readStream);
+        var yamlStream = new YamlStream();
+        yamlStream.Load(reader);
+        var key = new YamlScalarNode("uses");
+        var nodeList = yamlStream
+                      .Documents
+                      .SelectMany(z => z.AllNodes)
+                      .OfType<YamlMappingNode>()
+                      .Where(
+                           z => z.Children.ContainsKey(key)
+                            && z.Children[key] is YamlScalarNode sn
+                            && sn.Value?.Contains('@', StringComparison.OrdinalIgnoreCase) == true
+                       )
+                      .Select(
+                           // ReSharper disable once NullableWarningSuppressionIsUsed
+                           z => ( name: ( (YamlScalarNode)z.Children[key] ).Value!.Split("@")[0],
+                                  value: ( (YamlScalarNode)z.Children[key] ).Value )
+                       )
+                      .Distinct(z => z.name)
+                      .ToDictionary(
+                           z => z.name,
+                           z => z.value
+                       );
+
+        string? GetValue(string? uses)
+        {
+            if (uses == null) return null;
+            var nodeKey = uses.Split('@')[0];
+            if (nodeList.TryGetValue(nodeKey, out var value))
+            {
+                return value;
+            }
+
+            return uses;
+        }
+
+        foreach (var job in config.Jobs)
+        {
+            if (job is RocketSurgeonsGithubWorkflowJob workflowJob)
+            {
+                workflowJob.Uses = GetValue(workflowJob.Uses);
+            }
+            else if (job is RocketSurgeonsGithubActionsJob actionsJob)
+            {
+                foreach (var step in actionsJob.Steps.OfType<UsingStep>())
+                {
+                    step.Uses = step.Uses = GetValue(step.Uses);
+                }
             }
         }
     }
