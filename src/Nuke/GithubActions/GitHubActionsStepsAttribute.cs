@@ -81,7 +81,6 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
     /// <inheritdoc />
     public override ConfigurationEntity GetConfiguration(IReadOnlyCollection<ExecutableTarget> relevantTargets)
     {
-        _ = base.GetConfiguration(relevantTargets);
         var steps = new List<GitHubActionsStep>();
 
 

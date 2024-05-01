@@ -38,7 +38,6 @@ override Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepsAttribute.IdPostfix
 override Rocket.Surgery.Nuke.GithubActions.GitHubActionsStepsAttribute.RelevantTargetNames.get -> System.Collections.Generic.IEnumerable<string!>!
 override Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.ConfigurationFile.get -> Nuke.Common.IO.AbsolutePath!
 override Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.CreateWriter(System.IO.StreamWriter! streamWriter) -> Nuke.Common.Utilities.CustomFileWriter!
-override Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.GetConfiguration(System.Collections.Generic.IReadOnlyCollection<Nuke.Common.Execution.ExecutableTarget!>! relevantTargets) -> Nuke.Common.CI.ConfigurationEntity!
 override Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.HostType.get -> System.Type!
 override Rocket.Surgery.Nuke.GithubActions.GitHubActionsVariableAttribute.ToTriggerValue() -> Rocket.Surgery.Nuke.GithubActions.ITriggerValue!
 override Rocket.Surgery.Nuke.GithubActions.GitHubActionsWorkflowOutput.ToString() -> string!
@@ -380,8 +379,12 @@ Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase
 Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.ApplyEnhancements(Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration! config) -> void
 Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.Enhancements.get -> string![]!
 Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.Enhancements.set -> void
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.ExcludedTargets.get -> string![]!
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.ExcludedTargets.set -> void
 Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.GithubActionsStepsAttributeBase(string! name) -> void
 Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.Name.get -> string!
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.NonEntryTargets.get -> string![]!
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.NonEntryTargets.set -> void
 Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.On.get -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsTrigger[]!
 Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.On.set -> void
 Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnCronSchedule.get -> string?

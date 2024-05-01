@@ -1,7 +1,6 @@
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
-using Nuke.Common.Execution;
 using Nuke.Common.IO;
 using Nuke.Common.Utilities.Collections;
 using Rocket.Surgery.Nuke.ContinuousIntegration;
@@ -25,6 +24,33 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     protected GithubActionsStepsAttributeBase(string name)
     {
         Name = name;
+    }
+
+    public new string[] NonEntryTargets
+    {
+        get => base.NonEntryTargets;
+        set => base.NonEntryTargets =
+        [
+            ..value,
+            nameof(ICIEnvironment.CIEnvironment),
+            nameof(ITriggerCodeCoverageReports.TriggerCodeCoverageReports),
+            nameof(ITriggerCodeCoverageReports.GenerateCodeCoverageReportCobertura),
+            nameof(IGenerateCodeCoverageBadges.GenerateCodeCoverageBadges),
+            nameof(IGenerateCodeCoverageReport.GenerateCodeCoverageReport),
+            nameof(IGenerateCodeCoverageSummary.GenerateCodeCoverageSummary),
+        ];
+    }
+
+    public new string[] ExcludedTargets
+    {
+        get => base.ExcludedTargets;
+        set => base.ExcludedTargets =
+        [
+            ..value,
+            nameof(ICanClean.Clean),
+            nameof(ICanRestoreWithDotNetCore.DotnetToolRestore),
+            nameof(ICanRestoreWithDotNetCore.DotnetWorkloadRestore),
+        ];
     }
 
     /// <inheritdoc />
@@ -112,30 +138,6 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     ///     The name of the file
     /// </summary>
     protected string Name { get; }
-
-    /// <inheritdoc />
-    public override ConfigurationEntity GetConfiguration(IReadOnlyCollection<ExecutableTarget> relevantTargets)
-    {
-        ExcludedTargets =
-        [
-            ..ExcludedTargets,
-            nameof(ICanClean.Clean),
-            nameof(ICanRestoreWithDotNetCore.DotnetToolRestore),
-            nameof(ICanRestoreWithDotNetCore.DotnetWorkloadRestore),
-        ];
-        NonEntryTargets =
-        [
-            ..NonEntryTargets,
-            nameof(ICIEnvironment.CIEnvironment),
-            nameof(ITriggerCodeCoverageReports.TriggerCodeCoverageReports),
-            nameof(ITriggerCodeCoverageReports.GenerateCodeCoverageReportCobertura),
-            nameof(IGenerateCodeCoverageBadges.GenerateCodeCoverageBadges),
-            nameof(IGenerateCodeCoverageReport.GenerateCodeCoverageReport),
-            nameof(IGenerateCodeCoverageSummary.GenerateCodeCoverageSummary),
-        ];
-        // This is here on purpose, this method is used for side effects only.
-        return null!;
-    }
 
     /// <summary>
     ///     Applies the given enhancements to the build
