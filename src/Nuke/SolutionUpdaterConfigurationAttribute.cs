@@ -18,9 +18,9 @@ public sealed class SolutionUpdaterConfigurationAttribute : Attribute
         string[]? additionalIgnoreFolderFilePatterns = null
     )
     {
-        AdditionalRelativeFolderFilePatterns = additionalRelativeFolderFilePatterns ?? Array.Empty<string>();
-        AdditionalConfigFolderFilePatterns = additionalConfigFolderFilePatterns ?? Array.Empty<string>();
-        AdditionalIgnoreFolderFilePatterns = additionalIgnoreFolderFilePatterns ?? Array.Empty<string>();
+        AdditionalRelativeFolderFilePatterns = additionalRelativeFolderFilePatterns ?? [];
+        AdditionalConfigFolderFilePatterns = additionalConfigFolderFilePatterns ?? [];
+        AdditionalIgnoreFolderFilePatterns = additionalIgnoreFolderFilePatterns ?? [];
     }
 
     /// <summary>

@@ -130,6 +130,7 @@ Rocket.Surgery.Nuke.DotNetCore.ICanPackWithDotNetCore.CorePack.get -> Nuke.Commo
 Rocket.Surgery.Nuke.DotNetCore.ICanRestoreWithDotNetCore
 Rocket.Surgery.Nuke.DotNetCore.ICanRestoreWithDotNetCore.CoreRestore.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.DotNetCore.ICanRestoreWithDotNetCore.DotnetToolRestore.get -> Nuke.Common.Target!
+Rocket.Surgery.Nuke.DotNetCore.ICanRestoreWithDotNetCore.DotnetWorkloadRestore.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.DotNetCore.ICanTestWithDotNetCore
 Rocket.Surgery.Nuke.DotNetCore.ICanTestWithDotNetCore.CoreTest.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.DotNetCore.ICanTestWithDotNetCoreBuild
@@ -378,8 +379,12 @@ Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase
 Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.ApplyEnhancements(Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsConfiguration! config) -> void
 Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.Enhancements.get -> string![]!
 Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.Enhancements.set -> void
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.ExcludedTargets.get -> string![]!
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.ExcludedTargets.set -> void
 Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.GithubActionsStepsAttributeBase(string! name) -> void
 Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.Name.get -> string!
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.NonEntryTargets.get -> string![]!
+Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.NonEntryTargets.set -> void
 Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.On.get -> Rocket.Surgery.Nuke.GithubActions.RocketSurgeonGitHubActionsTrigger[]!
 Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.On.set -> void
 Rocket.Surgery.Nuke.GithubActions.GithubActionsStepsAttributeBase.OnCronSchedule.get -> string?

@@ -8,11 +8,11 @@ namespace Rocket.Surgery.Nuke.DotNetCore;
 ///     Adds a task for `dotnet tool restore` and `dotnet restore`
 /// </summary>
 public interface ICanRestoreWithDotNetCore : IHaveCleanTarget,
-                                             IHaveSolution,
-                                             IHaveOutputLogs,
-                                             IHaveGitVersion,
-                                             IHaveRestoreTarget,
-                                             ICan
+    IHaveSolution,
+    IHaveOutputLogs,
+    IHaveGitVersion,
+    IHaveRestoreTarget,
+    ICan
 {
     /// <summary>
     ///     This will ensure that all local dotnet tools are installed
@@ -24,6 +24,14 @@ public interface ICanRestoreWithDotNetCore : IHaveCleanTarget,
                                            .Executes(() => DotNet($"tool restore"));
 
     /// <summary>
+    ///     This will ensure that all local dotnet tools are installed
+    /// </summary>
+    public Target DotnetWorkloadRestore => d => d
+                                               .After(Clean)
+                                               .Unlisted()
+                                               .Executes(() => DotNet($"workload restore"));
+
+    /// <summary>
     ///     dotnet restore
     /// </summary>
     public Target CoreRestore => d => d
@@ -31,6 +39,7 @@ public interface ICanRestoreWithDotNetCore : IHaveCleanTarget,
                                      .Unlisted()
                                      .After(Clean)
                                      .DependsOn(DotnetToolRestore)
+                                     .DependsOn(DotnetWorkloadRestore)
                                      .Executes(
                                           () => DotNetRestore(
                                               s => s

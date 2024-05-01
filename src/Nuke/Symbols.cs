@@ -12,15 +12,17 @@ public static class Symbols
     /// </summary>
     public static readonly Dictionary<Regex, string> DefaultSymbols = new()
     {
-        [new Regex("(^Compile|Compile$|^Build|Build$)", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "⚙",
-        [new Regex("(^Pack|Pack$)", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "📦",
-        [new Regex("^Use", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🔨",
-        [new Regex("^Install", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "📲",
-        [new Regex("(^Restore|Restore$)", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🎁",
-        [new Regex("(^Publish|Publish$)", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🐿",
-        [new Regex(".*?Test.*?", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🚦",
-        [new Regex("Tool", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🛠",
-        [new Regex("Run", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "💨",
+        [new("(^Compile|^Build)", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "⚙️",
+        [new("^Pack", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "📦",
+        [new("^Publish", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "📫",
+        [new("^Use", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🔨",
+        [new("^Install", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "📲",
+        [new("^Restore", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🎁",
+        [new("^Publish", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🚀",
+        [new(".*?Tool.*?", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "⚒️",
+        [new(".*?Workload.*?", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🚒",
+        [new(".*?Test.*?", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🚦",
+        [new(".*?Test.*?", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "💨",
     };
 
     /// <summary>

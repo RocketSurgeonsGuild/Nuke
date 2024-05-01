@@ -39,6 +39,6 @@ public interface ICanLint : INukeBuild
     /// </summary>
     [Parameter("The files to lint, if not given lints all files", Separator = " ", Name = "lint-files")]
     #pragma warning disable CA1819
-    private string[] PrivateLintFiles => TryGetValue(() => PrivateLintFiles) ?? Array.Empty<string>();
+    private string[] PrivateLintFiles => TryGetValue(() => PrivateLintFiles) ?? [];
     #pragma warning restore CA1819
 }

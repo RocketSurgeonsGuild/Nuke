@@ -13,6 +13,7 @@ public interface ICanRegenerateBuildConfiguration : ICanLint
     /// <summary>
     ///     Regenerate the build configurations
     /// </summary>
+    [UsedImplicitly]
     public Target RegenerateBuildConfigurations =>
         t => t
             .TryDependentFor<ICanLintStagedFiles>(static z => z.LintStaged)

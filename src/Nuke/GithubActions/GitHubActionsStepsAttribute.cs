@@ -61,12 +61,12 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
     /// <summary>
     ///     The targets to invoke
     /// </summary>
-    public string[] InvokedTargets { get; set; } = Array.Empty<string>();
+    public string[] InvokedTargets { get; set; } = [];
 
     /// <summary>
     ///     The parameters to import
     /// </summary>
-    public string[] Parameters { get; set; } = Array.Empty<string>();
+    public string[] Parameters { get; set; } = [];
 
     /// <inheritdoc />
     public override string IdPostfix => Name;
@@ -246,8 +246,14 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         {
             Run = "dotnet tool install -g Nuke.GlobalTool",
         };
+        // TODO: Add configuration to disable this?
+        steps.Add(
+            new RunStep("dotnet workload restore")
+            {
+                Run = "dotnet workload restore",
+            }
+        );
         var dotnetTools = Path.Combine(NukeBuild.RootDirectory, ".config/dotnet-tools.json");
-        var localTool = false;
         if (File.Exists(dotnetTools))
         {
             steps.Add(
@@ -256,16 +262,10 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                     Run = "dotnet tool restore",
                 }
             );
-            if (!DotNetTool.IsInstalled("nuke"))
-            {
-                steps.Add(globalToolStep);
-            }
-            else
-            {
-                localTool = true;
-            }
         }
-        else
+
+        var localTool = DotNetTool.IsInstalled("nuke");
+        if (!localTool)
         {
             steps.Add(globalToolStep);
         }
@@ -368,8 +368,8 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         {
             Steps = steps,
             Outputs = jobOutputs,
-            RunsOn = !_isGithubHosted ? _images : Array.Empty<string>(),
-            Matrix = _isGithubHosted ? _images : Array.Empty<string>(),
+            RunsOn = !_isGithubHosted ? _images : [],
+            Matrix = _isGithubHosted ? _images : [],
             // TODO: Figure out what this looks like here
             //                    Environment = inputs
             //                                 .Concat<ITriggerValue>(GetAllSecrets(secrets))

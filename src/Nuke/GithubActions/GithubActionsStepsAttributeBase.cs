@@ -2,6 +2,10 @@ using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
 using Nuke.Common.IO;
+using Nuke.Common.Utilities.Collections;
+using Rocket.Surgery.Nuke.ContinuousIntegration;
+using Rocket.Surgery.Nuke.DotNetCore;
+using YamlDotNet.RepresentationModel;
 
 #pragma warning disable CA1851
 // ReSharper disable PossibleMultipleEnumeration
@@ -10,6 +14,7 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// <summary>
 ///     Base attribute for a github actions workflow
 /// </summary>
+[PublicAPI]
 public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttributeBase
 {
     /// <summary>
@@ -21,6 +26,33 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
         Name = name;
     }
 
+    public new string[] NonEntryTargets
+    {
+        get => base.NonEntryTargets;
+        set => base.NonEntryTargets =
+        [
+            ..value,
+            nameof(ICIEnvironment.CIEnvironment),
+            nameof(ITriggerCodeCoverageReports.TriggerCodeCoverageReports),
+            nameof(ITriggerCodeCoverageReports.GenerateCodeCoverageReportCobertura),
+            nameof(IGenerateCodeCoverageBadges.GenerateCodeCoverageBadges),
+            nameof(IGenerateCodeCoverageReport.GenerateCodeCoverageReport),
+            nameof(IGenerateCodeCoverageSummary.GenerateCodeCoverageSummary),
+        ];
+    }
+
+    public new string[] ExcludedTargets
+    {
+        get => base.ExcludedTargets;
+        set => base.ExcludedTargets =
+        [
+            ..value,
+            nameof(ICanClean.Clean),
+            nameof(ICanRestoreWithDotNetCore.DotnetToolRestore),
+            nameof(ICanRestoreWithDotNetCore.DotnetWorkloadRestore),
+        ];
+    }
+
     /// <inheritdoc />
     public override Type HostType { get; } = typeof(GitHubActions);
 
@@ -30,67 +62,67 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     /// <summary>
     ///     The triggers
     /// </summary>
-    public RocketSurgeonGitHubActionsTrigger[] On { get; set; } = Array.Empty<RocketSurgeonGitHubActionsTrigger>();
+    public RocketSurgeonGitHubActionsTrigger[] On { get; set; } = [];
 
     /// <summary>
     ///     The branches to run for push
     /// </summary>
-    public string[] OnPushBranches { get; set; } = Array.Empty<string>();
+    public string[] OnPushBranches { get; set; } = [];
 
     /// <summary>
     ///     The tags to run for push
     /// </summary>
-    public string[] OnPushTags { get; set; } = Array.Empty<string>();
+    public string[] OnPushTags { get; set; } = [];
 
     /// <summary>
     ///     The paths to include for pushes
     /// </summary>
-    public string[] OnPushIncludePaths { get; set; } = Array.Empty<string>();
+    public string[] OnPushIncludePaths { get; set; } = [];
 
     /// <summary>
     ///     The paths to exclude for pushes
     /// </summary>
-    public string[] OnPushExcludePaths { get; set; } = Array.Empty<string>();
+    public string[] OnPushExcludePaths { get; set; } = [];
 
     /// <summary>
     ///     The branches for pull requests
     /// </summary>
-    public string[] OnPullRequestBranches { get; set; } = Array.Empty<string>();
+    public string[] OnPullRequestBranches { get; set; } = [];
 
     /// <summary>
     ///     The tags for pull requests
     /// </summary>
-    public string[] OnPullRequestTags { get; set; } = Array.Empty<string>();
+    public string[] OnPullRequestTags { get; set; } = [];
 
     /// <summary>
     ///     The paths to include for pull requests
     /// </summary>
-    public string[] OnPullRequestIncludePaths { get; set; } = Array.Empty<string>();
+    public string[] OnPullRequestIncludePaths { get; set; } = [];
 
     /// <summary>
     ///     The paths to exclude for pull requests
     /// </summary>
-    public string[] OnPullRequestExcludePaths { get; set; } = Array.Empty<string>();
+    public string[] OnPullRequestExcludePaths { get; set; } = [];
 
     /// <summary>
     ///     The branches for pull requests
     /// </summary>
-    public string[] OnPullRequestTargetBranches { get; set; } = Array.Empty<string>();
+    public string[] OnPullRequestTargetBranches { get; set; } = [];
 
     /// <summary>
     ///     The tags for pull requests
     /// </summary>
-    public string[] OnPullRequestTargetTags { get; set; } = Array.Empty<string>();
+    public string[] OnPullRequestTargetTags { get; set; } = [];
 
     /// <summary>
     ///     The paths to include for pull requests
     /// </summary>
-    public string[] OnPullRequestTargetIncludePaths { get; set; } = Array.Empty<string>();
+    public string[] OnPullRequestTargetIncludePaths { get; set; } = [];
 
     /// <summary>
     ///     The paths to exclude for pull requests
     /// </summary>
-    public string[] OnPullRequestTargetExcludePaths { get; set; } = Array.Empty<string>();
+    public string[] OnPullRequestTargetExcludePaths { get; set; } = [];
 
     /// <summary>
     ///     The schedule to run on
@@ -100,7 +132,7 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     /// <summary>
     ///     A list of static methods that can be used for additional configurations
     /// </summary>
-    public string[] Enhancements { get; set; } = Array.Empty<string>();
+    public string[] Enhancements { get; set; } = [];
 
     /// <summary>
     ///     The name of the file
@@ -121,6 +153,61 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
                     ? method.Invoke(null, new object[] { config, }) as RocketSurgeonGitHubActionsConfiguration ?? config
                     : method.Invoke(Build, new object[] { config, }) as RocketSurgeonGitHubActionsConfiguration
                  ?? config;
+            }
+        }
+
+        // This will normalize the version numbers against the existing file.
+        if (!File.Exists(ConfigurationFile)) return;
+
+        using var readStream = File.OpenRead(ConfigurationFile);
+        using var reader = new StreamReader(readStream);
+        var yamlStream = new YamlStream();
+        yamlStream.Load(reader);
+        var key = new YamlScalarNode("uses");
+        var nodeList = yamlStream
+                      .Documents
+                      .SelectMany(z => z.AllNodes)
+                      .OfType<YamlMappingNode>()
+                      .Where(
+                           z => z.Children.ContainsKey(key)
+                            && z.Children[key] is YamlScalarNode sn
+                            && sn.Value?.Contains('@', StringComparison.OrdinalIgnoreCase) == true
+                       )
+                      .Select(
+                           // ReSharper disable once NullableWarningSuppressionIsUsed
+                           z => ( name: ( (YamlScalarNode)z.Children[key] ).Value!.Split("@")[0],
+                                  value: ( (YamlScalarNode)z.Children[key] ).Value )
+                       )
+                      .Distinct(z => z.name)
+                      .ToDictionary(
+                           z => z.name,
+                           z => z.value
+                       );
+
+        string? GetValue(string? uses)
+        {
+            if (uses == null) return null;
+            var nodeKey = uses.Split('@')[0];
+            if (nodeList.TryGetValue(nodeKey, out var value))
+            {
+                return value;
+            }
+
+            return uses;
+        }
+
+        foreach (var job in config.Jobs)
+        {
+            if (job is RocketSurgeonsGithubWorkflowJob workflowJob)
+            {
+                workflowJob.Uses = GetValue(workflowJob.Uses);
+            }
+            else if (job is RocketSurgeonsGithubActionsJob actionsJob)
+            {
+                foreach (var step in actionsJob.Steps.OfType<UsingStep>())
+                {
+                    step.Uses = step.Uses = GetValue(step.Uses);
+                }
             }
         }
     }
