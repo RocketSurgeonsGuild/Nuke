@@ -246,8 +246,14 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         {
             Run = "dotnet tool install -g Nuke.GlobalTool",
         };
+        // TODO: Add configuration to disable this?
+        steps.Add(
+            new RunStep("dotnet workload restore")
+            {
+                Run = "dotnet workload restore",
+            }
+        );
         var dotnetTools = Path.Combine(NukeBuild.RootDirectory, ".config/dotnet-tools.json");
-        var localTool = false;
         if (File.Exists(dotnetTools))
         {
             steps.Add(
@@ -256,23 +262,10 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                     Run = "dotnet tool restore",
                 }
             );
-            // TODO: Add configuration to disable this?
-            steps.Add(
-                new RunStep("dotnet workload restore")
-                {
-                    Run = "dotnet workload restore",
-                }
-            );
-            if (!DotNetTool.IsInstalled("nuke"))
-            {
-                steps.Add(globalToolStep);
-            }
-            else
-            {
-                localTool = true;
-            }
         }
-        else
+
+        var localTool = DotNetTool.IsInstalled("nuke");
+        if (!localTool)
         {
             steps.Add(globalToolStep);
         }
