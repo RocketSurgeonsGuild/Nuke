@@ -4,6 +4,7 @@ using Nuke.Common.CI.GitHubActions.Configuration;
 using Nuke.Common.IO;
 using Nuke.Common.Utilities.Collections;
 using Rocket.Surgery.Nuke.ContinuousIntegration;
+using Rocket.Surgery.Nuke.ContinuousIntegration;
 using Rocket.Surgery.Nuke.DotNetCore;
 using YamlDotNet.RepresentationModel;
 
@@ -24,15 +25,14 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     protected GithubActionsStepsAttributeBase(string name)
     {
         Name = name;
-        ExcludedTargets =
-        [
-            ..ExcludedTargets,
-            nameof(ICanClean.Clean),
-            nameof(ICanRestoreWithDotNetCore.DotnetToolRestore),
-            nameof(ICanRestoreWithDotNetCore.DotnetWorkloadRestore),
-        ];
+        ExcludedTargets = [];
+        NonEntryTargets = [];
     }
 
+    /// <summary>
+    /// The non entry targets
+    /// </summary>
+    /// <remarks>Including the custom ones</remarks>
     public new string[] NonEntryTargets
     {
         get => base.NonEntryTargets;
@@ -48,6 +48,10 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
         ];
     }
 
+    /// <summary>
+    /// The excluded targets
+    /// </summary>
+    /// <remarks>Including the custom ones</remarks>
     public new string[] ExcludedTargets
     {
         get => base.ExcludedTargets;

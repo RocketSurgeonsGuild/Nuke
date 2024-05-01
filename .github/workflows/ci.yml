@@ -126,18 +126,9 @@ jobs:
       - name: ⚒️ dotnet tool restore
         run: |
           dotnet tool restore
-      - name: Clean
-        id: clean
+      - name: 🚒 dotnet workload restore
         run: |
-          dotnet nuke Clean --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
-      - name: 🚒 Dotnet Workload Restore
-        id: dotnetWorkloadRestore
-        run: |
-          dotnet nuke DotnetWorkloadRestore --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
-      - name: ⚒️ Dotnet Tool Restore
-        id: dotnetToolRestore
-        run: |
-          dotnet nuke DotnetToolRestore --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
+          dotnet workload restore
       - name: 🎁 Restore
         id: restore
         run: |
@@ -149,7 +140,27 @@ jobs:
       - name: 🚦 Test
         id: test
         run: |
-          dotnet nuke Test TriggerCodeCoverageReports GenerateCodeCoverageReportCobertura GenerateCodeCoverageBadges GenerateCodeCoverageSummary GenerateCodeCoverageReport --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
+          dotnet nuke Test --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
+      - name: Trigger Code Coverage Reports
+        id: triggerCodeCoverageReports
+        run: |
+          dotnet nuke TriggerCodeCoverageReports --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
+      - name: Generate Code Coverage Report Cobertura
+        id: generateCodeCoverageReportCobertura
+        run: |
+          dotnet nuke GenerateCodeCoverageReportCobertura --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
+      - name: Generate Code Coverage Badges
+        id: generateCodeCoverageBadges
+        run: |
+          dotnet nuke GenerateCodeCoverageBadges --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
+      - name: Generate Code Coverage Summary
+        id: generateCodeCoverageSummary
+        run: |
+          dotnet nuke GenerateCodeCoverageSummary --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
+      - name: Generate Code Coverage Report
+        id: generateCodeCoverageReport
+        run: |
+          dotnet nuke GenerateCodeCoverageReport --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
       - name: 📦 Pack
         id: pack
         run: |
