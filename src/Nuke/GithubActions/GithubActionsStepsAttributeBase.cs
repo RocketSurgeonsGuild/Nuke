@@ -24,6 +24,13 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     protected GithubActionsStepsAttributeBase(string name)
     {
         Name = name;
+        ExcludedTargets =
+        [
+            ..ExcludedTargets,
+            nameof(ICanClean.Clean),
+            nameof(ICanRestoreWithDotNetCore.DotnetToolRestore),
+            nameof(ICanRestoreWithDotNetCore.DotnetWorkloadRestore),
+        ];
     }
 
     public new string[] NonEntryTargets
@@ -305,3 +312,4 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
         }
     }
 }
+
