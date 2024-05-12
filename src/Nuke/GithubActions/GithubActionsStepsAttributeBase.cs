@@ -29,7 +29,7 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     }
 
     /// <summary>
-    /// The non entry targets
+    ///     The non entry targets
     /// </summary>
     /// <remarks>Including the custom ones</remarks>
     public new string[] NonEntryTargets
@@ -48,36 +48,9 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     }
 
     /// <summary>
-    /// The excluded targets
+    ///     The excluded targets
     /// </summary>
     /// <remarks>Including the custom ones</remarks>
-    public new string[] ExcludedTargets
-    {
-        get => base.ExcludedTargets;
-        set => base.ExcludedTargets =
-        [
-            ..value,
-            nameof(ICanClean.Clean),
-            nameof(ICanRestoreWithDotNetCore.DotnetToolRestore),
-            nameof(ICanRestoreWithDotNetCore.DotnetWorkloadRestore),
-        ];
-    }
-
-    public new string[] NonEntryTargets
-    {
-        get => base.NonEntryTargets;
-        set => base.NonEntryTargets =
-        [
-            ..value,
-            nameof(ICIEnvironment.CIEnvironment),
-            nameof(ITriggerCodeCoverageReports.TriggerCodeCoverageReports),
-            nameof(ITriggerCodeCoverageReports.GenerateCodeCoverageReportCobertura),
-            nameof(IGenerateCodeCoverageBadges.GenerateCodeCoverageBadges),
-            nameof(IGenerateCodeCoverageReport.GenerateCodeCoverageReport),
-            nameof(IGenerateCodeCoverageSummary.GenerateCodeCoverageSummary),
-        ];
-    }
-
     public new string[] ExcludedTargets
     {
         get => base.ExcludedTargets;
