@@ -1,2 +1,1 @@
 #nullable enable
-Rocket.Surgery.Nuke.GithubActions.OnePasswordConnectServerSecret.GroupByKey.get -> string!
