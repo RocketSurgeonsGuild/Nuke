@@ -32,6 +32,6 @@ public sealed class DotNetToolAttribute : ToolInjectionAttributeBase
     /// <inheritdoc />
     public override object GetValue(MemberInfo member, object instance)
     {
-        return DotNetTool.GetTool(_command);
+        return DotnetTool.GetTool(_command);
     }
 }

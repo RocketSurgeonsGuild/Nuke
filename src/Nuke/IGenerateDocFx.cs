@@ -19,7 +19,7 @@ public interface IGenerateDocFx : IHaveDocs
     /// <summary>
     ///     The docfx tool
     /// </summary>
-    public Tool Docfx => DotNetTool.GetTool("docfx");
+    public Tool Docfx => DotnetTool.GetTool("docfx");
 
     /// <summary>
     ///     The core docs to generate documentation

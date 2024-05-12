@@ -2,7 +2,6 @@ using System.Collections.ObjectModel;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.IO;
 using Nuke.Common.Tools.ReportGenerator;
-using Nuke.Common.Utilities.Collections;
 
 namespace Rocket.Surgery.Nuke;
 

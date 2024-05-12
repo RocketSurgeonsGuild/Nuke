@@ -32,15 +32,9 @@ public static class FilePathExtensions
         var absolutePaths = paths as AbsolutePath[] ?? paths.ToArray();
         foreach (var path in absolutePaths)
         {
-            if (Cache.TryGetValue(path, out var _))
-            {
-                return path;
-            }
+            if (Cache.TryGetValue(path, out var _)) return path;
 
-            if (!path.DirectoryExists())
-            {
-                continue;
-            }
+            if (!path.DirectoryExists()) continue;
 
             foreach (var p in absolutePaths)
             {
@@ -77,15 +71,9 @@ public static class FilePathExtensions
         var absolutePaths = paths as AbsolutePath[] ?? paths.ToArray();
         foreach (var path in absolutePaths)
         {
-            if (Cache.TryGetValue(path, out var _))
-            {
-                return path;
-            }
+            if (Cache.TryGetValue(path, out var _)) return path;
 
-            if (!path.FileExists())
-            {
-                continue;
-            }
+            if (!path.FileExists()) continue;
 
             foreach (var p in absolutePaths)
             {

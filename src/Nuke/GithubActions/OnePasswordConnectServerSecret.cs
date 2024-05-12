@@ -13,7 +13,7 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// <param name="Variable">The GitHub variable to item path part for the op reference (eg. op://vault/item)</param>
 /// <param name="ConnectHost">The Connect Server Host (defaults to OP_CONNECT_HOST)</param>
 /// <param name="ConnectToken">The Connect Server Token (defaults to OP_CONNECT_TOKEN)</param>
-public record OnePasswordConnectServerSecret
+public sealed record OnePasswordConnectServerSecret
 (
     string Path,
     string Name,
@@ -36,9 +36,11 @@ public record OnePasswordConnectServerSecret
         return sBuilder.ToString()[..8];
     }
 
-    public string GroupByKey = $"{ConnectHost}, {ConnectToken}";
-    public string OutputId => $"op{HashId(ConnectHost + ConnectToken)}";
+    internal string OutputId => $"op{HashId(ConnectHost + ConnectToken)}";
+
+    /// <inheritdoc />
     public string Prefix => $"steps.{OutputId}.outputs";
 
+    /// <inheritdoc />
     public string? Default => null;
 }

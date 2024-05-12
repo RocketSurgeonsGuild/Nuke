@@ -18,12 +18,10 @@ public sealed class UploadLogsAttribute : BuildExtensionAttributeBase, IOnBuildF
     public void OnBuildFinished()
     {
         if (Build is IHaveOutputLogs logs)
-        {
             foreach (var item in logs.LogsDirectory.GlobFiles("**/*"))
             {
                 UploadFile(item);
             }
-        }
     }
 
     private static void UploadFile(AbsolutePath path)

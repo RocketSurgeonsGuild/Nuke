@@ -26,7 +26,6 @@ public class AzurePipelinesSteps : ConfigurationEntity
     {
         writer.WriteLine("#");
         if (Parameters.Count > 0)
-        {
             using (writer.WriteBlock("parameters:"))
             {
                 foreach (var item in Parameters)
@@ -34,7 +33,6 @@ public class AzurePipelinesSteps : ConfigurationEntity
                     item.Write(writer);
                 }
             }
-        }
 
         using (writer.WriteBlock("steps:"))
         {

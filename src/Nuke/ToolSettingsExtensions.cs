@@ -117,15 +117,10 @@ public static class ToolSettingsExtensions
                                                                                                              .GetValue(null)!;
 
         if (mappings.Contains(typeof(MSBuildVerbosity)))
-        {
             foreach (var mapping in mappings[typeof(MSBuildVerbosity)])
             {
-                if (mapping.Verbosity == NukeBuild.Verbosity)
-                {
-                    verbosity = (MSBuildVerbosity)mapping.MappedVerbosity;
-                }
+                if (mapping.Verbosity == NukeBuild.Verbosity) verbosity = (MSBuildVerbosity)mapping.MappedVerbosity;
             }
-        }
 
         return settings.SetProcessArgumentConfigurator(
             args =>
@@ -143,18 +138,12 @@ public static class ToolSettingsExtensions
     public static T SetGitVersionEnvironment<T>(this T settings, GitVersion? gitVersion)
         where T : ToolSettings
     {
-        if (gitVersion == null)
-        {
-            return settings;
-        }
+        if (gitVersion == null) return settings;
 
         foreach (var item in JObject.FromObject(gitVersion))
         {
             var key = $"gitversion_{item.Key}".ToUpperInvariant();
-            if (settings.ProcessEnvironmentVariables.TryGetValue(key, out var _))
-            {
-                continue;
-            }
+            if (settings.ProcessEnvironmentVariables.TryGetValue(key, out var _)) continue;
 
             settings = settings.AddProcessEnvironmentVariable(key, item.Value?.ToString());
         }

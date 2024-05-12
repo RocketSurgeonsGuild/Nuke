@@ -58,10 +58,7 @@ public class ContinuousIntegrationConventionsAttribute : BuildExtensionAttribute
         {
             summary.TouchFile();
             var coverageSummary = ( codeCoverage.CoverageSummaryDirectory / "Summary.md" ).ReadAllText();
-            if (coverageSummary.IndexOf("|**Name**", StringComparison.Ordinal) is > -1 and var index)
-            {
-                coverageSummary = coverageSummary[..( index - 1 )];
-            }
+            if (coverageSummary.IndexOf("|**Name**", StringComparison.Ordinal) is > -1 and var index) coverageSummary = coverageSummary[..( index - 1 )];
 
             summary.WriteAllText(summary.ReadAllText().TrimStart() + "\n" + coverageSummary);
         }

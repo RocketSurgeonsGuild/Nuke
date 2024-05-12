@@ -96,10 +96,7 @@ public class ReadmeUpdater
                 )
         {
             var sectionName = sectionMatch.First().Groups[1].Value;
-            if (!Sections.AllSections.TryGetValue(sectionName, out var section))
-            {
-                throw new NotImplementedException("Section " + sectionName + " is not supported!");
-            }
+            if (!Sections.AllSections.TryGetValue(sectionName, out var section)) throw new NotImplementedException("Section " + sectionName + " is not supported!");
 
             var sectionStart = sectionMatch.First().Captures[0];
             var sectionEnd = sectionMatch.Last().Captures[0];

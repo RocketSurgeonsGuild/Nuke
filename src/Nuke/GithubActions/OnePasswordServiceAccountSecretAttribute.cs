@@ -1,5 +1,8 @@
 namespace Rocket.Surgery.Nuke.GithubActions;
 
+/// <summary>
+/// one password service account secret
+/// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 public sealed class OnePasswordServiceAccountSecretAttribute : TriggerValueAttribute
 {

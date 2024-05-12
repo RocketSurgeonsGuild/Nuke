@@ -55,17 +55,11 @@ public class RocketSurgeonsGithubActionsJob : RocketSurgeonsGithubActionsJobBase
         {
             Permissions?.Write(writer);
 
-            if (Matrix.Count() > 1 || !FailFast)
-            {
-                writer.WriteLine("strategy:");
-            }
+            if (Matrix.Count() > 1 || !FailFast) writer.WriteLine("strategy:");
 
             using (writer.Indent())
             {
-                if (!FailFast)
-                {
-                    writer.WriteLine("fail-fast: false");
-                }
+                if (!FailFast) writer.WriteLine("fail-fast: false");
 
                 if (Matrix.Count() > 1)
                 {
@@ -79,17 +73,10 @@ public class RocketSurgeonsGithubActionsJob : RocketSurgeonsGithubActionsJobBase
             }
 
             if (!Matrix.Any() && RunsOn.Any())
-            {
                 writer.WriteLine($"runs-on: [{string.Join(", ", RunsOn)}]");
-            }
             else if (Matrix.Count() == 1)
-            {
                 writer.WriteLine($"runs-on: {Matrix.First()}");
-            }
-            else if (Matrix.Count() > 1)
-            {
-                writer.WriteLine("runs-on: ${{ matrix.os }}");
-            }
+            else if (Matrix.Count() > 1) writer.WriteLine("runs-on: ${{ matrix.os }}");
 
             writer.WriteLine("steps:");
             using (writer.Indent())

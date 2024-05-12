@@ -65,7 +65,10 @@ internal class LiquidReporter
             // ReSharper disable once NullableWarningSuppressionIsUsed
             var errors = (IList<Exception>)parameters[1]!;
             foreach (var error in errors)
+            {
                 _logger.Verbose(error.Message);
+            }
+
             _logger.Information("Finished generating report");
         }
         catch (SyntaxException e)

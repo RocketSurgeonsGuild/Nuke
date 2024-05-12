@@ -15,10 +15,7 @@ internal static class SolutionUpdater
     )
     {
         if (EnvironmentInfo.HasVariable("RSG_NUKE_LINT_STAGED")) return;
-        if (solution.GetSolutionFolder("config") is not { } configFolder)
-        {
-            configFolder = solution.AddSolutionFolder("config");
-        }
+        if (solution.GetSolutionFolder("config") is not { } configFolder) configFolder = solution.AddSolutionFolder("config");
 
         var actions = ReplaceDotBuildFolder(solution, configFolder)
                      .Concat(ReplaceDotSolutionFolder(solution, configFolder))
@@ -43,10 +40,7 @@ internal static class SolutionUpdater
             action();
         }
 
-        if (!found)
-        {
-            return;
-        }
+        if (!found) return;
 
         Log.Logger.Information("Updating solution to match newly found files");
         solution.Save();
@@ -232,10 +226,7 @@ internal static class SolutionUpdater
 
         foreach (var item in buildFolder.Items)
         {
-            if (!configFolder.Items.ContainsKey(item.Key))
-            {
-                configFolder.Items.Add(item.Key, item.Value);
-            }
+            if (!configFolder.Items.ContainsKey(item.Key)) configFolder.Items.Add(item.Key, item.Value);
         }
     }
 }

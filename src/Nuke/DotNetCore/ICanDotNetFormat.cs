@@ -40,7 +40,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint
                                                  .TriggeredBy(PostLint)
                                                  .After(DotNetFormat)
                                                  .OnlyWhenStatic(() => IsLocalBuild || LintPaths.Any())
-                                                 .OnlyWhenStatic(() => DotNetTool.IsInstalled("jb"))
+                                                 .OnlyWhenStatic(() => DotnetTool.IsInstalled("jb"))
                                                  .Executes(
                                                       () => LintPaths.Any()
                                                           ? DotNetTasks.DotNet(

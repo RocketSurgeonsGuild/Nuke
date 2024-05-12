@@ -40,10 +40,7 @@ public class Histories : IReadmeSection
             var subConfig = string.IsNullOrEmpty(section.ConfigKey) ? config.ToDictionary(x => (object)x.Key, x => x.Value) :
                 config.TryGetValue(section.ConfigKey, out var o) ? o as IDictionary<object, object?> : null;
             // Assume if not configured, it will never be able to be rendered
-            if (subConfig is null)
-            {
-                continue;
-            }
+            if (subConfig is null) continue;
 
             var (badge, history) = section.Process(subConfig, references, build);
             results.Add((section.Name, badge, history));

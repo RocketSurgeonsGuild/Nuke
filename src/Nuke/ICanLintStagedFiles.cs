@@ -43,15 +43,11 @@ public interface ICanLintStagedFiles : INukeBuild
                                                       logger: (type, s) =>
                                                               {
                                                                   if (type == OutputType.Std)
-                                                                  {
                                                                       // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
                                                                       Console.Out.WriteLine(s);
-                                                                  }
                                                                   else
-                                                                  {
                                                                       // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
                                                                       Console.Error.WriteLine(s);
-                                                                  }
                                                               }
                                                   )
                                                  .AssertWaitForExit()
@@ -62,10 +58,7 @@ public interface ICanLintStagedFiles : INukeBuild
                                             {
                                                 GitTasks.Git("add .nuke/build.schema.json");
                                                 GitTasks.Git("add .github/workflows/*.yml");
-                                                if (this is IHavePublicApis)
-                                                {
-                                                    GitTasks.Git("add *PublicAPI.Shipped.txt *PublicAPI.Unshipped.txt");
-                                                }
+                                                if (this is IHavePublicApis) GitTasks.Git("add *PublicAPI.Shipped.txt *PublicAPI.Unshipped.txt");
                                             }
                                         );
 }

@@ -72,10 +72,7 @@ internal class NugetPackagesSection : IReadmeSection
             NuGetDownloadsBadge(packageName),
             "NuGet Downloads"
         );
-        if (!config.ContainsKey("myget"))
-        {
-            return $"| {packageName} | [!{nugetVersionBadge}!{nugetDownloadsBadge}]{nugetUrlReference} |";
-        }
+        if (!config.ContainsKey("myget")) return $"| {packageName} | [!{nugetVersionBadge}!{nugetDownloadsBadge}]{nugetUrlReference} |";
 
         // ReSharper disable NullableWarningSuppressionIsUsed
         var dcfg = config;

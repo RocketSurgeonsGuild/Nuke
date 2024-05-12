@@ -51,7 +51,6 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                                   () =>
                                                                   {
                                                                       if (this is IHaveTestArtifacts { TestResultsDirectory: { } testResultsDirectory, })
-                                                                      {
                                                                           // Ensure anything that has been dropped in the test results from a collector is
                                                                           // into the coverage directory
                                                                           foreach (var file in testResultsDirectory
@@ -67,7 +66,6 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                                                   FileExistsPolicy.OverwriteIfNewer
                                                                               );
                                                                           }
-                                                                      }
                                                                   }
                                                               )
                                                              .Executes(

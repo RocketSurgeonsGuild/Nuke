@@ -58,22 +58,13 @@ public abstract class BaseGitHubActionsStep : GitHubActionsStep
         writer.WriteLine($"- name: {ComputeStepName(StepName)}");
         using (writer.Indent())
         {
-            if (!string.IsNullOrWhiteSpace(Id))
-            {
-                writer.WriteLine($"id: {Id}");
-            }
+            if (!string.IsNullOrWhiteSpace(Id)) writer.WriteLine($"id: {Id}");
 
             writer.WriteKeyValues("env", Environment);
 
-            if (!string.IsNullOrWhiteSpace(If?.ToString()))
-            {
-                writer.WriteLine($"if: {If}");
-            }
+            if (!string.IsNullOrWhiteSpace(If?.ToString())) writer.WriteLine($"if: {If}");
 
-            if (ContinueOnError)
-            {
-                writer.WriteLine("continue-on-error: true");
-            }
+            if (ContinueOnError) writer.WriteLine("continue-on-error: true");
         }
     }
 

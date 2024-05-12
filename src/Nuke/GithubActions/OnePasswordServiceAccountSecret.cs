@@ -34,10 +34,11 @@ public record OnePasswordServiceAccountSecret
         return sBuilder.ToString()[..8];
     }
 
-    public string GroupByKey = Secret;
-    public string OutputId => $"op{HashId(Secret)}";
+    internal string OutputId => $"op{HashId(Secret)}";
+
+    /// <inheritdoc />
     public string Prefix => $"steps.{OutputId}.outputs";
 
-
+    /// <inheritdoc />
     public string? Default => null;
 }

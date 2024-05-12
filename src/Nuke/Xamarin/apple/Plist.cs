@@ -156,18 +156,12 @@ internal static class Plist
                 return Convert.FromBase64String(element.Value);
             case "array":
                 {
-                    if (!element.HasElements)
-                    {
-                        return Array.Empty<object>();
-                    }
+                    if (!element.HasElements) return Array.Empty<object>();
 
                     var rawArray = element.Elements().Select(DeserializeXml).ToArray();
 
                     var type = rawArray[0].GetType();
-                    if (rawArray.Any(val => val.GetType() != type))
-                    {
-                        return rawArray;
-                    }
+                    if (rawArray.Any(val => val.GetType() != type)) return rawArray;
 
                     var typedArray = Array.CreateInstance(type, rawArray.Length);
                     rawArray.CopyTo(typedArray, 0);

@@ -159,70 +159,31 @@ public record GitHubActionsPermissions
         writer.WriteLine("permissions:");
         using (writer.Indent())
         {
-            if (Actions is { } actions)
-            {
-                writer.WriteLine($"actions: {actions.GetValue()}");
-            }
+            if (Actions is { } actions) writer.WriteLine($"actions: {actions.GetValue()}");
 
-            if (Checks is { } checks)
-            {
-                writer.WriteLine($"checks: {checks.GetValue()}");
-            }
+            if (Checks is { } checks) writer.WriteLine($"checks: {checks.GetValue()}");
 
-            if (Contents is { } contents)
-            {
-                writer.WriteLine($"contents: {contents.GetValue()}");
-            }
+            if (Contents is { } contents) writer.WriteLine($"contents: {contents.GetValue()}");
 
-            if (Deployments is { } deployments)
-            {
-                writer.WriteLine($"deployments: {deployments.GetValue()}");
-            }
+            if (Deployments is { } deployments) writer.WriteLine($"deployments: {deployments.GetValue()}");
 
-            if (IdToken is { } idToken)
-            {
-                writer.WriteLine($"id-token: {idToken.GetValue()}");
-            }
+            if (IdToken is { } idToken) writer.WriteLine($"id-token: {idToken.GetValue()}");
 
-            if (Issues is { } issues)
-            {
-                writer.WriteLine($"issues: {issues.GetValue()}");
-            }
+            if (Issues is { } issues) writer.WriteLine($"issues: {issues.GetValue()}");
 
-            if (Discussions is { } discussions)
-            {
-                writer.WriteLine($"discussions: {discussions.GetValue()}");
-            }
+            if (Discussions is { } discussions) writer.WriteLine($"discussions: {discussions.GetValue()}");
 
-            if (Packages is { } packages)
-            {
-                writer.WriteLine($"packages: {packages.GetValue()}");
-            }
+            if (Packages is { } packages) writer.WriteLine($"packages: {packages.GetValue()}");
 
-            if (Pages is { } pages)
-            {
-                writer.WriteLine($"pages: {pages.GetValue()}");
-            }
+            if (Pages is { } pages) writer.WriteLine($"pages: {pages.GetValue()}");
 
-            if (PullRequests is { } pullRequests)
-            {
-                writer.WriteLine($"pull-requests: {pullRequests.GetValue()}");
-            }
+            if (PullRequests is { } pullRequests) writer.WriteLine($"pull-requests: {pullRequests.GetValue()}");
 
-            if (RepositoryProjects is { } repositoryProjects)
-            {
-                writer.WriteLine($"repository-projects: {repositoryProjects.GetValue()}");
-            }
+            if (RepositoryProjects is { } repositoryProjects) writer.WriteLine($"repository-projects: {repositoryProjects.GetValue()}");
 
-            if (SecurityEvents is { } securityEvents)
-            {
-                writer.WriteLine($"security-events: {securityEvents.GetValue()}");
-            }
+            if (SecurityEvents is { } securityEvents) writer.WriteLine($"security-events: {securityEvents.GetValue()}");
 
-            if (Statuses is { } statuses)
-            {
-                writer.WriteLine($"statuses: {statuses.GetValue()}");
-            }
+            if (Statuses is { } statuses) writer.WriteLine($"statuses: {statuses.GetValue()}");
         }
     }
 }

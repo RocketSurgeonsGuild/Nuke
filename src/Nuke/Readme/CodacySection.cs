@@ -12,10 +12,7 @@ internal class CodacySection : IBadgeSection
         IHaveSolution build
     )
     {
-        if (!( config.TryGetValue("github", out var githubObj) && config.TryGetValue("codacy", out var codacyObj) ))
-        {
-            return string.Empty;
-        }
+        if (!( config.TryGetValue("github", out var githubObj) && config.TryGetValue("codacy", out var codacyObj) )) return string.Empty;
 
         // ReSharper disable once NullableWarningSuppressionIsUsed
         var github = (IDictionary<object, object>)githubObj!;

@@ -49,30 +49,15 @@ public class SetupDotNetStep : UsingStep
     public override void Write(CustomFileWriter writer)
     {
         // WithProperties(x => x.Underscore().Dasherize().ToLowerInvariant());
-        if (!string.IsNullOrWhiteSpace(DotNetVersion))
-        {
-            With.Add("dotnet-version", DotNetVersion);
-        }
+        if (!string.IsNullOrWhiteSpace(DotNetVersion)) With.Add("dotnet-version", DotNetVersion);
 
-        if (!string.IsNullOrWhiteSpace(SourceUrl))
-        {
-            With.Add("source-url", SourceUrl);
-        }
+        if (!string.IsNullOrWhiteSpace(SourceUrl)) With.Add("source-url", SourceUrl);
 
-        if (!string.IsNullOrWhiteSpace(Owner))
-        {
-            With.Add("owner", Owner);
-        }
+        if (!string.IsNullOrWhiteSpace(Owner)) With.Add("owner", Owner);
 
-        if (!string.IsNullOrWhiteSpace(SourceUrl))
-        {
-            NuGetAuthToken = string.IsNullOrWhiteSpace(NuGetAuthToken) ? "${{ secrets.GITHUB_TOKEN }}" : NuGetAuthToken;
-        }
+        if (!string.IsNullOrWhiteSpace(SourceUrl)) NuGetAuthToken = string.IsNullOrWhiteSpace(NuGetAuthToken) ? "${{ secrets.GITHUB_TOKEN }}" : NuGetAuthToken;
 
-        if (!string.IsNullOrWhiteSpace(NuGetAuthToken))
-        {
-            Environment.Add("NUGET_AUTH_TOKEN", NuGetAuthToken);
-        }
+        if (!string.IsNullOrWhiteSpace(NuGetAuthToken)) Environment.Add("NUGET_AUTH_TOKEN", NuGetAuthToken);
 
         base.Write(writer);
     }
