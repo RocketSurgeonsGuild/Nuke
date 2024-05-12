@@ -9,7 +9,7 @@ namespace Rocket.Surgery.Nuke;
 ///     This directory is left separate to allow easier integration with editors that might look it's contents to display
 ///     coverage.
 /// </remarks>
-public interface IHaveCodeCoverage : IHaveArtifacts, IComprehendSources
+public interface IHaveCodeCoverage : IHaveArtifacts
 {
     /// <summary>
     ///     The directory where coverage artifacts are to be dropped

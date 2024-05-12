@@ -109,7 +109,7 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                  }
                )
               .SetReports(InputReports)
-              .SetSourceDirectories(SourceDirectory)
+              .SetSourceDirectories(NukeBuild.RootDirectory)
               .SetTargetDirectory(CoverageReportDirectory)
               .SetFramework(Constants.ReportGeneratorFramework)
             ;
