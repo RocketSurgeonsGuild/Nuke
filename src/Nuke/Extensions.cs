@@ -2,7 +2,6 @@ using System.Collections.ObjectModel;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.IO;
 using Nuke.Common.Tools.ReportGenerator;
-using Nuke.Common.Utilities.Collections;
 
 namespace Rocket.Surgery.Nuke;
 
@@ -59,14 +58,17 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Determine if there is a pullrequest happening or not.
+    ///     Determine if there is a pullrequest happening or not.
     /// </summary>
     /// <param name="actions"></param>
     /// <returns></returns>
-    public static bool IsPullRequest(this GitHubActions? actions) => actions?.EventName is "pull_request" or "pull_request_target";
+    public static bool IsPullRequest(this GitHubActions? actions)
+    {
+        return actions?.EventName is "pull_request" or "pull_request_target";
+    }
 
     /// <summary>
-    /// Add a value to the dictionary if it's missing
+    ///     Add a value to the dictionary if it's missing
     /// </summary>
     /// <param name="dictionary"></param>
     /// <param name="key"></param>
@@ -82,7 +84,7 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Add a value to the dictionary if it's missing
+    ///     Add a value to the dictionary if it's missing
     /// </summary>
     /// <param name="dictionary"></param>
     /// <param name="key"></param>
@@ -90,7 +92,8 @@ public static class Extensions
     /// <typeparam name="TKey"></typeparam>
     /// <typeparam name="TValue"></typeparam>
     /// <returns></returns>
-    public static IReadOnlyDictionary<TKey, TValue> AddIfMissing<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> dictionary, TKey key, TValue value) where TKey : notnull
+    public static IReadOnlyDictionary<TKey, TValue> AddIfMissing<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> dictionary, TKey key, TValue value)
+        where TKey : notnull
     {
         if (dictionary.TryGetValue(key, out _)) return dictionary;
 
@@ -100,7 +103,7 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Add a value to the dictionary if it's missing and replace it if it's set
+    ///     Add a value to the dictionary if it's missing and replace it if it's set
     /// </summary>
     /// <param name="dictionary"></param>
     /// <param name="key"></param>
@@ -115,7 +118,7 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Add a value to the dictionary if it's missing and replace it if it's set
+    ///     Add a value to the dictionary if it's missing and replace it if it's set
     /// </summary>
     /// <param name="dictionary"></param>
     /// <param name="key"></param>
@@ -123,7 +126,8 @@ public static class Extensions
     /// <typeparam name="TKey"></typeparam>
     /// <typeparam name="TValue"></typeparam>
     /// <returns></returns>
-    public static IReadOnlyDictionary<TKey, TValue> ReplaceIfSet<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> dictionary, TKey key, TValue value) where TKey : notnull
+    public static IReadOnlyDictionary<TKey, TValue> ReplaceIfSet<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> dictionary, TKey key, TValue value)
+        where TKey : notnull
     {
         var newDictionary = dictionary.ToDictionary(z => z.Key, z => z.Value);
         newDictionary[key] = value;

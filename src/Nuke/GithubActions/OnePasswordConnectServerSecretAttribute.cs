@@ -1,5 +1,8 @@
 namespace Rocket.Surgery.Nuke.GithubActions;
 
+/// <summary>
+///     A one password connect server secret
+/// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 public sealed class OnePasswordConnectServerSecretAttribute : TriggerValueAttribute
 {

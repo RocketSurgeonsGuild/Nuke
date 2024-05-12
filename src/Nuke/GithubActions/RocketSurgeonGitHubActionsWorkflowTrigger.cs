@@ -14,6 +14,21 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
     /// </summary>
     public RocketSurgeonGitHubActionsTrigger Kind { get; set; }
 
+    /// <summary>
+    ///     The input variables for the workflow
+    /// </summary>
+    public List<GitHubActionsInput> Inputs { get; set; } = new();
+
+    /// <summary>
+    ///     The secret variables for the workflow
+    /// </summary>
+    public List<GitHubActionsSecret> Secrets { get; set; } = new();
+
+    /// <summary>
+    ///     The output variables for the workflow
+    /// </summary>
+    public List<GitHubActionsWorkflowOutput> Outputs { get; set; } = new();
+
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
@@ -33,17 +48,11 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
                         using (writer.Indent())
                         {
                             writer.WriteLine($"type: {input.Type.GetValue()}");
-                            if (!string.IsNullOrWhiteSpace(input.Description))
-                            {
-                                writer.WriteLine($"description: '{input.Description}'");
-                            }
+                            if (!string.IsNullOrWhiteSpace(input.Description)) writer.WriteLine($"description: '{input.Description}'");
 
                             writer.WriteLine($"required: {input.Required ?? false}");
 
-                            if (input.Default != null)
-                            {
-                                writer.WriteLine($"default: {input.Default}");
-                            }
+                            if (input.Default != null) writer.WriteLine($"default: {input.Default}");
                         }
                     }
                 }
@@ -59,10 +68,7 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
                         writer.WriteLine($"{input.Name}:");
                         using (writer.Indent())
                         {
-                            if (!string.IsNullOrWhiteSpace(input.Description))
-                            {
-                                writer.WriteLine($"description: '{input.Description}'");
-                            }
+                            if (!string.IsNullOrWhiteSpace(input.Description)) writer.WriteLine($"description: '{input.Description}'");
 
                             writer.WriteLine($"required: {input.Required ?? false}");
                         }
@@ -80,10 +86,7 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
                         writer.WriteLine($"{input.OutputName}:");
                         using (writer.Indent())
                         {
-                            if (!string.IsNullOrWhiteSpace(input.Description))
-                            {
-                                writer.WriteLine($"description: '{input.Description}'");
-                            }
+                            if (!string.IsNullOrWhiteSpace(input.Description)) writer.WriteLine($"description: '{input.Description}'");
 
                             writer.WriteLine($"value: {input}");
                         }
@@ -92,19 +95,4 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
             }
         }
     }
-
-    /// <summary>
-    ///     The input variables for the workflow
-    /// </summary>
-    public List<GitHubActionsInput> Inputs { get; set; } = new();
-
-    /// <summary>
-    ///     The secret variables for the workflow
-    /// </summary>
-    public List<GitHubActionsSecret> Secrets { get; set; } = new();
-
-    /// <summary>
-    ///     The output variables for the workflow
-    /// </summary>
-    public List<GitHubActionsWorkflowOutput> Outputs { get; set; } = new();
 }

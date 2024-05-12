@@ -44,12 +44,8 @@ public static class CustomFileWriterExtensions
         }
 
         if (value.Contains('\'', StringComparison.Ordinal))
-        {
             writer.WriteLine($"{key}: \"{value}\"");
-        }
         else
-        {
             writer.WriteLine($"{key}: '{value}'");
-        }
     }
 }

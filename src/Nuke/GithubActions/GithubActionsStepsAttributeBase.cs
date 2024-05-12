@@ -24,8 +24,14 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     protected GithubActionsStepsAttributeBase(string name)
     {
         Name = name;
+        ExcludedTargets = [];
+        NonEntryTargets = [];
     }
 
+    /// <summary>
+    ///     The non entry targets
+    /// </summary>
+    /// <remarks>Including the custom ones</remarks>
     public new string[] NonEntryTargets
     {
         get => base.NonEntryTargets;
@@ -41,6 +47,10 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
         ];
     }
 
+    /// <summary>
+    ///     The excluded targets
+    /// </summary>
+    /// <remarks>Including the custom ones</remarks>
     public new string[] ExcludedTargets
     {
         get => base.ExcludedTargets;
@@ -146,7 +156,6 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     protected void ApplyEnhancements(RocketSurgeonGitHubActionsConfiguration config)
     {
         if (Enhancements.Length > 0)
-        {
             foreach (var method in Enhancements.Join(Build.GetType().GetMethods(), z => z, z => z.Name, (_, e) => e))
             {
                 config = method.IsStatic
@@ -154,7 +163,6 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
                     : method.Invoke(Build, new object[] { config, }) as RocketSurgeonGitHubActionsConfiguration
                  ?? config;
             }
-        }
 
         // This will normalize the version numbers against the existing file.
         if (!File.Exists(ConfigurationFile)) return;
@@ -188,10 +196,7 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
         {
             if (uses == null) return null;
             var nodeKey = uses.Split('@')[0];
-            if (nodeList.TryGetValue(nodeKey, out var value))
-            {
-                return value;
-            }
+            if (nodeList.TryGetValue(nodeKey, out var value)) return value;
 
             return uses;
         }
@@ -199,16 +204,12 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
         foreach (var job in config.Jobs)
         {
             if (job is RocketSurgeonsGithubWorkflowJob workflowJob)
-            {
                 workflowJob.Uses = GetValue(workflowJob.Uses);
-            }
             else if (job is RocketSurgeonsGithubActionsJob actionsJob)
-            {
                 foreach (var step in actionsJob.Steps.OfType<UsingStep>())
                 {
                     step.Uses = step.Uses = GetValue(step.Uses);
                 }
-            }
         }
     }
 
@@ -229,16 +230,13 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     )
     {
         if (On.Any(z => z == RocketSurgeonGitHubActionsTrigger.WorkflowDispatch))
-        {
             yield return new RocketSurgeonGitHubActionsWorkflowTrigger
             {
                 Kind = RocketSurgeonGitHubActionsTrigger.WorkflowDispatch,
                 Inputs = inputs.ToList(),
             };
-        }
 
         if (On.Any(z => z == RocketSurgeonGitHubActionsTrigger.WorkflowCall))
-        {
             yield return new RocketSurgeonGitHubActionsWorkflowTrigger
             {
                 Kind = RocketSurgeonGitHubActionsTrigger.WorkflowCall,
@@ -246,10 +244,8 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
                 Outputs = outputs.ToList(),
                 Inputs = inputs.ToList(),
             };
-        }
 
         if (OnPushBranches.Length > 0 || OnPushTags.Length > 0 || OnPushIncludePaths.Length > 0 || OnPushExcludePaths.Length > 0)
-        {
             yield return new RocketSurgeonGitHubActionsVcsTrigger
             {
                 Kind = RocketSurgeonGitHubActionsTrigger.Push,
@@ -258,10 +254,8 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
                 IncludePaths = OnPushIncludePaths,
                 ExcludePaths = OnPushExcludePaths,
             };
-        }
 
         if (OnPullRequestBranches.Length > 0 || OnPullRequestTags.Length > 0 || OnPullRequestIncludePaths.Length > 0 || OnPullRequestExcludePaths.Length > 0)
-        {
             yield return new RocketSurgeonGitHubActionsVcsTrigger
             {
                 Kind = RocketSurgeonGitHubActionsTrigger.PullRequest,
@@ -270,13 +264,11 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
                 IncludePaths = OnPullRequestIncludePaths,
                 ExcludePaths = OnPullRequestExcludePaths,
             };
-        }
 
         if (OnPullRequestTargetBranches.Length > 0
          || OnPullRequestTargetTags.Length > 0
          || OnPullRequestTargetIncludePaths.Length > 0
          || OnPullRequestTargetExcludePaths.Length > 0)
-        {
             yield return new RocketSurgeonGitHubActionsVcsTrigger
             {
                 Kind = RocketSurgeonGitHubActionsTrigger.PullRequestTarget,
@@ -285,7 +277,6 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
                 IncludePaths = OnPullRequestTargetIncludePaths,
                 ExcludePaths = OnPullRequestTargetExcludePaths,
             };
-        }
 
         if (OnCronSchedule != null)
             yield return new GitHubActionsScheduledTrigger { Cron = OnCronSchedule, };

@@ -126,18 +126,6 @@ jobs:
       - name: ⚒️ dotnet tool restore
         run: |
           dotnet tool restore
-      - name: Clean
-        id: clean
-        run: |
-          dotnet nuke Clean --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
-      - name: 🚒 Dotnet Workload Restore
-        id: dotnetWorkloadRestore
-        run: |
-          dotnet nuke DotnetWorkloadRestore --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
-      - name: ⚒️ Dotnet Tool Restore
-        id: dotnetToolRestore
-        run: |
-          dotnet nuke DotnetToolRestore --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
       - name: 🎁 Restore
         id: restore
         run: |

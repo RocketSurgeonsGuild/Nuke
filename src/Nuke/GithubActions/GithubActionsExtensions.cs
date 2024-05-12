@@ -236,8 +236,7 @@ public static class GithubActionsExtensions
                 }
             );
 
-            if (DotNetTool.IsInstalled("codecov.tool"))
-            {
+            if (DotnetTool.IsInstalled("codecov.tool"))
                 AddStep(
                     job,
                     new UsingStep("Publish Coverage")
@@ -252,11 +251,9 @@ public static class GithubActionsExtensions
                         },
                     }
                 );
-            }
         }
 
         if (typeof(IHaveOutputLogs).IsAssignableFrom(typeof(T)))
-        {
             AddStep(
                 job,
                 new UploadArtifactStep("Publish logs")
@@ -266,10 +263,8 @@ public static class GithubActionsExtensions
                     If = "always()",
                 }
             );
-        }
 
         if (typeof(IHaveTestArtifacts).IsAssignableFrom(typeof(T)))
-        {
             AddStep(
                 job,
                 new UploadArtifactStep("Publish test data")
@@ -279,7 +274,6 @@ public static class GithubActionsExtensions
                     If = "always()",
                 }
             );
-        }
 
         PublishArtifacts<T>(job);
 
@@ -372,10 +366,7 @@ public static class GithubActionsExtensions
     {
         // ReSharper disable once NullableWarningSuppressionIsUsed
         var def = (ITargetDefinition)DefinitionProperty.GetValue(target)!;
-        if (outputPaths.TryGetValue(def, out var paths))
-        {
-            return paths;
-        }
+        if (outputPaths.TryGetValue(def, out var paths)) return paths;
 
         paths = new();
         outputPaths[def] = paths;

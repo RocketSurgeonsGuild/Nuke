@@ -53,10 +53,7 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
     public override ConfigurationEntity GetConfiguration(IReadOnlyCollection<ExecutableTarget> relevantTargets)
     {
         var config = base.GetConfiguration(relevantTargets);
-        if (config is not RocketSurgeonGitHubActionsConfiguration configuration)
-        {
-            return config;
-        }
+        if (config is not RocketSurgeonGitHubActionsConfiguration configuration) return config;
 
         var buildJob =
             configuration

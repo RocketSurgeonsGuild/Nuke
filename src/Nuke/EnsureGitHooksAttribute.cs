@@ -40,10 +40,7 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
     public void OnBuildCreated(IReadOnlyCollection<ExecutableTarget> executableTargets)
     {
         // Only care about local environments
-        if (!NukeBuild.IsLocalBuild)
-        {
-            return;
-        }
+        if (!NukeBuild.IsLocalBuild) return;
 
         // ReSharper disable once SuspiciousTypeConversion.Global
         if (Build is not IGitHooksEngine engine)
@@ -102,11 +99,9 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
                    .AssertWaitForExit()
                    .AssertZeroExitCode();
                 if (NukeBuild.IsLocalBuild)
-                {
                     ProcessTasks
                        .StartProcess(ToolPathResolver.GetPathExecutable("npm"), "run prepare", NukeBuild.RootDirectory)
                        .AssertWaitForExit();
-                }
             }
 
             if (!AreHooksInstalled(hooks))

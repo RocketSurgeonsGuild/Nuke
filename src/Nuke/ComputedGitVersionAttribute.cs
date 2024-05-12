@@ -36,7 +36,6 @@ public class ComputedGitVersionAttribute : ValueInjectionAttributeBase
     internal static GitVersion GetGitVersion(string? frameworkVersion, bool updateAssemblyInfo)
     {
         if (!HasGitVer())
-        {
             return GitVersionTasks.GitVersion(
                                        s => s
                                            .SetFramework(frameworkVersion)
@@ -51,7 +50,6 @@ public class ComputedGitVersionAttribute : ValueInjectionAttributeBase
                                             )
                                    )
                                   .Result;
-        }
 
         var json = Variables
                   .Where(z => z.Key.StartsWith("GITVERSION_", StringComparison.OrdinalIgnoreCase))

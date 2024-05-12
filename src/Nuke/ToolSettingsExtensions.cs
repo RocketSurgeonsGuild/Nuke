@@ -74,9 +74,10 @@ public static class ToolSettingsExtensions
         var existingArgs = settings.ProcessArgumentConfigurator;
         return settings.SetProcessArgumentConfigurator(
             args =>
-                existingArgs(args).Add(
-                    $"/bl:\"{path}\";ProjectImports={( NukeBuild.IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed )}"
-                )
+                existingArgs(args)
+                   .Add(
+                        $"/bl:\"{path}\";ProjectImports={( NukeBuild.IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed )}"
+                    )
         );
     }
 
@@ -110,28 +111,25 @@ public static class ToolSettingsExtensions
         var nukeAssembly = typeof(VerbosityMappingAttribute).Assembly;
         // ReSharper disable once NullableWarningSuppressionIsUsed
         var verbosityMappingType = nukeAssembly.GetType("Nuke.Common.Tooling.VerbosityMapping")!;
-        var mappings = (LookupTable<Type, (Verbosity Verbosity, object MappedVerbosity)>)verbosityMappingType.GetRuntimeFields()
-                                                                                                             .Single(z => z.Name == "Mappings")
-                                                                                                             .NotNull()
-                                                                                                             // ReSharper disable once NullableWarningSuppressionIsUsed
-                                                                                                             .GetValue(null)!;
+        var mappings = (LookupTable<Type, (Verbosity Verbosity, object MappedVerbosity)>)verbosityMappingType
+                                                                                        .GetRuntimeFields()
+                                                                                        .Single(z => z.Name == "Mappings")
+                                                                                        .NotNull()
+                                                                                         // ReSharper disable once NullableWarningSuppressionIsUsed
+                                                                                        .GetValue(null)!;
 
         if (mappings.Contains(typeof(MSBuildVerbosity)))
-        {
             foreach (var mapping in mappings[typeof(MSBuildVerbosity)])
             {
-                if (mapping.Verbosity == NukeBuild.Verbosity)
-                {
-                    verbosity = (MSBuildVerbosity)mapping.MappedVerbosity;
-                }
+                if (mapping.Verbosity == NukeBuild.Verbosity) verbosity = (MSBuildVerbosity)mapping.MappedVerbosity;
             }
-        }
 
         return settings.SetProcessArgumentConfigurator(
             args =>
-                existingArgs(args).Add(
-                    $"/fileLogger /fileloggerparameters:ShowTimestamp;Verbosity={verbosity};LogFile=\"{path}\""
-                )
+                existingArgs(args)
+                   .Add(
+                        $"/fileLogger /fileloggerparameters:ShowTimestamp;Verbosity={verbosity};LogFile=\"{path}\""
+                    )
         );
     }
 
@@ -143,18 +141,12 @@ public static class ToolSettingsExtensions
     public static T SetGitVersionEnvironment<T>(this T settings, GitVersion? gitVersion)
         where T : ToolSettings
     {
-        if (gitVersion == null)
-        {
-            return settings;
-        }
+        if (gitVersion == null) return settings;
 
         foreach (var item in JObject.FromObject(gitVersion))
         {
             var key = $"gitversion_{item.Key}".ToUpperInvariant();
-            if (settings.ProcessEnvironmentVariables.TryGetValue(key, out var _))
-            {
-                continue;
-            }
+            if (settings.ProcessEnvironmentVariables.TryGetValue(key, out var _)) continue;
 
             settings = settings.AddProcessEnvironmentVariable(key, item.Value?.ToString());
         }

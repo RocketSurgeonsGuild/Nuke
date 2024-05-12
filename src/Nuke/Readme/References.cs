@@ -15,13 +15,9 @@ public class References : IMarkdownReferences, IReadmeSection
     {
         var key = $"[{name}]";
         if (string.IsNullOrEmpty(altText))
-        {
             altText = "";
-        }
         else
-        {
             altText = $" \"{altText}\"";
-        }
 
         _references.Add(key, $"{value}{altText}");
         return key;

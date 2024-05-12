@@ -84,10 +84,7 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
                 ))
             {
                 var value = parameter.GetValue(Build);
-                if (value is AbsolutePath)
-                {
-                    value = null;
-                }
+                if (value is AbsolutePath) value = null;
 
                 paramList.Add(
                     new()
@@ -127,7 +124,7 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
     )
     {
         var chainLinkNames = GetInvokedTargets(executableTarget, relevantTargets).Select(z => z.Name).ToArray();
-        var tool = DotNetTool.IsInstalled("codecov.tool") ? "dotnet nuke" : "nuke";
+        var tool = DotnetTool.IsInstalled("codecov.tool") ? "dotnet nuke" : "nuke";
 
         return new()
         {
@@ -147,10 +144,7 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
     {
         var symbol = _defaultSymbols.FirstOrDefault(z => z.Key.EndsWith(name, StringComparison.OrdinalIgnoreCase))
                                     .Value;
-        if (string.IsNullOrWhiteSpace(symbol))
-        {
-            return name;
-        }
+        if (string.IsNullOrWhiteSpace(symbol)) return name;
 
         return $"{symbol} {name}";
     }

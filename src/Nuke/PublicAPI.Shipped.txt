@@ -139,6 +139,7 @@ Rocket.Surgery.Nuke.DotNetCore.IHaveCollectCoverage
 Rocket.Surgery.Nuke.DotNetCore.IHaveCollectCoverage.CollectCoverage.get -> bool
 Rocket.Surgery.Nuke.DotNetCore.IHaveDataCollector
 Rocket.Surgery.Nuke.DotNetCore.IHaveMsBuildCoverage
+Rocket.Surgery.Nuke.DotnetTool
 Rocket.Surgery.Nuke.DotNetTool
 Rocket.Surgery.Nuke.DotNetToolAttribute
 Rocket.Surgery.Nuke.DotNetToolAttribute.DotNetToolAttribute(string! command) -> void
@@ -461,6 +462,7 @@ Rocket.Surgery.Nuke.GithubActions.OnePasswordConnectServerSecret.Default.get -> 
 Rocket.Surgery.Nuke.GithubActions.OnePasswordConnectServerSecret.Description.get -> string?
 Rocket.Surgery.Nuke.GithubActions.OnePasswordConnectServerSecret.Description.init -> void
 Rocket.Surgery.Nuke.GithubActions.OnePasswordConnectServerSecret.GroupByKey -> string!
+Rocket.Surgery.Nuke.GithubActions.OnePasswordConnectServerSecret.GroupByKey.get -> string!
 Rocket.Surgery.Nuke.GithubActions.OnePasswordConnectServerSecret.Name.get -> string!
 Rocket.Surgery.Nuke.GithubActions.OnePasswordConnectServerSecret.Name.init -> void
 Rocket.Surgery.Nuke.GithubActions.OnePasswordConnectServerSecret.OnePasswordConnectServerSecret(string! Path, string! Name, string? Description = null, string? Alias = null, string? Variable = null, string! ConnectHost = "OP_CONNECT_HOST", string! ConnectToken = "OP_CONNECT_TOKEN") -> void
@@ -784,6 +786,7 @@ Rocket.Surgery.Nuke.IMayTheForceBeWithYou
 Rocket.Surgery.Nuke.IMayTheForceBeWithYou.Force.get -> bool
 Rocket.Surgery.Nuke.ITrigger
 Rocket.Surgery.Nuke.ITriggerCodeCoverageReports
+Rocket.Surgery.Nuke.ITriggerCodeCoverageReports.CoverageReportDirectory.get -> Nuke.Common.IO.AbsolutePath!
 Rocket.Surgery.Nuke.ITriggerCodeCoverageReports.GenerateCodeCoverageReportCobertura.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ITriggerCodeCoverageReports.InputReports.get -> System.Collections.Generic.IEnumerable<Nuke.Common.IO.AbsolutePath!>!
 Rocket.Surgery.Nuke.ITriggerCodeCoverageReports.TriggerCodeCoverageReports.get -> Nuke.Common.Target!
@@ -913,7 +916,9 @@ static readonly Rocket.Surgery.Nuke.Xamarin.TargetPlatform.iPhoneSimulator -> Ro
 static Rocket.Surgery.Nuke.Azp.AzurePipelinesTasks.IsNotRunningOnAzurePipelines.get -> System.Func<bool>!
 static Rocket.Surgery.Nuke.Azp.AzurePipelinesTasks.IsRunningOnAzurePipelines.get -> System.Func<bool>!
 static Rocket.Surgery.Nuke.ComputedGitVersionAttribute.HasGitVer() -> bool
+static Rocket.Surgery.Nuke.DotnetTool.GetTool(string! nugetPackageName) -> Nuke.Common.Tooling.Tool!
 static Rocket.Surgery.Nuke.DotNetTool.GetTool(string! nugetPackageName) -> Nuke.Common.Tooling.Tool!
+static Rocket.Surgery.Nuke.DotnetTool.IsInstalled(string! nugetPackageName) -> bool
 static Rocket.Surgery.Nuke.DotNetTool.IsInstalled(string! nugetPackageName) -> bool
 static Rocket.Surgery.Nuke.Extensions.AddIfMissing<TKey, TValue>(this System.Collections.Generic.IDictionary<TKey, TValue>! dictionary, TKey key, TValue value) -> System.Collections.Generic.IDictionary<TKey, TValue>!
 static Rocket.Surgery.Nuke.Extensions.AddIfMissing<TKey, TValue>(this System.Collections.Generic.IReadOnlyDictionary<TKey, TValue>! dictionary, TKey key, TValue value) -> System.Collections.Generic.IReadOnlyDictionary<TKey, TValue>!

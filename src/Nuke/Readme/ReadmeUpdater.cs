@@ -15,10 +15,10 @@ public class ReadmeUpdater
     /// </summary>
     public ReadmeUpdater()
     {
-        Sections = new Sections();
-        Badges = new Badges();
-        History = new Histories();
-        References = new References();
+        Sections = new();
+        Badges = new();
+        History = new();
+        References = new();
         Sections
            .Add(Badges)
            .Add(History)
@@ -77,7 +77,7 @@ public class ReadmeUpdater
         var match = nukeDataRegex.Match(content);
         var yaml = string.Join(Environment.NewLine, match.Groups.Cast<Group>().Skip(1).Select(x => x.Value));
         var d = new DeserializerBuilder()
-           // .WithNamingConvention(new CamelCaseNamingConvention())
+            // .WithNamingConvention(new CamelCaseNamingConvention())
            .Build();
         using var reader = new StringReader(yaml.Trim('\n', '\r'));
         var config = d.Deserialize<ExpandoObject>(reader);
@@ -97,16 +97,14 @@ public class ReadmeUpdater
         {
             var sectionName = sectionMatch.First().Groups[1].Value;
             if (!Sections.AllSections.TryGetValue(sectionName, out var section))
-            {
                 throw new NotImplementedException("Section " + sectionName + " is not supported!");
-            }
 
             var sectionStart = sectionMatch.First().Captures[0];
             var sectionEnd = sectionMatch.Last().Captures[0];
             var newSectionContent = section.Process(config, References, build);
             ranges.Add(
-                (sectionStart.Index + sectionStart.Length,
-                  sectionEnd.Index - ( sectionStart.Index + sectionStart.Length ), newSectionContent)
+                ( sectionStart.Index + sectionStart.Length,
+                  sectionEnd.Index - ( sectionStart.Index + sectionStart.Length ), newSectionContent )
             );
         }
 

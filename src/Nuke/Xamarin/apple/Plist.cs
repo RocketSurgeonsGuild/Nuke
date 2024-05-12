@@ -73,31 +73,31 @@ internal static class Plist
         {
             case string:
                 Log.Verbose("string: {String}", item);
-                return new XElement("string", item);
+                return new("string", item);
             case double:
             case float:
             case decimal:
                 Log.Verbose("floating point: {Float}", item);
-                return new XElement("real", Convert.ToString(item, CultureInfo.InvariantCulture));
+                return new("real", Convert.ToString(item, CultureInfo.InvariantCulture));
             case int:
             case long:
                 Log.Verbose("integer: {Integer}", item);
-                return new XElement("integer", Convert.ToString(item, CultureInfo.InvariantCulture));
-            case bool when ( item as bool? ) == true:
+                return new("integer", Convert.ToString(item, CultureInfo.InvariantCulture));
+            case bool when item as bool? == true:
                 Log.Verbose("boolean: {Boolean}", item);
-                return new XElement("true");
-            case bool when ( item as bool? ) == false:
+                return new("true");
+            case bool when item as bool? == false:
                 Log.Verbose("boolean: {Boolean}", item);
-                return new XElement("false");
+                return new("false");
             case DateTime time:
                 Log.Verbose("DateTime: {DateTime}", item);
-                return new XElement("date", time.ToString("yyyy-MM-ddTHH:mm:ss.fffZ", DateTimeFormatInfo.InvariantInfo));
+                return new("date", time.ToString("yyyy-MM-ddTHH:mm:ss.fffZ", DateTimeFormatInfo.InvariantInfo));
             case DateTimeOffset offset:
                 Log.Verbose("DateTimeOffset: {DateTimeOffset}", item);
-                return new XElement("date", offset.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ", DateTimeFormatInfo.InvariantInfo));
+                return new("date", offset.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ", DateTimeFormatInfo.InvariantInfo));
             case byte[] bytes:
                 Log.Verbose("DateTimeOffset: {DateTimeOffset}", item);
-                return new XElement("data", Convert.ToBase64String(bytes));
+                return new("data", Convert.ToBase64String(bytes));
             case IDictionary dictionary:
                 {
                     var dict = new XElement("dict");
@@ -156,18 +156,12 @@ internal static class Plist
                 return Convert.FromBase64String(element.Value);
             case "array":
                 {
-                    if (!element.HasElements)
-                    {
-                        return Array.Empty<object>();
-                    }
+                    if (!element.HasElements) return Array.Empty<object>();
 
                     var rawArray = element.Elements().Select(DeserializeXml).ToArray();
 
                     var type = rawArray[0].GetType();
-                    if (rawArray.Any(val => val.GetType() != type))
-                    {
-                        return rawArray;
-                    }
+                    if (rawArray.Any(val => val.GetType() != type)) return rawArray;
 
                     var typedArray = Array.CreateInstance(type, rawArray.Length);
                     rawArray.CopyTo(typedArray, 0);
@@ -186,9 +180,9 @@ internal static class Plist
                         var key = inner[idx];
                         if (key.Name.LocalName != "key")
                         {
-#pragma warning disable CA2201
-                            throw new Exception("Even items need to be keys");
-#pragma warning restore CA2201
+                            #pragma warning disable CA2201
+                            throw new("Even items need to be keys");
+                            #pragma warning restore CA2201
                         }
 
                         idx++;

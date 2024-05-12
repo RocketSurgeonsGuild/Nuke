@@ -13,6 +13,6 @@ public static class Helpers
     /// <returns></returns>
     public static bool IsDotnetToolInstalled(string nugetPackageName)
     {
-        return DotNetTool.IsInstalled(nugetPackageName);
+        return DotnetTool.IsInstalled(nugetPackageName);
     }
 }

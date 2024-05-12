@@ -15,19 +15,6 @@ namespace Rocket.Surgery.Nuke.ContinuousIntegration;
 public class ContinuousIntegrationConventionsAttribute : BuildExtensionAttributeBase, IOnBuildFinished
 #pragma warning restore CA1813
 {
-    /// <inheritdoc />
-    public void OnBuildFinished()
-    {
-        if (Build is not { } nukeBuild) return;
-        if (nukeBuild.IsLocalBuild) return;
-        switch (nukeBuild.Host)
-        {
-            case GitHubActions:
-                HandleGithubActions(Build);
-                break;
-        }
-    }
-
     private static void HandleGithubActions(INukeBuild build)
     {
         if (EnvironmentInfo.GetVariable<AbsolutePath>("GITHUB_STEP_SUMMARY") is not { } summary) return;
@@ -36,7 +23,7 @@ public class ContinuousIntegrationConventionsAttribute : BuildExtensionAttribute
         if (build.ExecutionPlan.Any(z => z.Name == nameof(IHaveTestTarget.Test))
          && build is IHaveTestArtifacts testResultReports
          && testResultReports.TestResultsDirectory.GlobFiles("**/*.trx") is
-         { Count: > 0 } results)
+                { Count: > 0, } results)
         {
             summary.TouchFile();
             var reporter = new LiquidReporter(results.Select(z => z.ToString()), Log.Logger);
@@ -58,12 +45,22 @@ public class ContinuousIntegrationConventionsAttribute : BuildExtensionAttribute
         {
             summary.TouchFile();
             var coverageSummary = ( codeCoverage.CoverageSummaryDirectory / "Summary.md" ).ReadAllText();
-            if (coverageSummary.IndexOf("|**Name**", StringComparison.Ordinal) is > -1 and var index)
-            {
-                coverageSummary = coverageSummary[..( index - 1 )];
-            }
+            if (coverageSummary.IndexOf("|**Name**", StringComparison.Ordinal) is > -1 and var index) coverageSummary = coverageSummary[..( index - 1 )];
 
             summary.WriteAllText(summary.ReadAllText().TrimStart() + "\n" + coverageSummary);
+        }
+    }
+
+    /// <inheritdoc />
+    public void OnBuildFinished()
+    {
+        if (Build is not { } nukeBuild) return;
+        if (nukeBuild.IsLocalBuild) return;
+        switch (nukeBuild.Host)
+        {
+            case GitHubActions:
+                HandleGithubActions(Build);
+                break;
         }
     }
 }

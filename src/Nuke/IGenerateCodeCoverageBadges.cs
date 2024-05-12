@@ -23,10 +23,7 @@ public interface IGenerateCodeCoverageBadges : ITriggerCodeCoverageReports, IGen
                                                     .OnlyWhenDynamic(() => InputReports.Any())
                                                     .Executes(
                                                          () => ReportGeneratorTasks.ReportGenerator(
-                                                             s => WithTag(s)
-                                                                 // .SetToolPath(toolPath)
-                                                                 .SetFramework(Constants.ReportGeneratorFramework)
-                                                                 .SetReports(InputReports)
+                                                             s => Defaults(s)
                                                                  .SetTargetDirectory(CoverageBadgeDirectory)
                                                                  .SetReportTypes(ReportTypes.Badges)
                                                          )

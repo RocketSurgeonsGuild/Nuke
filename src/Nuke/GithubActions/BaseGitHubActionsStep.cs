@@ -48,9 +48,9 @@ public abstract class BaseGitHubActionsStep : GitHubActionsStep
     /// <summary>
     ///     The outputs of this step
     /// </summary>
-#pragma warning disable CA1002
+    #pragma warning disable CA1002
     public List<GitHubActionsOutput> Outputs { get; set; } = new();
-#pragma warning restore CA1002
+    #pragma warning restore CA1002
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
@@ -58,22 +58,13 @@ public abstract class BaseGitHubActionsStep : GitHubActionsStep
         writer.WriteLine($"- name: {ComputeStepName(StepName)}");
         using (writer.Indent())
         {
-            if (!string.IsNullOrWhiteSpace(Id))
-            {
-                writer.WriteLine($"id: {Id}");
-            }
+            if (!string.IsNullOrWhiteSpace(Id)) writer.WriteLine($"id: {Id}");
 
             writer.WriteKeyValues("env", Environment);
 
-            if (!string.IsNullOrWhiteSpace(If?.ToString()))
-            {
-                writer.WriteLine($"if: {If}");
-            }
+            if (!string.IsNullOrWhiteSpace(If?.ToString())) writer.WriteLine($"if: {If}");
 
-            if (ContinueOnError)
-            {
-                writer.WriteLine("continue-on-error: true");
-            }
+            if (ContinueOnError) writer.WriteLine("continue-on-error: true");
         }
     }
 

@@ -22,20 +22,14 @@ public interface IGenerateCodeCoverageSummary : ITriggerCodeCoverageReports, IGe
                                                      .Unlisted()
                                                      .OnlyWhenDynamic(() => InputReports.Any())
                                                      .Executes(
-                                                          () =>
-                                                          {
-                                                              var output = ReportGeneratorTasks.ReportGenerator(
-                                                                  s => WithTag(s)
-                                                                      .SetFramework(Constants.ReportGeneratorFramework)
-                                                                      // .SetToolPath(toolPath)
-                                                                      .SetReports(InputReports)
-                                                                      .SetTargetDirectory(CoverageSummaryDirectory)
-                                                                      .SetReportTypes(
-                                                                           ReportTypes.HtmlSummary, ReportTypes.TextSummary, ReportTypes.MarkdownSummary
-                                                                       )
-                                                              );
-
-                                                              return output;
-                                                          }
+                                                          () => ReportGeneratorTasks.ReportGenerator(
+                                                              s => Defaults(s)
+                                                                  .SetTargetDirectory(CoverageSummaryDirectory)
+                                                                  .SetReportTypes(
+                                                                       ReportTypes.HtmlSummary,
+                                                                       ReportTypes.TextSummary,
+                                                                       ReportTypes.MarkdownSummary
+                                                                   )
+                                                          )
                                                       );
 }

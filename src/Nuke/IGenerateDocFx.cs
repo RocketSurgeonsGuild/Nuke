@@ -13,13 +13,13 @@ public interface IGenerateDocFx : IHaveDocs
     /// </summary>
     [Parameter("serve the docs")]
     public bool? Serve => EnvironmentInfo.GetVariable<bool?>("Serve")
-                       // ?? ValueInjectionUtility.TryGetValue(() => Serve)
-                       ?? false;
+        // ?? ValueInjectionUtility.TryGetValue(() => Serve)
+     ?? false;
 
     /// <summary>
     ///     The docfx tool
     /// </summary>
-    public Tool Docfx => DotNetTool.GetTool("docfx");
+    public Tool Docfx => DotnetTool.GetTool("docfx");
 
     /// <summary>
     ///     The core docs to generate documentation
@@ -34,7 +34,7 @@ public interface IGenerateDocFx : IHaveDocs
                                            {
                                                Task.Run(() => Docfx($"{DocumentationDirectory / "docfx.json"} --serve"));
 
-                                               var watcher = new FileSystemWatcher(DocumentationDirectory) { EnableRaisingEvents = true };
+                                               var watcher = new FileSystemWatcher(DocumentationDirectory) { EnableRaisingEvents = true, };
                                                while (true)
                                                {
                                                    watcher.WaitForChanged(WatcherChangeTypes.All);

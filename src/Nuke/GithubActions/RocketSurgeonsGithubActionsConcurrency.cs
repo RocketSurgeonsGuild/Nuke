@@ -21,14 +21,8 @@ public class RocketSurgeonsGithubActionsConcurrency : ConfigurationEntity
     public override void Write(CustomFileWriter writer)
     {
         using var _ = writer.Indent();
-        if (!string.IsNullOrWhiteSpace(Group))
-        {
-            writer.WriteValue(new("group", Group));
-        }
+        if (!string.IsNullOrWhiteSpace(Group)) writer.WriteValue(new("group", Group));
 
-        if (CancelInProgress.HasValue)
-        {
-            writer.WriteLine($"cancel-in-progress: {CancelInProgress.Value.ToString().ToLowerInvariant()}");
-        }
+        if (CancelInProgress.HasValue) writer.WriteLine($"cancel-in-progress: {CancelInProgress.Value.ToString().ToLowerInvariant()}");
     }
 }

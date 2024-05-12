@@ -136,13 +136,14 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                             onePasswordServiceAccountSecrets
                                .DistinctBy(z => z.Variable)
                                .Where(z => !z.Path.StartsWith("op://") && !string.IsNullOrWhiteSpace(z.Variable))
+                                // ReSharper disable once NullableWarningSuppressionIsUsed
                                .Select(s => new GitHubActionsVariable(s.Variable!))
                         )
                        .ToArray();
 
             steps.AddRange(
                 onePasswordServiceAccountSecrets
-                   .GroupBy(z => z.GroupByKey)
+                   .GroupBy(z => z.Secret)
                    .Select(
                         static secrets => new UsingStep($"Load 1Password Secrets ({secrets.Key})")
                         {
@@ -197,13 +198,14 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                             onePasswordConnectServerSecrets
                                .DistinctBy(z => z.Variable)
                                .Where(z => !z.Path.StartsWith("op://") && !string.IsNullOrWhiteSpace(z.Variable))
+                                // ReSharper disable once NullableWarningSuppressionIsUsed
                                .Select(s => new GitHubActionsVariable(s.Variable!))
                         )
                        .ToArray();
 
             steps.AddRange(
                 onePasswordConnectServerSecrets
-                   .GroupBy(z => z.GroupByKey)
+                   .GroupBy(z => $"{z.ConnectHost}, {z.ConnectToken}")
                    .Select(
                         static secrets => new UsingStep($"Load 1Password Secrets ({secrets.Key})")
                         {
@@ -255,29 +257,24 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         );
         var dotnetTools = Path.Combine(NukeBuild.RootDirectory, ".config/dotnet-tools.json");
         if (File.Exists(dotnetTools))
-        {
             steps.Add(
                 new RunStep("dotnet tool restore")
                 {
                     Run = "dotnet tool restore",
                 }
             );
-        }
 
-        var localTool = DotNetTool.IsInstalled("nuke");
-        if (!localTool)
-        {
-            steps.Add(globalToolStep);
-        }
+        var localTool = DotnetTool.IsInstalled("nuke");
+        if (!localTool) steps.Add(globalToolStep);
 
         var environmentVariables =
             GetAllSecrets(secrets)
-                // ReSharper disable once CoVariantArrayConversion
+                // ReSharper disable CoVariantArrayConversion
                .Concat<ITriggerValue>(variables)
                .Concat(onePasswordConnectServerSecrets)
                .Concat(onePasswordServiceAccountSecrets)
-                // ReSharper disable once CoVariantArrayConversion
                .Concat(environmentAttributes)
+                // ReSharper enable CoVariantArrayConversion
                .SelectMany(
                     z =>
                     {
@@ -397,22 +394,18 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         ApplyEnhancements(config);
 
         if (!buildJob.Name.Equals(Settings.DefaultGithubJobName, StringComparison.OrdinalIgnoreCase))
-        {
             // ReSharper disable once PossibleMultipleEnumeration
             config.DetailedTriggers = GetTriggers(requiredInputs, outputs, secrets)
                                      .Concat(config.DetailedTriggers.Except(triggers))
                                      .ToList();
-        }
 
         // need a better way to do this more generically
         if (buildJob.Steps.OfType<UsingStep>().Any(z => z.Uses?.StartsWith("codecov/codecov-action", StringComparison.OrdinalIgnoreCase) == true))
-        {
             foreach (var trigger in config.DetailedTriggers.OfType<RocketSurgeonGitHubActionsWorkflowTrigger>())
             {
                 if (trigger.Secrets.Any(s => s.Name == "CODECOV_TOKEN")) continue;
                 trigger.Secrets.Add(new("CODECOV_TOKEN", "The codecov token", Alias: "CodecovToken"));
             }
-        }
 
         if (_isGithubHosted && _images is { Length: > 1, })
         {
@@ -483,10 +476,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         {
             if (uses == null) return null;
             var nodeKey = uses.Split('@')[0];
-            if (nodeList.TryGetValue(nodeKey, out var value))
-            {
-                return value;
-            }
+            if (nodeList.TryGetValue(nodeKey, out var value)) return value;
 
             return uses;
         }
@@ -494,16 +484,12 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         foreach (var job in config.Jobs)
         {
             if (job is RocketSurgeonsGithubWorkflowJob workflowJob)
-            {
                 workflowJob.Uses = GetValue(workflowJob.Uses);
-            }
             else if (job is RocketSurgeonsGithubActionsJob actionsJob)
-            {
                 foreach (var step in actionsJob.Steps.OfType<UsingStep>())
                 {
                     step.Uses = step.Uses = GetValue(step.Uses);
                 }
-            }
         }
     }
 
@@ -532,10 +518,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                 ))
             {
                 var value = parameter.GetValue(build);
-                if (value is AbsolutePath)
-                {
-                    value = null;
-                }
+                if (value is AbsolutePath) value = null;
 
                 yield return new()
                 {

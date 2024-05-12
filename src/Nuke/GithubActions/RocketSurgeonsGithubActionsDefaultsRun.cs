@@ -17,6 +17,7 @@ public class RocketSurgeonsGithubActionsDefaultsRun : ConfigurationEntity
     /// </summary>
     public string? WorkingDirectory { get; set; }
 
+    /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
         using var _ = writer.Indent();

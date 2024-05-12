@@ -45,8 +45,7 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                              .Executes(
                                                                   () =>
                                                                   {
-                                                                      if (this is IHaveTestArtifacts { TestResultsDirectory: { } testResultsDirectory })
-                                                                      {
+                                                                      if (this is IHaveTestArtifacts { TestResultsDirectory: { } testResultsDirectory, })
                                                                           // Ensure anything that has been dropped in the test results from a collector is
                                                                           // into the coverage directory
                                                                           foreach (var file in testResultsDirectory
@@ -62,7 +61,6 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                                                   FileExistsPolicy.OverwriteIfNewer
                                                                               );
                                                                           }
-                                                                      }
                                                                   }
                                                               )
                                                              .Executes(
@@ -70,12 +68,7 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                                   {
                                                                       // var toolPath = ToolPathResolver.GetPackageExecutable("ReportGenerator", "ReportGenerator.dll", framework: "netcoreapp3.0");
                                                                       ReportGeneratorTasks.ReportGenerator(
-                                                                          s => WithTag(s)
-                                                                              // .SetToolPath(toolPath)
-                                                                              .SetFramework(
-                                                                                   Constants.ReportGeneratorFramework
-                                                                               )
-                                                                              .SetReports(InputReports)
+                                                                          s => Defaults(s)
                                                                               .SetTargetDirectory(CoverageDirectory)
                                                                               .SetReportTypes(ReportTypes.Cobertura)
                                                                       );
@@ -103,15 +96,18 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
     /// </summary>
     /// <param name="settings"></param>
     /// <returns></returns>
-    protected ReportGeneratorSettings WithTag(ReportGeneratorSettings settings)
+    protected ReportGeneratorSettings Defaults(ReportGeneratorSettings settings)
     {
         return ( this switch
-        {
-            IHaveGitVersion gitVersion => settings.SetTag(gitVersion.GitVersion.InformationalVersion),
-            IHaveGitRepository { GitRepository: { } } gitRepository => settings.SetTag(
-                gitRepository.GitRepository.Head
-            ),
-            _ => settings
-        } ).SetFramework(Constants.ReportGeneratorFramework);
+                 {
+                     IHaveGitVersion gitVersion                               => settings.SetTag(gitVersion.GitVersion.InformationalVersion),
+                     IHaveGitRepository { GitRepository: { }, } gitRepository => settings.SetTag(gitRepository.GitRepository.Head),
+                     _                                                        => settings,
+                 }
+               )
+              .SetReports(InputReports)
+              .SetSourceDirectories(NukeBuild.RootDirectory)
+              .SetFramework(Constants.ReportGeneratorFramework)
+            ;
     }
 }

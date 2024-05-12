@@ -19,9 +19,7 @@ public sealed class PrintBuildVersionAttribute : BuildExtensionAttributeBase, IO
         IReadOnlyCollection<ExecutableTarget> executionPlan
     )
     {
-        if (Build is IHaveGitVersion gitVersion && Build is IHaveSolution solution &&
-            Build is IHaveConfiguration configuration)
-        {
+        if (Build is IHaveGitVersion gitVersion && Build is IHaveSolution solution && Build is IHaveConfiguration configuration)
             Log.Logger.Information(
                 "Building version {InformationalVersion} of {SolutionName} ({Configuration}) using version {NukeVersion} of Nuke",
                 gitVersion.GitVersion.InformationalVersion,
@@ -29,7 +27,6 @@ public sealed class PrintBuildVersionAttribute : BuildExtensionAttributeBase, IO
                 configuration.Configuration,
                 typeof(NukeBuild).Assembly.GetVersionText()
             );
-        }
     }
 
     /// <inheritdoc />

@@ -9,7 +9,7 @@ namespace Rocket.Surgery.Nuke;
 public interface IGenerateCodeCoverageReport : ITriggerCodeCoverageReports, IGenerate
 {
     /// <summary>
-    ///     The directory where the report will be places
+    ///     The directory where the report will be placed
     /// </summary>
     public AbsolutePath CoverageReportDirectory => CoverageDirectory / "report";
 
@@ -22,17 +22,10 @@ public interface IGenerateCodeCoverageReport : ITriggerCodeCoverageReports, IGen
                                                     .Unlisted()
                                                     .OnlyWhenDynamic(() => InputReports.Any())
                                                     .Executes(
-                                                         () =>
-                                                         {
-                                                             return ReportGeneratorTasks.ReportGenerator(
-                                                                 s => WithTag(s)
-                                                                     .SetFramework(Constants.ReportGeneratorFramework)
-                                                                     .SetReports(InputReports)
-                                                                     .SetTargetDirectory(CoverageReportDirectory)
-                                                                     .SetReportTypes(
-                                                                          ReportTypes.HtmlInline_AzurePipelines_Dark
-                                                                      )
-                                                             );
-                                                         }
+                                                         () => ReportGeneratorTasks.ReportGenerator(
+                                                             s => Defaults(s)
+                                                                 .SetTargetDirectory(CoverageReportDirectory)
+                                                                 .SetReportTypes(ReportTypes.HtmlInline_AzurePipelines_Dark)
+                                                         )
                                                      );
 }

@@ -17,7 +17,10 @@ public static class FilePathExtensions
     /// <param name="path"></param>
     /// <param name="paths"></param>
     /// <returns></returns>
-    public static AbsolutePath PickDirectory(AbsolutePath path, params AbsolutePath[] paths) => PickDirectory([path, .. paths]);
+    public static AbsolutePath PickDirectory(AbsolutePath path, params AbsolutePath[] paths)
+    {
+        return PickDirectory([path, .. paths,]);
+    }
 
     /// <summary>
     ///     Returns the first directory that exists on disk
@@ -32,15 +35,9 @@ public static class FilePathExtensions
         var absolutePaths = paths as AbsolutePath[] ?? paths.ToArray();
         foreach (var path in absolutePaths)
         {
-            if (Cache.TryGetValue(path, out var _))
-            {
-                return path;
-            }
+            if (Cache.TryGetValue(path, out var _)) return path;
 
-            if (!path.DirectoryExists())
-            {
-                continue;
-            }
+            if (!path.DirectoryExists()) continue;
 
             foreach (var p in absolutePaths)
             {
@@ -62,7 +59,10 @@ public static class FilePathExtensions
     /// <param name="path"></param>
     /// <param name="paths"></param>
     /// <returns></returns>
-    public static AbsolutePath PickFile(AbsolutePath path, params AbsolutePath[] paths) => PickFile([path, .. paths]);
+    public static AbsolutePath PickFile(AbsolutePath path, params AbsolutePath[] paths)
+    {
+        return PickFile([path, .. paths,]);
+    }
 
     /// <summary>
     ///     Returns the first file that exists on disk
@@ -77,15 +77,9 @@ public static class FilePathExtensions
         var absolutePaths = paths as AbsolutePath[] ?? paths.ToArray();
         foreach (var path in absolutePaths)
         {
-            if (Cache.TryGetValue(path, out var _))
-            {
-                return path;
-            }
+            if (Cache.TryGetValue(path, out var _)) return path;
 
-            if (!path.FileExists())
-            {
-                continue;
-            }
+            if (!path.FileExists()) continue;
 
             foreach (var p in absolutePaths)
             {

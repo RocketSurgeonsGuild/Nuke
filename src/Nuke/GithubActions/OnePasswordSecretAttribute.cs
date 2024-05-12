@@ -99,7 +99,6 @@ public sealed class OnePasswordSecretAttribute : TriggerValueAttribute
     internal ITriggerValue ToSecret()
     {
         if (UseConnectServer)
-        {
             return new OnePasswordConnectServerSecret(
                 Path,
                 Name,
@@ -109,7 +108,6 @@ public sealed class OnePasswordSecretAttribute : TriggerValueAttribute
                 ConnectHost ?? "OP_CONNECT_HOST",
                 ConnectToken ?? "OP_CONNECT_TOKEN"
             );
-        }
 
         return new OnePasswordServiceAccountSecret(
             Path,

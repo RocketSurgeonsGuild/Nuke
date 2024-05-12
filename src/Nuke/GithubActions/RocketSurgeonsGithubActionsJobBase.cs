@@ -87,10 +87,7 @@ public abstract class RocketSurgeonsGithubActionsJobBase : ConfigurationEntity
                 defaults.Write(writer);
             }
 
-            if (!string.IsNullOrWhiteSpace(If?.ToString()))
-            {
-                writer.WriteLine($"if: {If}");
-            }
+            if (!string.IsNullOrWhiteSpace(If?.ToString())) writer.WriteLine($"if: {If}");
         }
     }
 }
