@@ -15,9 +15,7 @@ public class RocketSurgeonsGithubActionsJob : RocketSurgeonsGithubActionsJobBase
     /// </summary>
     /// <param name="name"></param>
     /// <exception cref="ArgumentNullException"></exception>
-    public RocketSurgeonsGithubActionsJob(string name) : base(name)
-    {
-    }
+    public RocketSurgeonsGithubActionsJob(string name) : base(name) { }
 
     /// <summary>
     ///     The images to run on in a matrix
@@ -30,7 +28,7 @@ public class RocketSurgeonsGithubActionsJob : RocketSurgeonsGithubActionsJobBase
     public IEnumerable<string> RunsOn { get; set; } = Enumerable.Empty<string>();
 
     /// <summary>
-    /// The permissions of this workflow
+    ///     The permissions of this workflow
     /// </summary>
     public GitHubActionsPermissions? Permissions { get; set; }
 
@@ -39,12 +37,12 @@ public class RocketSurgeonsGithubActionsJob : RocketSurgeonsGithubActionsJobBase
     /// </summary>
     public List<GitHubActionsStep> Steps { get; set; } = new();
 
-    internal IDictionary<object, object> InternalData { get; } = new Dictionary<object, object>();
-
     /// <summary>
     ///     Should the job matrix fail fast, or wait for all to fail
     /// </summary>
     public bool FailFast { get; set; } = true;
+
+    internal IDictionary<object, object> InternalData { get; } = new Dictionary<object, object>();
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)

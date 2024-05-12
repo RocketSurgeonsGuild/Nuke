@@ -56,9 +56,11 @@ public interface IHavePublicApis : IHaveSolution, ICanLint
                                                             {
                                                                 var shippedFilePath = GetShippedFilePath(project.Directory);
                                                                 var unshippedFilePath = GetUnshippedFilePath(project.Directory);
-                                                                if (!shippedFilePath.FileExists()) await File.WriteAllTextAsync(shippedFilePath, "#nullable enable");
+                                                                if (!shippedFilePath.FileExists())
+                                                                    await File.WriteAllTextAsync(shippedFilePath, "#nullable enable");
 
-                                                                if (!unshippedFilePath.FileExists()) await File.WriteAllTextAsync(unshippedFilePath, "#nullable enable");
+                                                                if (!unshippedFilePath.FileExists())
+                                                                    await File.WriteAllTextAsync(unshippedFilePath, "#nullable enable");
 
                                                                 DotNetTasks.DotNet($"format analyzers {project.Path} --diagnostics=RS0016");
                                                             }

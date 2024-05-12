@@ -3,12 +3,12 @@ using Nuke.Common.Tooling;
 namespace Rocket.Surgery.Nuke.GithubActions;
 
 /// <summary>
-/// The permissions collections object
+///     The permissions collections object
 /// </summary>
 public record GitHubActionsPermissions
 {
     /// <summary>
-    /// No permissions to anything
+    ///     No permissions to anything
     /// </summary>
     public static GitHubActionsPermissions None { get; } = new()
     {
@@ -28,7 +28,7 @@ public record GitHubActionsPermissions
     };
 
     /// <summary>
-    /// Write all permissions
+    ///     Write all permissions
     /// </summary>
     public static GitHubActionsPermissions WriteAll { get; } = new()
     {
@@ -48,7 +48,7 @@ public record GitHubActionsPermissions
     };
 
     /// <summary>
-    /// Read all permissions
+    ///     Read all permissions
     /// </summary>
     public static GitHubActionsPermissions ReadAll { get; } = new()
     {
@@ -68,72 +68,72 @@ public record GitHubActionsPermissions
     };
 
     /// <summary>
-    /// The actions
+    ///     The actions
     /// </summary>
     public GitHubActionsPermission Actions { get; set; } = GitHubActionsPermission.Read;
 
     /// <summary>
-    /// The checks
+    ///     The checks
     /// </summary>
     public GitHubActionsPermission Checks { get; set; } = GitHubActionsPermission.Read;
 
     /// <summary>
-    /// The contents
+    ///     The contents
     /// </summary>
     public GitHubActionsPermission Contents { get; set; } = GitHubActionsPermission.Read;
 
     /// <summary>
-    /// The deployments
+    ///     The deployments
     /// </summary>
     public GitHubActionsPermission Deployments { get; set; } = GitHubActionsPermission.Read;
 
     /// <summary>
-    /// The id-token
+    ///     The id-token
     /// </summary>
     public GitHubActionsPermission IdToken { get; set; }
 
     /// <summary>
-    /// The issues
+    ///     The issues
     /// </summary>
     public GitHubActionsPermission Issues { get; set; } = GitHubActionsPermission.Write;
 
     /// <summary>
-    /// The discussions
+    ///     The discussions
     /// </summary>
     public GitHubActionsPermission Discussions { get; set; }
 
     /// <summary>
-    /// The packages
+    ///     The packages
     /// </summary>
     public GitHubActionsPermission Packages { get; set; }
 
     /// <summary>
-    /// The pages
+    ///     The pages
     /// </summary>
     public GitHubActionsPermission Pages { get; set; }
 
     /// <summary>
-    /// The pull-requests
+    ///     The pull-requests
     /// </summary>
     public GitHubActionsPermission PullRequests { get; set; } = GitHubActionsPermission.Write;
 
     /// <summary>
-    /// The repository-projects
+    ///     The repository-projects
     /// </summary>
     public GitHubActionsPermission RepositoryProjects { get; set; }
 
     /// <summary>
-    /// The security-events
+    ///     The security-events
     /// </summary>
     public GitHubActionsPermission SecurityEvents { get; set; }
 
     /// <summary>
-    /// The statuses
+    ///     The statuses
     /// </summary>
     public GitHubActionsPermission Statuses { get; set; } = GitHubActionsPermission.Write;
 
     /// <summary>
-    /// Write the permissions to the given yaml file
+    ///     Write the permissions to the given yaml file
     /// </summary>
     /// <param name="writer"></param>
     public void Write(CustomFileWriter writer)

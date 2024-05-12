@@ -14,6 +14,11 @@ namespace Rocket.Surgery.Nuke.ContinuousIntegration;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
 public sealed class UploadLogsAttribute : BuildExtensionAttributeBase, IOnBuildFinished
 {
+    private static void UploadFile(AbsolutePath path)
+    {
+        AzurePipelines.Instance?.WriteCommand("task.uploadfile", path);
+    }
+
     /// <inheritdoc />
     public void OnBuildFinished()
     {
@@ -22,11 +27,6 @@ public sealed class UploadLogsAttribute : BuildExtensionAttributeBase, IOnBuildF
             {
                 UploadFile(item);
             }
-    }
-
-    private static void UploadFile(AbsolutePath path)
-    {
-        AzurePipelines.Instance?.WriteCommand("task.uploadfile", path);
     }
 
     /// <inheritdoc />

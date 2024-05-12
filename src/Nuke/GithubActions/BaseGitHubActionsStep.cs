@@ -48,9 +48,9 @@ public abstract class BaseGitHubActionsStep : GitHubActionsStep
     /// <summary>
     ///     The outputs of this step
     /// </summary>
-#pragma warning disable CA1002
+    #pragma warning disable CA1002
     public List<GitHubActionsOutput> Outputs { get; set; } = new();
-#pragma warning restore CA1002
+    #pragma warning restore CA1002
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)

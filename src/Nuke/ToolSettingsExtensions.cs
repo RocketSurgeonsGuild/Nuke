@@ -74,9 +74,10 @@ public static class ToolSettingsExtensions
         var existingArgs = settings.ProcessArgumentConfigurator;
         return settings.SetProcessArgumentConfigurator(
             args =>
-                existingArgs(args).Add(
-                    $"/bl:\"{path}\";ProjectImports={( NukeBuild.IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed )}"
-                )
+                existingArgs(args)
+                   .Add(
+                        $"/bl:\"{path}\";ProjectImports={( NukeBuild.IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed )}"
+                    )
         );
     }
 
@@ -110,11 +111,12 @@ public static class ToolSettingsExtensions
         var nukeAssembly = typeof(VerbosityMappingAttribute).Assembly;
         // ReSharper disable once NullableWarningSuppressionIsUsed
         var verbosityMappingType = nukeAssembly.GetType("Nuke.Common.Tooling.VerbosityMapping")!;
-        var mappings = (LookupTable<Type, (Verbosity Verbosity, object MappedVerbosity)>)verbosityMappingType.GetRuntimeFields()
-                                                                                                             .Single(z => z.Name == "Mappings")
-                                                                                                             .NotNull()
-                                                                                                             // ReSharper disable once NullableWarningSuppressionIsUsed
-                                                                                                             .GetValue(null)!;
+        var mappings = (LookupTable<Type, (Verbosity Verbosity, object MappedVerbosity)>)verbosityMappingType
+                                                                                        .GetRuntimeFields()
+                                                                                        .Single(z => z.Name == "Mappings")
+                                                                                        .NotNull()
+                                                                                         // ReSharper disable once NullableWarningSuppressionIsUsed
+                                                                                        .GetValue(null)!;
 
         if (mappings.Contains(typeof(MSBuildVerbosity)))
             foreach (var mapping in mappings[typeof(MSBuildVerbosity)])
@@ -124,9 +126,10 @@ public static class ToolSettingsExtensions
 
         return settings.SetProcessArgumentConfigurator(
             args =>
-                existingArgs(args).Add(
-                    $"/fileLogger /fileloggerparameters:ShowTimestamp;Verbosity={verbosity};LogFile=\"{path}\""
-                )
+                existingArgs(args)
+                   .Add(
+                        $"/fileLogger /fileloggerparameters:ShowTimestamp;Verbosity={verbosity};LogFile=\"{path}\""
+                    )
         );
     }
 
