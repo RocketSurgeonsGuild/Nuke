@@ -9,13 +9,13 @@ namespace Rocket.Surgery.Nuke;
 ///     This directory is left separate to allow easier integration with editors that might look it's contents to display
 ///     coverage.
 /// </remarks>
-public interface IHaveCodeCoverage : IHaveArtifacts
+public interface IHaveCodeCoverage : IHaveArtifacts, IComprehendSources
 {
     /// <summary>
     ///     The directory where coverage artifacts are to be dropped
     /// </summary>
     [Parameter("The directory where coverage artifacts are to be dropped", Name = "Coverage")]
     public AbsolutePath CoverageDirectory => EnvironmentInfo.GetVariable<AbsolutePath>("Coverage")
-                                          ?? TryGetValue(() => CoverageDirectory)
-                                          ?? NukeBuild.RootDirectory / "coverage";
+     ?? TryGetValue(() => CoverageDirectory)
+     ?? NukeBuild.RootDirectory / "coverage";
 }

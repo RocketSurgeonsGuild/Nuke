@@ -24,6 +24,11 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
        .GlobFiles("**/*.cobertura.xml");
 
     /// <summary>
+    ///     The directory where the report will be placed
+    /// </summary>
+    public AbsolutePath CoverageReportDirectory => CoverageDirectory / "report";
+
+    /// <summary>
     ///     This will generate code coverage reports from emitted coverage data
     /// </summary>
     public Target TriggerCodeCoverageReports => d => d
@@ -45,7 +50,7 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                              .Executes(
                                                                   () =>
                                                                   {
-                                                                      if (this is IHaveTestArtifacts { TestResultsDirectory: { } testResultsDirectory })
+                                                                      if (this is IHaveTestArtifacts { TestResultsDirectory: { } testResultsDirectory, })
                                                                       {
                                                                           // Ensure anything that has been dropped in the test results from a collector is
                                                                           // into the coverage directory
@@ -70,14 +75,7 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                                   {
                                                                       // var toolPath = ToolPathResolver.GetPackageExecutable("ReportGenerator", "ReportGenerator.dll", framework: "netcoreapp3.0");
                                                                       ReportGeneratorTasks.ReportGenerator(
-                                                                          s => WithTag(s)
-                                                                              // .SetToolPath(toolPath)
-                                                                              .SetFramework(
-                                                                                   Constants.ReportGeneratorFramework
-                                                                               )
-                                                                              .SetReports(InputReports)
-                                                                              .SetTargetDirectory(CoverageDirectory)
-                                                                              .SetReportTypes(ReportTypes.Cobertura)
+                                                                          s => Defaults(s).SetReportTypes(ReportTypes.Cobertura)
                                                                       );
 
                                                                       CopyFile(
@@ -103,15 +101,19 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
     /// </summary>
     /// <param name="settings"></param>
     /// <returns></returns>
-    protected ReportGeneratorSettings WithTag(ReportGeneratorSettings settings)
+    protected ReportGeneratorSettings Defaults(ReportGeneratorSettings settings)
     {
         return ( this switch
-        {
-            IHaveGitVersion gitVersion => settings.SetTag(gitVersion.GitVersion.InformationalVersion),
-            IHaveGitRepository { GitRepository: { } } gitRepository => settings.SetTag(
-                gitRepository.GitRepository.Head
-            ),
-            _ => settings
-        } ).SetFramework(Constants.ReportGeneratorFramework);
+                 {
+                     IHaveGitVersion gitVersion                               => settings.SetTag(gitVersion.GitVersion.InformationalVersion),
+                     IHaveGitRepository { GitRepository: { }, } gitRepository => settings.SetTag(gitRepository.GitRepository.Head),
+                     _                                                        => settings,
+                 }
+               )
+              .SetReports(InputReports)
+              .SetSourceDirectories(SourceDirectory)
+              .SetTargetDirectory(CoverageReportDirectory)
+              .SetFramework(Constants.ReportGeneratorFramework)
+            ;
     }
 }

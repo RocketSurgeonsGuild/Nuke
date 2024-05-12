@@ -720,7 +720,6 @@ Rocket.Surgery.Nuke.IGenerateCodeCoverageBadges
 Rocket.Surgery.Nuke.IGenerateCodeCoverageBadges.CoverageBadgeDirectory.get -> Nuke.Common.IO.AbsolutePath!
 Rocket.Surgery.Nuke.IGenerateCodeCoverageBadges.GenerateCodeCoverageBadges.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.IGenerateCodeCoverageReport
-Rocket.Surgery.Nuke.IGenerateCodeCoverageReport.CoverageReportDirectory.get -> Nuke.Common.IO.AbsolutePath!
 Rocket.Surgery.Nuke.IGenerateCodeCoverageReport.GenerateCodeCoverageReport.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.IGenerateCodeCoverageSummary
 Rocket.Surgery.Nuke.IGenerateCodeCoverageSummary.CoverageSummaryDirectory.get -> Nuke.Common.IO.AbsolutePath!
@@ -784,6 +783,7 @@ Rocket.Surgery.Nuke.IMayTheForceBeWithYou
 Rocket.Surgery.Nuke.IMayTheForceBeWithYou.Force.get -> bool
 Rocket.Surgery.Nuke.ITrigger
 Rocket.Surgery.Nuke.ITriggerCodeCoverageReports
+Rocket.Surgery.Nuke.ITriggerCodeCoverageReports.CoverageReportDirectory.get -> Nuke.Common.IO.AbsolutePath!
 Rocket.Surgery.Nuke.ITriggerCodeCoverageReports.GenerateCodeCoverageReportCobertura.get -> Nuke.Common.Target!
 Rocket.Surgery.Nuke.ITriggerCodeCoverageReports.InputReports.get -> System.Collections.Generic.IEnumerable<Nuke.Common.IO.AbsolutePath!>!
 Rocket.Surgery.Nuke.ITriggerCodeCoverageReports.TriggerCodeCoverageReports.get -> Nuke.Common.Target!
