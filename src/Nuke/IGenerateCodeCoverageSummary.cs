@@ -24,11 +24,12 @@ public interface IGenerateCodeCoverageSummary : ITriggerCodeCoverageReports, IGe
                                                      .Executes(
                                                           () => ReportGeneratorTasks.ReportGenerator(
                                                               s => Defaults(s)
-                                                                 .SetReportTypes(
-                                                                      ReportTypes.HtmlSummary,
-                                                                      ReportTypes.TextSummary,
-                                                                      ReportTypes.MarkdownSummary
-                                                                  )
+                                                                  .SetTargetDirectory(CoverageSummaryDirectory)
+                                                                  .SetReportTypes(
+                                                                       ReportTypes.HtmlSummary,
+                                                                       ReportTypes.TextSummary,
+                                                                       ReportTypes.MarkdownSummary
+                                                                   )
                                                           )
                                                       );
 }

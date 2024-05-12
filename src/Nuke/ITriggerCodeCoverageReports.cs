@@ -24,11 +24,6 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
        .GlobFiles("**/*.cobertura.xml");
 
     /// <summary>
-    ///     The directory where the report will be placed
-    /// </summary>
-    public AbsolutePath CoverageReportDirectory => CoverageDirectory / "report";
-
-    /// <summary>
     ///     This will generate code coverage reports from emitted coverage data
     /// </summary>
     public Target TriggerCodeCoverageReports => d => d
@@ -73,7 +68,9 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                                   {
                                                                       // var toolPath = ToolPathResolver.GetPackageExecutable("ReportGenerator", "ReportGenerator.dll", framework: "netcoreapp3.0");
                                                                       ReportGeneratorTasks.ReportGenerator(
-                                                                          s => Defaults(s).SetReportTypes(ReportTypes.Cobertura)
+                                                                          s => Defaults(s)
+                                                                              .SetTargetDirectory(CoverageDirectory)
+                                                                              .SetReportTypes(ReportTypes.Cobertura)
                                                                       );
 
                                                                       CopyFile(
@@ -110,7 +107,6 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                )
               .SetReports(InputReports)
               .SetSourceDirectories(NukeBuild.RootDirectory)
-              .SetTargetDirectory(CoverageReportDirectory)
               .SetFramework(Constants.ReportGeneratorFramework)
             ;
     }

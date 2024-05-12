@@ -1,3 +1,4 @@
+using Nuke.Common.IO;
 using Nuke.Common.Tools.ReportGenerator;
 
 namespace Rocket.Surgery.Nuke;
@@ -7,6 +8,11 @@ namespace Rocket.Surgery.Nuke;
 /// </summary>
 public interface IGenerateCodeCoverageReport : ITriggerCodeCoverageReports, IGenerate
 {
+    /// <summary>
+    ///     The directory where the report will be placed
+    /// </summary>
+    public AbsolutePath CoverageReportDirectory => CoverageDirectory / "report";
+
     /// <summary>
     ///     Generates a code coverage report got the given set of input reports
     /// </summary>
@@ -18,7 +24,8 @@ public interface IGenerateCodeCoverageReport : ITriggerCodeCoverageReports, IGen
                                                     .Executes(
                                                          () => ReportGeneratorTasks.ReportGenerator(
                                                              s => Defaults(s)
-                                                                .SetReportTypes(ReportTypes.HtmlInline_AzurePipelines_Dark)
+                                                                 .SetTargetDirectory(CoverageReportDirectory)
+                                                                 .SetReportTypes(ReportTypes.HtmlInline_AzurePipelines_Dark)
                                                          )
                                                      );
 }
