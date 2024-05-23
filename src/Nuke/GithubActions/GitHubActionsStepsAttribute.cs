@@ -253,6 +253,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             new RunStep("dotnet workload restore")
             {
                 Run = "dotnet workload restore",
+                ContinueOnError = true,
             }
         );
         var dotnetTools = Path.Combine(NukeBuild.RootDirectory, ".config/dotnet-tools.json");

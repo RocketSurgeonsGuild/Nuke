@@ -55,6 +55,7 @@ jobs:
         with:
           clean: 'false'
       - name: 🚒 dotnet workload restore
+        continue-on-error: true
         run: |
           dotnet workload restore
       - name: ⚒️ dotnet tool restore
