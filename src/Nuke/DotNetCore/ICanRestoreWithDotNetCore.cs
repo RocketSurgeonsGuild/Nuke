@@ -24,14 +24,6 @@ public interface ICanRestoreWithDotNetCore : IHaveCleanTarget,
                                            .Executes(() => DotNet($"tool restore"));
 
     /// <summary>
-    ///     This will ensure that all local dotnet tools are installed
-    /// </summary>
-    public Target DotnetWorkloadRestore => d => d
-                                               .After(Clean)
-                                               .Unlisted()
-                                               .Executes(() => DotNet($"workload restore"));
-
-    /// <summary>
     ///     dotnet restore
     /// </summary>
     public Target CoreRestore => d => d
@@ -39,7 +31,6 @@ public interface ICanRestoreWithDotNetCore : IHaveCleanTarget,
                                      .Unlisted()
                                      .After(Clean)
                                      .DependsOn(DotnetToolRestore)
-                                     .DependsOn(DotnetWorkloadRestore)
                                      .Executes(
                                           () => DotNetRestore(
                                               s => s

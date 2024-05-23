@@ -59,7 +59,6 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
             ..value,
             nameof(ICanClean.Clean),
             nameof(ICanRestoreWithDotNetCore.DotnetToolRestore),
-            nameof(ICanRestoreWithDotNetCore.DotnetWorkloadRestore),
         ];
     }
 
