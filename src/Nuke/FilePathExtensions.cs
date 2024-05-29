@@ -35,14 +35,11 @@ public static class FilePathExtensions
         var absolutePaths = paths as AbsolutePath[] ?? paths.ToArray();
         foreach (var path in absolutePaths)
         {
-            if (Cache.TryGetValue(path, out var _)) return path;
+            if (Cache.ContainsKey(path)) return path;
 
             if (!path.DirectoryExists()) continue;
 
-            foreach (var p in absolutePaths)
-            {
-                Cache.TryAdd(p, path);
-            }
+            Cache.TryAdd(path, default);
 
             return path;
         }
@@ -77,14 +74,11 @@ public static class FilePathExtensions
         var absolutePaths = paths as AbsolutePath[] ?? paths.ToArray();
         foreach (var path in absolutePaths)
         {
-            if (Cache.TryGetValue(path, out var _)) return path;
+            if (Cache.ContainsKey(path)) return path;
 
             if (!path.FileExists()) continue;
 
-            foreach (var p in absolutePaths)
-            {
-                Cache.TryAdd(p, path);
-            }
+            Cache.TryAdd(path, default);
 
             return path;
         }
@@ -92,5 +86,5 @@ public static class FilePathExtensions
         return absolutePaths.First();
     }
 
-    private static readonly ConcurrentDictionary<AbsolutePath, AbsolutePath> Cache = new();
+    private static readonly ConcurrentDictionary<AbsolutePath, object> Cache = new();
 }
