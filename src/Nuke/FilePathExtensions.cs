@@ -86,5 +86,5 @@ public static class FilePathExtensions
         return absolutePaths.First();
     }
 
-    private static readonly ConcurrentDictionary<AbsolutePath, object> Cache = new();
+    private static readonly ConcurrentDictionary<AbsolutePath, object?> Cache = new();
 }
