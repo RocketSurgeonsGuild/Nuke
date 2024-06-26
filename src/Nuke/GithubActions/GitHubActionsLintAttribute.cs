@@ -72,7 +72,7 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
                         .Select(z => z.ToTriggerValue())
                         .Select(value => string.IsNullOrWhiteSpace(value.Prefix) ? value.Name : $"{value.Prefix}.{value.Name}")
                         .FirstOrDefault()
-         ?? $$$"""secrets.{{{TokenSecret}}}""";
+         ?? ( TokenSecret.Contains(".") ? $$$"""{{{TokenSecret}}}""" : $$$"""secrets.{{{TokenSecret}}}""" );
 
         configuration.Concurrency = new()
         {
