@@ -19,7 +19,7 @@
             "commands": ["codecov"]
         },
         "jetbrains.resharper.globaltools": {
-            "version": "2024.1.6",
+            "version": "2024.2.0",
             "commands": ["jb"]
         },
         "nukeeper": {
