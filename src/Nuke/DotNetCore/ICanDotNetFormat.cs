@@ -55,22 +55,25 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                  .Add("--no-restore");
 
                                                   if (DotNetFormatIncludedDiagnostics is { Length: > 1, })
-                                                      arguments.Add("--diagnostics {value}", string.Join(" ", DotNetFormatIncludedDiagnostics.Value));
+                                                  {
+                                                      _ = arguments.Add("--diagnostics {value}", string.Join(" ", DotNetFormatIncludedDiagnostics.Value));
+                                                  }
 
                                                   if (DotNetFormatExcludedDiagnostics is { Length: > 1, })
-                                                      arguments.Add("--exclude-diagnostics {value}", string.Join(" ", DotNetFormatExcludedDiagnostics));
-
-                                                  arguments.Add("--binarylog {value}", LogsDirectory / "dotnet-format.binlog");
-
-                                                  if (LintPaths.HasPaths)
                                                   {
-                                                      arguments.Add("--include {value}", string.Join(",", LintPaths.Glob(DotNetFormatMatcher)));
+                                                      _ = arguments.Add("--exclude-diagnostics {value}", string.Join(" ", DotNetFormatExcludedDiagnostics));
+                                                  }
+
+                                                  _ = arguments.Add("--binarylog {value}", LogsDirectory / "dotnet-format.binlog");
+
+                                                  if (LintPaths.HasPaths && LintPaths.Glob(DotNetFormatMatcher).ToArray() is { Length: > 0, } values)
+                                                  {
+                                                      _ = arguments.Add("--include {value}", string.Join(",", values.Select(z => z.ToString())));
                                                   }
 
                                                   return DotNetTasks.DotNet(
                                                       arguments.RenderForExecution(),
-                                                      RootDirectory,
-                                                      logInvocation: false
+                                                      RootDirectory /*, logInvocation: false*/
                                                   );
                                               }
                                           );
@@ -98,10 +101,13 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                           );
                                                           if (LintPaths.HasPaths)
                                                           {
-                                                              arguments.Add("--include={value}", string.Join(";", LintPaths.Glob(JetBrainsCleanupCodeMatcher)));
+                                                              _ = arguments.Add(
+                                                                  "--include={value}",
+                                                                  string.Join(";", LintPaths.Glob(JetBrainsCleanupCodeMatcher))
+                                                              );
                                                           }
 
-                                                          return DotnetTool.GetProperTool("jb")(arguments, RootDirectory, logInvocation: false);
+                                                          return DotnetTool.GetProperTool("jb")(arguments, RootDirectory /*, logInvocation: false*/);
                                                       }
                                                   );
 

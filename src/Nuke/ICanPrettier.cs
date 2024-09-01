@@ -25,24 +25,25 @@ public interface ICanPrettier : ICanLint
             .Executes(
                  () =>
                  {
-                     var args = new Arguments()
-                               .Add("prettier")
-                               .Add("--write");
-
-                     if (LintPaths.HasPaths)
-                     {
-                         LintPaths.Glob(PrettierMatcher).ForEach(x => args.Add(x));
-                     }
+                     var args = LintPaths.Trigger != LintTrigger.None && LintPaths.Glob(PrettierMatcher).ToArray() is { Length: > 0, } values
+                         ? makeArgsForStagedFiles(values)
+                         : new Arguments().Add("prettier").Add(".").Add("--write");
 
                      return ProcessTasks
                            .StartProcess(
                                 ToolPathResolver.GetPathExecutable("npx"),
-                                args.RenderForExecution(),
-                                logInvocation: false,
+                                args.RenderForExecution() /*, logInvocation: false*/,
                                 logger: (_, s) => Log.Logger.Information(s)
                             )
                            .AssertWaitForExit()
                            .AssertZeroExitCode();
+
+                     static Arguments makeArgsForStagedFiles(IEnumerable<RelativePath> values)
+                     {
+                         var a = new Arguments().Add("prettier").Add("--write");
+                         values.ForEach(x => a.Add(x));
+                         return a;
+                     }
                  }
              );
 

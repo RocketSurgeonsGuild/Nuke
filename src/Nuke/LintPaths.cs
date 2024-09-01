@@ -1,9 +1,37 @@
 using System.Collections.Frozen;
 using Microsoft.Extensions.FileSystemGlobbing;
 using Nuke.Common.IO;
-using Serilog;
 
 namespace Rocket.Surgery.Nuke;
+
+/// <summary>
+///     The trigger that the lint paths were created for
+/// </summary>
+public enum LintTrigger
+{
+    /// <summary>
+    ///     The paths were created for a specified files
+    /// </summary>
+    Specific,
+
+    /// <summary>
+    ///     The local staged files
+    /// </summary>
+    Staged,
+
+    /// <summary>
+    ///     A pull request
+    /// </summary>
+    PullRequest,
+
+    /// <summary>
+    ///     No files.
+    /// </summary>
+    /// <remarks>
+    ///     This could means tasks could be run on all files or no files, whatever is needed.
+    /// </remarks>
+    None,
+}
 
 /// <summary>
 ///     Lint paths container
@@ -28,13 +56,13 @@ public class LintPaths
     ///     Lint paths container
     /// </summary>
     /// <param name="matcher">The matcher to include / exclude files on a global level even ones that might be checked in</param>
-    /// <param name="pathsProvided"></param>
+    /// <param name="trigger"></param>
     /// <param name="message"></param>
     /// <param name="paths"></param>
-    public LintPaths(Matcher matcher, bool pathsProvided, string message, IEnumerable<string> paths)
+    public LintPaths(Matcher matcher, LintTrigger trigger, string message, IEnumerable<string> paths)
     {
+        Trigger = trigger;
         Message = message;
-        HasPaths = pathsProvided;
 
         _paths = paths
                 .Select(z => z.Trim())
@@ -44,6 +72,11 @@ public class LintPaths
     }
 
     /// <summary>
+    ///     The trigger that the lint paths were created for
+    /// </summary>
+    public LintTrigger Trigger { get; }
+
+    /// <summary>
     ///     Message about how the paths were resolved
     /// </summary>
     public string Message { get; }
@@ -51,7 +84,7 @@ public class LintPaths
     /// <summary>
     ///     Are there any paths?
     /// </summary>
-    public bool HasPaths { get; }
+    public bool HasPaths => Trigger != LintTrigger.None;
 
     /// <summary>
     ///     Are there any paths?

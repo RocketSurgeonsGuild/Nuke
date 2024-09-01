@@ -19,6 +19,7 @@ public interface ICanLint : IHaveGitRepository
         string? lastFolder = null;
 
         foreach (var parts in stagedFiles
+                             .GetRelativePaths()
                              .Select(z => z.ToString().Split(['/', '\\',], StringSplitOptions.RemoveEmptyEntries))
                              .OrderByDescending(z => z.Length > 1)
                              .ThenBy(z => string.Join("/", z)))
@@ -49,8 +50,8 @@ public interface ICanLint : IHaveGitRepository
             if (currentPath != lastFolder)
             {
                 // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-                Log.Information($"📂 {currentPath}");
                 lastFolder = currentPath;
+                if (!string.IsNullOrWhiteSpace(currentPath)) Log.Information($"📂 {currentPath}");
             }
 
             // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
@@ -93,7 +94,7 @@ public interface ICanLint : IHaveGitRepository
                      if (toolInstalled)
                      {
                          var tool = DotnetTool.GetTool("husky");
-                         _ = tool("run --group lint", logInvocation: false);
+                         _ = tool("run --group lint" /*, logInvocation: false*/);
                      }
                  }
              );
@@ -150,14 +151,17 @@ public interface ICanLint : IHaveGitRepository
     private LintPaths ResolveLintPathsImpl()
     {
         List<string> files = [];
+        var trigger = LintTrigger.None;
         var message = "Linting all files";
         if (PrivateLintFiles.Any())
         {
+            trigger = LintTrigger.Specific;
             message = "Linting only the files provided";
             files.AddRange(PrivateLintFiles);
         }
         else if (GitHubActions.Instance.IsPullRequest())
         {
+            trigger = LintTrigger.PullRequest;
             message = "Linting only the files in the Pull Request";
             files.AddRange(
                 GitTasks
@@ -178,19 +182,16 @@ public interface ICanLint : IHaveGitRepository
                     .ToArray()
                      is { Length: > 0, } stagedFiles)
         {
+            trigger = LintTrigger.Staged;
             message = "Linting only the staged files";
             files.AddRange(stagedFiles);
         }
-        else
-        {
-            message = "Linting all files";
-        }
 
         return files is { Count: > 0, }
-            ? new(LintMatcher, true, message, files)
+            ? new(LintMatcher, trigger, message, files)
             : new(
                 LintMatcher,
-                false,
+                trigger,
                 message,
                 GitTasks.Git($"ls-files", logOutput: false, logInvocation: false).Select(z => z.Text)
             );
