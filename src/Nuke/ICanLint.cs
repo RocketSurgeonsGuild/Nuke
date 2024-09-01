@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using Microsoft.Extensions.FileSystemGlobbing;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.IO;
@@ -14,6 +13,51 @@ namespace Rocket.Surgery.Nuke;
 public interface ICanLint : IHaveGitRepository
 {
     private static LintPaths _lintPaths = null!;
+
+    private static void WriteFileTreeWithEmoji(IEnumerable<AbsolutePath> stagedFiles)
+    {
+        var currentFolder = new Stack<string>();
+        string? lastFolder = null;
+
+        foreach (var parts in stagedFiles
+                             .Select(z => z.ToString().Split(['/', '\\',], StringSplitOptions.RemoveEmptyEntries))
+                             .OrderByDescending(z => z.Length > 1)
+                             .ThenBy(z => string.Join("/", z)))
+        {
+            var commonPrefixLength = 0;
+
+            // Find the common prefix length
+            while (commonPrefixLength < currentFolder.Count
+                && commonPrefixLength < parts.Length - 1
+                && currentFolder.ElementAt(commonPrefixLength) == parts[commonPrefixLength])
+            {
+                commonPrefixLength++;
+            }
+
+            // Remove the non-common parts from the stack
+            while (currentFolder.Count > commonPrefixLength)
+            {
+                _ = currentFolder.Pop();
+            }
+
+            // Add the new parts to the stack
+            for (var i = commonPrefixLength; i < parts.Length - 1; i++)
+            {
+                currentFolder.Push(parts[i]);
+            }
+
+            var currentPath = string.Join("/", currentFolder.Reverse());
+            if (currentPath != lastFolder)
+            {
+                // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
+                Log.Information($"📂 {currentPath}");
+                lastFolder = currentPath;
+            }
+
+            // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
+            Log.Information($"{' '.Repeat(currentFolder.Count > 0 ? 4 : 0)}📄 " + parts[^1]);
+        }
+    }
 
     /// <summary>
     ///     The lint target
@@ -37,7 +81,7 @@ public interface ICanLint : IHaveGitRepository
                                               () =>
                                               {
                                                   List<string> files = [];
-                                                  string message = "Linting all files";
+                                                  var message = "Linting all files";
                                                   if (PrivateLintFiles.Any())
                                                   {
                                                       message = "Linting only the files provided";
@@ -63,7 +107,7 @@ public interface ICanLint : IHaveGitRepository
                                                               .Where(z => z.Text[0] is not ('D' or 'd'))
                                                               .Select(z => z.Text[1..].Trim())
                                                               .ToArray()
-                                                               is { Length: > 0 } stagedFiles)
+                                                               is { Length: > 0, } stagedFiles)
                                                   {
                                                       message = "Linting only the staged files";
                                                       files.AddRange(stagedFiles);
@@ -73,11 +117,12 @@ public interface ICanLint : IHaveGitRepository
                                                       message = "Linting all files";
                                                   }
 
-                                                  _lintPaths = files is { Count: > 0 }
+                                                  _lintPaths = files is { Count: > 0, }
                                                       ? new(LintMatcher, true, message, files)
                                                       : new(
                                                           LintMatcher,
-                                                          false, message,
+                                                          false,
+                                                          message,
                                                           GitTasks.Git($"ls-files", logOutput: false, logInvocation: false).Select(z => z.Text)
                                                       );
                                               }
@@ -104,7 +149,7 @@ public interface ICanLint : IHaveGitRepository
                      if (toolInstalled)
                      {
                          var tool = DotnetTool.GetTool("husky");
-                         tool("run --group lint");
+                         _ = tool("run --group lint");
                      }
                  }
              );
@@ -120,19 +165,23 @@ public interface ICanLint : IHaveGitRepository
             .Executes(
                  () =>
                  {
-                     GitTasks.Git("add .nuke/build.schema.json");
-                     GitTasks.Git("add .github/workflows/*.yml");
-                     if (this is IHavePublicApis) GitTasks.Git("add *PublicAPI.Shipped.txt *PublicAPI.Unshipped.txt");
+                     _ = GitTasks.Git("add .nuke/build.schema.json", exitHandler: _ => { });
+                     _ = GitTasks.Git("add .github/workflows/*.yml", exitHandler: _ => { });
+                     if (this is IHavePublicApis)
+                     {
+                         _ = GitTasks.Git("add *PublicAPI.Shipped.txt *PublicAPI.Unshipped.txt", exitHandler: _ => { });
+                     }
 
                      if (LintPaths.HasPaths)
                      {
-                         GitTasks.Git(
+                         _ = GitTasks.Git(
                              $"add {string.Join(" ",
                                  LintPaths
                                     .Paths
                                     .Select(z => RootDirectory.GetRelativePathTo(z))
                                     .Select(z => $"\"{z}\"")
-                             )}"
+                             )}",
+                             exitHandler: _ => { }
                          );
                      }
                  }
@@ -144,15 +193,7 @@ public interface ICanLint : IHaveGitRepository
     public LintPaths LintPaths => _lintPaths ?? throw new InvalidOperationException("LintPaths has not been initialized");
 
     /// <summary>
-    ///     The files to lint, if not given lints all files
-    /// </summary>
-    [Parameter("The files to lint, if not given lints all files", Separator = " ", Name = "lint-files")]
-    #pragma warning disable CA1819
-    private string[] PrivateLintFiles => TryGetValue(() => PrivateLintFiles) ?? [];
-    #pragma warning restore CA1819
-
-    /// <summary>
-    /// The default matcher to exclude files from linting
+    ///     The default matcher to exclude files from linting
     /// </summary>
     public Matcher LintMatcher => new Matcher(StringComparison.OrdinalIgnoreCase)
                                  .AddInclude("**/*")
@@ -162,48 +203,11 @@ public interface ICanLint : IHaveGitRepository
                                  .AddExclude("**/*.verified.*")
                                  .AddExclude("**/*.received.*");
 
-    private static void WriteFileTreeWithEmoji(IEnumerable<AbsolutePath> stagedFiles)
-    {
-        var currentFolder = new Stack<string>();
-        string? lastFolder = null;
-
-        foreach (var parts in stagedFiles
-                             .Select(z => z.ToString().Split(['/', '\\',], StringSplitOptions.RemoveEmptyEntries))
-                             .OrderByDescending(z => z.Length > 1)
-                             .ThenBy(z => string.Join("/", z)))
-        {
-            var commonPrefixLength = 0;
-
-            // Find the common prefix length
-            while (commonPrefixLength < currentFolder.Count
-                && commonPrefixLength < parts.Length - 1
-                && currentFolder.ElementAt(commonPrefixLength) == parts[commonPrefixLength])
-            {
-                commonPrefixLength++;
-            }
-
-            // Remove the non-common parts from the stack
-            while (currentFolder.Count > commonPrefixLength)
-            {
-                currentFolder.Pop();
-            }
-
-            // Add the new parts to the stack
-            for (var i = commonPrefixLength; i < parts.Length - 1; i++)
-            {
-                currentFolder.Push(parts[i]);
-            }
-
-            var currentPath = string.Join("/", currentFolder.Reverse());
-            if (currentPath != lastFolder)
-            {
-                // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-                Log.Information($"📂 {currentPath}");
-                lastFolder = currentPath;
-            }
-
-            // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-            Log.Information($"{' '.Repeat(currentFolder.Count > 0 ? 4 : 0)}📄 " + parts[^1]);
-        }
-    }
+    /// <summary>
+    ///     The files to lint, if not given lints all files
+    /// </summary>
+    [Parameter("The files to lint, if not given lints all files", Separator = " ", Name = "lint-files")]
+    #pragma warning disable CA1819
+    private string[] PrivateLintFiles => TryGetValue(() => PrivateLintFiles) ?? [];
+    #pragma warning restore CA1819
 }

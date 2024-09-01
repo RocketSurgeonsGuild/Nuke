@@ -1,11 +1,6 @@
 <Project>
     <PropertyGroup>
-        <EnsureNukeRestore Condition="'$(EnsureNukeRestore)' == ''">enable</EnsureNukeRestore>
-        <EnsureNukeRestoreTask Condition="'$(EnsureNukeRestoreTask)' == ''">restore</EnsureNukeRestoreTask>
         <_NukeRoot Condition="'$(_NukeRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove('$(MSBuildProjectFullPath)', 'build.cmd'))</_NukeRoot>
-        <_NukeEnsureNukeRestoreRoot Condition="'$(_NukeRoot)' == ''">
-            $([MSBuild]::GetDirectoryNameOfFileAbove('$(MSBuildProjectFullPath)', 'build.sh'))
-        </_NukeEnsureNukeRestoreRoot>
         <_NukeRoot Condition="'$(_NukeRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove('$(MSBuildProjectFullPath)', 'build.ps1'))</_NukeRoot>
         <_NukeTemp Condition="'$(_NukeTemp)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove('$(MSBuildProjectFullPath)', 'build.ps1'))/.nuke/temp/</_NukeTemp>
 
@@ -44,9 +39,5 @@
     </PropertyGroup>
     <ItemGroup>
         <Using Include="Rocket.Surgery.Nuke" />
-        <AdditionalFiles
-            Include="$(MSBuildThisFileDirectory)/BannedSymbols.Rocket.Surgery.Nuke.txt"
-            Condition="Exists('$(MSBuildThisFileDirectory)/BannedSymbols.Rocket.Surgery.Nuke.txt')" />
-        <GlobalAnalyzerConfigFiles Include="$(MSBuildThisFileDirectory)/banned_symbols.globalconfig" />
     </ItemGroup>
 </Project>

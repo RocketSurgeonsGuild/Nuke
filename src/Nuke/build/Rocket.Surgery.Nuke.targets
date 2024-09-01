@@ -1,4 +1,16 @@
 <Project>
+    <PropertyGroup>
+        <!--
+        This enables a default restore task in the event you are trying to build a project that has yet to run the nuke build or dotnet tool restore.
+        -->
+        <EnsureNukeRestore Condition="'$(EnsureNukeRestore)' == ''">true</EnsureNukeRestore>
+        <EnsureNukeRestoreTask Condition="'$(EnsureNukeRestoreTask)' == ''">restore</EnsureNukeRestoreTask>
+        <!--
+        The project model is banned because there can be a disconnect from newer versions of MSBuild tools.
+        However if you do not want to have your build tools banned you can set the NukeBanProjectModel to some value other than true
+        -->
+        <NukeBanProjectModel Condition="'$(EnsureNukeRestoreTask)' == ''">true</NukeBanProjectModel>
+    </PropertyGroup>
     <ItemGroup>
         <NukeSpecificationFiles Include="**\*.json" Exclude="bin\**;obj\**" />
         <NukeExternalFiles Include="**\*.*.ext" Exclude="bin\**;obj\**" />
@@ -27,10 +39,19 @@
         <None Include="$(_NukeRoot)\.github\renovate.json5" Link=".config/renovate.json5" Condition="Exists('$(_NukeRoot)\.github\renovate.json5')" />
     </ItemGroup>
 
+    <ItemGroup Condition="'$(NukeBanProjectModel)' == 'true'">
+        <AdditionalFiles
+            Include="$(MSBuildThisFileDirectory)/BannedSymbols.Rocket.Surgery.Nuke.txt"
+            Condition="Exists('$(MSBuildThisFileDirectory)/BannedSymbols.Rocket.Surgery.Nuke.txt')"
+        />
+        <GlobalAnalyzerConfigFiles Include="$(MSBuildThisFileDirectory)/banned_symbols.globalconfig" />
+    </ItemGroup>
+
     <Target
         Name="EnsureNukeRestore"
         BeforeTargets="Restore;CollectPackageReferences"
-        Condition="'$(CI)' == '' and '$(DesignTimeBuild)' != 'true' and '$(EnsureNukeRestore)' == 'enable' and !Exists('$(_NukeTemp)')">
+        Condition="'$(CI)' == '' and '$(DesignTimeBuild)' != 'true' and '$(EnsureNukeRestore)' == 'enable' and !Exists('$(_NukeTemp)')"
+    >
         <Exec Command="dotnet tool restore" StandardOutputImportance="Low" StandardErrorImportance="High" WorkingDirectory="$(_NukeRoot)" />
         <Exec Command="dotnet nuke $(EnsureNukeRestoreTask)" StandardOutputImportance="Low" StandardErrorImportance="High" WorkingDirectory="$(_NukeRoot)" />
     </Target>
