@@ -55,12 +55,13 @@ public static class ToolSettingsExtensions
     /// </summary>
     /// <param name="settings"></param>
     /// <param name="path"></param>
-    public static T SetDefaultLoggers<T>(this T settings, AbsolutePath path)
+    /// <param name="verbosity"></param>
+    public static T SetDefaultLoggers<T>(this T settings, AbsolutePath path, MSBuildVerbosity? verbosity = null)
         where T : ToolSettings
     {
         return settings
               .SetBinaryLogger((AbsolutePath)Path.ChangeExtension(path, "binlog"))
-              .SetFileLogger((AbsolutePath)Path.ChangeExtension(path, "log"));
+              .SetFileLogger((AbsolutePath)Path.ChangeExtension(path, "log"), verbosity);
     }
 
     /// <summary>
@@ -69,17 +70,7 @@ public static class ToolSettingsExtensions
     /// <param name="settings"></param>
     /// <param name="path"></param>
     public static T SetBinaryLogger<T>(this T settings, AbsolutePath path)
-        where T : ToolSettings
-    {
-        var existingArgs = settings.ProcessArgumentConfigurator;
-        return settings.SetProcessArgumentConfigurator(
-            args =>
-                existingArgs(args)
-                   .Add(
-                        $"/bl:\"{path}\";ProjectImports={( NukeBuild.IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed )}"
-                    )
-        );
-    }
+        where T : ToolSettings => SetBinaryLogger(settings, path, NukeBuild.IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed);
 
     /// <summary>
     ///     Configures binary logging for MSBuild
@@ -102,27 +93,12 @@ public static class ToolSettingsExtensions
     /// </summary>
     /// <param name="settings"></param>
     /// <param name="path"></param>
-    public static T SetFileLogger<T>(this T settings, AbsolutePath path)
+    /// <param name="verbosity"></param>
+    public static T SetFileLogger<T>(this T settings, AbsolutePath path, MSBuildVerbosity? verbosity = null)
         where T : ToolSettings
     {
         var existingArgs = settings.ProcessArgumentConfigurator;
-        var verbosity = MSBuildVerbosity.Normal;
-
-        var nukeAssembly = typeof(VerbosityMappingAttribute).Assembly;
-        // ReSharper disable once NullableWarningSuppressionIsUsed
-        var verbosityMappingType = nukeAssembly.GetType("Nuke.Common.Tooling.VerbosityMapping")!;
-        var mappings = (LookupTable<Type, (Verbosity Verbosity, object MappedVerbosity)>)verbosityMappingType
-                                                                                        .GetRuntimeFields()
-                                                                                        .Single(z => z.Name == "Mappings")
-                                                                                        .NotNull()
-                                                                                         // ReSharper disable once NullableWarningSuppressionIsUsed
-                                                                                        .GetValue(null)!;
-
-        if (mappings.Contains(typeof(MSBuildVerbosity)))
-            foreach (var mapping in mappings[typeof(MSBuildVerbosity)])
-            {
-                if (mapping.Verbosity == NukeBuild.Verbosity) verbosity = (MSBuildVerbosity)mapping.MappedVerbosity;
-            }
+        verbosity ??= NukeBuild.Verbosity.MapVerbosity(MSBuildVerbosity.Normal);
 
         return settings.SetProcessArgumentConfigurator(
             args =>

@@ -1,6 +1,9 @@
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
+using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
+using Nuke.Common.Tools.MSBuild;
+using Rocket.Surgery.Nuke.ProjectModel;
 using Serilog;
 
 namespace Rocket.Surgery.Nuke;
@@ -8,23 +11,8 @@ namespace Rocket.Surgery.Nuke;
 /// <summary>
 ///     Defines targets for a library project that tracks apis using the Microsoft.CodeAnalysis.PublicApiAnalyzers package
 /// </summary>
-public interface IHavePublicApis : IHaveSolution, ICanLint
+public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
 {
-    /// <summary>
-    ///     Determine if Unshipped apis should always be pushed the Shipped file used in lint-staged to automatically update the shipped file
-    /// </summary>
-    public bool ShouldMoveUnshippedToShipped => true;
-
-    /// <summary>
-    ///     All the projects that depend on the Microsoft.CodeAnalysis.PublicApiAnalyzers package
-    /// </summary>
-    public IEnumerable<Project> PublicApiAnalyzerProjects => Solution
-                                                            .AllProjects
-                                                            .Where(z => z.HasPackageReference("Microsoft.CodeAnalysis.PublicApiAnalyzers"))
-                                                            .Where(z => !LintPaths.Any() || LintPaths.Any(path => z.Directory.Contains(path)));
-    #pragma warning restore CA1860
-
-
     private static AbsolutePath GetShippedFilePath(AbsolutePath directory)
     {
         return directory / "PublicAPI.Shipped.txt";
@@ -34,6 +22,11 @@ public interface IHavePublicApis : IHaveSolution, ICanLint
     {
         return directory / "PublicAPI.Unshipped.txt";
     }
+
+    /// <summary>
+    ///     Determine if Unshipped apis should always be pushed the Shipped file used in lint-staged to automatically update the shipped file
+    /// </summary>
+    public bool ShouldMoveUnshippedToShipped => true;
 
     /// <summary>
     ///     Setup to lint the public api projects
@@ -48,11 +41,13 @@ public interface IHavePublicApis : IHaveSolution, ICanLint
     public Target LintPublicApiAnalyzers => d =>
                                                 d
                                                    .TriggeredBy(Lint)
+                                                   .DependsOn(ResolveLintPaths)
+                                                   .Before(PostLint)
                                                    .Unlisted()
                                                    .Executes(
                                                         async () =>
                                                         {
-                                                            foreach (var project in PublicApiAnalyzerProjects)
+                                                            await foreach (var project in GetPublicApiAnalyzerProjects())
                                                             {
                                                                 var shippedFilePath = GetShippedFilePath(project.Directory);
                                                                 var unshippedFilePath = GetUnshippedFilePath(project.Directory);
@@ -62,7 +57,24 @@ public interface IHavePublicApis : IHaveSolution, ICanLint
                                                                 if (!unshippedFilePath.FileExists())
                                                                     await File.WriteAllTextAsync(unshippedFilePath, "#nullable enable");
 
-                                                                DotNetTasks.DotNet($"format analyzers {project.Path} --diagnostics=RS0016");
+                                                                var arguments = new Arguments()
+                                                                               .Add("format")
+                                                                               .Add("analyzers")
+                                                                               .Add(
+                                                                                    "--verbosity {value}",
+                                                                                    Verbosity
+                                                                                       .MapVerbosity(MSBuildVerbosity.Normal)
+                                                                                       .ToString()
+                                                                                       .ToLowerInvariant()
+                                                                                )
+                                                                               .Add("--no-restore")
+                                                                               .Add(
+                                                                                    "--binarylog {value}",
+                                                                                    LogsDirectory / $"public-api-format.{project.Name}.binlog"
+                                                                                )
+                                                                               .Add("--diagnostics {value}", "RS0016");
+
+                                                                DotNetTasks.DotNet(arguments.RenderForExecution(), RootDirectory, logInvocation: false);
                                                             }
                                                         }
                                                     );
@@ -79,7 +91,7 @@ public interface IHavePublicApis : IHaveSolution, ICanLint
                                                    .Executes(
                                                         async () =>
                                                         {
-                                                            foreach (var project in PublicApiAnalyzerProjects)
+                                                            await foreach (var project in GetPublicApiAnalyzerProjects())
                                                             {
                                                                 Log.Logger.Information("Moving unshipped to shipped for {ProjectName}", project.Name);
                                                                 var shippedFilePath = GetShippedFilePath(project.Directory);
@@ -109,4 +121,22 @@ public interface IHavePublicApis : IHaveSolution, ICanLint
                                                             }
                                                         }
                                                     );
+
+    /// <summary>
+    ///     All the projects that depend on the Microsoft.CodeAnalysis.PublicApiAnalyzers package
+    /// </summary>
+    private async IAsyncEnumerable<Project> GetPublicApiAnalyzerProjects()
+    {
+        if (!LintPaths.HasPaths) yield break;
+        foreach (var project in Solution.AllProjects)
+        {
+            var analysis = await project.AnalyzeProject();
+            if (analysis
+               .PackageReferences
+               .Values
+               .SelectMany(z => z.Keys)
+               .Any(z => z.Equals("Microsoft.CodeAnalysis.PublicApiAnalyzers", StringComparison.OrdinalIgnoreCase)))
+                yield return project;
+        }
+    }
 }

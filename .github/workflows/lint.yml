@@ -56,9 +56,6 @@ jobs:
         id: commit-message
         run: |
           echo "message=$(git show -s --format=%s)" >> "$GITHUB_OUTPUT"
-      - name: npm ci
-        run: |
-          npm ci --ignore-scripts
       - name: 🔨 Use .NET Core 6.0 SDK
         uses: actions/setup-dotnet@v4
         with:
@@ -74,14 +71,54 @@ jobs:
       - name: ⚒️ dotnet tool restore
         run: |
           dotnet tool restore
+      - name: Resolve Lint Paths
+        id: resolveLintPaths
+        run: |
+          dotnet nuke ResolveLintPaths --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
+      - name: Lint
+        id: lint
+        run: |
+          dotnet nuke Lint --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
       - name: Regenerate Build Configurations
         id: regenerateBuildConfigurations
         run: |
           dotnet nuke RegenerateBuildConfigurations --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
-      - name: Lint Staged
-        id: lintStaged
+      - name: Generate Readme
+        id: generateReadme
         run: |
-          dotnet nuke LintStaged --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
+          dotnet nuke GenerateReadme --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
+      - name: Lint Public Api Analyzers
+        id: lintPublicApiAnalyzers
+        run: |
+          dotnet nuke LintPublicApiAnalyzers --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
+      - name: Move Unshipped to Shipped
+        id: moveUnshippedToShipped
+        run: |
+          dotnet nuke MoveUnshippedToShipped --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
+      - name: Prettier
+        id: prettier
+        run: |
+          dotnet nuke Prettier --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
+      - name: Husky Lint
+        id: huskyLint
+        run: |
+          dotnet nuke HuskyLint --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
+      - name: Dot Net Format
+        id: dotNetFormat
+        run: |
+          dotnet nuke DotNetFormat --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
+      - name: Jet Brains Cleanup Code
+        id: jetBrainsCleanupCode
+        run: |
+          dotnet nuke JetBrainsCleanupCode --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
+      - name: Post Lint
+        id: postLint
+        run: |
+          dotnet nuke PostLint --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
+      - name: Lint Git Add
+        id: lintGitAdd
+        run: |
+          dotnet nuke LintGitAdd --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
       - name: Add & Commit
         env:
           GITHUB_TOKEN: '${{ secrets.RSG_BOT_TOKEN }}'

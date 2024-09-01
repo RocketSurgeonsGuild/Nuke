@@ -7,7 +7,10 @@
   </PropertyGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="Rocket.Surgery.Nuke.Tests" />
+    <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" />
     <PackageReference Include="Nuke.Common" />
+    <PackageReference Include="System.Collections.Immutable" />
+    <PackageReference Include="System.Interactive.Async" />
     <PackageReference Include="YamlDotNet" />
     <PackageReference Include="Buildalyzer" />
     <PackageReference Include="Humanizer.Core" />
@@ -17,6 +20,15 @@
   <ItemGroup>
     <None Include="build/*.*" Pack="true" PackagePath="build" />
     <None Include="buildMultiTargeting/*.*" Pack="true" PackagePath="buildMultiTargeting" />
+    <None Include="buildTransitive/*.*" Pack="true" PackagePath="buildTransitive" />
+    <None Update="buildTransitive\Rocket.Surgery.Nuke.targets">
+      <Pack>true</Pack>
+      <PackagePath>buildMultiTargeting</PackagePath>
+    </None>
+    <None Update="buildTransitive\Rocket.Surgery.Nuke.props">
+      <Pack>true</Pack>
+      <PackagePath>buildMultiTargeting</PackagePath>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="default.runsettings" />
@@ -27,5 +39,8 @@
     <Using Include="Nuke.Common.Utilities" />
     <None Remove="Temp\LiquidReporter\Resources\MdMultiReport.md" />
     <EmbeddedResource Include="Temp\LiquidReporter\Resources\MdMultiReport.md" LogicalName="MdMultiReport.md" />
+      
+    <AdditionalFiles Include="build/BannedSymbols.Rocket.Surgery.Nuke.txt" />
+    <GlobalAnalyzerConfigFiles Include="build/banned_symbols.globalconfig" />
   </ItemGroup>
 </Project>

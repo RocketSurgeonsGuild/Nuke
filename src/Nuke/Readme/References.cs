@@ -30,7 +30,7 @@ public class References : IMarkdownReferences, IReadmeSection
     public string ConfigKey { get; } = string.Empty;
 
     /// <inheritdoc />
-    public string Process(
+    public Task<string> Process(
         IDictionary<string, object?> config,
         IMarkdownReferences references,
         IHaveSolution build
@@ -42,6 +42,6 @@ public class References : IMarkdownReferences, IReadmeSection
             sb.Append(item.Key).Append(": ").AppendLine(item.Value);
         }
 
-        return sb.ToString();
+        return Task.FromResult(sb.ToString());
     }
 }

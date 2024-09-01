@@ -36,10 +36,9 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         params GitHubActionsImage[] images
     ) : base(name)
     {
-        _images = new[] { image, }
-                 .Concat(images)
-                 .Select(z => z.GetValue().Replace(".", "_", StringComparison.Ordinal))
-                 .ToArray();
+        _images = Enumerable.Concat(new[] { image, }, images)
+                            .Select(z => z.GetValue().Replace(".", "_", StringComparison.Ordinal))
+                            .ToArray();
         _isGithubHosted = true;
     }
 
@@ -55,7 +54,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         params string[] images
     ) : base(name)
     {
-        _images = new[] { image, }.Concat(images).ToArray();
+        _images = Enumerable.Concat(new[] { image, }, images).ToArray();
     }
 
     /// <summary>
@@ -153,24 +152,24 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                                      .Select(secret => new GitHubActionsOutput(secret.Name, secret.Description))
                                      .ToList(),
                             With = new() { ["export-env"] = "false", },
-                            Environment = secrets
-                                         .Select(
-                                              z => new KeyValuePair<string, string>(
-                                                  z.Name,
-                                                  string.IsNullOrWhiteSpace(z.Variable)
-                                                      ? $$$"""{{{z.Path}}}"""
-                                                      : $$$"""${{ vars.{{{z.Variable}}} }}/{{{z.Path.TrimStart('/')}}}"""
-                                              )
-                                          )
-                                         .Concat(
-                                              [
-                                                  new KeyValuePair<string, string>(
-                                                      "OP_SERVICE_ACCOUNT_TOKEN",
-                                                      $$$"""${{ secrets.{{{secrets.First().OutputId}}} }}"""
-                                                  ),
-                                              ]
-                                          )
-                                         .ToDictionary(z => z.Key, z => z.Value),
+                            Environment = Enumerable.Concat(
+                                                         secrets
+                                                            .Select(
+                                                                 z => new KeyValuePair<string, string>(
+                                                                     z.Name,
+                                                                     string.IsNullOrWhiteSpace(z.Variable)
+                                                                         ? $$$"""{{{z.Path}}}"""
+                                                                         : $$$"""${{ vars.{{{z.Variable}}} }}/{{{z.Path.TrimStart('/')}}}"""
+                                                                 )
+                                                             ),
+                                                         [
+                                                             new KeyValuePair<string, string>(
+                                                                 "OP_SERVICE_ACCOUNT_TOKEN",
+                                                                 $$$"""${{ secrets.{{{secrets.First().OutputId}}} }}"""
+                                                             ),
+                                                         ]
+                                                     )
+                                                    .ToDictionary(z => z.Key, z => z.Value),
                         }
                     )
             );
@@ -215,28 +214,28 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                                      .Select(secret => new GitHubActionsOutput(secret.Name, secret.Description))
                                      .ToList(),
                             With = new() { ["export-env"] = "false", },
-                            Environment = secrets
-                                         .Select(
-                                              z => new KeyValuePair<string, string>(
-                                                  z.Name,
-                                                  string.IsNullOrWhiteSpace(z.Variable)
-                                                      ? $$$"""{{{z.Path}}}"""
-                                                      : $$$"""${{ vars.{{{z.Variable}}} }}/{{{z.Path.TrimStart('/')}}}"""
-                                              )
-                                          )
-                                         .Concat(
-                                              [
-                                                  new(
-                                                      "OP_CONNECT_HOST",
-                                                      $$$"""${{ vars.{{{secrets.First().ConnectHost}}} }}"""
-                                                  ),
-                                                  new KeyValuePair<string, string>(
-                                                      "OP_CONNECT_TOKEN",
-                                                      $$$"""${{ secrets.{{{secrets.First().ConnectToken}}} }}"""
-                                                  ),
-                                              ]
-                                          )
-                                         .ToDictionary(z => z.Key, z => z.Value),
+                            Environment = Enumerable.Concat(
+                                                         secrets
+                                                            .Select(
+                                                                 z => new KeyValuePair<string, string>(
+                                                                     z.Name,
+                                                                     string.IsNullOrWhiteSpace(z.Variable)
+                                                                         ? $$$"""{{{z.Path}}}"""
+                                                                         : $$$"""${{ vars.{{{z.Variable}}} }}/{{{z.Path.TrimStart('/')}}}"""
+                                                                 )
+                                                             ),
+                                                         [
+                                                             new(
+                                                                 "OP_CONNECT_HOST",
+                                                                 $$$"""${{ vars.{{{secrets.First().ConnectHost}}} }}"""
+                                                             ),
+                                                             new KeyValuePair<string, string>(
+                                                                 "OP_CONNECT_TOKEN",
+                                                                 $$$"""${{ secrets.{{{secrets.First().ConnectToken}}} }}"""
+                                                             ),
+                                                         ]
+                                                     )
+                                                    .ToDictionary(z => z.Key, z => z.Value),
                         }
                     )
             );
@@ -269,25 +268,25 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         if (!localTool) steps.Add(globalToolStep);
 
         var environmentVariables =
-            GetAllSecrets(secrets)
-                // ReSharper disable CoVariantArrayConversion
-               .Concat<ITriggerValue>(variables)
-               .Concat(onePasswordConnectServerSecrets)
-               .Concat(onePasswordServiceAccountSecrets)
-               .Concat(environmentAttributes)
-                // ReSharper enable CoVariantArrayConversion
-               .SelectMany(
-                    z =>
-                    {
-                        return new[]
-                        {
-                            new KeyValuePair<string, ITriggerValue>(z.Name, z),
-                            new KeyValuePair<string, ITriggerValue>(z.Alias ?? z.Name.Pascalize(), z),
-                        };
-                    }
-                )
-               .DistinctBy(z => z.Key, StringComparer.OrdinalIgnoreCase)
-               .ToDictionary(z => z.Key, z => z.Value, StringComparer.OrdinalIgnoreCase);
+            Enumerable.Concat(
+                           GetAllSecrets(secrets)
+                               // ReSharper disable CoVariantArrayConversion
+                              .Concat<ITriggerValue>(variables)
+                              .Concat(onePasswordConnectServerSecrets)
+                              .Concat(onePasswordServiceAccountSecrets), environmentAttributes)
+                       // ReSharper enable CoVariantArrayConversion
+                      .SelectMany(
+                           z =>
+                           {
+                               return new[]
+                               {
+                                   new KeyValuePair<string, ITriggerValue>(z.Name, z),
+                                   new KeyValuePair<string, ITriggerValue>(z.Alias ?? z.Name.Pascalize(), z),
+                               };
+                           }
+                       )
+                      .DistinctBy(z => z.Key, StringComparer.OrdinalIgnoreCase)
+                      .ToDictionary(z => z.Key, z => z.Value, StringComparer.OrdinalIgnoreCase);
 
         var implicitParameters =
             Build
@@ -466,8 +465,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                            // ReSharper disable once NullableWarningSuppressionIsUsed
                            z => ( name: ( (YamlScalarNode)z.Children[key] ).Value!.Split("@")[0],
                                   value: ( (YamlScalarNode)z.Children[key] ).Value )
-                       )
-                      .Distinct(z => z.name)
+                       ).DistinctBy(z => z.name)
                       .ToDictionary(
                            z => z.name,
                            z => z.value

@@ -26,7 +26,7 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
         params GitHubActionsImage[] images
     ) : base(name, image, images)
     {
-        InvokedTargets = new[] { nameof(ICanLintStagedFiles.LintStaged), };
+        InvokedTargets = new[] { nameof(ICanLint.Lint), };
     }
 
     /// <summary>
@@ -90,7 +90,6 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
                     step.Ref = "${{ github.event.pull_request.head.ref }}";
                 }
             )
-           .InsertAfterCheckOut(new RunStep("npm ci") { Run = "npm ci --ignore-scripts", })
            .InsertAfterCheckOut(
                 new RunStep("Get Head Commit Message") { Id = "commit-message", Run = "echo \"message=$(git show -s --format=%s)\" >> \"$GITHUB_OUTPUT\"", }
             )

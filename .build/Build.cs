@@ -13,7 +13,6 @@ using Rocket.Surgery.Nuke.DotNetCore;
 [UnsetVisualStudioEnvironmentVariables]
 [PackageIcon("https://raw.githubusercontent.com/RocketSurgeonsGuild/graphics/master/png/social-square-thrust-rounded.png")]
 [EnsureGitHooks(GitHook.PreCommit)]
-[EnsureReadmeIsUpdated("Readme.md")]
 [DotNetVerbosityMapping]
 [MSBuildVerbosityMapping]
 [NuGetVerbosityMapping]
@@ -28,7 +27,6 @@ public partial class Pipeline : NukeBuild,
     ICanPackWithDotNetCore,
     IHaveDataCollector,
     ICanClean,
-    ICanLintStagedFiles,
     ICanDotNetFormat,
     ICanPrettier,
     IHavePublicApis,

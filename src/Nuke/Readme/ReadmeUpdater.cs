@@ -68,7 +68,7 @@ public class ReadmeUpdater
     /// <param name="content"></param>
     /// <param name="build"></param>
     /// <returns></returns>
-    public string Process(string content, IHaveSolution build)
+    public async Task<string> Process(string content, IHaveSolution build)
     {
         var nukeDataRegex = new Regex(
             "<!-- nuke-data(.*?)-->",
@@ -101,7 +101,7 @@ public class ReadmeUpdater
 
             var sectionStart = sectionMatch.First().Captures[0];
             var sectionEnd = sectionMatch.Last().Captures[0];
-            var newSectionContent = section.Process(config, References, build);
+            var newSectionContent = await section.Process(config, References, build);
             ranges.Add(
                 ( sectionStart.Index + sectionStart.Length,
                   sectionEnd.Index - ( sectionStart.Index + sectionStart.Length ), newSectionContent )

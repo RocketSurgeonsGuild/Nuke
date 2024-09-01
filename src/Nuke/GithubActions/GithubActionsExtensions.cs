@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Collections.Immutable;
 using System.Reflection;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
@@ -119,7 +120,7 @@ public static class GithubActionsExtensions
     {
         foreach (var item in configuration.DetailedTriggers.OfType<RocketSurgeonGitHubActionsVcsTrigger>())
         {
-            item.IncludePaths = Enumerable.Concat(item.IncludePaths, paths).Distinct().ToArray();
+            item.IncludePaths = [..Enumerable.Concat(item.IncludePaths, paths).Distinct()];
         }
 
         return configuration;
@@ -135,7 +136,7 @@ public static class GithubActionsExtensions
     {
         foreach (var item in configuration.DetailedTriggers.OfType<RocketSurgeonGitHubActionsVcsTrigger>())
         {
-            item.ExcludePaths = Enumerable.Concat(item.IncludePaths, paths).Distinct().ToArray();
+            item.ExcludePaths = [..Enumerable.Concat(item.IncludePaths, paths).Distinct()];
         }
 
         return configuration;

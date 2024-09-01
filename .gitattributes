@@ -107,8 +107,8 @@ TODO              text
 *.lock            text -diff
 package-lock.json text -diff
 *.npmignore       text
-*.yaml            text
-*.yml             text
+*.yaml            text eol=lf
+*.yml             text eol=lf
 browserslist      text
 Makefile          text
 makefile          text

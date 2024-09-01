@@ -6,6 +6,7 @@ namespace Rocket.Surgery.Nuke;
 /// <summary>
 ///     A tool to update the readme
 /// </summary>
+[PublicAPI]
 public interface ICanUpdateReadme : IHaveSolution
 {
     /// <summary>
@@ -25,13 +26,25 @@ public interface ICanUpdateReadme : IHaveSolution
     /// </summary>
     public Target GenerateReadme => d => d
                                         .Unlisted()
-                                        .OnlyWhenStatic(() => IsLocalBuild)
+                                        .TryTriggeredBy<ICanLint>(z => z.Lint)
                                         .Executes(
-                                             () =>
+                                             async () =>
                                              {
+                                                 var path = TemporaryDirectory / "readme-last-updated-at";
+                                                 if (!path.FileExists())
+                                                 {
+                                                     await using var _ = File.Create(path);
+                                                     _.Close();
+                                                 }
+                                                 else if (File.GetLastWriteTime(path) + TimeSpan.FromHours(1) > DateTime.Now)
+                                                 {
+                                                     return;
+                                                 }
+
                                                  var readmeContent = File.ReadAllText(ReadmeFilePath);
-                                                 readmeContent = Readme.Process(readmeContent, this);
+                                                 readmeContent = await Readme.Process(readmeContent, this);
                                                  File.WriteAllText(ReadmeFilePath, readmeContent);
+                                                 File.SetLastWriteTime(path, DateTime.Now);
                                              }
                                          );
 }

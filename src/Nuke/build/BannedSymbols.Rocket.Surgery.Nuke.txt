@@ -1,0 +1,2 @@
+T:Nuke.Common.ProjectModel.ProjectExtensions
+T:Nuke.Common.ProjectModel.ProjectModelTasks

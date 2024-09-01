@@ -3,6 +3,7 @@ using System.Text.Json;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
+using Serilog;
 
 namespace Rocket.Surgery.Nuke;
 
@@ -30,6 +31,16 @@ public static class DotnetTool
     public static Tool GetTool(string nugetPackageName)
     {
         return ResolveToolsManifest().GetTool(nugetPackageName);
+    }
+
+    /// <summary>
+    ///     Gets the tool definition for a given local dotnet tool
+    /// </summary>
+    /// <param name="nugetPackageName"></param>
+    /// <returns></returns>
+    public static ProperTool GetProperTool(string nugetPackageName)
+    {
+        return ResolveToolsManifest().GetProperTool(nugetPackageName);
     }
 
     private static ResolvedToolsManifest? toolsManifest;
@@ -83,6 +94,16 @@ internal record ResolvedToolsManifest(ImmutableDictionary<string, FullToolComman
         return new(commandBuilder.ToImmutable());
     }
 
+    private static void DefaultLogger(OutputType kind, string message)
+    {
+        // ReSharper disable TemplateIsNotCompileTimeConstantProblem
+        if (kind == OutputType.Std)
+            Log.Information(message);
+        else
+            Log.Warning(message);
+        // ReSharper restore TemplateIsNotCompileTimeConstantProblem
+    }
+
     public bool IsInstalled(string commandName)
     {
         return CommandDefinitions.ContainsKey(commandName)
@@ -92,22 +113,38 @@ internal record ResolvedToolsManifest(ImmutableDictionary<string, FullToolComman
     public Tool GetTool(string nugetPackageName)
     {
         return CommandDefinitions.TryGetValue(nugetPackageName, out var tool)
+            ? (arguments, directory, variables, timeout, output, invocation, logger, handler) => DotNetTasks.DotNet(
+                  string.Concat(tool.Command, " ", arguments.ToStringAndClear()),
+                  directory,
+                  variables,
+                  timeout,
+                  output,
+                  invocation,
+                  // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
+                  logger ?? DefaultLogger,
+                  handler
+              )
+            : throw new InvalidOperationException($"Tool {nugetPackageName} is not installed");
+    }
+
+    public ProperTool GetProperTool(string nugetPackageName)
+    {
+        return CommandDefinitions.TryGetValue(nugetPackageName, out var tool)
             ? (arguments, directory, variables, timeout, output, invocation, logger, handler) =>
               {
-                  var args = arguments.ToStringAndClear();
-                  args = args.StartsWith('"')
-                      ? string.Concat("\"", tool.Command, " ", args.AsSpan(1))
-                      : string.Concat(tool.Command, " ", args);
-                  return DotNetTasks.DotNet(
-                      args,
+                  var process = ProcessTasks.StartProcess(
+                      DotNetTasks.DotNetPath,
+                      string.Concat(tool.Command, " ", arguments.RenderForExecution()),
                       directory,
                       variables,
                       timeout,
                       output,
                       invocation,
-                      logger,
-                      handler
+                      // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
+                      logger ?? DefaultLogger
                   );
+                  ( handler ?? ( p => ProcessTasks.DefaultExitHandler(null, p) ) ).Invoke(process.AssertWaitForExit());
+                  return process.Output;
               }
             : throw new InvalidOperationException($"Tool {nugetPackageName} is not installed");
     }
@@ -124,3 +161,17 @@ internal class ToolDefinition
     public string Version { get; set; } = null!;
     public string[] Commands { get; set; } = [];
 }
+
+/// <summary>
+///     Copy of tool just for stirngs to allow going from arguments
+/// </summary>
+public delegate IReadOnlyCollection<Output> ProperTool(
+    Arguments arguments,
+    string? workingDirectory = null,
+    IReadOnlyDictionary<string, string>? environmentVariables = null,
+    int? timeout = null,
+    bool? logOutput = null,
+    bool? logInvocation = null,
+    Action<OutputType, string>? logger = null,
+    Action<IProcess>? exitHandler = null
+);

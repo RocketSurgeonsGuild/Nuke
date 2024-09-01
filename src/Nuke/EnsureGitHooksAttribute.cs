@@ -1,7 +1,6 @@
 using Nuke.Common.Execution;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
-using Nuke.Common.Tools.Git;
 using Serilog;
 
 #pragma warning disable CA1019
@@ -43,16 +42,24 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
         if (!NukeBuild.IsLocalBuild) return;
 
         // ReSharper disable once SuspiciousTypeConversion.Global
-        if (Build is not IGitHooksEngine engine)
+        if (Build is IGitHooksEngine engine)
         {
-            Log.Verbose("No git hooks engine found, defaulting to husky");
-            engine = new HuskyEngine();
+            installHooks(engine, HookNames);
         }
 
-        if (!engine.AreHooksInstalled(HookNames))
+        if (( Build.RootDirectory / ".husky" ).DirectoryExists())
         {
-            Log.Information("git hooks not found...");
-            engine.InstallHooks(HookNames);
+            engine = new HuskyEngine();
+            installHooks(engine, HookNames);
+        }
+
+        static void installHooks(IGitHooksEngine engine, string[] hookNames)
+        {
+            if (!engine.AreHooksInstalled(hookNames))
+            {
+                Log.Information("git hooks not found...");
+                engine.InstallHooks(hookNames);
+            }
         }
     }
 
@@ -61,59 +68,10 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
     {
         if (( NukeBuild.RootDirectory / "package.json" ).FileExists() && !NukeBuild.RootDirectory.ContainsDirectory("node_modules"))
         {
-            Log.Information("package.json found running npm install to see if that installs any hooks");
             ProcessTasks
                .StartProcess(ToolPathResolver.GetPathExecutable("npm"), NukeBuild.IsLocalBuild ? "install" : "ci --ignore-scripts", NukeBuild.RootDirectory)
                .AssertWaitForExit()
                .AssertZeroExitCode();
-        }
-    }
-
-    private class HuskyEngine : IGitHooksEngine
-    {
-        public bool AreHooksInstalled(IReadOnlyCollection<string> hooks)
-        {
-            if (NukeBuild.IsServerBuild) return true;
-            try
-            {
-                var hooksOutput = GitTasks.Git($"config --get core.hookspath", logOutput: false, logInvocation: false);
-                var hooksPath = hooksOutput.StdToText().Trim();
-                var huskyScriptPath = NukeBuild.RootDirectory / ".husky" / "_" / "husky.sh";
-                return hooksPath.StartsWith(".husky") && huskyScriptPath.FileExists();
-            }
-            #pragma warning disable CA1031
-            catch
-                #pragma warning restore CA1031
-            {
-                return false;
-            }
-        }
-
-        public void InstallHooks(IReadOnlyCollection<string> hooks)
-        {
-            if (( NukeBuild.RootDirectory / "package.json" ).FileExists())
-            {
-                Log.Information("package.json found running npm install to see if that installs any hooks");
-                ProcessTasks
-                   .StartProcess(ToolPathResolver.GetPathExecutable("npm"), "install", NukeBuild.RootDirectory)
-                   .AssertWaitForExit()
-                   .AssertZeroExitCode();
-                if (NukeBuild.IsLocalBuild)
-                    ProcessTasks
-                       .StartProcess(ToolPathResolver.GetPathExecutable("npm"), "run prepare", NukeBuild.RootDirectory)
-                       .AssertWaitForExit();
-            }
-
-            if (!AreHooksInstalled(hooks))
-            {
-                Log.Information(
-                    "package.json not found or prepare script did not work correctly running npx husky"
-                );
-                ProcessTasks
-                   .StartProcess(ToolPathResolver.GetPathExecutable("npx"), "husky", NukeBuild.RootDirectory)
-                   .AssertWaitForExit()
-                   .AssertZeroExitCode();
-            }
         }
     }
 }

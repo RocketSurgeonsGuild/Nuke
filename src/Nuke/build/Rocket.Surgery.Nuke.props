@@ -1,8 +1,9 @@
 <Project>
     <PropertyGroup>
         <_NukeRoot Condition="'$(_NukeRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove('$(MSBuildProjectFullPath)', 'build.cmd'))</_NukeRoot>
-        <_NukeRoot Condition="'$(_NukeRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove('$(MSBuildProjectFullPath)', 'build.sh'))</_NukeRoot>
         <_NukeRoot Condition="'$(_NukeRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove('$(MSBuildProjectFullPath)', 'build.ps1'))</_NukeRoot>
+        <_NukeTemp Condition="'$(_NukeTemp)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove('$(MSBuildProjectFullPath)', 'build.ps1'))/.nuke/temp/</_NukeTemp>
+
         <_CiFiles Condition="'$(_CiFiles)' == ''" />
         <_CiFiles Condition="Exists('$(_NukeRoot)\.azure-pipelines.yml')">$(_CiFiles);$(_NukeRoot)\.azure-pipelines.yml</_CiFiles>
         <_CiFiles Condition="Exists('$(_NukeRoot)\azure-pipelines.yml')">$(_CiFiles);$(_NukeRoot)\azure-pipelines.yml</_CiFiles>
@@ -21,7 +22,9 @@
         <_ConfigFiles Condition="Exists('$(_NukeRoot)\nuget.config')">$(_ConfigFiles);$(_NukeRoot)\nuget.config</_ConfigFiles>
         <_ConfigFiles Condition="Exists('$(_NukeRoot)\omnisharp.json')">$(_ConfigFiles);$(_NukeRoot)\omnisharp.json</_ConfigFiles>
         <_ConfigFiles Condition="Exists('$(_NukeRoot)\.dependabot\config.yml')">$(_ConfigFiles);$(_NukeRoot)\.dependabot\config.yml</_ConfigFiles>
-        <_ConfigFiles Condition="Exists('$(_NukeRoot)\.config\dotnet-tools.json')">$(_ConfigFiles);$(_NukeRoot)\.config\dotnet-tools.json</_ConfigFiles>
+        <_ConfigFiles Condition="Exists('$(_NukeRoot)\BannedSymbols.txt')">$(_ConfigFiles);$(_NukeRoot)\BannedSymbols.txt</_ConfigFiles>
+        <_ConfigFiles Condition="Exists('$(_NukeRoot)\renovate.json')">$(_ConfigFiles);$(_NukeRoot)\renovate.json</_ConfigFiles>
+        <_ConfigFiles Condition="Exists('$(_NukeRoot)\renovate.json5')">$(_ConfigFiles);$(_NukeRoot)\renovate.json5</_ConfigFiles>
         <!--<_ConfigFiles Condition="Exists('$(_NukeRoot)\')">$(_ConfigFiles);$(_NukeRoot)\</_ConfigFiles>-->
 
         <_GitFiles Condition="'$(_GitFiles)' == ''" />
@@ -32,7 +35,7 @@
 
         <_NukeFiles Condition="'$(_NukeFiles)' == ''" />
         <_NukeFiles Condition="Exists('$(_NukeRoot)')">$(_NukeFiles);$(_NukeRoot)\build.ps1;$(_NukeRoot)\build.sh;$(_NukeRoot)\.nuke</_NukeFiles>
-        
+
     </PropertyGroup>
     <ItemGroup>
         <Using Include="Rocket.Surgery.Nuke" />
