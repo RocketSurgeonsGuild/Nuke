@@ -21,9 +21,9 @@ public interface ICanTestWithXUnit : IHaveTestTarget,
                                  .DependsOn(Build)
                                  .Unlisted()
                                  .Executes(
-                                      () =>
+                                      async () =>
                                       {
-                                          foreach (var project in Solution.GetTestProjects())
+                                          await foreach (var project in Solution.GetTestProjects())
                                           {
                                               DotNetTasks
                                                  .DotNetTest(

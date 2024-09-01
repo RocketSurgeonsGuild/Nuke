@@ -28,7 +28,7 @@ public class Histories : IReadmeSection
     public string ConfigKey => string.Empty;
 
     /// <inheritdoc />
-    public string Process(
+    public Task<string> Process(
         IDictionary<string, object?> config,
         IMarkdownReferences references,
         IHaveSolution build
@@ -51,6 +51,6 @@ public class Histories : IReadmeSection
         sb.Append("| ").AppendJoin(" | ", results.Select(z => string.Concat(Enumerable.Range(0, z.name.Length).Select(_ => "-")))).AppendLine(" |");
         sb.Append("| ").AppendJoin(" | ", results.Select(z => z.badge)).AppendLine(" |");
         sb.Append("| ").AppendJoin(" | ", results.Select(z => z.history)).AppendLine(" |");
-        return sb.ToString();
+        return Task.FromResult(sb.ToString());
     }
 }

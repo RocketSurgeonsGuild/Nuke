@@ -27,7 +27,7 @@ public class Badges : IReadmeSection
     public string ConfigKey => string.Empty;
 
     /// <inheritdoc />
-    public string Process(
+    public Task<string> Process(
         IDictionary<string, object?> config,
         IMarkdownReferences references,
         IHaveSolution build
@@ -47,6 +47,6 @@ public class Badges : IReadmeSection
             sb.AppendLine(result);
         }
 
-        return sb.ToString();
+        return Task.FromResult(sb.ToString());
     }
 }

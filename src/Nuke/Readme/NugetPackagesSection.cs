@@ -101,13 +101,13 @@ internal class NugetPackagesSection : IReadmeSection
 
     public string ConfigKey { get; } = string.Empty;
 
-    public string Process(
+    public async Task<string> Process(
         IDictionary<string, object?> config,
         IMarkdownReferences references,
         IHaveSolution build
     )
     {
-        var packageNames = build.Solution.WherePackable().Select(x => x.GetProperty<string>("PackageId") ?? x.Name);
+        var packageNames = build.Solution.WherePackable().Select(x => x.PackageId);
 
         var sb = new StringBuilder();
         if (config.ContainsKey("myget"))
@@ -121,7 +121,7 @@ internal class NugetPackagesSection : IReadmeSection
             sb.AppendLine("| ------- | ----- |");
         }
 
-        foreach (var package in packageNames.OrderBy(z => z))
+        await foreach (var package in packageNames.OrderBy(z => z))
         {
             sb.AppendLine(GetResult(config, references, package));
         }

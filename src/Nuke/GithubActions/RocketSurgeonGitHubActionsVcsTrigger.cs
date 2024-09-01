@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using Nuke.Common.CI.GitHubActions.Configuration;
 using Nuke.Common.Tooling;
 using Nuke.Common.Utilities.Collections;
@@ -18,22 +19,22 @@ public class RocketSurgeonGitHubActionsVcsTrigger : GitHubActionsDetailedTrigger
     /// <summary>
     ///     The branches
     /// </summary>
-    public string[] Branches { get; set; } = [];
+    public ImmutableArray<string> Branches { get; set; } = [];
 
     /// <summary>
     ///     The Tags
     /// </summary>
-    public string[] Tags { get; set; } = [];
+    public ImmutableArray<string> Tags { get; set; } = [];
 
     /// <summary>
     ///     The included paths
     /// </summary>
-    public string[] IncludePaths { get; set; } = [];
+    public ImmutableArray<string> IncludePaths { get; set; } = [];
 
     /// <summary>
     ///     The excluded paths
     /// </summary>
-    public string[] ExcludePaths { get; set; } = [];
+    public ImmutableArray<string> ExcludePaths { get; set; } = [];
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)

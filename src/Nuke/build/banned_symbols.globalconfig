@@ -1,0 +1,4 @@
+is_global = true
+
+# RS0030: Do not use banned APIs
+dotnet_diagnostic.RS0030.severity = error

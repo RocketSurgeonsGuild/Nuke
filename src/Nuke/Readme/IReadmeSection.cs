@@ -22,5 +22,5 @@ public interface IReadmeSection
     /// <param name="references"></param>
     /// <param name="build"></param>
     /// <returns></returns>
-    string Process(IDictionary<string, object?> config, IMarkdownReferences references, IHaveSolution build);
+    Task<string> Process(IDictionary<string, object?> config, IMarkdownReferences references, IHaveSolution build);
 }

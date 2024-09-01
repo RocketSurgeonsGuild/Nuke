@@ -1,4 +1,5 @@
 using Nuke.Common.ProjectModel;
+using Rocket.Surgery.Nuke.ProjectModel;
 
 namespace Rocket.Surgery.Nuke;
 
@@ -12,9 +13,13 @@ public static class SolutionExtensions
     /// </summary>
     /// <param name="solution">The solution.</param>
     /// <returns>An enumerable of projects.</returns>
-    public static IEnumerable<Project> WherePackable(this Solution solution)
+    public static async IAsyncEnumerable<ProjectAnalyzerModel> WherePackable(this Solution solution)
     {
-        return solution.AllProjects.Where(z => z.GetProperty<bool?>("IsPackable") == true && z.GetProperty<bool?>("IsTestProject") != true);
+        foreach (var project in solution.AllProjects)
+        {
+            var analyzeProject = await project.AnalyzeProject();
+            if (analyzeProject is { IsPackable: true, IsTestProject: false }) yield return analyzeProject;
+        }
     }
 
     /// <summary>
@@ -22,8 +27,12 @@ public static class SolutionExtensions
     /// </summary>
     /// <param name="solution">The solution.</param>
     /// <returns></returns>
-    public static IEnumerable<Project> GetTestProjects(this Solution solution)
+    public static async IAsyncEnumerable<ProjectAnalyzerModel> GetTestProjects(this Solution solution)
     {
-        return solution.AllProjects.Where(z => z.GetProperty<bool?>("IsTestProject") == true);
+        foreach (var project in solution.AllProjects)
+        {
+            var analyzeProject = await project.AnalyzeProject();
+            if (analyzeProject.IsTestProject) yield return analyzeProject;
+        }
     }
 }

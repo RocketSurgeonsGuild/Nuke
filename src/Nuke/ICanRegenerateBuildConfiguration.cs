@@ -1,7 +1,9 @@
 using System.Reflection;
 using Nuke.Common.CI;
+using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Utilities.Collections;
+using Serilog;
 
 namespace Rocket.Surgery.Nuke;
 
@@ -16,30 +18,28 @@ public interface ICanRegenerateBuildConfiguration : ICanLint
     [UsedImplicitly]
     public Target RegenerateBuildConfigurations =>
         t => t
-            .TryDependentFor<ICanLintStagedFiles>(static z => z.LintStaged)
-            .TryTriggeredBy<ICanLint>(static z => z.Lint)
-             // We run during LintStaged, no need to run again during the lint that lint-staged kicks off.
-            .OnlyWhenDynamic(() => !EnvironmentInfo.HasVariable("RSG_NUKE_LINT_STAGED"))
-            .Unlisted()
+            .TriggeredBy<ICanLint>(static z => z.Lint)
             .Executes(
                  () =>
                  {
-                     var allHosts = GetType()
-                                   .GetCustomAttributes<ConfigurationAttributeBase>()
-                                   .OfType<IConfigurationGenerator>();
+                     foreach (var host in GetType()
+                                         .GetCustomAttributes<ConfigurationAttributeBase>()
+                                         .OfType<IConfigurationGenerator>())
+                     {
+                         var args = new Arguments()
+                                   .Add(Assembly.GetEntryAssembly()!.Location)
+                                   .Add($"--{BuildServerConfigurationGeneration.ConfigurationParameterName} {{value}}", host.Id)
+                                   .Add("--host {value}", host.HostName);
 
-                     allHosts
-                        .Select(
-                             z =>
-                                 // ReSharper disable once NullableWarningSuppressionIsUsed
-                                 $"""{Assembly.GetEntryAssembly()!.Location} --{BuildServerConfigurationGeneration.ConfigurationParameterName} {z.Id} --host {z.HostName}"""
-                         )
-                        .ForEach(
-                             command => DotNetTasks.DotNet(
-                                 command,
-                                 environmentVariables: EnvironmentInfo.Variables.AddIfMissing("NUKE_INTERNAL_INTERCEPTOR", "1")
-                             )
+                         Log.Logger.Information("Regenerating {HostName} configuration id {Name}", host.HostName, host.Id);
+
+                         DotNetTasks.DotNet(
+                             args.RenderForExecution(),
+                             environmentVariables: EnvironmentInfo.Variables.AddIfMissing("NUKE_INTERNAL_INTERCEPTOR", "1")                            ,
+                             logOutput: false,
+                             logInvocation: false
                          );
+                     }
                  }
              );
 }

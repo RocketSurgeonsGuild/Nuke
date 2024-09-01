@@ -35,7 +35,6 @@ public interface ICanRestoreWithDotNetCore : IHaveCleanTarget,
                                           () => DotNetRestore(
                                               s => s
                                                   .SetProjectFile(Solution)
-                                                  .EnableDisableParallel()
                                                   .SetDefaultLoggers(LogsDirectory / "restore.log")
                                                   .SetGitVersionEnvironment(GitVersion)
                                           )

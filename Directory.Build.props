@@ -27,6 +27,7 @@
         <!--        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>-->
         <!--        <WarningsNotAsErrors></WarningsNotAsErrors>-->
         <WarningsAsErrors>RS0017</WarningsAsErrors>
+        <NoWarn>$(NoWarn);RS0016;RS0037</NoWarn>
 
         <NuGetAudit>true</NuGetAudit>
         <NuGetAuditMode>all</NuGetAuditMode>

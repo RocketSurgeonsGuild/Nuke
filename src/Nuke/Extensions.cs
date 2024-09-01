@@ -1,7 +1,12 @@
 using System.Collections.ObjectModel;
+using System.Reflection;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.IO;
+using Nuke.Common.Tooling;
+using Nuke.Common.Tools.MSBuild;
 using Nuke.Common.Tools.ReportGenerator;
+using Nuke.Common.Utilities.Collections;
+using Serilog;
 
 namespace Rocket.Surgery.Nuke;
 
@@ -43,6 +48,39 @@ public static class Extensions
     public static ITargetDefinition CreateOrCleanDirectory(this ITargetDefinition target, AbsolutePath testResultsDirectory)
     {
         return target.Executes(testResultsDirectory.CreateOrCleanDirectory);
+    }
+
+    /// <summary>
+    /// Map the current nuke verbosity to the given type
+    /// </summary>
+    /// <param name="verbosity"></param>
+    /// <param name="default"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static T MapVerbosity<T>(this Verbosity verbosity, T @default)
+    {
+        var nukeAssembly = typeof(VerbosityMappingAttribute).Assembly;
+        // ReSharper disable once NullableWarningSuppressionIsUsed
+        var verbosityMappingType = nukeAssembly.GetType("Nuke.Common.Tooling.VerbosityMapping")!;
+        var mappings = (LookupTable<Type, (Verbosity Verbosity, object MappedVerbosity)>)verbosityMappingType
+                                                                                        .GetRuntimeFields()
+                                                                                        .Single(z => z.Name == "Mappings")
+                                                                                        .NotNull()
+                                                                                         // ReSharper disable once NullableWarningSuppressionIsUsed
+                                                                                        .GetValue(null)!;
+
+        if (!mappings.Contains(typeof(T)))
+        {
+            Log.Warning("No verbosity mapping found for {Type}", typeof(T).Name);
+            return @default;
+        }
+
+        foreach (var mapping in mappings[typeof(T)])
+        {
+            if (mapping.Verbosity == NukeBuild.Verbosity) return (T)mapping.MappedVerbosity;
+        }
+
+        return @default;
     }
 
     /// <summary>
