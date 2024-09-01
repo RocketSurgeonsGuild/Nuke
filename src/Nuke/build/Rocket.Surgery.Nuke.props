@@ -3,8 +3,7 @@
         <EnsureNukeRestore Condition="'$(EnsureNukeRestore)' == ''">enable</EnsureNukeRestore>
         <EnsureNukeRestoreTask Condition="'$(EnsureNukeRestoreTask)' == ''">restore</EnsureNukeRestoreTask>
         <_NukeRoot Condition="'$(_NukeRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove('$(MSBuildProjectFullPath)', 'build.cmd'))</_NukeRoot>
-        <_NukeEnsureNukeRestoreRoot
-            Condition="'$(_NukeRoot)' == ''">
+        <_NukeEnsureNukeRestoreRoot Condition="'$(_NukeRoot)' == ''">
             $([MSBuild]::GetDirectoryNameOfFileAbove('$(MSBuildProjectFullPath)', 'build.sh'))
         </_NukeEnsureNukeRestoreRoot>
         <_NukeRoot Condition="'$(_NukeRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove('$(MSBuildProjectFullPath)', 'build.ps1'))</_NukeRoot>

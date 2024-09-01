@@ -13,12 +13,6 @@ namespace Rocket.Surgery.Nuke;
 /// </summary>
 public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
 {
-    /// <summary>
-    ///     Determine if Unshipped apis should always be pushed the Shipped file used in lint-staged to automatically update the shipped file
-    /// </summary>
-    public bool ShouldMoveUnshippedToShipped => true;
-
-
     private static AbsolutePath GetShippedFilePath(AbsolutePath directory)
     {
         return directory / "PublicAPI.Shipped.txt";
@@ -28,6 +22,11 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
     {
         return directory / "PublicAPI.Unshipped.txt";
     }
+
+    /// <summary>
+    ///     Determine if Unshipped apis should always be pushed the Shipped file used in lint-staged to automatically update the shipped file
+    /// </summary>
+    public bool ShouldMoveUnshippedToShipped => true;
 
     /// <summary>
     ///     Setup to lint the public api projects
@@ -40,35 +39,45 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
     /// </summary>
     [UsedImplicitly]
     public Target LintPublicApiAnalyzers => d =>
-                                                d.TriggeredBy(Lint)
-                                                 .DependsOn(ResolveLintPaths)
-                                                 .Before(PostLint)
-                                                 .Unlisted()
-                                                 .Executes(
-                                                      async () =>
-                                                      {
-                                                          await foreach (var project in GetPublicApiAnalyzerProjects())
-                                                          {
-                                                              var shippedFilePath = GetShippedFilePath(project.Directory);
-                                                              var unshippedFilePath = GetUnshippedFilePath(project.Directory);
-                                                              if (!shippedFilePath.FileExists())
-                                                                  await File.WriteAllTextAsync(shippedFilePath, "#nullable enable");
+                                                d
+                                                   .TriggeredBy(Lint)
+                                                   .DependsOn(ResolveLintPaths)
+                                                   .Before(PostLint)
+                                                   .Unlisted()
+                                                   .Executes(
+                                                        async () =>
+                                                        {
+                                                            await foreach (var project in GetPublicApiAnalyzerProjects())
+                                                            {
+                                                                var shippedFilePath = GetShippedFilePath(project.Directory);
+                                                                var unshippedFilePath = GetUnshippedFilePath(project.Directory);
+                                                                if (!shippedFilePath.FileExists())
+                                                                    await File.WriteAllTextAsync(shippedFilePath, "#nullable enable");
 
-                                                              if (!unshippedFilePath.FileExists())
-                                                                  await File.WriteAllTextAsync(unshippedFilePath, "#nullable enable");
+                                                                if (!unshippedFilePath.FileExists())
+                                                                    await File.WriteAllTextAsync(unshippedFilePath, "#nullable enable");
 
-                                                              var arguments = new Arguments()
-                                                                             .Add("format")
-                                                                             .Add("analyzers")
-                                                                             .Add("--verbosity {value}", Verbosity.MapVerbosity(MSBuildVerbosity.Normal).ToString().ToLowerInvariant())
-                                                                             .Add("--no-restore")
-                                                                             .Add("--binarylog {value}", LogsDirectory / "public-api-format.binlog")
-                                                                             .Add("--diagnostics {value}", "RS0016");
+                                                                var arguments = new Arguments()
+                                                                               .Add("format")
+                                                                               .Add("analyzers")
+                                                                               .Add(
+                                                                                    "--verbosity {value}",
+                                                                                    Verbosity
+                                                                                       .MapVerbosity(MSBuildVerbosity.Normal)
+                                                                                       .ToString()
+                                                                                       .ToLowerInvariant()
+                                                                                )
+                                                                               .Add("--no-restore")
+                                                                               .Add(
+                                                                                    "--binarylog {value}",
+                                                                                    LogsDirectory / $"public-api-format.{project.Name}.binlog"
+                                                                                )
+                                                                               .Add("--diagnostics {value}", "RS0016");
 
-                                                              DotNetTasks.DotNet(arguments.RenderForExecution(), RootDirectory, logInvocation: false);
-                                                          }
-                                                      }
-                                                  );
+                                                                DotNetTasks.DotNet(arguments.RenderForExecution(), RootDirectory, logInvocation: false);
+                                                            }
+                                                        }
+                                                    );
 
     /// <summary>
     ///     Ensure the shipped file is up to date

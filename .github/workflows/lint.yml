@@ -71,6 +71,10 @@ jobs:
       - name: ⚒️ dotnet tool restore
         run: |
           dotnet tool restore
+      - name: Resolve Lint Paths
+        id: resolveLintPaths
+        run: |
+          dotnet nuke ResolveLintPaths --skip --thisisaothervariable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisanothervariable '${{ vars.THIS_IS_ANOTHER_VARIABLE }}' --this_is_a_variable '${{ vars.THIS_IS_A_VARIABLE }}' --thisisaenv '${{ env.THIS_IS_A_ENV || 'test' }}' --thisisasecret '${{ secrets.THIS_IS_A_SECRET }}' --githubtoken '${{ secrets.GITHUB_TOKEN }}'
       - name: Lint
         id: lint
         run: |
