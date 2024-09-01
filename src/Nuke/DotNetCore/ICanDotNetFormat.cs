@@ -37,7 +37,6 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
     public Target DotNetFormat => d =>
                                       d
                                          .TriggeredBy(Lint)
-                                         .DependsOn(ResolveLintPaths)
                                          .Before(PostLint)
                                          .OnlyWhenDynamic(() => IsLocalBuild || LintPaths.HasPaths)
                                          .Executes(
@@ -80,7 +79,6 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
     public Target JetBrainsCleanupCode => d =>
                                               d
                                                  .TriggeredBy(Lint)
-                                                 .DependsOn(ResolveLintPaths)
                                                  .After(DotNetFormat)
                                                  .Before(PostLint)
                                                  .OnlyWhenDynamic(() => IsLocalBuild || LintPaths.HasPaths)

@@ -41,7 +41,6 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
     public Target LintPublicApiAnalyzers => d =>
                                                 d
                                                    .TriggeredBy(Lint)
-                                                   .DependsOn(ResolveLintPaths)
                                                    .Before(PostLint)
                                                    .Unlisted()
                                                    .Executes(

@@ -1,5 +1,60 @@
 {
     "$schema": "https://alirezanet.github.io/Husky.Net/schema.json",
-    "variables": [],
-    "tasks": []
+    "variables": [
+        {
+            "name": "pr-files",
+            "command": "git",
+            "args": ["diff", "--name-only", "HEAD", "master"]
+        }
+    ],
+    "tasks": [
+        {
+            "name": "prettier",
+            "group": "pre-commit",
+            "pathMode": "absolute",
+            "command": "npx",
+            "args": ["prettier", "--write", "${staged}"],
+            "include": [
+                "**/*.csproj",
+                "**/*.targets",
+                "**/*.props",
+                "**/*.xml",
+                "**/*.ts",
+                "**/*.tsx",
+                "**/*.js",
+                "**/*.jsx",
+                "**/*.vue",
+                "**/*.json",
+                "**/*.yml",
+                "**/*.yaml",
+                "**/*.css",
+                "**/*.scss"
+            ],
+            "exclude": ["**/node_modules/**/*", "**/bin/**/*", "**/obj/**/*", "**/*.verified.*", "**/*.received.*"]
+        },
+        {
+            "name": "prettier",
+            "group": "lint",
+            "pathMode": "absolute",
+            "command": "npx",
+            "args": ["prettier", "--write", "${pr-files}"],
+            "include": [
+                "**/*.csproj",
+                "**/*.targets",
+                "**/*.props",
+                "**/*.xml",
+                "**/*.ts",
+                "**/*.tsx",
+                "**/*.js",
+                "**/*.jsx",
+                "**/*.vue",
+                "**/*.json",
+                "**/*.yml",
+                "**/*.yaml",
+                "**/*.css",
+                "**/*.scss"
+            ],
+            "exclude": ["**/node_modules/**/*", "**/bin/**/*", "**/obj/**/*", "**/*.verified.*", "**/*.received.*"]
+        }
+    ]
 }

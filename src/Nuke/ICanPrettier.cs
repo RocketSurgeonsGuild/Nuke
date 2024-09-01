@@ -1,3 +1,4 @@
+using Microsoft.Extensions.FileSystemGlobbing;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Utilities.Collections;
@@ -17,7 +18,6 @@ public interface ICanPrettier : ICanLint
     public Target Prettier =>
         d => d
             .TriggeredBy(Lint)
-            .DependsOn(ResolveLintPaths)
             .Before(PostLint)
             .OnlyWhenStatic(() => ( RootDirectory / ".prettierrc" ).FileExists())
             .Executes(
@@ -25,12 +25,11 @@ public interface ICanPrettier : ICanLint
                  {
                      var args = new Arguments()
                                .Add("prettier")
-                               .Add(".")
                                .Add("--write");
 
                      if (LintPaths.HasPaths)
                      {
-                         LintPaths.Paths.ForEach(x => args.Add(x));
+                         LintPaths.Glob(PrettierMatcher).ForEach(x => args.Add(x));
                      }
 
                      return ProcessTasks
@@ -44,4 +43,25 @@ public interface ICanPrettier : ICanLint
                            .AssertZeroExitCode();
                  }
              );
+
+    /// <summary>
+    /// The default matcher for what files prettier supports with the xml plugin
+    /// </summary>
+    public Matcher PrettierMatcher => matcher ??= new Matcher()
+                                                 .AddInclude("**/*.csproj")
+                                                 .AddInclude("**/*.targets")
+                                                 .AddInclude("**/*.props")
+                                                 .AddInclude("**/*.xml")
+                                                 .AddInclude("**/*.ts")
+                                                 .AddInclude("**/*.tsx")
+                                                 .AddInclude("**/*.js")
+                                                 .AddInclude("**/*.jsx")
+                                                 .AddInclude("**/*.vue")
+                                                 .AddInclude("**/*.json")
+                                                 .AddInclude("**/*.yml")
+                                                 .AddInclude("**/*.yaml")
+                                                 .AddInclude("**/*.css")
+                                                 .AddInclude("**/*.scss");
+
+    private static Matcher? matcher;
 }

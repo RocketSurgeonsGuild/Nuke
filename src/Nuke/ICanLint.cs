@@ -13,7 +13,6 @@ namespace Rocket.Surgery.Nuke;
 [PublicAPI]
 public interface ICanLint : IHaveGitRepository
 {
-    private static LintPaths _lintPaths = null!;
 
     private static void WriteFileTreeWithEmoji(IEnumerable<AbsolutePath> stagedFiles)
     {
@@ -64,7 +63,6 @@ public interface ICanLint : IHaveGitRepository
     ///     The lint target
     /// </summary>
     public Target Lint => t => t
-                              .DependsOn(ResolveLintPaths)
                               .OnlyWhenDynamic(() => LintPaths.HasPaths)
                               .Executes(
                                    () =>
@@ -73,66 +71,10 @@ public interface ICanLint : IHaveGitRepository
                                        WriteFileTreeWithEmoji(LintPaths.Paths);
                                    }
                                );
-
-    /// <summary>
-    ///     Resolve the lint paths based on the current environment
-    /// </summary>
-    public Target ResolveLintPaths => t => t
-                                         .Executes(
-                                              () =>
-                                              {
-                                                  List<string> files = [];
-                                                  var message = "Linting all files";
-                                                  if (PrivateLintFiles.Any())
-                                                  {
-                                                      message = "Linting only the files provided";
-                                                      files.AddRange(PrivateLintFiles);
-                                                  }
-                                                  else if (GitHubActions.Instance.IsPullRequest())
-                                                  {
-                                                      message = "Linting only the files in the Pull Request";
-                                                      files.AddRange(
-                                                          GitTasks
-                                                             .Git(
-                                                                  $"diff --name-status origin/{GitHubActions.Instance.BaseRef} origin/{GitHubActions.Instance.HeadRef}",
-                                                                  logOutput: false,
-                                                                  logInvocation: false
-                                                              )
-                                                             .Where(z => z.Text[0] is not ('D' or 'd'))
-                                                             .Select(z => z.Text[1..].Trim())
-                                                      );
-                                                  }
-                                                  else if (IsLocalBuild
-                                                        && GitTasks
-                                                              .Git($"diff --name-status --cached", logOutput: false, logInvocation: false)
-                                                              .Where(z => z.Text[0] is not ('D' or 'd'))
-                                                              .Select(z => z.Text[1..].Trim())
-                                                              .ToArray()
-                                                               is { Length: > 0, } stagedFiles)
-                                                  {
-                                                      message = "Linting only the staged files";
-                                                      files.AddRange(stagedFiles);
-                                                  }
-                                                  else
-                                                  {
-                                                      message = "Linting all files";
-                                                  }
-
-                                                  _lintPaths = files is { Count: > 0, }
-                                                      ? new(LintMatcher, true, message, files)
-                                                      : new(
-                                                          LintMatcher,
-                                                          false,
-                                                          message,
-                                                          GitTasks.Git($"ls-files", logOutput: false, logInvocation: false).Select(z => z.Text)
-                                                      );
-                                              }
-                                          );
-
     /// <summary>
     ///     A lint target that runs last
     /// </summary>
-    public Target PostLint => t => t.Unlisted().After(Lint).TriggeredBy(Lint).DependsOn(ResolveLintPaths);
+    public Target PostLint => t => t.Unlisted().After(Lint).TriggeredBy(Lint);
 
     /// <summary>
     ///     A ensure only the linted files are added to the commit
@@ -141,7 +83,6 @@ public interface ICanLint : IHaveGitRepository
         t => t
             .Unlisted()
             .TriggeredBy(Lint)
-            .DependsOn(ResolveLintPaths)
             .Before(PostLint)
             .Executes(
                  () =>
@@ -162,7 +103,6 @@ public interface ICanLint : IHaveGitRepository
         t => t
             .Unlisted()
             .After(Lint)
-            .DependsOn(ResolveLintPaths)
             .TriggeredBy(PostLint)
             .Executes(
                  () =>
@@ -192,7 +132,7 @@ public interface ICanLint : IHaveGitRepository
     /// <summary>
     ///     The lint paths rooted as an absolute path.
     /// </summary>
-    public LintPaths LintPaths => _lintPaths ?? throw new InvalidOperationException("LintPaths has not been initialized");
+    public LintPaths LintPaths => lintPaths ??= ResolveLintPathsImpl();
 
     /// <summary>
     ///     The default matcher to exclude files from linting
@@ -209,21 +149,56 @@ public interface ICanLint : IHaveGitRepository
     ///     The files to lint, if not given lints all files
     /// </summary>
     [Parameter("The files to lint, if not given lints all files", Separator = " ", Name = "lint-files")]
-    #pragma warning disable CA1819
     private string[] PrivateLintFiles => TryGetValue(() => PrivateLintFiles) ?? [];
 
-/* Unmerged change from project 'Rocket.Surgery.Nuke(net7.0)'
-Before:
-    #pragma warning restore CA1819
-After:
-#pragma warning restore CA1819
-*/
+    private static LintPaths? lintPaths;
+    private LintPaths ResolveLintPathsImpl()
+    {
+        List<string> files = [];
+        var message = "Linting all files";
+        if (PrivateLintFiles.Any())
+        {
+            message = "Linting only the files provided";
+            files.AddRange(PrivateLintFiles);
+        }
+        else if (GitHubActions.Instance.IsPullRequest())
+        {
+            message = "Linting only the files in the Pull Request";
+            files.AddRange(
+                GitTasks
+                   .Git(
+                        $"diff --name-status origin/{GitHubActions.Instance.BaseRef} origin/{GitHubActions.Instance.HeadRef}",
+                        logOutput: false,
+                        logInvocation: false
+                    )
+                   .Where(z => z.Text[0] is not ('D' or 'd'))
+                   .Select(z => z.Text[1..].Trim())
+            );
+        }
+        else if (IsLocalBuild
+              && GitTasks
+                    .Git($"diff --name-status --cached", logOutput: false, logInvocation: false)
+                    .Where(z => z.Text[0] is not ('D' or 'd'))
+                    .Select(z => z.Text[1..].Trim())
+                    .ToArray()
+                     is { Length: > 0, } stagedFiles)
+        {
+            message = "Linting only the staged files";
+            files.AddRange(stagedFiles);
+        }
+        else
+        {
+            message = "Linting all files";
+        }
 
-/* Unmerged change from project 'Rocket.Surgery.Nuke(net8.0)'
-Before:
-    #pragma warning restore CA1819
-After:
-#pragma warning restore CA1819
-*/
-    #pragma warning restore CA1819
+        return files is { Count: > 0, }
+            ? new(LintMatcher, true, message, files)
+            : new(
+                LintMatcher,
+                false,
+                message,
+                GitTasks.Git($"ls-files", logOutput: false, logInvocation: false).Select(z => z.Text)
+            );
+    }
+
 }
