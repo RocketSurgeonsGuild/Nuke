@@ -11,6 +11,9 @@ namespace Rocket.Surgery.Nuke.DotNetCore;
 /// </summary>
 public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
 {
+    private static Matcher? jbMatcher;
+    private static Matcher? dnfMatcher;
+
     /// <summary>
     ///     The default severity to use for DotNetFormat
     /// </summary>
@@ -61,8 +64,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
 
                                                   if (LintPaths.HasPaths)
                                                   {
-                                                      var matcher = new Matcher(StringComparison.OrdinalIgnoreCase).AddInclude("**/*.cs");
-                                                      arguments.Add("--include {value}", string.Join(",", LintPaths.Glob(matcher)));
+                                                      arguments.Add("--include {value}", string.Join(",", LintPaths.Glob(DotNetFormatMatcher)));
                                                   }
 
                                                   return DotNetTasks.DotNet(
@@ -96,15 +98,26 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                           );
                                                           if (LintPaths.HasPaths)
                                                           {
-                                                              var matcher = new Matcher(StringComparison.OrdinalIgnoreCase)
-                                                                           .AddInclude("**/*.cs")
-                                                                           .AddInclude("**/*.csproj")
-                                                                           .AddInclude("**/*.targets")
-                                                                           .AddInclude("**/*.props");
-                                                              arguments.Add("--include={value}", string.Join(";", LintPaths.Glob(matcher)));
+                                                              arguments.Add("--include={value}", string.Join(";", LintPaths.Glob(JetBrainsCleanupCodeMatcher)));
                                                           }
 
                                                           return DotnetTool.GetProperTool("jb")(arguments, RootDirectory, logInvocation: false);
                                                       }
                                                   );
+
+    /// <summary>
+    ///     The default matcher for jetbrains cleanup code
+    /// </summary>
+    public Matcher JetBrainsCleanupCodeMatcher => jbMatcher ??= new Matcher(StringComparison.OrdinalIgnoreCase)
+                                                               .AddInclude("**/*.cs")
+                                                               .AddInclude("**/*.csproj")
+                                                               .AddInclude("**/*.targets")
+                                                               .AddInclude("**/*.props")
+                                                               .AddInclude("**/*.xml");
+
+    /// <summary>
+    ///     The default matcher for jetbrains cleanup code
+    /// </summary>
+    public Matcher DotNetFormatMatcher => dnfMatcher ??= new Matcher(StringComparison.OrdinalIgnoreCase)
+       .AddInclude("**/*.cs");
 }

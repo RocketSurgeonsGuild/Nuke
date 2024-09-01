@@ -121,13 +121,7 @@ public interface ICanLint : IHaveGitRepository
                          patterns.AddRange(LintPaths.RelativePaths.Select(z => z.ToString()));
                      }
 
-                     var args = new Arguments().Add("add");
-                     foreach (var path in patterns)
-                     {
-                         args.Add(path);
-                     }
-
-                     _ = GitTasks.Git(args.RenderForExecution(), exitHandler: _ => { });
+                     patterns.ForEach(static pattern => GitTasks.Git(new Arguments().Add("add").Add(pattern).RenderForExecution(), exitHandler: _ => { }));
                  }
              );
 

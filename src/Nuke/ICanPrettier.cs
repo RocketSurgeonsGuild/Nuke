@@ -49,7 +49,7 @@ public interface ICanPrettier : ICanLint
     /// <summary>
     ///     The default matcher for what files prettier supports with the xml plugin
     /// </summary>
-    public Matcher PrettierMatcher => matcher ??= new Matcher()
+    public Matcher PrettierMatcher => matcher ??= new Matcher(StringComparison.OrdinalIgnoreCase)
                                                  .AddInclude("**/*.csproj")
                                                  .AddInclude("**/*.targets")
                                                  .AddInclude("**/*.props")

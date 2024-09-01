@@ -1,5 +1,5 @@
 {
-  "$schema": "https://alirezanet.github.io/Husky.Net/schema.json",
-  "variables": [],
-  "tasks": []
+    "$schema": "https://alirezanet.github.io/Husky.Net/schema.json",
+    "variables": [],
+    "tasks": []
 }
