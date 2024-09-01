@@ -12,6 +12,8 @@ namespace Rocket.Surgery.Nuke;
 [PublicAPI]
 public interface ICanPrettier : ICanLint
 {
+    private static Matcher? matcher;
+
     /// <summary>
     ///     The prettier target
     /// </summary>
@@ -45,7 +47,7 @@ public interface ICanPrettier : ICanLint
              );
 
     /// <summary>
-    /// The default matcher for what files prettier supports with the xml plugin
+    ///     The default matcher for what files prettier supports with the xml plugin
     /// </summary>
     public Matcher PrettierMatcher => matcher ??= new Matcher()
                                                  .AddInclude("**/*.csproj")
@@ -62,6 +64,4 @@ public interface ICanPrettier : ICanLint
                                                  .AddInclude("**/*.yaml")
                                                  .AddInclude("**/*.css")
                                                  .AddInclude("**/*.scss");
-
-    private static Matcher? matcher;
 }

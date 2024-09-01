@@ -13,7 +13,6 @@ namespace Rocket.Surgery.Nuke;
 [PublicAPI]
 public interface ICanLint : IHaveGitRepository
 {
-
     private static void WriteFileTreeWithEmoji(IEnumerable<AbsolutePath> stagedFiles)
     {
         var currentFolder = new Stack<string>();
@@ -59,6 +58,8 @@ public interface ICanLint : IHaveGitRepository
         }
     }
 
+    private static LintPaths? lintPaths;
+
     /// <summary>
     ///     The lint target
     /// </summary>
@@ -71,6 +72,7 @@ public interface ICanLint : IHaveGitRepository
                                        WriteFileTreeWithEmoji(LintPaths.Paths);
                                    }
                                );
+
     /// <summary>
     ///     A lint target that runs last
     /// </summary>
@@ -151,7 +153,6 @@ public interface ICanLint : IHaveGitRepository
     [Parameter("The files to lint, if not given lints all files", Separator = " ", Name = "lint-files")]
     private string[] PrivateLintFiles => TryGetValue(() => PrivateLintFiles) ?? [];
 
-    private static LintPaths? lintPaths;
     private LintPaths ResolveLintPathsImpl()
     {
         List<string> files = [];
@@ -200,5 +201,4 @@ public interface ICanLint : IHaveGitRepository
                 GitTasks.Git($"ls-files", logOutput: false, logInvocation: false).Select(z => z.Text)
             );
     }
-
 }
