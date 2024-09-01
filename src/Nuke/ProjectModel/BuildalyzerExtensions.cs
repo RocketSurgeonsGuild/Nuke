@@ -51,9 +51,11 @@ public static class BuildalyzerExtensions
                 sw.Stop();
                 Log.Information("Built project {Project} in {Elapsed}", project.Name, sw.Elapsed);
 
-                return r.TryGetTargetFramework(targetFramework, out var result)
-                    ? new ProjectAnalyzerModel(result)
-                    : throw new InvalidOperationException($"Failed to find target framework {targetFramework}");
+                return targetFramework is { Length: > 0 }
+                    ? r.TryGetTargetFramework(targetFramework, out var result)
+                        ? new ProjectAnalyzerModel(result)
+                        : throw new InvalidOperationException($"Failed to find target framework {targetFramework}")
+                    : new(r.Results.Last());
             }
         );
     }
@@ -74,9 +76,11 @@ public static class BuildalyzerExtensions
                     var r = analyzerManager.Analyze(binLogPath);
                     _projectResults.TryAdd(binLogPath, r);
 
-                    return r.TryGetTargetFramework(targetFramework ?? r.TargetFrameworks.Last(), out var re)
-                        ? new ProjectAnalyzerModel(re)
-                        : throw new InvalidOperationException($"Failed to find target framework {targetFramework}");
+                    return targetFramework is { Length: > 0 }
+                        ? r.TryGetTargetFramework(targetFramework, out var rr)
+                            ? new ProjectAnalyzerModel(rr)
+                            : throw new InvalidOperationException($"Failed to find target framework {targetFramework}")
+                        : new(r.Results.Last());
                 }
             );
     }
