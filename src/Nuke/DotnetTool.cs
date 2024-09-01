@@ -3,6 +3,7 @@ using System.Text.Json;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
+using Serilog;
 
 namespace Rocket.Surgery.Nuke;
 
@@ -93,6 +94,16 @@ internal record ResolvedToolsManifest(ImmutableDictionary<string, FullToolComman
         return new(commandBuilder.ToImmutable());
     }
 
+    private static void DefaultLogger(OutputType kind, string message)
+    {
+        // ReSharper disable TemplateIsNotCompileTimeConstantProblem
+        if (kind == OutputType.Std)
+            Log.Information(message);
+        else
+            Log.Warning(message);
+        // ReSharper restore TemplateIsNotCompileTimeConstantProblem
+    }
+
     public bool IsInstalled(string commandName)
     {
         return CommandDefinitions.ContainsKey(commandName)
@@ -109,7 +120,8 @@ internal record ResolvedToolsManifest(ImmutableDictionary<string, FullToolComman
                   timeout,
                   output,
                   invocation,
-                  logger,
+                  // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
+                  logger ?? DefaultLogger,
                   handler
               )
             : throw new InvalidOperationException($"Tool {nugetPackageName} is not installed");
@@ -128,7 +140,8 @@ internal record ResolvedToolsManifest(ImmutableDictionary<string, FullToolComman
                       timeout,
                       output,
                       invocation,
-                      logger
+                      // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
+                      logger ?? DefaultLogger
                   );
                   ( handler ?? ( p => ProcessTasks.DefaultExitHandler(null, p) ) ).Invoke(process.AssertWaitForExit());
                   return process.Output;
@@ -150,7 +163,7 @@ internal class ToolDefinition
 }
 
 /// <summary>
-/// Copy of tool just for stirngs to allow going from arguments
+///     Copy of tool just for stirngs to allow going from arguments
 /// </summary>
 public delegate IReadOnlyCollection<Output> ProperTool(
     Arguments arguments,

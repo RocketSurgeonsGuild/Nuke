@@ -1,6 +1,7 @@
 using Microsoft.Extensions.FileSystemGlobbing;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.IO;
+using Nuke.Common.Tooling;
 using Nuke.Common.Tools.Git;
 using Serilog;
 
@@ -149,7 +150,7 @@ public interface ICanLint : IHaveGitRepository
                      if (toolInstalled)
                      {
                          var tool = DotnetTool.GetTool("husky");
-                         _ = tool("run --group lint");
+                         _ = tool("run --group lint", logInvocation: false);
                      }
                  }
              );
@@ -161,29 +162,30 @@ public interface ICanLint : IHaveGitRepository
         t => t
             .Unlisted()
             .After(Lint)
+            .DependsOn(ResolveLintPaths)
             .TriggeredBy(PostLint)
             .Executes(
                  () =>
                  {
-                     _ = GitTasks.Git("add .nuke/build.schema.json", exitHandler: _ => { });
-                     _ = GitTasks.Git("add .github/workflows/*.yml", exitHandler: _ => { });
+                     List<string> patterns = [".nuke/build.schema.json", ".github/workflows",];
                      if (this is IHavePublicApis)
                      {
-                         _ = GitTasks.Git("add *PublicAPI.Shipped.txt *PublicAPI.Unshipped.txt", exitHandler: _ => { });
+                         patterns.Add("**/PublicAPI.Shipped.txt");
+                         patterns.Add("**/PublicAPI.Unshipped.txt");
                      }
 
                      if (LintPaths.HasPaths)
                      {
-                         _ = GitTasks.Git(
-                             $"add {string.Join(" ",
-                                 LintPaths
-                                    .Paths
-                                    .Select(z => RootDirectory.GetRelativePathTo(z))
-                                    .Select(z => $"\"{z}\"")
-                             )}",
-                             exitHandler: _ => { }
-                         );
+                         patterns.AddRange(LintPaths.RelativePaths.Select(z => z.ToString()));
                      }
+
+                     var args = new Arguments().Add("add");
+                     foreach (var path in patterns)
+                     {
+                         args.Add(path);
+                     }
+
+                     _ = GitTasks.Git(args.RenderForExecution(), exitHandler: _ => { });
                  }
              );
 
@@ -209,5 +211,19 @@ public interface ICanLint : IHaveGitRepository
     [Parameter("The files to lint, if not given lints all files", Separator = " ", Name = "lint-files")]
     #pragma warning disable CA1819
     private string[] PrivateLintFiles => TryGetValue(() => PrivateLintFiles) ?? [];
+
+/* Unmerged change from project 'Rocket.Surgery.Nuke(net7.0)'
+Before:
+    #pragma warning restore CA1819
+After:
+#pragma warning restore CA1819
+*/
+
+/* Unmerged change from project 'Rocket.Surgery.Nuke(net8.0)'
+Before:
+    #pragma warning restore CA1819
+After:
+#pragma warning restore CA1819
+*/
     #pragma warning restore CA1819
 }

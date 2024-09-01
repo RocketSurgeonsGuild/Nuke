@@ -1,11 +1,8 @@
-using System.Collections.Frozen;
 using System.Collections.Immutable;
 using Microsoft.Extensions.FileSystemGlobbing;
-using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
-using Serilog;
 
 namespace Rocket.Surgery.Nuke.DotNetCore;
 
@@ -17,7 +14,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
     /// <summary>
     ///     The default severity to use for DotNetFormat
     /// </summary>
-    public DotNetFormatSeverity DotNetFormatSeverity => DotNetFormatSeverity.warn;
+    public DotNetFormatSeverity DotNetFormatSeverity => DotNetFormatSeverity.info;
 
     /// <summary>
     ///     The default profile to use for JetBrainsCleanupCode
@@ -25,12 +22,12 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
     public string JetBrainsCleanupCodeProfile => "Full Cleanup";
 
     /// <summary>
-    /// A list of diagnostic ids to exclude from the dotnet format
+    ///     A list of diagnostic ids to exclude from the dotnet format
     /// </summary>
     public ImmutableArray<string> DotNetFormatExcludedDiagnostics => [];
 
     /// <summary>
-    ///   A list of diagnostic ids to include in the dotnet format
+    ///     A list of diagnostic ids to include in the dotnet format
     /// </summary>
     public ImmutableArray<string>? DotNetFormatIncludedDiagnostics => null;
 
@@ -49,13 +46,16 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                   var arguments = new Arguments()
                                                                  .Add("format")
                                                                  .Add("--severity {value}", DotNetFormatSeverity.ToString())
-                                                                 .Add("--verbosity {value}", Verbosity.MapVerbosity(MSBuildVerbosity.Normal).ToString().ToLowerInvariant())
+                                                                 .Add(
+                                                                      "--verbosity {value}",
+                                                                      Verbosity.MapVerbosity(MSBuildVerbosity.Normal).ToString().ToLowerInvariant()
+                                                                  )
                                                                  .Add("--no-restore");
 
-                                                  if (DotNetFormatIncludedDiagnostics is { Length: > 1 })
+                                                  if (DotNetFormatIncludedDiagnostics is { Length: > 1, })
                                                       arguments.Add("--diagnostics {value}", string.Join(" ", DotNetFormatIncludedDiagnostics.Value));
 
-                                                  if (DotNetFormatExcludedDiagnostics is { Length: > 1 })
+                                                  if (DotNetFormatExcludedDiagnostics is { Length: > 1, })
                                                       arguments.Add("--exclude-diagnostics {value}", string.Join(" ", DotNetFormatExcludedDiagnostics));
 
                                                   arguments.Add("--binarylog {value}", LogsDirectory / "dotnet-format.binlog");
@@ -69,8 +69,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                   return DotNetTasks.DotNet(
                                                       arguments.RenderForExecution(),
                                                       RootDirectory,
-                                                      logInvocation: false,
-                                                      logger: (_, s) => Log.Logger.Information(s)
+                                                      logInvocation: false
                                                   );
                                               }
                                           );
@@ -107,7 +106,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                               arguments.Add("--include={value}", string.Join(";", LintPaths.Glob(matcher)));
                                                           }
 
-                                                          return DotnetTool.GetProperTool("jb")(arguments, RootDirectory/*, logInvocation: false*/);
+                                                          return DotnetTool.GetProperTool("jb")(arguments, RootDirectory, logInvocation: false);
                                                       }
                                                   );
 }

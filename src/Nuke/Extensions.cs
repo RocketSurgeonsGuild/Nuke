@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Reflection;
+using Microsoft.Extensions.FileSystemGlobbing;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
@@ -81,6 +82,38 @@ public static class Extensions
         }
 
         return @default;
+    }
+
+    /// <summary>
+    /// Gets the relative paths from the root directory.
+    /// </summary>
+    /// <param name="paths"></param>
+    /// <returns></returns>
+    public static IEnumerable<RelativePath> GetRelativePaths(this IEnumerable<AbsolutePath> paths) => paths.Select(z => NukeBuild.RootDirectory.GetRelativePathTo(z));
+
+    /// <summary>
+    /// Gets the relative paths from the root directory.
+    /// </summary>
+    /// <param name="paths"></param>
+    /// <returns></returns>
+    public static IEnumerable<string> GetRelativePathStrings(this IEnumerable<AbsolutePath> paths) => paths.Select(z => NukeBuild.RootDirectory.GetRelativePathTo(z).ToString());
+
+    /// <summary>
+    /// Gets the relative paths that fit the matcher
+    /// </summary>
+    /// <returns></returns>
+    public static IEnumerable<RelativePath> Match(this IEnumerable<RelativePath> relativePaths, Matcher matcher)
+    {
+        return matcher.Match(NukeBuild.RootDirectory, relativePaths.Select(z => z.ToString())) is { HasMatches: true, Files: var files } ? files.Select(z => (RelativePath)z.Path) : [];
+    }
+
+    /// <summary>
+    /// Gets the relative paths that fit the matcher
+    /// </summary>
+    /// <returns></returns>
+    public static IEnumerable<AbsolutePath> Match(this IEnumerable<AbsolutePath> absolutePaths, Matcher matcher)
+    {
+        return matcher.Match(absolutePaths.Select(z => z.ToString())) is { HasMatches: true, Files: var files } ? files.Select(z => (RelativePath)z.Path).Select(z => NukeBuild.RootDirectory / z) : [];
     }
 
     /// <summary>
