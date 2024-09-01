@@ -13,7 +13,7 @@ public sealed class DotNetToolAttribute : ToolInjectionAttributeBase
     private readonly string _command;
 
     /// <summary>
-    ///     DotnetToolAttribute constructor
+    ///     DotNetToolAttribute constructor
     /// </summary>
     /// <param name="command"></param>
     #pragma warning disable CA1019
@@ -32,6 +32,6 @@ public sealed class DotNetToolAttribute : ToolInjectionAttributeBase
     /// <inheritdoc />
     public override object GetValue(MemberInfo member, object instance)
     {
-        return DotnetTool.GetTool(_command);
+        return DotNetTool.GetTool(_command);
     }
 }

@@ -26,7 +26,7 @@ public partial class Pipeline : NukeBuild,
     ICanTestWithDotNetCore,
     ICanPackWithDotNetCore,
     IHaveDataCollector,
-    ICanClean,
+    ICanCleanThings,
     ICanDotNetFormat,
     ICanPrettier,
     IHavePublicApis,
@@ -64,22 +64,21 @@ public partial class Pipeline : NukeBuild,
     [Solution(GenerateProjects = true)]
     private Solution Solution { get; } = null!;
 
-    public Target Build => _ => _.Inherit<ICanBuildWithDotNetCore>(x => x.CoreBuild);
+    public Target Build => _ => _;
     public Target Lint => _ => _.Inherit<ICanLint>(x => x.Lint);
 
-    public Target Pack => _ => _
-                              .Inherit<ICanPackWithDotNetCore>(x => x.CorePack)
-                              .DependsOn(Clean);
+    public Target Pack => _ => _;
 
 
-    public Target Clean => _ => _.Inherit<ICanClean>(x => x.Clean);
-    public Target Restore => _ => _.Inherit<ICanRestoreWithDotNetCore>(x => x.CoreRestore);
+    public Target Clean => _ => _;
+
+    public Target Restore => _ => _;
     Nuke.Common.ProjectModel.Solution IHaveSolution.Solution => Solution;
 
     [GitVersion(NoFetch = true)]
     public GitVersion GitVersion { get; } = null!;
 
-    public Target Test => _ => _.Inherit<ICanTestWithDotNetCore>(x => x.CoreTest);
+    public Target Test => _ => _;
 
     [Parameter("Configuration to build")]
     public Configuration Configuration { get; } = IsLocalBuild ? Configuration.Debug : Configuration.Release;

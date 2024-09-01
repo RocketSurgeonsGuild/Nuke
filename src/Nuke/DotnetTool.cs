@@ -11,7 +11,7 @@ namespace Rocket.Surgery.Nuke;
 /// <summary>
 ///     DotNetTool for Nuke builds
 /// </summary>
-public static class DotnetTool
+public static class DotNetTool
 {
     /// <summary>
     ///     Determine if a dotnet tool is installed in the dotnet-tools.json

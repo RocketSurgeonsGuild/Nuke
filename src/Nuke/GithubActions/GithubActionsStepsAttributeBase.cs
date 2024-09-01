@@ -56,8 +56,8 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
         set => base.ExcludedTargets =
         [
             ..value,
-            nameof(ICanClean.Clean),
-            nameof(ICanRestoreWithDotNetCore.DotnetToolRestore),
+            nameof(ICanCleanStuff.Clean),
+            nameof(ICanRestoreWithDotNetCore.DotNetToolRestore),
         ];
     }
 

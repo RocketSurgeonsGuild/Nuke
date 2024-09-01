@@ -22,10 +22,12 @@ public interface ICanTestWithDotNetCoreBuild : IHaveCollectCoverage,
     /// <summary>
     ///     dotnet test
     /// </summary>
-    public Target CoreTest => d => d
+    public Target DotNetCoreTestBuild => d => d
                                   .Description("Executes all the unit tests.")
                                   .Unlisted()
                                   .After(Build)
+                                        .TryDependentFor<IHaveTestTarget>(a => a.Test)
+                                        .TryAfter<IHaveRestoreTarget>(a => a.Restore)
                                   .OnlyWhenDynamic(() => TestsDirectory.GlobFiles("**/*.csproj").Count > 0)
                                   .WhenSkipped(DependencyBehavior.Execute)
                                   .Executes(

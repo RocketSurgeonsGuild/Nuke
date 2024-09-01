@@ -26,7 +26,7 @@ class HuskyEngine : IGitHooksEngine
     {
         if (!AreHooksInstalled(hooks))
         {
-            DotnetTool.GetTool("husky")("install");
+            DotNetTool.GetTool("husky")("install");
         }
     }
 }

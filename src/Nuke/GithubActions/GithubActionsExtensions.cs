@@ -237,7 +237,7 @@ public static class GithubActionsExtensions
                 }
             );
 
-            if (DotnetTool.IsInstalled("codecov.tool"))
+            if (DotNetTool.IsInstalled("codecov.tool"))
                 AddStep(
                     job,
                     new UsingStep("Publish Coverage")

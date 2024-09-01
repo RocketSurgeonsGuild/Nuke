@@ -124,7 +124,7 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
     )
     {
         var chainLinkNames = GetInvokedTargets(executableTarget, relevantTargets).Select(z => z.Name).ToArray();
-        var tool = DotnetTool.IsInstalled("codecov.tool") ? "dotnet nuke" : "nuke";
+        var tool = DotNetTool.IsInstalled("codecov.tool") ? "dotnet nuke" : "nuke";
 
         return new()
         {

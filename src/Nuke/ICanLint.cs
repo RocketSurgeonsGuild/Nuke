@@ -11,7 +11,7 @@ namespace Rocket.Surgery.Nuke;
 ///     Adds support for linting the files in a solution or via
 /// </summary>
 [PublicAPI]
-public interface ICanLint : IHaveGitRepository
+public interface ICanLint : IHaveGitRepository, IHaveLintTarget
 {
     private static void WriteFileTreeWithEmoji(IEnumerable<AbsolutePath> stagedFiles)
     {
@@ -66,6 +66,7 @@ public interface ICanLint : IHaveGitRepository
     /// </summary>
     public Target Lint => t => t
                               .OnlyWhenDynamic(() => LintPaths.HasPaths)
+                              .TryDependsOn<IHaveRestoreTarget>(a => a.Restore)
                               .Executes(
                                    () =>
                                    {
@@ -90,10 +91,10 @@ public interface ICanLint : IHaveGitRepository
             .Executes(
                  () =>
                  {
-                     var toolInstalled = DotnetTool.IsInstalled("husky");
+                     var toolInstalled = DotNetTool.IsInstalled("husky");
                      if (toolInstalled)
                      {
-                         var tool = DotnetTool.GetTool("husky");
+                         var tool = DotNetTool.GetTool("husky");
                          _ = tool("run --group lint" /*, logInvocation: false*/);
                      }
                  }
@@ -164,22 +165,18 @@ public interface ICanLint : IHaveGitRepository
             trigger = LintTrigger.PullRequest;
             message = "Linting only the files in the Pull Request";
             files.AddRange(
-                GitTasks
-                   .Git(
-                        $"diff --name-status origin/{GitHubActions.Instance.BaseRef} origin/{GitHubActions.Instance.HeadRef}",
-                        logOutput: false,
-                        logInvocation: false
-                    )
-                   .Where(z => z.Text[0] is not ('D' or 'd'))
-                   .Select(z => z.Text[1..].Trim())
+                FilterFiles(
+                    GitTasks
+                       .Git(
+                            $"diff --name-status origin/{GitHubActions.Instance.BaseRef} origin/{GitHubActions.Instance.HeadRef}",
+                            logOutput: false,
+                            logInvocation: false
+                        )
+                )
             );
         }
         else if (IsLocalBuild
-              && GitTasks
-                    .Git($"diff --name-status --cached", logOutput: false, logInvocation: false)
-                    .Where(z => z.Text[0] is not ('D' or 'd'))
-                    .Select(z => z.Text[1..].Trim())
-                    .ToArray()
+              && FilterFiles(GitTasks.Git($"diff --name-status --cached", logOutput: false, logInvocation: false)).ToArray()
                      is { Length: > 0, } stagedFiles)
         {
             trigger = LintTrigger.Staged;
@@ -195,5 +192,33 @@ public interface ICanLint : IHaveGitRepository
                 message,
                 GitTasks.Git($"ls-files", logOutput: false, logInvocation: false).Select(z => z.Text)
             );
+    }
+
+    static IEnumerable<string> FilterFiles(IEnumerable<Output> outputs)
+    {
+        foreach (var output in outputs)
+        {
+            var file = output.Text;
+            if (file is ['D' or 'd', ..])
+            {
+                continue;
+            }
+
+            var filePath = file[8..].Trim();
+
+            if (file is ['R' or 'r', _])
+            {
+                var renameIndex = filePath.LastIndexOf("   ", StringComparison.OrdinalIgnoreCase);
+                switch (renameIndex)
+                {
+                    case > 0:
+                        yield return filePath[renameIndex..].Trim();
+                        break;
+                }
+                continue;
+            }
+
+            yield return filePath;
+        }
     }
 }

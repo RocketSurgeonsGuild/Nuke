@@ -17,8 +17,9 @@ public interface ICanRestoreWithDotNetCore : IHaveCleanTarget,
     /// <summary>
     ///     This will ensure that all local dotnet tools are installed
     /// </summary>
-    public Target DotnetToolRestore => d => d
+    public Target DotNetToolRestore => d => d
                                            .After(Clean)
+                                           .TryDependentFor<IHaveRestoreTarget>(a => a.Restore)
                                            .OnlyWhenStatic(() => ( NukeBuild.RootDirectory / ".config" / "dotnet-tools.json" ).FileExists())
                                            .Unlisted()
                                            .Executes(() => DotNet($"tool restore"));
@@ -26,17 +27,18 @@ public interface ICanRestoreWithDotNetCore : IHaveCleanTarget,
     /// <summary>
     ///     dotnet restore
     /// </summary>
-    public Target CoreRestore => d => d
-                                     .Description("Restores the dependencies.")
-                                     .Unlisted()
-                                     .After(Clean)
-                                     .DependsOn(DotnetToolRestore)
-                                     .Executes(
-                                          () => DotNetRestore(
-                                              s => s
-                                                  .SetProjectFile(Solution)
-                                                  .SetDefaultLoggers(LogsDirectory / "restore.log")
-                                                  .SetGitVersionEnvironment(GitVersion)
-                                          )
-                                      );
+    public Target DotNetCoreRestore => d => d
+                                           .Description("Restores the dependencies.")
+                                           .Unlisted()
+                                           .TryDependentFor<IHaveRestoreTarget>(a => a.Restore)
+                                           .After(Clean)
+                                           .DependsOn(DotNetToolRestore)
+                                           .Executes(
+                                                () => DotNetRestore(
+                                                    s => s
+                                                        .SetProjectFile(Solution)
+                                                        .SetDefaultLoggers(LogsDirectory / "restore.log")
+                                                        .SetGitVersionEnvironment(GitVersion)
+                                                )
+                                            );
 }

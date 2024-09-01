@@ -264,7 +264,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                 }
             );
 
-        var localTool = DotnetTool.IsInstalled("nuke");
+        var localTool = DotNetTool.IsInstalled("nuke");
         if (!localTool) steps.Add(globalToolStep);
 
         var environmentVariables =

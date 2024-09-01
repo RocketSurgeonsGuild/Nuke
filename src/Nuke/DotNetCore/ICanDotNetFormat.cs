@@ -41,6 +41,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                       d
                                          .TriggeredBy(Lint)
                                          .Before(PostLint)
+                                         .TryAfter<ICanRestoreWithDotNetCore>(a => a.DotNetToolRestore)
                                          .OnlyWhenDynamic(() => IsLocalBuild || LintPaths.HasPaths)
                                          .Executes(
                                               () =>
@@ -87,7 +88,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                  .After(DotNetFormat)
                                                  .Before(PostLint)
                                                  .OnlyWhenDynamic(() => IsLocalBuild || LintPaths.HasPaths)
-                                                 .OnlyWhenStatic(() => DotnetTool.IsInstalled("jb"))
+                                                 .OnlyWhenStatic(() => DotNetTool.IsInstalled("jb"))
                                                  .Executes(
                                                       () =>
                                                       {
@@ -107,7 +108,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                               );
                                                           }
 
-                                                          return DotnetTool.GetProperTool("jb")(arguments, RootDirectory /*, logInvocation: false*/);
+                                                          return DotNetTool.GetProperTool("jb")(arguments, RootDirectory /*, logInvocation: false*/);
                                                       }
                                                   );
 
