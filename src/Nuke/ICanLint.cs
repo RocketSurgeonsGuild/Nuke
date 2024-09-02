@@ -14,6 +14,34 @@ namespace Rocket.Surgery.Nuke;
 [PublicAPI]
 public interface ICanLint : IHaveGitRepository, IHaveLintTarget
 {
+    static IEnumerable<string> FilterFiles(IEnumerable<Output> outputs)
+    {
+        foreach (var output in outputs)
+        {
+            var file = output.Text;
+            if (file is ['D' or 'd', ..,])
+            {
+                continue;
+            }
+
+
+            if (file is ['R' or 'r', _,])
+            {
+                var renameIndex = file.LastIndexOf("   ", StringComparison.OrdinalIgnoreCase);
+                switch (renameIndex)
+                {
+                    case > 0:
+                        yield return file[renameIndex..].Trim();
+                        break;
+                }
+
+                continue;
+            }
+
+            yield return file[2..].Trim();
+        }
+    }
+
     private static void WriteFileTreeWithEmoji(IEnumerable<AbsolutePath> stagedFiles)
     {
         var currentFolder = new Stack<string>();
@@ -196,33 +224,5 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
                 message,
                 GitTasks.Git($"ls-files", logOutput: false, logInvocation: false).Select(z => z.Text)
             );
-    }
-
-    static IEnumerable<string> FilterFiles(IEnumerable<Output> outputs)
-    {
-        foreach (var output in outputs)
-        {
-            var file = output.Text;
-            if (file is ['D' or 'd', ..])
-            {
-                continue;
-            }
-
-            var filePath = file[8..].Trim();
-
-            if (file is ['R' or 'r', _])
-            {
-                var renameIndex = filePath.LastIndexOf("   ", StringComparison.OrdinalIgnoreCase);
-                switch (renameIndex)
-                {
-                    case > 0:
-                        yield return filePath[renameIndex..].Trim();
-                        break;
-                }
-                continue;
-            }
-
-            yield return filePath;
-        }
     }
 }

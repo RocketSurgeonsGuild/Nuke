@@ -1,5 +1,4 @@
 using Nuke.Common.IO;
-using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
@@ -15,14 +14,14 @@ namespace Rocket.Surgery.Nuke;
 [PublicAPI]
 public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
 {
-    private static AbsolutePath GetShippedFilePath(AbsolutePath directory)
+    private static AbsolutePath GetShippedFilePath(ProjectAnalyzerModel project)
     {
-        return directory / "PublicAPI.Shipped.txt";
+        return project.Directory / "PublicAPI.Shipped.txt";
     }
 
-    private static AbsolutePath GetUnshippedFilePath(AbsolutePath directory)
+    private static AbsolutePath GetUnshippedFilePath(ProjectAnalyzerModel project)
     {
-        return directory / "PublicAPI.Unshipped.txt";
+        return project.Directory / "PublicAPI.Unshipped.txt";
     }
 
     /// <summary>
@@ -51,8 +50,8 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
                                                         {
                                                             await foreach (var project in GetPublicApiAnalyzerProjects())
                                                             {
-                                                                var shippedFilePath = GetShippedFilePath(project.Directory);
-                                                                var unshippedFilePath = GetUnshippedFilePath(project.Directory);
+                                                                var shippedFilePath = GetShippedFilePath(project);
+                                                                var unshippedFilePath = GetUnshippedFilePath(project);
                                                                 if (!shippedFilePath.FileExists())
                                                                     await File.WriteAllTextAsync(shippedFilePath, "#nullable enable");
 
@@ -96,8 +95,8 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
                                                             await foreach (var project in GetPublicApiAnalyzerProjects())
                                                             {
                                                                 Log.Logger.Information("Moving unshipped to shipped for {ProjectName}", project.Name);
-                                                                var shippedFilePath = GetShippedFilePath(project.Directory);
-                                                                var unshippedFilePath = GetUnshippedFilePath(project.Directory);
+                                                                var shippedFilePath = GetShippedFilePath(project);
+                                                                var unshippedFilePath = GetUnshippedFilePath(project);
 
                                                                 var shipped = await GetLines(shippedFilePath);
                                                                 var unshipped = await GetLines(unshippedFilePath);
@@ -127,18 +126,17 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
     /// <summary>
     ///     All the projects that depend on the Microsoft.CodeAnalysis.PublicApiAnalyzers package
     /// </summary>
-    private async IAsyncEnumerable<Project> GetPublicApiAnalyzerProjects()
+    private IAsyncEnumerable<ProjectAnalyzerModel> GetPublicApiAnalyzerProjects()
     {
-        if (!LintPaths.HasPaths) yield break;
-        foreach (var project in Solution.AllProjects)
-        {
-            var analysis = await project.AnalyzeProject();
-            if (analysis
-               .PackageReferences
-               .Values
-               .SelectMany(z => z.Keys)
-               .Any(z => z.Equals("Microsoft.CodeAnalysis.PublicApiAnalyzers", StringComparison.OrdinalIgnoreCase)))
-                yield return project;
-        }
+        if (!LintPaths.HasPaths) return AsyncEnumerable.Empty<ProjectAnalyzerModel>();
+        return Solution
+              .AnalyzeAllProjects()
+              .Where(
+                   project => project
+                             .PackageReferences
+                             .Values
+                             .SelectMany(z => z.Keys)
+                             .Any(z => z.Equals("Microsoft.CodeAnalysis.PublicApiAnalyzers", StringComparison.OrdinalIgnoreCase))
+               );
     }
 }

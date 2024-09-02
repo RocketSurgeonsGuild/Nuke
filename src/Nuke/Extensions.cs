@@ -4,7 +4,6 @@ using Microsoft.Extensions.FileSystemGlobbing;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
-using Nuke.Common.Tools.MSBuild;
 using Nuke.Common.Tools.ReportGenerator;
 using Nuke.Common.Utilities.Collections;
 using Serilog;
@@ -52,7 +51,30 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Map the current nuke verbosity to the given type
+    ///     Should we update?!
+    /// </summary>
+    /// <param name="path"></param>
+    /// <param name="waitTime"></param>
+    /// <param name="createFile"></param>
+    /// <returns></returns>
+    public static bool ShouldUpdate(this AbsolutePath path, TimeSpan? waitTime = null, bool createFile = true)
+    {
+        if (!path.FileExists())
+        {
+            if (!createFile) return true;
+            using var _ = File.Create(path);
+            _.Close();
+        }
+        else if (File.GetLastWriteTime(path) + ( waitTime ?? TimeSpan.FromHours(1) ) > DateTime.Now)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    ///     Map the current nuke verbosity to the given type
     /// </summary>
     /// <param name="verbosity"></param>
     /// <param name="default"></param>
@@ -85,35 +107,45 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Gets the relative paths from the root directory.
+    ///     Gets the relative paths from the root directory.
     /// </summary>
     /// <param name="paths"></param>
     /// <returns></returns>
-    public static IEnumerable<RelativePath> GetRelativePaths(this IEnumerable<AbsolutePath> paths) => paths.Select(z => NukeBuild.RootDirectory.GetRelativePathTo(z));
+    public static IEnumerable<RelativePath> GetRelativePaths(this IEnumerable<AbsolutePath> paths)
+    {
+        return paths.Select(z => NukeBuild.RootDirectory.GetRelativePathTo(z));
+    }
 
     /// <summary>
-    /// Gets the relative paths from the root directory.
+    ///     Gets the relative paths from the root directory.
     /// </summary>
     /// <param name="paths"></param>
     /// <returns></returns>
-    public static IEnumerable<string> GetRelativePathStrings(this IEnumerable<AbsolutePath> paths) => paths.Select(z => NukeBuild.RootDirectory.GetRelativePathTo(z).ToString());
+    public static IEnumerable<string> GetRelativePathStrings(this IEnumerable<AbsolutePath> paths)
+    {
+        return paths.Select(z => NukeBuild.RootDirectory.GetRelativePathTo(z).ToString());
+    }
 
     /// <summary>
-    /// Gets the relative paths that fit the matcher
+    ///     Gets the relative paths that fit the matcher
     /// </summary>
     /// <returns></returns>
     public static IEnumerable<RelativePath> Match(this IEnumerable<RelativePath> relativePaths, Matcher matcher)
     {
-        return matcher.Match(NukeBuild.RootDirectory, relativePaths.Select(z => z.ToString())) is { HasMatches: true, Files: var files } ? files.Select(z => (RelativePath)z.Path) : [];
+        return matcher.Match(NukeBuild.RootDirectory, relativePaths.Select(z => z.ToString())) is { HasMatches: true, Files: var files, }
+            ? files.Select(z => (RelativePath)z.Path)
+            : [];
     }
 
     /// <summary>
-    /// Gets the relative paths that fit the matcher
+    ///     Gets the relative paths that fit the matcher
     /// </summary>
     /// <returns></returns>
     public static IEnumerable<AbsolutePath> Match(this IEnumerable<AbsolutePath> absolutePaths, Matcher matcher)
     {
-        return matcher.Match(absolutePaths.Select(z => z.ToString())) is { HasMatches: true, Files: var files } ? files.Select(z => (RelativePath)z.Path).Select(z => NukeBuild.RootDirectory / z) : [];
+        return matcher.Match(absolutePaths.Select(z => z.ToString())) is { HasMatches: true, Files: var files, }
+            ? files.Select(z => (RelativePath)z.Path).Select(z => NukeBuild.RootDirectory / z)
+            : [];
     }
 
     /// <summary>

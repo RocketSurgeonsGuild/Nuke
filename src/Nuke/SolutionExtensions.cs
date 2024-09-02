@@ -17,8 +17,8 @@ public static class SolutionExtensions
     {
         foreach (var project in solution.AllProjects)
         {
-            var analyzeProject = await project.AnalyzeProject();
-            if (analyzeProject is { IsPackable: true, IsTestProject: false }) yield return analyzeProject;
+            var analyzeProject = await project.Analyze();
+            if (analyzeProject is { IsPackable: true, IsTestProject: false, }) yield return analyzeProject;
         }
     }
 
@@ -31,7 +31,7 @@ public static class SolutionExtensions
     {
         foreach (var project in solution.AllProjects)
         {
-            var analyzeProject = await project.AnalyzeProject();
+            var analyzeProject = await project.Analyze();
             if (analyzeProject.IsTestProject) yield return analyzeProject;
         }
     }

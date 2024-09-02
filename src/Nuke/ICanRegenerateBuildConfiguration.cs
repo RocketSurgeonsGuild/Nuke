@@ -2,7 +2,6 @@ using System.Reflection;
 using Nuke.Common.CI;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
-using Nuke.Common.Utilities.Collections;
 using Rocket.Surgery.Nuke.GithubActions;
 using Serilog;
 
@@ -36,10 +35,13 @@ public interface ICanRegenerateBuildConfiguration : ICanLint
                          Log.Logger.Information("Regenerating {HostName} configuration id {Name}", host.HostName, host.Id);
 
                          DotNetTasks.DotNet(
-                             args.RenderForExecution(),
-                             environmentVariables: EnvironmentInfo.Variables.AddIfMissing("NUKE_INTERNAL_INTERCEPTOR", "1")                            ,
-                             logOutput: false,
-                             logInvocation: false
+                             args.RenderForExecution()
+//                            ,
+//                             environmentVariables: EnvironmentInfo.Variables.AddIfMissing("NUKE_INTERNAL_INTERCEPTOR", "1")
+                            ,
+                             logOutput: true
+//                            ,
+//                             logInvocation: false
                          );
                      }
                  }

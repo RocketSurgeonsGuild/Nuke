@@ -20,7 +20,7 @@ using Rocket.Surgery.Nuke.DotNetCore;
 [LocalBuildConventions]
 #pragma warning disable CA1050
 public partial class Pipeline : NukeBuild,
-#pragma warning restore CA1050
+    #pragma warning restore CA1050
     ICanRestoreWithDotNetCore,
     ICanBuildWithDotNetCore,
     ICanTestWithDotNetCore,
@@ -31,6 +31,7 @@ public partial class Pipeline : NukeBuild,
     ICanPrettier,
     IHavePublicApis,
     ICanUpdateReadme,
+    ICanUpdateSolution,
     IGenerateCodeCoverageReport,
     IGenerateCodeCoverageSummary,
     IGenerateCodeCoverageBadges,
@@ -49,9 +50,6 @@ public partial class Pipeline : NukeBuild,
         return Execute<Pipeline>(x => x.Default);
     }
 
-    [OptionalGitRepository]
-    public GitRepository? GitRepository { get; }
-
     [Parameter]
     public string? GitHubToken { get; }
 
@@ -65,6 +63,10 @@ public partial class Pipeline : NukeBuild,
     private Solution Solution { get; } = null!;
 
     public Target Build => _ => _;
+
+    [OptionalGitRepository]
+    public GitRepository? GitRepository { get; }
+
     public Target Lint => _ => _.Inherit<ICanLint>(x => x.Lint);
 
     public Target Pack => _ => _;

@@ -1,5 +1,4 @@
 using Nuke.Common.Execution;
-using Nuke.Common.IO;
 using Serilog;
 
 namespace Rocket.Surgery.Nuke;
@@ -11,33 +10,6 @@ namespace Rocket.Surgery.Nuke;
 [AttributeUsage(AttributeTargets.Class)]
 public sealed class LocalBuildConventionsAttribute : BuildExtensionAttributeBase, IOnBuildFinished, IOnBuildInitialized, IOnBuildCreated
 {
-    private static void EnsureSolutionIsUptoDate(INukeBuild nukeBuild, IHaveSolution haveSolution)
-    {
-        var path = nukeBuild.TemporaryDirectory / "solution-last-updated-at";
-        if (!path.FileExists())
-        {
-            using var _ = File.Create(path);
-            _.Close();
-        }
-        else if (File.GetLastWriteTime(path) + TimeSpan.FromHours(1) > DateTime.Now)
-        {
-            return;
-        }
-
-        var attributes = nukeBuild
-                        .GetType()
-                        .GetCustomAttributes(true)
-                        .OfType<SolutionUpdaterConfigurationAttribute>()
-                        .ToArray();
-        SolutionUpdater.UpdateSolution(
-            haveSolution.Solution,
-            attributes.SelectMany(z => z.AdditionalRelativeFolderFilePatterns),
-            attributes.SelectMany(z => z.AdditionalConfigFolderFilePatterns),
-            attributes.SelectMany(z => z.AdditionalIgnoreFolderFilePatterns)
-        );
-        File.SetLastWriteTime(path, DateTime.Now);
-    }
-
     /// <inheritdoc />
     public void OnBuildCreated(IReadOnlyCollection<ExecutableTarget> executableTargets)
     {
@@ -53,10 +25,8 @@ public sealed class LocalBuildConventionsAttribute : BuildExtensionAttributeBase
     /// <inheritdoc />
     public void OnBuildFinished()
     {
-        if (Build is not ({ } nukeBuild and IHaveSolution)) return;
-        if (nukeBuild.IsServerBuild) return;
-
-        //        EnsureSolutionIsUptoDate(nukeBuild, haveSolution);
+//        if (Build is not ({ } nukeBuild and IHaveSolution)) return;
+//        if (nukeBuild.IsServerBuild) return;
     }
 
     /// <inheritdoc />
@@ -65,9 +35,7 @@ public sealed class LocalBuildConventionsAttribute : BuildExtensionAttributeBase
     /// <inheritdoc />
     public void OnBuildInitialized(IReadOnlyCollection<ExecutableTarget> executableTargets, IReadOnlyCollection<ExecutableTarget> executionPlan)
     {
-        if (Build is not (INukeBuild nukeBuild and IHaveSolution haveSolution)) return;
-        if (nukeBuild.IsServerBuild) return;
-
-        EnsureSolutionIsUptoDate(nukeBuild, haveSolution);
+//        if (Build is not (INukeBuild nukeBuild and IHaveSolution haveSolution)) return;
+//        if (nukeBuild.IsServerBuild) return;
     }
 }

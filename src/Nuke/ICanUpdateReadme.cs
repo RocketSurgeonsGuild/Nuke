@@ -31,16 +31,6 @@ public interface ICanUpdateReadme : IHaveSolution
                                              async () =>
                                              {
                                                  var path = TemporaryDirectory / "readme-last-updated-at";
-                                                 if (!path.FileExists())
-                                                 {
-                                                     await using var _ = File.Create(path);
-                                                     _.Close();
-                                                 }
-                                                 else if (File.GetLastWriteTime(path) + TimeSpan.FromHours(1) > DateTime.Now)
-                                                 {
-                                                     return;
-                                                 }
-
                                                  var readmeContent = File.ReadAllText(ReadmeFilePath);
                                                  readmeContent = await Readme.Process(readmeContent, this);
                                                  File.WriteAllText(ReadmeFilePath, readmeContent);
