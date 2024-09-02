@@ -1,3 +1,4 @@
+using System.Reflection;
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
@@ -37,12 +38,7 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
         set => base.NonEntryTargets =
         [
             ..value,
-            nameof(ICIEnvironment.CIEnvironment),
-            nameof(ITriggerCodeCoverageReports.TriggerCodeCoverageReports),
-            nameof(ITriggerCodeCoverageReports.GenerateCodeCoverageReportCobertura),
-            nameof(IGenerateCodeCoverageBadges.GenerateCodeCoverageBadges),
-            nameof(IGenerateCodeCoverageReport.GenerateCodeCoverageReport),
-            nameof(IGenerateCodeCoverageSummary.GenerateCodeCoverageSummary),
+            ..GetTargetsWithAttributes<NonEntryTargetAttribute>(),
         ];
     }
 
@@ -56,8 +52,7 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
         set => base.ExcludedTargets =
         [
             ..value,
-            nameof(ICanCleanStuff.Clean),
-            nameof(ICanRestoreWithDotNetCore.DotNetToolRestore),
+            ..GetTargetsWithAttributes<ExcludeTargetAttribute>(),
         ];
     }
 
@@ -157,8 +152,8 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
             foreach (var method in Enhancements.Join(Build.GetType().GetMethods(), z => z, z => z.Name, (_, e) => e))
             {
                 config = method.IsStatic
-                    ? method.Invoke(null, new object[] { config, }) as RocketSurgeonGitHubActionsConfiguration ?? config
-                    : method.Invoke(Build, new object[] { config, }) as RocketSurgeonGitHubActionsConfiguration
+                    ? method.Invoke(null, [config,]) as RocketSurgeonGitHubActionsConfiguration ?? config
+                    : method.Invoke(Build, [config,]) as RocketSurgeonGitHubActionsConfiguration
                  ?? config;
             }
 
@@ -181,8 +176,8 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
                        )
                       .Select(
                            // ReSharper disable once NullableWarningSuppressionIsUsed
-                           z => ( name: ( (YamlScalarNode)z.Children[key] ).Value!.Split("@")[0],
-                                  value: ( (YamlScalarNode)z.Children[key] ).Value )
+                           z => (name: ( (YamlScalarNode)z.Children[key] ).Value!.Split("@")[0],
+                                  value: ( (YamlScalarNode)z.Children[key] ).Value)
                        )
                       .DistinctBy(z => z.name)
                       .ToDictionary(
@@ -247,20 +242,20 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
             yield return new RocketSurgeonGitHubActionsVcsTrigger
             {
                 Kind = RocketSurgeonGitHubActionsTrigger.Push,
-                Branches = [..OnPushBranches],
-                Tags = [..OnPushTags],
-                IncludePaths = [..OnPushIncludePaths],
-                ExcludePaths = [..OnPushExcludePaths],
+                Branches = [.. OnPushBranches],
+                Tags = [.. OnPushTags],
+                IncludePaths = [.. OnPushIncludePaths],
+                ExcludePaths = [.. OnPushExcludePaths],
             };
 
         if (OnPullRequestBranches.Length > 0 || OnPullRequestTags.Length > 0 || OnPullRequestIncludePaths.Length > 0 || OnPullRequestExcludePaths.Length > 0)
             yield return new RocketSurgeonGitHubActionsVcsTrigger
             {
                 Kind = RocketSurgeonGitHubActionsTrigger.PullRequest,
-                Branches = [..OnPullRequestBranches],
-                Tags = [..OnPullRequestTags],
-                IncludePaths = [..OnPullRequestIncludePaths],
-                ExcludePaths = [..OnPullRequestExcludePaths],
+                Branches = [.. OnPullRequestBranches],
+                Tags = [.. OnPullRequestTags],
+                IncludePaths = [.. OnPullRequestIncludePaths],
+                ExcludePaths = [.. OnPullRequestExcludePaths],
             };
 
         if (OnPullRequestTargetBranches.Length > 0
@@ -270,10 +265,10 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
             yield return new RocketSurgeonGitHubActionsVcsTrigger
             {
                 Kind = RocketSurgeonGitHubActionsTrigger.PullRequestTarget,
-                Branches = [..OnPullRequestTargetBranches],
-                Tags = [..OnPullRequestTargetTags],
-                IncludePaths = [..OnPullRequestTargetIncludePaths],
-                ExcludePaths = [..OnPullRequestTargetExcludePaths],
+                Branches = [.. OnPullRequestTargetBranches],
+                Tags = [.. OnPullRequestTargetTags],
+                IncludePaths = [.. OnPullRequestTargetIncludePaths],
+                ExcludePaths = [.. OnPullRequestTargetExcludePaths],
             };
 
         if (OnCronSchedule != null)
@@ -292,5 +287,22 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
         {
             yield return secret;
         }
+    }
+
+    private static IEnumerable<string> GetTargetsWithAttributes<TAttribute>() where TAttribute : Attribute
+    {
+        return AppDomain.CurrentDomain.GetAssemblies()
+                      .SelectMany(z =>
+                      {
+                          try
+                          {
+                              return z.GetTypes();
+                          }
+                          catch { return []; }
+                      })
+                      .Where(z => z.IsInterface || z.IsClass)
+                      .SelectMany(z => z.GetProperties().Where(z => z.PropertyType == typeof(Target)))
+                      .Where(z => z.GetCustomAttribute<TAttribute>(true) is { })
+                      .Select(z => z.Name);
     }
 }

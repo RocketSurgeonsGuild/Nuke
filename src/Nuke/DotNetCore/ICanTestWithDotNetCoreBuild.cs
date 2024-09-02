@@ -2,6 +2,7 @@ using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
+using Rocket.Surgery.Nuke.GithubActions;
 
 namespace Rocket.Surgery.Nuke.DotNetCore;
 
@@ -22,6 +23,7 @@ public interface ICanTestWithDotNetCoreBuild : IHaveCollectCoverage,
     /// <summary>
     ///     dotnet test
     /// </summary>
+    [NonEntryTarget]
     public Target DotNetCoreTestBuild => d => d
                                   .Description("Executes all the unit tests.")
                                   .Unlisted()

@@ -3,6 +3,7 @@ using Nuke.Common.CI;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Utilities.Collections;
+using Rocket.Surgery.Nuke.GithubActions;
 using Serilog;
 
 namespace Rocket.Surgery.Nuke;
@@ -10,12 +11,13 @@ namespace Rocket.Surgery.Nuke;
 /// <summary>
 ///     Defines an interface that can regenerate all of the build configurations
 /// </summary>
+[PublicAPI]
 public interface ICanRegenerateBuildConfiguration : ICanLint
 {
     /// <summary>
     ///     Regenerate the build configurations
     /// </summary>
-    [UsedImplicitly]
+    [NonEntryTarget]
     public Target RegenerateBuildConfigurations =>
         t => t
             .TriggeredBy<ICanLint>(static z => z.Lint)

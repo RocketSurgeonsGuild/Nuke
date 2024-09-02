@@ -3,6 +3,7 @@ using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.Git;
+using Rocket.Surgery.Nuke.GithubActions;
 using Serilog;
 
 namespace Rocket.Surgery.Nuke;
@@ -78,11 +79,13 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
     /// <summary>
     ///     A lint target that runs last
     /// </summary>
+    [NonEntryTarget]
     public Target PostLint => t => t.Unlisted().After(Lint).TriggeredBy(Lint);
 
     /// <summary>
     ///     A ensure only the linted files are added to the commit
     /// </summary>
+    [NonEntryTarget]
     public Target HuskyLint =>
         t => t
             .Unlisted()
@@ -103,6 +106,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
     /// <summary>
     ///     A ensure only the linted files are added to the commit
     /// </summary>
+    [NonEntryTarget]
     public Target LintGitAdd =>
         t => t
             .Unlisted()

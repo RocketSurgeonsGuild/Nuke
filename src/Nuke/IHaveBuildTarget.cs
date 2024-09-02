@@ -10,3 +10,16 @@ public interface IHaveBuildTarget : IHave
     /// </summary>
     Target Build { get; }
 }
+
+
+/// <summary>
+///     Defines the build target
+/// </summary>
+public interface IHaveGenerateDocumentationTarget : IHave
+{
+    /// <summary>
+    ///     The Build Target
+    /// </summary>
+    Target GenerateDocumentation { get; }
+}
+

@@ -1,5 +1,6 @@
 using Nuke.Common.IO;
 using Nuke.Common.Tools.ReportGenerator;
+using Rocket.Surgery.Nuke.GithubActions;
 
 namespace Rocket.Surgery.Nuke;
 
@@ -16,6 +17,7 @@ public interface IGenerateCodeCoverageSummary : ITriggerCodeCoverageReports, IGe
     /// <summary>
     ///     Generate a code coverage summary for the given reports
     /// </summary>
+    [NonEntryTarget]
     public Target GenerateCodeCoverageSummary => d => d
                                                      .After(GenerateCodeCoverageReportCobertura)
                                                      .TriggeredBy(TriggerCodeCoverageReports)

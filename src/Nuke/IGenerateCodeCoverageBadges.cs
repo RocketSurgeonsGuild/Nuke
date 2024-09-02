@@ -1,5 +1,6 @@
 using Nuke.Common.IO;
 using Nuke.Common.Tools.ReportGenerator;
+using Rocket.Surgery.Nuke.GithubActions;
 
 namespace Rocket.Surgery.Nuke;
 
@@ -16,6 +17,7 @@ public interface IGenerateCodeCoverageBadges : ITriggerCodeCoverageReports, IGen
     /// <summary>
     ///     Generate a code coverage badges for the given reports
     /// </summary>
+    [NonEntryTarget]
     public Target GenerateCodeCoverageBadges => d => d
                                                     .After(GenerateCodeCoverageReportCobertura)
                                                     .TriggeredBy(TriggerCodeCoverageReports)

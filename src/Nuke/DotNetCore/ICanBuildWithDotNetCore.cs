@@ -1,4 +1,5 @@
 using Nuke.Common.Tools.DotNet;
+using Rocket.Surgery.Nuke.GithubActions;
 
 namespace Rocket.Surgery.Nuke.DotNetCore;
 
@@ -17,6 +18,7 @@ public interface ICanBuildWithDotNetCore : IHaveRestoreTarget,
     /// <summary>
     ///     dotnet build
     /// </summary>
+    [NonEntryTarget]
     public Target DotNetCoreBuild => d => d
                                          .Description("Builds all the projects.")
                                          .Unlisted()

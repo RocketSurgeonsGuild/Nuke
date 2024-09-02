@@ -3,6 +3,7 @@ using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
+using Rocket.Surgery.Nuke.GithubActions;
 using Rocket.Surgery.Nuke.ProjectModel;
 using Serilog;
 
@@ -11,6 +12,7 @@ namespace Rocket.Surgery.Nuke;
 /// <summary>
 ///     Defines targets for a library project that tracks apis using the Microsoft.CodeAnalysis.PublicApiAnalyzers package
 /// </summary>
+[PublicAPI]
 public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
 {
     private static AbsolutePath GetShippedFilePath(AbsolutePath directory)
@@ -31,13 +33,14 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
     /// <summary>
     ///     Setup to lint the public api projects
     /// </summary>
+    [NonEntryTarget]
     public Target ShipPublicApis => d =>
                                         d.Triggers(LintPublicApiAnalyzers);
 
     /// <summary>
     ///     Setup to lint the public api projects
     /// </summary>
-    [UsedImplicitly]
+    [NonEntryTarget]
     public Target LintPublicApiAnalyzers => d =>
                                                 d
                                                    .TriggeredBy(Lint)
@@ -81,7 +84,7 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
     /// <summary>
     ///     Ensure the shipped file is up to date
     /// </summary>
-    [UsedImplicitly]
+    [NonEntryTarget]
     public Target MoveUnshippedToShipped => d =>
                                                 d
                                                    .DependsOn(LintPublicApiAnalyzers)
