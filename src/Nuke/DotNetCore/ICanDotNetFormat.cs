@@ -37,11 +37,11 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
     /// <summary>
     ///     The dotnet format target
     /// </summary>
-    public Target DotNetFormat => d =>
+    public Target DotnetFormat => d =>
                                       d
                                          .TriggeredBy(Lint)
                                          .Before(PostLint)
-                                         .TryAfter<ICanRestoreWithDotNetCore>(a => a.DotNetToolRestore)
+                                         .TryAfter<ICanRestoreWithDotNetCore>(a => a.DotnetToolRestore)
                                          .OnlyWhenDynamic(() => IsLocalBuild || LintPaths.HasPaths)
                                          .Executes(
                                               () =>
@@ -85,7 +85,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
     public Target JetBrainsCleanupCode => d =>
                                               d
                                                  .TriggeredBy(Lint)
-                                                 .After(DotNetFormat)
+                                                 .After(DotnetFormat)
                                                  .Before(PostLint)
                                                  .OnlyWhenDynamic(() => IsLocalBuild || LintPaths.HasPaths)
                                                  .OnlyWhenStatic(() => DotNetTool.IsInstalled("jb"))

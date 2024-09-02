@@ -1,5 +1,4 @@
 using Nuke.Common.Tools.DotNet;
-using Rocket.Surgery.Nuke.GithubActions;
 
 namespace Rocket.Surgery.Nuke.DotNetCore;
 
@@ -21,7 +20,7 @@ public interface ICanPackWithDotNetCore : IHaveBuildTarget,
     ///     dotnet pack
     /// </summary>
     [NonEntryTarget]
-    public Target DotNetCorePack => d => d
+    public Target DotnetCorePack => d => d
                                         .Description("Packs all the NuGet packages.")
                                         .Unlisted()
                                         .After(Clean)

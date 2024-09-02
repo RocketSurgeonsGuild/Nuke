@@ -2,7 +2,6 @@ using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
-using Rocket.Surgery.Nuke.GithubActions;
 
 namespace Rocket.Surgery.Nuke.DotNetCore;
 
@@ -24,54 +23,54 @@ public interface ICanTestWithDotNetCoreBuild : IHaveCollectCoverage,
     ///     dotnet test
     /// </summary>
     [NonEntryTarget]
-    public Target DotNetCoreTestBuild => d => d
-                                  .Description("Executes all the unit tests.")
-                                  .Unlisted()
-                                  .After(Build)
-                                        .TryDependentFor<IHaveTestTarget>(a => a.Test)
-                                        .TryAfter<IHaveRestoreTarget>(a => a.Restore)
-                                  .OnlyWhenDynamic(() => TestsDirectory.GlobFiles("**/*.csproj").Count > 0)
-                                  .WhenSkipped(DependencyBehavior.Execute)
-                                  .Executes(
-                                       () => MSBuildTasks.MSBuild(
-                                           settings =>
-                                               settings
-                                                  .SetSolutionFile(Solution)
-                                                  .SetConfiguration(Configuration)
-                                                  .SetDefaultLoggers(LogsDirectory / "test.build.log")
-                                                  .SetGitVersionEnvironment(GitVersion)
-                                                  .SetAssemblyVersion(GitVersion.AssemblySemVer)
-                                                  .SetPackageVersion(GitVersion.NuGetVersionV2)
-                                       )
-                                   )
-                                  .CreateOrCleanDirectory(TestResultsDirectory)
-                                  .CleanCoverageDirectory(CoverageDirectory)
-                                  .EnsureRunSettingsExists(RunSettings)
-                                  .Executes(
-                                       () => DotNetTasks.DotNetTest(
-                                           s => s
-                                               .SetProjectFile(Solution)
-                                               .SetDefaultLoggers(LogsDirectory / "test.log")
-                                               .SetGitVersionEnvironment(GitVersion)
-                                               .EnableNoRestore()
-                                               .SetLoggers("trx")
-                                               .SetConfiguration(Configuration)
-                                               .EnableNoBuild()
-                                               .SetResultsDirectory(TestResultsDirectory)
-                                               .When(
-                                                    !CollectCoverage,
-                                                    x => x
-                                                        .SetProperty((string)"CollectCoverage", "true")
-                                                        .SetProperty("CoverageDirectory", CoverageDirectory)
-                                                )
-                                               .When(
-                                                    CollectCoverage,
-                                                    x => x
-                                                        .SetProperty("CollectCoverage", "false")
-                                                        .SetDataCollector("XPlat Code Coverage")
-                                                        .SetSettingsFile(RunSettings)
-                                                )
-                                       )
-                                   )
-                                  .CollectCoverage(TestResultsDirectory, CoverageDirectory);
+    public Target DotnetCoreTestBuild => d => d
+                                             .Description("Executes all the unit tests.")
+                                             .Unlisted()
+                                             .After(Build)
+                                             .TryDependentFor<IHaveTestTarget>(a => a.Test)
+                                             .TryAfter<IHaveRestoreTarget>(a => a.Restore)
+                                             .OnlyWhenDynamic(() => TestsDirectory.GlobFiles("**/*.csproj").Count > 0)
+                                             .WhenSkipped(DependencyBehavior.Execute)
+                                             .Executes(
+                                                  () => MSBuildTasks.MSBuild(
+                                                      settings =>
+                                                          settings
+                                                             .SetSolutionFile(Solution)
+                                                             .SetConfiguration(Configuration)
+                                                             .SetDefaultLoggers(LogsDirectory / "test.build.log")
+                                                             .SetGitVersionEnvironment(GitVersion)
+                                                             .SetAssemblyVersion(GitVersion.AssemblySemVer)
+                                                             .SetPackageVersion(GitVersion.NuGetVersionV2)
+                                                  )
+                                              )
+                                             .CreateOrCleanDirectory(TestResultsDirectory)
+                                             .CleanCoverageDirectory(CoverageDirectory)
+                                             .EnsureRunSettingsExists(RunSettings)
+                                             .Executes(
+                                                  () => DotNetTasks.DotNetTest(
+                                                      s => s
+                                                          .SetProjectFile(Solution)
+                                                          .SetDefaultLoggers(LogsDirectory / "test.log")
+                                                          .SetGitVersionEnvironment(GitVersion)
+                                                          .EnableNoRestore()
+                                                          .SetLoggers("trx")
+                                                          .SetConfiguration(Configuration)
+                                                          .EnableNoBuild()
+                                                          .SetResultsDirectory(TestResultsDirectory)
+                                                          .When(
+                                                               !CollectCoverage,
+                                                               x => x
+                                                                   .SetProperty((string)"CollectCoverage", "true")
+                                                                   .SetProperty("CoverageDirectory", CoverageDirectory)
+                                                           )
+                                                          .When(
+                                                               CollectCoverage,
+                                                               x => x
+                                                                   .SetProperty("CollectCoverage", "false")
+                                                                   .SetDataCollector("XPlat Code Coverage")
+                                                                   .SetSettingsFile(RunSettings)
+                                                           )
+                                                  )
+                                              )
+                                             .CollectCoverage(TestResultsDirectory, CoverageDirectory);
 }

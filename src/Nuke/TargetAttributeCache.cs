@@ -3,7 +3,6 @@ using System.Collections.Immutable;
 using System.Reflection;
 using System.Text.Json;
 using Nuke.Common.IO;
-using Rocket.Surgery.Nuke.GithubActions;
 
 namespace Rocket.Surgery.Nuke;
 
@@ -11,16 +10,25 @@ internal static class TargetAttributeCache
 {
     public static IEnumerable<string> GetTargetsWithAttribute<TAttribute>() where TAttribute : Attribute
     {
-        return _cache
-              .Where(z => z.Value.Contains(typeof(TAttribute).FullName!))
-              .Select(z => z.Key);
+        var result = _cache
+                    .Where(z => z.Value.Contains(typeof(TAttribute).FullName!))
+                    .Select(z => z.Key)
+                    .ToArray();
+        return result;
+    }
+
+    internal static FrozenDictionary<string, FrozenSet<string>> BuildCache()
+    {
+        var cache = PopulateCache();
+        AttributeCache.WriteAllText(JsonSerializer.Serialize(cache, new JsonSerializerOptions { WriteIndented = true, }));
+        return cache.ToFrozenDictionary(z => z.Key, z => z.Value.ToFrozenSet());
     }
 
     private static readonly FrozenDictionary<string, FrozenSet<string>> _cache = EnsureAttributeCacheIsUptoDate();
 
-    private static FrozenDictionary<string, FrozenSet<string>> PopulateCacheFromDisk(AbsolutePath path)
+    private static FrozenDictionary<string, FrozenSet<string>> PopulateCacheFromDisk()
     {
-        return JsonSerializer.Deserialize<Dictionary<string, HashSet<string>>>(path.ReadAllText())!
+        return JsonSerializer.Deserialize<Dictionary<string, HashSet<string>>>(AttributeCache.ReadAllText())!
                              .ToFrozenDictionary(z => z.Key, z => z.Value.ToFrozenSet());
     }
 
@@ -57,14 +65,12 @@ internal static class TargetAttributeCache
               .ToImmutableSortedDictionary(z => z.Key, z => z.Targets);
     }
 
+    private static AbsolutePath AttributeCache => NukeBuild.RootDirectory / ".nuke" / "attributes.cache";
+
     private static FrozenDictionary<string, FrozenSet<string>> EnsureAttributeCacheIsUptoDate()
     {
-        var attributeCache = NukeBuild.RootDirectory / ".nuke" / "attributes.cache";
-        if (!attributeCache.ShouldUpdate(createFile: false)) return PopulateCacheFromDisk(attributeCache);
-
-        var cache = PopulateCache();
-        attributeCache.WriteAllText(JsonSerializer.Serialize(cache, new JsonSerializerOptions { WriteIndented = true, }));
-        return cache.ToFrozenDictionary(z => z.Key, z => z.Value.ToFrozenSet());
+        if (!AttributeCache.ShouldUpdate(createFile: false)) return PopulateCacheFromDisk();
+        return BuildCache();
     }
 
     private record CacheItem(string Key, ExcludeTargetAttribute? ExcludeTarget, NonEntryTargetAttribute? NonEntryTarget)

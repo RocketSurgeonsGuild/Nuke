@@ -1,6 +1,5 @@
 using Nuke.Common.IO;
 using Nuke.Common.Tools.DotNet;
-using Rocket.Surgery.Nuke.GithubActions;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
 namespace Rocket.Surgery.Nuke.DotNetCore;
@@ -20,7 +19,7 @@ public interface ICanRestoreWithDotNetCore : IHaveCleanTarget,
     /// </summary>
     [ExcludeTarget]
     [NonEntryTarget]
-    public Target DotNetToolRestore => d => d
+    public Target DotnetToolRestore => d => d
                                            .Unlisted()
                                            .After(Clean)
                                            .TryDependentFor<IHaveRestoreTarget>(a => a.Restore)
@@ -31,12 +30,12 @@ public interface ICanRestoreWithDotNetCore : IHaveCleanTarget,
     ///     dotnet restore
     /// </summary>
     [NonEntryTarget]
-    public Target DotNetCoreRestore => d => d
+    public Target DotnetCoreRestore => d => d
                                            .Description("Restores the dependencies.")
                                            .Unlisted()
                                            .TryDependentFor<IHaveRestoreTarget>(a => a.Restore)
                                            .After(Clean)
-                                           .DependsOn(DotNetToolRestore)
+                                           .DependsOn(DotnetToolRestore)
                                            .Executes(
                                                 () => DotNetRestore(
                                                     s => s
