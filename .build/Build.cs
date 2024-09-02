@@ -20,13 +20,13 @@ using Rocket.Surgery.Nuke.DotNetCore;
 [LocalBuildConventions]
 #pragma warning disable CA1050
 public partial class Pipeline : NukeBuild,
-    #pragma warning restore CA1050
+#pragma warning restore CA1050
     ICanRestoreWithDotNetCore,
     ICanBuildWithDotNetCore,
     ICanTestWithDotNetCore,
     ICanPackWithDotNetCore,
     IHaveDataCollector,
-    ICanCleanThings,
+    ICanCleanStuff,
     ICanDotNetFormat,
     ICanPrettier,
     IHavePublicApis,
