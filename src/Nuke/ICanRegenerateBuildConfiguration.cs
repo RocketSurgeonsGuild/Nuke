@@ -1,8 +1,8 @@
 using System.Reflection;
 using Nuke.Common.CI;
+using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
-using Nuke.Common.Utilities.Collections;
 using Serilog;
 
 namespace Rocket.Surgery.Nuke;
@@ -10,12 +10,13 @@ namespace Rocket.Surgery.Nuke;
 /// <summary>
 ///     Defines an interface that can regenerate all of the build configurations
 /// </summary>
+[PublicAPI]
 public interface ICanRegenerateBuildConfiguration : ICanLint
 {
     /// <summary>
     ///     Regenerate the build configurations
     /// </summary>
-    [UsedImplicitly]
+    [NonEntryTarget]
     public Target RegenerateBuildConfigurations =>
         t => t
             .TriggeredBy<ICanLint>(static z => z.Lint)
@@ -27,16 +28,23 @@ public interface ICanRegenerateBuildConfiguration : ICanLint
                                          .OfType<IConfigurationGenerator>())
                      {
                          var args = new Arguments()
-                                   .Add(Assembly.GetEntryAssembly()!.Location)
-                                   .Add($"--{BuildServerConfigurationGeneration.ConfigurationParameterName} {{value}}", host.Id)
-                                   .Add("--host {value}", host.HostName);
+                                   .Add(AbsolutePath.Create(Assembly.GetEntryAssembly()!.Location))
+                                   .Add(
+                                        "--{value}",
+                                        new Dictionary<string, string>
+                                        {
+                                            [BuildServerConfigurationGeneration.ConfigurationParameterName] = host.Id,
+                                            ["host"] = host.HostName,
+                                        },
+                                        "{key} {value}"
+                                    );
 
                          Log.Logger.Information("Regenerating {HostName} configuration id {Name}", host.HostName, host.Id);
 
                          DotNetTasks.DotNet(
                              args.RenderForExecution(),
-                             environmentVariables: EnvironmentInfo.Variables.AddIfMissing("NUKE_INTERNAL_INTERCEPTOR", "1")                            ,
-                             logOutput: false,
+                             environmentVariables: EnvironmentInfo.Variables.AddIfMissing("NUKE_INTERNAL_INTERCEPTOR", "1"),
+                             logOutput: true,
                              logInvocation: false
                          );
                      }

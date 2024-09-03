@@ -1,5 +1,6 @@
 using Nuke.Common.IO;
 using Nuke.Common.Tools.ReportGenerator;
+using Rocket.Surgery.Nuke.GithubActions;
 using static Nuke.Common.IO.FileSystemTasks;
 
 // ReSharper disable SuspiciousTypeConversion.Global
@@ -26,6 +27,7 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
     /// <summary>
     ///     This will generate code coverage reports from emitted coverage data
     /// </summary>
+    [NonEntryTarget]
     public Target TriggerCodeCoverageReports => d => d
                                                     .TriggeredBy(Test)
                                                     .Unlisted()
@@ -38,6 +40,7 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
     /// <summary>
     ///     This will generate code coverage reports from emitted coverage data
     /// </summary>
+    [NonEntryTarget]
     public Target GenerateCodeCoverageReportCobertura => d => d
                                                              .TriggeredBy(TriggerCodeCoverageReports)
                                                              .Unlisted()

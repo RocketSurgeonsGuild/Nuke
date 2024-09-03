@@ -1,3 +1,4 @@
+using Rocket.Surgery.Nuke.GithubActions;
 using Serilog;
 
 namespace Rocket.Surgery.Nuke.ContinuousIntegration;
@@ -25,6 +26,7 @@ public interface ICIEnvironment : IHaveBuildVersion
     /// <summary>
     ///     Prints CI environment state for debug purposes
     /// </summary>
+    [NonEntryTarget]
     public Target CIEnvironment => d => d
                                        .TriggeredBy(BuildVersion)
                                        .Unlisted()

@@ -17,7 +17,8 @@ public interface ICanBuildWithDotNetCore : IHaveRestoreTarget,
     /// <summary>
     ///     dotnet build
     /// </summary>
-    public Target DotNetCoreBuild => d => d
+    [NonEntryTarget]
+    public Target DotnetCoreBuild => d => d
                                          .Description("Builds all the projects.")
                                          .Unlisted()
                                          .TryDependentFor<IHaveBuildTarget>(a => a.Build)

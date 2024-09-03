@@ -19,7 +19,8 @@ public interface ICanPackWithDotNetCore : IHaveBuildTarget,
     /// <summary>
     ///     dotnet pack
     /// </summary>
-    public Target DotNetCorePack => d => d
+    [NonEntryTarget]
+    public Target DotnetCorePack => d => d
                                         .Description("Packs all the NuGet packages.")
                                         .Unlisted()
                                         .After(Clean)

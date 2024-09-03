@@ -1,110 +1,91 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using Buildalyzer;
 using Buildalyzer.Environment;
 using Nuke.Common.IO;
+using Nuke.Common.ProjectModel;
 using Serilog;
-using Serilog.Context;
 
 namespace Rocket.Surgery.Nuke.ProjectModel;
 
-using Project = global::Nuke.Common.ProjectModel.Project;
-using Solution = global::Nuke.Common.ProjectModel.Solution;
+using Project = Project;
+using Solution = Solution;
 
 /// <summary>
-/// Extensions for <see cref="Buildalyzer"/>.
+///     Extensions for <see cref="Buildalyzer" />.
 /// </summary>
+[PublicAPI]
 public static class BuildalyzerExtensions
 {
-    private static readonly ConcurrentDictionary<Solution, IAnalyzerManager> _solutionReferences = new();
+    /// <summary>
+    ///     Loads the project through <see cref="AnalyzerManager" /> and returns the result for the given target framework.
+    /// </summary>
+    public static async Task<ProjectAnalyzerModel> Analyze(this Project project, string? targetFramework = null, EnvironmentOptions? options = null)
+    {
+        var solutionManager = await GetAnalyzerManager(project.Solution, options);
+        return await solutionManager.GetProject(project, targetFramework);
+    }
+
+    /// <summary>
+    ///     Loads the project through <see cref="AnalyzerManager" /> and returns the result for the given target framework.
+    /// </summary>
+    public static Task<SolutionAnalyzerModel> Analyze(this Solution solution, EnvironmentOptions? options = null)
+    {
+        return GetAnalyzerManager(solution, options);
+    }
+
+    /// <summary>
+    ///     Loads the project through <see cref="AnalyzerManager" /> and returns the result for the given target framework.
+    /// </summary>
+    public static async IAsyncEnumerable<ProjectAnalyzerModel> AnalyzeAllProjects(
+        this Solution solution,
+        string? targetFramework = null,
+        EnvironmentOptions? options = null
+    )
+    {
+        var manager = await GetAnalyzerManager(solution, options);
+        foreach (var item in await manager.Analyze())
+        {
+            yield return item;
+        }
+    }
+
+    /// <summary>
+    ///     Loads the project through <see cref="AnalyzerManager" /> and returns the result for the given target framework.
+    /// </summary>
+    public static Task<ProjectAnalyzerModel> AnalyzeBinLog(
+        this Project project,
+        AbsolutePath binlogPath,
+        string? targetFramework = null,
+        EnvironmentOptions? options = null
+    )
+    {
+        var solutionManager = new BinLogAnalyzerModel(binlogPath);
+        return solutionManager.GetProject(project, targetFramework);
+    }
+
+    /// <summary>
+    ///     Loads the project through <see cref="AnalyzerManager" /> using the provided binlog and returns the result for the given target framework.
+    /// </summary>
+    public static BinLogAnalyzerModel AnalyzeBinLog(this AbsolutePath binlogPath)
+    {
+        return new(binlogPath);
+    }
+
+    private static readonly ConcurrentDictionary<Solution, SolutionAnalyzerModel> _solutionReferences = new();
     private static readonly ConcurrentDictionary<string, IAnalyzerResults> _projectResults = new();
 
-    /// <summary>
-    /// Loads the project through <see cref="AnalyzerManager"/> and returns the result for the given target framework.
-    /// </summary>
-    public static async Task<ProjectAnalyzerModel> AnalyzeProject(this Project project, string? targetFramework = null, EnvironmentOptions? options = null)
-    {
-        {
-            var analyzerManager = await GetAnalyzerManager(project.Solution);
-            var analyzer = analyzerManager.GetProject(project.Path);
-            targetFramework ??= analyzer.ProjectFile.TargetFrameworks.Last();
-            if (_projectResults.TryGetValue(project.Path, out var results))
-            {
-                if (results.TryGetTargetFramework(targetFramework, out var result))
-                    return new(result);
-                throw new InvalidOperationException($"Failed to find target framework {targetFramework}");
-            }
-        }
-
-        return await Task.Run(
-            async () =>
-            {
-                var analyzerManager = await GetAnalyzerManager(project.Solution);
-                var analyzer = analyzerManager.GetProject(project.Path);
-                var environment = analyzer.EnvironmentFactory.GetBuildEnvironment(targetFramework, options ?? new());
-
-                var sw = Stopwatch.StartNew();
-                Log.Information("Building project {Project}", project.Name);
-                var r = environment is null ? analyzer.Build() : analyzer.Build(environment);
-                _projectResults.TryAdd(project.Path, r);
-                sw.Stop();
-                Log.Information("Built project {Project} in {Elapsed}", project.Name, sw.Elapsed);
-
-                return targetFramework is { Length: > 0 }
-                    ? r.TryGetTargetFramework(targetFramework, out var result)
-                        ? new ProjectAnalyzerModel(result)
-                        : throw new InvalidOperationException($"Failed to find target framework {targetFramework}")
-                    : new(r.Results.Last());
-            }
-        );
-    }
-
-    /// <summary>
-    /// Loads the project through <see cref="AnalyzerManager"/> using the provided binlog and returns the result for the given target framework.
-    /// </summary>
-    public static Task<ProjectAnalyzerModel> AnalyzeBinLog(this AbsolutePath binLogPath, string? targetFramework = null)
-    {
-        return _projectResults.TryGetValue(binLogPath, out var results)
-            ? results.TryGetTargetFramework(targetFramework ?? results.TargetFrameworks.Last(), out var result)
-                ? Task.FromResult(new ProjectAnalyzerModel(result))
-                : throw new InvalidOperationException($"Failed to find target framework {targetFramework}")
-            : Task.Run(
-                () =>
-                {
-                    var analyzerManager = new AnalyzerManager();
-                    var r = analyzerManager.Analyze(binLogPath);
-                    _projectResults.TryAdd(binLogPath, r);
-
-                    return targetFramework is { Length: > 0 }
-                        ? r.TryGetTargetFramework(targetFramework, out var rr)
-                            ? new ProjectAnalyzerModel(rr)
-                            : throw new InvalidOperationException($"Failed to find target framework {targetFramework}")
-                        : new(r.Results.Last());
-                }
-            );
-    }
-
-    private static Task<IAnalyzerManager> GetAnalyzerManager(Solution solution)
+    private static Task<SolutionAnalyzerModel> GetAnalyzerManager(Solution solution, EnvironmentOptions? environmentOptions = null)
     {
         return _solutionReferences.TryGetValue(solution, out var manager)
             ? Task.FromResult(manager)
-            : Task.Factory.StartNew(
-                static (state) =>
+            : Task.Run(
+                () =>
                 {
-                    if (state is not Solution solution) throw new InvalidOperationException("Invalid state");
-                    using (LogContext.PushProperty("Solution", solution.Path))
-                    {
-                        var sw = Stopwatch.StartNew();
-                        Log.Information("Loading solution {Solution}", solution.Path);
-                        var manager = new AnalyzerManager(solution.Path);
-                        _solutionReferences.TryAdd(solution, manager);
-                        sw.Stop();
-                        Log.Information("Loaded solution {Solution} in {Elapsed}", solution.Path, sw.Elapsed);
-                        return (IAnalyzerManager)manager;
-                    }
-                },
-                solution
+                    var m = new SolutionAnalyzerModel(solution.Path, environmentOptions);
+                    _solutionReferences.TryAdd(solution, m);
+                    return m;
+                }
             );
     }
 }

@@ -2,6 +2,7 @@ using Microsoft.Extensions.FileSystemGlobbing;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Utilities.Collections;
+using Rocket.Surgery.Nuke.GithubActions;
 using Serilog;
 
 namespace Rocket.Surgery.Nuke;
@@ -17,6 +18,7 @@ public interface ICanPrettier : ICanLint
     /// <summary>
     ///     The prettier target
     /// </summary>
+    [NonEntryTarget]
     public Target Prettier =>
         d => d
             .TriggeredBy(Lint)

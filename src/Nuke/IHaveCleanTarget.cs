@@ -1,3 +1,5 @@
+using Rocket.Surgery.Nuke.GithubActions;
+
 namespace Rocket.Surgery.Nuke;
 
 /// <summary>
@@ -8,6 +10,7 @@ public interface IHaveCleanTarget : IHave
     /// <summary>
     ///     The Clean Target
     /// </summary>
+    [ExcludeTarget]
     Target Clean { get; }
 }
 /// <summary>

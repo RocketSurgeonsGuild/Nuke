@@ -17,22 +17,25 @@ public interface ICanRestoreWithDotNetCore : IHaveCleanTarget,
     /// <summary>
     ///     This will ensure that all local dotnet tools are installed
     /// </summary>
-    public Target DotNetToolRestore => d => d
+    [ExcludeTarget]
+    [NonEntryTarget]
+    public Target DotnetToolRestore => d => d
+                                           .Unlisted()
                                            .After(Clean)
                                            .TryDependentFor<IHaveRestoreTarget>(a => a.Restore)
                                            .OnlyWhenStatic(() => ( NukeBuild.RootDirectory / ".config" / "dotnet-tools.json" ).FileExists())
-                                           .Unlisted()
                                            .Executes(() => DotNet($"tool restore"));
 
     /// <summary>
     ///     dotnet restore
     /// </summary>
-    public Target DotNetCoreRestore => d => d
+    [NonEntryTarget]
+    public Target DotnetCoreRestore => d => d
                                            .Description("Restores the dependencies.")
                                            .Unlisted()
                                            .TryDependentFor<IHaveRestoreTarget>(a => a.Restore)
                                            .After(Clean)
-                                           .DependsOn(DotNetToolRestore)
+                                           .DependsOn(DotnetToolRestore)
                                            .Executes(
                                                 () => DotNetRestore(
                                                     s => s

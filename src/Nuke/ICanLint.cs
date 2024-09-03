@@ -1,3 +1,4 @@
+using LibGit2Sharp;
 using Microsoft.Extensions.FileSystemGlobbing;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.IO;
@@ -13,6 +14,19 @@ namespace Rocket.Surgery.Nuke;
 [PublicAPI]
 public interface ICanLint : IHaveGitRepository, IHaveLintTarget
 {
+    static IEnumerable<string> FilterFiles(TreeChanges patch)
+    {
+        foreach (var item in patch)
+        {
+            var result = item switch
+                         {
+                             { Status: ChangeKind.Added or ChangeKind.Modified or ChangeKind.Renamed or ChangeKind.Copied, } => item.Path, _ => null,
+                         };
+            if (string.IsNullOrWhiteSpace(result)) continue;
+            yield return item.Path;
+        }
+    }
+
     private static void WriteFileTreeWithEmoji(IEnumerable<AbsolutePath> stagedFiles)
     {
         var currentFolder = new Stack<string>();
@@ -64,6 +78,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
     /// <summary>
     ///     The lint target
     /// </summary>
+    [NonEntryTarget]
     public Target Lint => t => t
                               .OnlyWhenDynamic(() => LintPaths.HasPaths)
                               .TryDependsOn<IHaveRestoreTarget>(a => a.Restore)
@@ -78,11 +93,13 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
     /// <summary>
     ///     A lint target that runs last
     /// </summary>
+    [NonEntryTarget]
     public Target PostLint => t => t.Unlisted().After(Lint).TriggeredBy(Lint);
 
     /// <summary>
     ///     A ensure only the linted files are added to the commit
     /// </summary>
+    [NonEntryTarget]
     public Target HuskyLint =>
         t => t
             .Unlisted()
@@ -103,6 +120,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
     /// <summary>
     ///     A ensure only the linted files are added to the commit
     /// </summary>
+    [NonEntryTarget]
     public Target LintGitAdd =>
         t => t
             .Unlisted()
@@ -151,6 +169,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
 
     private LintPaths ResolveLintPathsImpl()
     {
+        using var repo = new Repository(RootDirectory);
         List<string> files = [];
         var trigger = LintTrigger.None;
         var message = "Linting all files";
@@ -164,20 +183,10 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
         {
             trigger = LintTrigger.PullRequest;
             message = "Linting only the files in the Pull Request";
-            files.AddRange(
-                FilterFiles(
-                    GitTasks
-                       .Git(
-                            $"diff --name-status origin/{GitHubActions.Instance.BaseRef} origin/{GitHubActions.Instance.HeadRef}",
-                            logOutput: false,
-                            logInvocation: false
-                        )
-                )
-            );
+            var diff = repo.Diff.Compare<TreeChanges>([$"origin/{GitHubActions.Instance.BaseRef}", $"origin/{GitHubActions.Instance.HeadRef}",]);
+            files.AddRange(FilterFiles(diff));
         }
-        else if (IsLocalBuild
-              && FilterFiles(GitTasks.Git($"diff --name-status --cached", logOutput: false, logInvocation: false)).ToArray()
-                     is { Length: > 0, } stagedFiles)
+        else if (IsLocalBuild && FilterFiles(repo.Diff.Compare<TreeChanges>(repo.Head.Tip?.Tree, DiffTargets.Index)).ToArray() is { Length: > 0, } stagedFiles)
         {
             trigger = LintTrigger.Staged;
             message = "Linting only the staged files";
@@ -186,39 +195,6 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
 
         return files is { Count: > 0, }
             ? new(LintMatcher, trigger, message, files)
-            : new(
-                LintMatcher,
-                trigger,
-                message,
-                GitTasks.Git($"ls-files", logOutput: false, logInvocation: false).Select(z => z.Text)
-            );
-    }
-
-    static IEnumerable<string> FilterFiles(IEnumerable<Output> outputs)
-    {
-        foreach (var output in outputs)
-        {
-            var file = output.Text;
-            if (file is ['D' or 'd', ..])
-            {
-                continue;
-            }
-
-            var filePath = file[8..].Trim();
-
-            if (file is ['R' or 'r', _])
-            {
-                var renameIndex = filePath.LastIndexOf("   ", StringComparison.OrdinalIgnoreCase);
-                switch (renameIndex)
-                {
-                    case > 0:
-                        yield return filePath[renameIndex..].Trim();
-                        break;
-                }
-                continue;
-            }
-
-            yield return filePath;
-        }
+            : new(LintMatcher, trigger, message, repo.Index.Where(z => z.StageLevel > 0).Select(z => z.Path));
     }
 }

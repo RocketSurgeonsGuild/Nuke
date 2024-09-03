@@ -1,19 +1,20 @@
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
+using Rocket.Surgery.Nuke.GithubActions;
 
 namespace Rocket.Surgery.Nuke;
 
 /// <summary>
 ///     Interface used during docs generation
 /// </summary>
-public interface IGenerateDocFx : IHaveDocs
+public interface IGenerateDocFx : IHaveDocs, IHaveGenerateDocumentationTarget
 {
     /// <summary>
     ///     Parameter to be used to serve documentation
     /// </summary>
     [Parameter("serve the docs")]
     public bool? Serve => EnvironmentInfo.GetVariable<bool?>("Serve")
-        // ?? ValueInjectionUtility.TryGetValue(() => Serve)
+     // ?? ValueInjectionUtility.TryGetValue(() => Serve)
      ?? false;
 
     /// <summary>
@@ -24,7 +25,9 @@ public interface IGenerateDocFx : IHaveDocs
     /// <summary>
     ///     The core docs to generate documentation
     /// </summary>
-    public Target CoreDocs => d => d
+    [NonEntryTarget]
+    public Target GenerateDocFx => d => d
+                                    .TryDependentFor<IHaveGenerateDocumentationTarget>(z => z.GenerateDocumentation)
                                   .OnlyWhenStatic(() => DocumentationDirectory.DirectoryExists())
                                   .OnlyWhenStatic(() => ( DocumentationDirectory / "docfx.json" ).FileExists())
                                   .Executes(

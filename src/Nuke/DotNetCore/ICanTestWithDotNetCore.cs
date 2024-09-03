@@ -21,7 +21,8 @@ public interface ICanTestWithDotNetCore : IHaveCollectCoverage,
     /// <summary>
     ///     dotnet test
     /// </summary>
-    public Target DotNetCoreTest => d => d
+    [NonEntryTarget]
+    public Target DotnetCoreTest => d => d
                                         .Description("Executes all the unit tests.")
                                         .Unlisted()
                                         .After(Build)

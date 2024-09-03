@@ -1,5 +1,6 @@
 using Nuke.Common.IO;
 using Nuke.Common.Utilities.Collections;
+using Rocket.Surgery.Nuke.GithubActions;
 
 // ReSharper disable SuspiciousTypeConversion.Global
 
@@ -14,6 +15,7 @@ public interface ICanCleanStuff : IHaveCleanTarget, IHaveBuildTarget
     /// <summary>
     ///     clean all artifact directories
     /// </summary>
+    [NonEntryTarget]
     public Target CleanWellKnownTemporaryFiles => d => d
                                    .Before(Build)
                                    .TryDependentFor<IHaveCleanTarget>(z => z.Clean)

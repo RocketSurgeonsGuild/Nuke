@@ -27,7 +27,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
     /// <summary>
     ///     A list of diagnostic ids to exclude from the dotnet format
     /// </summary>
-    public ImmutableArray<string> DotNetFormatExcludedDiagnostics => [];
+    public ImmutableArray<string> DotNetFormatExcludedDiagnostics => ["RCS1060",];
 
     /// <summary>
     ///     A list of diagnostic ids to include in the dotnet format
@@ -37,11 +37,11 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
     /// <summary>
     ///     The dotnet format target
     /// </summary>
-    public Target DotNetFormat => d =>
+    public Target DotnetFormat => d =>
                                       d
                                          .TriggeredBy(Lint)
                                          .Before(PostLint)
-                                         .TryAfter<ICanRestoreWithDotNetCore>(a => a.DotNetToolRestore)
+                                         .TryAfter<ICanRestoreWithDotNetCore>(a => a.DotnetToolRestore)
                                          .OnlyWhenDynamic(() => IsLocalBuild || LintPaths.HasPaths)
                                          .Executes(
                                               () =>
@@ -55,12 +55,12 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                   )
                                                                  .Add("--no-restore");
 
-                                                  if (DotNetFormatIncludedDiagnostics is { Length: > 1, })
+                                                  if (DotNetFormatIncludedDiagnostics is { Length: > 0, })
                                                   {
                                                       _ = arguments.Add("--diagnostics {value}", string.Join(" ", DotNetFormatIncludedDiagnostics.Value));
                                                   }
 
-                                                  if (DotNetFormatExcludedDiagnostics is { Length: > 1, })
+                                                  if (DotNetFormatExcludedDiagnostics is { Length: > 0, })
                                                   {
                                                       _ = arguments.Add("--exclude-diagnostics {value}", string.Join(" ", DotNetFormatExcludedDiagnostics));
                                                   }
@@ -85,7 +85,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
     public Target JetBrainsCleanupCode => d =>
                                               d
                                                  .TriggeredBy(Lint)
-                                                 .After(DotNetFormat)
+                                                 .After(DotnetFormat)
                                                  .Before(PostLint)
                                                  .OnlyWhenDynamic(() => IsLocalBuild || LintPaths.HasPaths)
                                                  .OnlyWhenStatic(() => DotNetTool.IsInstalled("jb"))

@@ -7,8 +7,10 @@
   </PropertyGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="Rocket.Surgery.Nuke.Tests" />
+    <PackageReference Include="LibGit2Sharp" />
     <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" />
     <PackageReference Include="Nuke.Common" />
+    <PackageReference Include="Serilog.Extensions.Logging" />
     <PackageReference Include="System.Collections.Immutable" />
     <PackageReference Include="System.Interactive.Async" />
     <PackageReference Include="YamlDotNet" />

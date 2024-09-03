@@ -1,3 +1,4 @@
+using Rocket.Surgery.Nuke.GithubActions;
 using Serilog;
 
 namespace Rocket.Surgery.Nuke;
@@ -10,6 +11,7 @@ public interface IHaveBuildVersion : IHaveGitVersion, IHaveSolution, IHaveConfig
     /// <summary>
     ///     prints the build information.
     /// </summary>
+    [NonEntryTarget]
     public Target BuildVersion => d => d
        .Executes(
             () =>
