@@ -189,9 +189,6 @@ internal static class SolutionUpdater
 
     private static IEnumerable<Action> AddSolutionItemToFolder(SolutionFolder folder, UnixRelativePath path)
     {
-        if (folder.Items.Values.Select(z => ( (RelativePath)z ).ToUnixRelativePath().ToString()).Any(z => z == path)) yield break;
-        if (folder.Items.Keys.Select(z => ( (RelativePath)z ).ToUnixRelativePath().ToString()).Any(z => z == path)) yield break;
-        if (folder.Items.ContainsKey(path)) yield break;
         yield return () =>
                      {
                          if (folder.Items.Values.Select(z => ( (RelativePath)z ).ToUnixRelativePath().ToString()).Any(z => z == path)) return;
@@ -204,15 +201,21 @@ internal static class SolutionUpdater
     private static IEnumerable<Action> ReplaceDotBuildFolder(Solution solution, SolutionFolder configFolder)
     {
         // sunset .build folder
-        if (solution.GetSolutionFolder(".build") is not { } buildFolder) yield break;
-        yield return () => ReplaceFolder(solution, configFolder, buildFolder);
+        yield return () =>
+                     {
+                         if (solution.GetSolutionFolder(".build") is not { } buildFolder) return;
+                         ReplaceFolder(solution, configFolder, buildFolder);
+                     };
     }
 
     private static IEnumerable<Action> ReplaceDotSolutionFolder(Solution solution, SolutionFolder configFolder)
     {
         // sunset .build folder
-        if (solution.GetSolutionFolder(".solution") is not { } buildFolder) yield break;
-        yield return () => solution.RemoveSolutionFolder(buildFolder);
+        yield return () =>
+                     {
+                         if (solution.GetSolutionFolder(".solution") is not { } buildFolder) return;
+                         solution.RemoveSolutionFolder(buildFolder);
+                     };
     }
 
     private static void ReplaceFolder(Solution solution, SolutionFolder configFolder, SolutionFolder buildFolder)
@@ -222,7 +225,8 @@ internal static class SolutionUpdater
             project.SolutionFolder = configFolder;
         }
 
-        solution.RemoveSolutionFolder(buildFolder);
+        if (solution.GetSolutionFolder(buildFolder.Name) is { } folder)
+            solution.RemoveSolutionFolder(folder);
 
         foreach (var item in buildFolder.Items)
         {
