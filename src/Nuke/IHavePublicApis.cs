@@ -1,4 +1,5 @@
 using Nuke.Common.IO;
+using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
@@ -47,15 +48,19 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
                                                    .Executes(
                                                         async () =>
                                                         {
-                                                            await foreach (var project in GetPublicApiAnalyzerProjects())
+                                                            await foreach (var project in GetPublicApiAnalyzerProjects(Solution))
                                                             {
                                                                 var shippedFilePath = GetShippedFilePath(project);
                                                                 var unshippedFilePath = GetUnshippedFilePath(project);
                                                                 if (!shippedFilePath.FileExists())
+                                                                {
                                                                     await File.WriteAllTextAsync(shippedFilePath, "#nullable enable");
+                                                                }
 
                                                                 if (!unshippedFilePath.FileExists())
+                                                                {
                                                                     await File.WriteAllTextAsync(unshippedFilePath, "#nullable enable");
+                                                                }
 
                                                                 var arguments = new Arguments()
                                                                                .Add("format")
@@ -74,7 +79,10 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                                 )
                                                                                .Add("--diagnostics {value}", "RS0016");
 
-                                                                DotNetTasks.DotNet(arguments.RenderForExecution(), RootDirectory /*, logInvocation: false*/);
+                                                                _ = DotNetTasks.DotNet(
+                                                                    arguments.RenderForExecution(),
+                                                                    RootDirectory /*, logInvocation: false*/
+                                                                );
                                                             }
                                                         }
                                                     );
@@ -91,7 +99,7 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
                                                    .Executes(
                                                         async () =>
                                                         {
-                                                            await foreach (var project in GetPublicApiAnalyzerProjects())
+                                                            await foreach (var project in GetPublicApiAnalyzerProjects(Solution))
                                                             {
                                                                 Log.Logger.Information("Moving unshipped to shipped for {ProjectName}", project.Name);
                                                                 var shippedFilePath = GetShippedFilePath(project);
@@ -101,7 +109,11 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                 var unshipped = await GetLines(unshippedFilePath);
                                                                 foreach (var item in unshipped)
                                                                 {
-                                                                    if (item is not { Length: > 0, }) continue;
+                                                                    if (item is not { Length: > 0, })
+                                                                    {
+                                                                        continue;
+                                                                    }
+
                                                                     shipped.Add(item);
                                                                 }
 
@@ -117,7 +129,7 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                     ? ( await File.ReadAllLinesAsync(path) )
                                                                      .Where(z => z != "#nullable enable")
                                                                      .ToList()
-                                                                    : new();
+                                                                    : [];
                                                             }
                                                         }
                                                     );
@@ -125,18 +137,10 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
     /// <summary>
     ///     All the projects that depend on the Microsoft.CodeAnalysis.PublicApiAnalyzers package
     /// </summary>
-    private IAsyncEnumerable<ProjectAnalyzerModel> GetPublicApiAnalyzerProjects()
+    private IAsyncEnumerable<ProjectAnalyzerModel> GetPublicApiAnalyzerProjects(Solution solution)
     {
-        if (!LintPaths.HasPaths) return AsyncEnumerable.Empty<ProjectAnalyzerModel>();
-        var binlog = LogsDirectory
-                    .GlobFiles("*.binlog")
-                    .OrderBy(z => File.GetLastWriteTimeUtc(z))
-                    .FirstOrDefault();
-        if (binlog == null) return AsyncEnumerable.Empty<ProjectAnalyzerModel>();
-
-        return binlog
-              .AnalyzeBinLog()
-              .GetProjects()
+        return solution
+              .AnalyzeAllProjects()
               .Where(
                    project => project
                              .PackageReferences

@@ -55,9 +55,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                       d
                                          .TriggeredBy(Lint)
                                          .Before(PostLint)
-                                         .OnlyWhenDynamic(
-                                              () => IsLocalBuild || ( LintPaths.HasPaths && LintPaths.Glob(DotnetFormatMatcher) is { Length: > 0 } )
-                                          )
+                                         .OnlyWhenDynamic(() => LintPaths.IsLocalLintOrMatches(DotnetFormatMatcher))
                                          .Executes(
                                               () =>
                                               {
@@ -82,7 +80,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
 
                                                   _ = arguments.Add("--binarylog {value}", LogsDirectory / "dotnet-format.binlog");
 
-                                                  if (LintPaths.HasPaths && LintPaths.Glob(DotnetFormatMatcher) is { Length: > 0, } values)
+                                                  if (LintPaths.Glob(DotnetFormatMatcher) is { Length: > 0, } values)
                                                   {
                                                       _ = arguments.Add("--include {value}", string.Join(",", values.Select(z => z.ToString())));
                                                   }
@@ -102,11 +100,8 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                  .TriggeredBy(Lint)
                                                  .After(DotnetFormat)
                                                  .Before(PostLint)
-                                                 .OnlyWhenDynamic(
-                                                      () => IsLocalBuild
-                                                       || ( LintPaths.HasPaths && LintPaths.Glob(JetBrainsCleanupCodeMatcher) is { Length: > 0 } )
-                                                  )
                                                  .OnlyWhenStatic(() => DotNetTool.IsInstalled("jb"))
+                                                 .OnlyWhenDynamic(() => LintPaths.IsLocalLintOrMatches(JetBrainsCleanupCodeMatcher))
                                                  .Executes(
                                                       () =>
                                                       {
@@ -118,7 +113,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                               "--disable-settings-layers={value}",
                                                                               "GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal"
                                                                           );
-                                                          if (LintPaths.HasPaths && LintPaths.Glob(JetBrainsCleanupCodeMatcher) is { Length: > 0 } files)
+                                                          if (LintPaths.Glob(JetBrainsCleanupCodeMatcher) is { Length: > 0 } files)
                                                           {
                                                               arguments.Add("--include={value}", files, ';');
                                                           }

@@ -86,7 +86,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
     ///     The lint target
     /// </summary>
     public new Target Lint => t => t
-                                  .OnlyWhenDynamic(() => LintPaths.HasPaths)
+                                  .OnlyWhenDynamic(() => LintPaths.Active)
                                   .TryDependsOn<IHaveRestoreTarget>(a => a.Restore)
                                   .Executes(
                                        () =>
@@ -144,7 +144,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
                          patterns.Add("**/PublicAPI.Unshipped.txt");
                      }
 
-                     if (LintPaths.HasPaths)
+                     if (LintPaths.Active)
                      {
                          patterns.AddRange(LintPaths.RelativePaths.Select(z => z.ToString()));
                      }
@@ -206,6 +206,6 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
 
         return files is { Count: > 0, }
             ? new(LintMatcher, trigger, message, files)
-            : new(LintMatcher, trigger, message, GitTasks.Git("ls-files", logOutput: false, logInvocation: false).Select(z => z.Text));
+            : new(LintMatcher, trigger, message, [] /*GitTasks.Git("ls-files", logOutput: false, logInvocation: false).Select(z => z.Text)*/);
     }
 }

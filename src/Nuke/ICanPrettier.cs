@@ -24,12 +24,14 @@ public interface ICanPrettier : ICanLint
             .TriggeredBy(Lint)
             .Before(PostLint)
             .OnlyWhenStatic(() => ( RootDirectory / ".prettierrc" ).FileExists())
+            .OnlyWhenDynamic(() => LintPaths.IsLocalLintOrMatches(PrettierMatcher))
             .Executes(
                  () =>
                  {
-                     var args = LintPaths.Trigger != LintTrigger.None && LintPaths.Glob(PrettierMatcher) is { Length: > 0, } values
-                         ? makeArgsForStagedFiles(values)
-                         : new Arguments().Add("prettier").Add(".").Add("--write");
+                     var args =
+                         LintPaths.Active
+                             ? makeArgsForStagedFiles(LintPaths.Glob(PrettierMatcher))
+                             : new Arguments().Add("prettier").Add(".").Add("--write");
 
                      return ProcessTasks
                            .StartProcess(
