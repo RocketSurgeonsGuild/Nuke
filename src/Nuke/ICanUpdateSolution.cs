@@ -12,6 +12,9 @@ public interface ICanUpdateSolution : IHaveSolution
     public Target GenerateSolutionItems
         => d => d
                .Unlisted()
+                // Does not work well on the linting runner
+                // always seems to produce a commit against the solution
+               .OnlyWhenStatic(() => IsLocalBuild)
                .TryTriggeredBy<ICanLint>(z => z.PostLint)
                .TryAfter<ICanLint>(z => z.PostLint)
                .Executes(
