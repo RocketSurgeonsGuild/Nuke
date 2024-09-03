@@ -27,7 +27,7 @@ public interface ICanPrettier : ICanLint
             .Executes(
                  () =>
                  {
-                     var args = LintPaths.Trigger != LintTrigger.None && LintPaths.Glob(PrettierMatcher).ToArray() is { Length: > 0, } values
+                     var args = LintPaths.Trigger != LintTrigger.None && LintPaths.Glob(PrettierMatcher) is { Length: > 0, } values
                          ? makeArgsForStagedFiles(values)
                          : new Arguments().Add("prettier").Add(".").Add("--write");
 

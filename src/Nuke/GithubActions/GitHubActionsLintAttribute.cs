@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Reflection;
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
@@ -12,6 +13,7 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// </summary>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Class)]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
 {
     /// <summary>
@@ -49,11 +51,17 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
     /// </remarks>
     public string TokenSecret { get; set; } = "RSG_BOT_TOKEN";
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString();
+
     /// <inheritdoc />
     public override ConfigurationEntity GetConfiguration(IReadOnlyCollection<ExecutableTarget> relevantTargets)
     {
         var config = base.GetConfiguration(relevantTargets);
-        if (config is not RocketSurgeonGitHubActionsConfiguration configuration) return config;
+        if (config is not RocketSurgeonGitHubActionsConfiguration configuration)
+        {
+            return config;
+        }
 
         var buildJob =
             configuration
@@ -72,7 +80,7 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
                         .Select(z => z.ToTriggerValue())
                         .Select(value => string.IsNullOrWhiteSpace(value.Prefix) ? value.Name : $"{value.Prefix}.{value.Name}")
                         .FirstOrDefault()
-         ?? ( TokenSecret.Contains(".") ? $$$"""{{{TokenSecret}}}""" : $$$"""secrets.{{{TokenSecret}}}""" );
+         ?? ( TokenSecret.Contains(".") ? $"{TokenSecret}" : $"secrets.{TokenSecret}" );
 
         configuration.Concurrency = new()
         {
@@ -80,7 +88,7 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
             Group = "lint-${{ github.event.pull_request.number }}",
         };
 
-        buildJob
+        _ = buildJob
            .ConfigureStep<CheckoutStep>(
                 step =>
                 {
@@ -96,7 +104,7 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
            .AddStep(
                 new UsingStep("Add & Commit")
                 {
-                    If = $$$""" "'${{ steps.commit-message.outputs.message }}' == '{{{commitMessage}}}'" """.Trim(),
+                    If = $$$""" "contains('${{ steps.commit-message.outputs.message }}', '{{{commitMessage}}}')" """.Trim(),
                     Uses = "planetscale/ghcommit-action@v0.1.36",
                     With =
                     {
@@ -113,7 +121,11 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
                                        .OfType<RocketSurgeonGitHubActionsWorkflowTrigger>()
                 )
         {
-            if (workflowTrigger.Secrets.Any(z => z.Name == TokenSecret || z.Alias == TokenSecret)) continue;
+            if (workflowTrigger.Secrets.Any(z => z.Name == TokenSecret || z.Alias == TokenSecret))
+            {
+                continue;
+            }
+
             workflowTrigger.Secrets.Add(new(TokenSecret, "The token used to commit back when linting", true));
         }
 

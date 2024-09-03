@@ -38,6 +38,9 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
         "CS0246",
         "IDE1006",
         "RCS1175",
+        "IDE0052",
+        "RCS1246",
+        "RCS1112",
     ];
 
     /// <summary>
@@ -52,7 +55,9 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                       d
                                          .TriggeredBy(Lint)
                                          .Before(PostLint)
-                                         .OnlyWhenDynamic(() => IsLocalBuild || LintPaths.HasPaths)
+                                         .OnlyWhenDynamic(
+                                              () => IsLocalBuild || ( LintPaths.HasPaths && LintPaths.Glob(DotnetFormatMatcher) is { Length: > 0 } )
+                                          )
                                          .Executes(
                                               () =>
                                               {
@@ -67,22 +72,22 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
 
                                                   if (DotNetFormatIncludedDiagnostics is { Length: > 0, })
                                                   {
-                                                      _ = arguments.Add("--diagnostics {value}", string.Join(" ", DotNetFormatIncludedDiagnostics.Value));
+                                                      _ = arguments.Add("--diagnostics {value}", DotNetFormatIncludedDiagnostics.Value, ' ');
                                                   }
 
                                                   if (DotNetFormatExcludedDiagnostics is { Length: > 0, })
                                                   {
-                                                      _ = arguments.Add("--exclude-diagnostics {value}", string.Join(" ", DotNetFormatExcludedDiagnostics));
+                                                      _ = arguments.Add("--exclude-diagnostics {value}", DotNetFormatExcludedDiagnostics, ' ');
                                                   }
 
                                                   _ = arguments.Add("--binarylog {value}", LogsDirectory / "dotnet-format.binlog");
 
-                                                  if (LintPaths.HasPaths && LintPaths.Glob(DotNetFormatMatcher).ToArray() is { Length: > 0, } values)
+                                                  if (LintPaths.HasPaths && LintPaths.Glob(DotnetFormatMatcher) is { Length: > 0, } values)
                                                   {
                                                       _ = arguments.Add("--include {value}", string.Join(",", values.Select(z => z.ToString())));
                                                   }
 
-                                                  return DotNetTasks.DotNet(
+                                                  _ = DotNetTasks.DotNet(
                                                       arguments.RenderForExecution(),
                                                       RootDirectory /*, logInvocation: false*/
                                                   );
@@ -97,7 +102,10 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                  .TriggeredBy(Lint)
                                                  .After(DotnetFormat)
                                                  .Before(PostLint)
-                                                 .OnlyWhenDynamic(() => IsLocalBuild || LintPaths.HasPaths)
+                                                 .OnlyWhenDynamic(
+                                                      () => IsLocalBuild
+                                                       || ( LintPaths.HasPaths && LintPaths.Glob(JetBrainsCleanupCodeMatcher) is { Length: > 0 } )
+                                                  )
                                                  .OnlyWhenStatic(() => DotNetTool.IsInstalled("jb"))
                                                  .Executes(
                                                       () =>
@@ -110,15 +118,12 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                               "--disable-settings-layers={value}",
                                                                               "GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal"
                                                                           );
-                                                          if (LintPaths.HasPaths)
+                                                          if (LintPaths.HasPaths && LintPaths.Glob(JetBrainsCleanupCodeMatcher) is { Length: > 0 } files)
                                                           {
-                                                              _ = arguments.Add(
-                                                                  "--include={value}",
-                                                                  string.Join(";", LintPaths.Glob(JetBrainsCleanupCodeMatcher))
-                                                              );
+                                                              arguments.Add("--include={value}", files, ';');
                                                           }
 
-                                                          return DotNetTool.GetProperTool("jb")(arguments, RootDirectory /*, logInvocation: false*/);
+                                                          _ = DotNetTool.GetProperTool("jb")(arguments, RootDirectory /*, logInvocation: false*/);
                                                       }
                                                   );
 
@@ -135,6 +140,6 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
     /// <summary>
     ///     The default matcher for jetbrains cleanup code
     /// </summary>
-    public Matcher DotNetFormatMatcher => dnfMatcher ??= new Matcher(StringComparison.OrdinalIgnoreCase)
+    public Matcher DotnetFormatMatcher => dnfMatcher ??= new Matcher(StringComparison.OrdinalIgnoreCase)
        .AddInclude("**/*.cs");
 }

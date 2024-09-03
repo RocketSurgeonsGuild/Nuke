@@ -78,7 +78,6 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
     /// <summary>
     ///     The lint target
     /// </summary>
-    [NonEntryTarget]
     public new Target Lint => t => t
                                   .OnlyWhenDynamic(() => LintPaths.HasPaths)
                                   .TryDependsOn<IHaveRestoreTarget>(a => a.Restore)
@@ -156,6 +155,9 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
     public Matcher LintMatcher => new Matcher(StringComparison.OrdinalIgnoreCase)
                                  .AddInclude("**/*")
                                  .AddExclude("**/node_modules/**/*")
+                                 .AddExclude(".idea/**/*")
+                                 .AddExclude(".vscode/**/*")
+                                 .AddExclude(".nuke/**/*")
                                  .AddExclude("**/bin/**/*")
                                  .AddExclude("**/obj/**/*")
                                  .AddExclude("**/*.verified.*")
