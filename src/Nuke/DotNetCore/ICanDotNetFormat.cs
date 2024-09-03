@@ -52,7 +52,6 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                       d
                                          .TriggeredBy(Lint)
                                          .Before(PostLint)
-                                         .TryAfter<ICanRestoreWithDotNetCore>(a => a.DotnetToolRestore)
                                          .OnlyWhenDynamic(() => IsLocalBuild || LintPaths.HasPaths)
                                          .Executes(
                                               () =>

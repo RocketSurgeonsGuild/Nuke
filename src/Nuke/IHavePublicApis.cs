@@ -2,7 +2,6 @@ using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
-using Rocket.Surgery.Nuke.GithubActions;
 using Rocket.Surgery.Nuke.ProjectModel;
 using Serilog;
 
@@ -129,8 +128,15 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
     private IAsyncEnumerable<ProjectAnalyzerModel> GetPublicApiAnalyzerProjects()
     {
         if (!LintPaths.HasPaths) return AsyncEnumerable.Empty<ProjectAnalyzerModel>();
-        return Solution
-              .AnalyzeAllProjects()
+        var binlog = LogsDirectory
+                    .GlobFiles("*.binlog")
+                    .OrderBy(z => File.GetLastWriteTimeUtc(z))
+                    .FirstOrDefault();
+        if (binlog == null) return AsyncEnumerable.Empty<ProjectAnalyzerModel>();
+
+        return binlog
+              .AnalyzeBinLog()
+              .GetProjects()
               .Where(
                    project => project
                              .PackageReferences
