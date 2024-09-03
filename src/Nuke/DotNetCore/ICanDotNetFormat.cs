@@ -3,6 +3,8 @@ using Microsoft.Extensions.FileSystemGlobbing;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
+using Serilog;
+using Serilog.Events;
 
 namespace Rocket.Surgery.Nuke.DotNetCore;
 
@@ -87,7 +89,14 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
 
                                                   _ = DotNetTasks.DotNet(
                                                       arguments.RenderForExecution(),
-                                                      RootDirectory /*, logInvocation: false*/
+                                                      RootDirectory,
+                                                      logOutput: true,
+                                                      // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
+                                                      logger: static (t, s) => Log.Write(
+                                                                  t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information,
+                                                                  s
+                                                              ),
+                                                      logInvocation: Verbosity == Verbosity.Verbose
                                                   );
                                               }
                                           );
@@ -113,12 +122,22 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                               "--disable-settings-layers={value}",
                                                                               "GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal"
                                                                           );
-                                                          if (LintPaths.Glob(JetBrainsCleanupCodeMatcher) is { Length: > 0 } files)
+                                                          if (LintPaths.Glob(JetBrainsCleanupCodeMatcher) is { Length: > 0, } files)
                                                           {
                                                               arguments.Add("--include={value}", files, ';');
                                                           }
 
-                                                          _ = DotNetTool.GetProperTool("jb")(arguments, RootDirectory /*, logInvocation: false*/);
+                                                          _ = DotNetTool.GetProperTool("jb")(
+                                                              arguments,
+                                                              RootDirectory,
+                                                              logOutput: true,
+                                                              // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
+                                                              logger: static (t, s) => Log.Write(
+                                                                          t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information,
+                                                                          s
+                                                                      ),
+                                                              logInvocation: Verbosity == Verbosity.Verbose
+                                                          );
                                                       }
                                                   );
 

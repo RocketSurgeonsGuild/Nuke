@@ -5,6 +5,7 @@ using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.Git;
 using Serilog;
+using Serilog.Events;
 
 namespace Rocket.Surgery.Nuke;
 
@@ -109,6 +110,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
     public Target HuskyLint =>
         t => t
             .Unlisted()
+            .OnlyWhenStatic(() => IsLocalBuild)
             .TriggeredBy(Lint)
             .Before(PostLint)
             .Executes(
@@ -121,14 +123,19 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
                      }
 
                      var tool = DotNetTool.GetTool("husky");
-                     _ = tool("run --group lint" /*, logInvocation: false*/);
+                     _ = tool(
+                         "run --group lint",
+                         logOutput: true,
+                         // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
+                         logger: static (t, s) => Log.Write(t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information, s),
+                         logInvocation: Verbosity == Verbosity.Verbose
+                     );
                  }
              );
 
     /// <summary>
     ///     A ensure only the linted files are added to the commit
     /// </summary>
-    [NonEntryTarget]
     public Target LintGitAdd =>
         t => t
             .Unlisted()

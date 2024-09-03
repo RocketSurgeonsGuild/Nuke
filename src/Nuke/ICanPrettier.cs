@@ -2,8 +2,8 @@ using Microsoft.Extensions.FileSystemGlobbing;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Utilities.Collections;
-using Rocket.Surgery.Nuke.GithubActions;
 using Serilog;
+using Serilog.Events;
 
 namespace Rocket.Surgery.Nuke;
 
@@ -18,7 +18,6 @@ public interface ICanPrettier : ICanLint
     /// <summary>
     ///     The prettier target
     /// </summary>
-    [NonEntryTarget]
     public Target Prettier =>
         d => d
             .TriggeredBy(Lint)
@@ -36,8 +35,11 @@ public interface ICanPrettier : ICanLint
                      return ProcessTasks
                            .StartProcess(
                                 ToolPathResolver.GetPathExecutable("npx"),
-                                args.RenderForExecution() /*, logInvocation: false*/,
-                                logger: (_, s) => Log.Logger.Information(s)
+                                args.RenderForExecution(),
+                                logOutput: true,
+                                // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
+                                logger: static (t, s) => Log.Write(t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information, s),
+                                logInvocation: Verbosity == Verbosity.Verbose
                             )
                            .AssertWaitForExit()
                            .AssertZeroExitCode();

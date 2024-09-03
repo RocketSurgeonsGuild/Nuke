@@ -5,6 +5,7 @@ using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
 using Rocket.Surgery.Nuke.ProjectModel;
 using Serilog;
+using Serilog.Events;
 
 namespace Rocket.Surgery.Nuke;
 
@@ -32,14 +33,11 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
     /// <summary>
     ///     Setup to lint the public api projects
     /// </summary>
-    [NonEntryTarget]
-    public Target ShipPublicApis => d =>
-                                        d.Triggers(LintPublicApiAnalyzers);
+    public Target ShipPublicApis => d => d.Triggers(LintPublicApiAnalyzers);
 
     /// <summary>
     ///     Setup to lint the public api projects
     /// </summary>
-    [NonEntryTarget]
     public Target LintPublicApiAnalyzers => d =>
                                                 d
                                                    .TriggeredBy(Lint)
@@ -81,7 +79,14 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
 
                                                                 _ = DotNetTasks.DotNet(
                                                                     arguments.RenderForExecution(),
-                                                                    RootDirectory /*, logInvocation: false*/
+                                                                    RootDirectory,
+                                                                    logOutput: true,
+                                                                    // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
+                                                                    logger: static (t, s) => Log.Write(
+                                                                                t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information,
+                                                                                s
+                                                                            ),
+                                                                    logInvocation: Verbosity == Verbosity.Verbose
                                                                 );
                                                             }
                                                         }
@@ -90,7 +95,6 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
     /// <summary>
     ///     Ensure the shipped file is up to date
     /// </summary>
-    [NonEntryTarget]
     public Target MoveUnshippedToShipped => d =>
                                                 d
                                                    .DependsOn(LintPublicApiAnalyzers)
