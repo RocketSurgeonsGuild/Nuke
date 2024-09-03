@@ -40,6 +40,7 @@ public enum LintTrigger
 public class LintPaths
 {
     private readonly ImmutableArray<AbsolutePath> _paths;
+    private readonly Dictionary<Matcher, ImmutableArray<AbsolutePath>> _matches = new();
 
     /// <summary>
     ///     Lint paths container
@@ -53,7 +54,8 @@ public class LintPaths
         Trigger = trigger;
         Message = message;
 
-        _paths = [
+        _paths =
+        [
             ..paths
              .Select(z => z.Trim())
              .Select(z => Path.IsPathRooted(z) ? (AbsolutePath)z : NukeBuild.RootDirectory / z)
@@ -91,10 +93,10 @@ public class LintPaths
     /// </summary>
     /// <param name="matcher"></param>
     /// <returns></returns>
-    public ImmutableArray<RelativePath> Glob(Matcher matcher)
-    {
-        return _paths.Match(matcher).GetRelativePaths();
-    }
+    public ImmutableArray<RelativePath> Glob(Matcher matcher) =>
+        _matches.TryGetValue(matcher, out var results)
+            ? results.GetRelativePaths()
+            : (_matches[matcher] = _paths.Match(matcher)).GetRelativePaths();
 
     /// <summary>
     ///     Glob against a given matcher to included / exclude files
@@ -111,10 +113,10 @@ public class LintPaths
     /// </summary>
     /// <param name="matcher"></param>
     /// <returns></returns>
-    public IEnumerable<AbsolutePath> GlobAbsolute(Matcher matcher)
-    {
-        return _paths.Match(matcher);
-    }
+    public IEnumerable<AbsolutePath> GlobAbsolute(Matcher matcher) =>
+        _matches.TryGetValue(matcher, out var results)
+            ? results
+            : _matches[matcher] = _paths.Match(matcher);
 
     /// <summary>
     ///     Glob against a given matcher to included / exclude files
