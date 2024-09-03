@@ -308,7 +308,6 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             var key = par.GetCustomAttribute<ParameterAttribute>()?.Name ?? par.Name;
             if (environmentVariables.TryGetValue(key, out var value) && value is not GitHubActionsInput)
             {
-                //                Log.Logger.Information("Found Parameter {Name}", value.Name);
                 var name = string.IsNullOrWhiteSpace(value.Prefix) ? value.Name : $"{value.Prefix}.{value.Name}";
                 stepParameters.Add(new(key, $"{name}{( string.IsNullOrWhiteSpace(value.Default) ? "" : $" || {value.Default}" )}"));
             }
