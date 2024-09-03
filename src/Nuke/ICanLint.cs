@@ -78,7 +78,6 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
     /// <summary>
     ///     The lint target
     /// </summary>
-    [NonEntryTarget]
     public new Target Lint => t => t
                                   .OnlyWhenDynamic(() => LintPaths.HasPaths)
                                   .TryDependsOn<IHaveRestoreTarget>(a => a.Restore)
