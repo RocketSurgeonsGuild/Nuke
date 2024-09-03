@@ -1,4 +1,5 @@
 using System.Collections.Frozen;
+using System.Collections.Immutable;
 using Microsoft.Extensions.FileSystemGlobbing;
 using Nuke.Common.IO;
 
@@ -38,19 +39,7 @@ public enum LintTrigger
 /// </summary>
 public class LintPaths
 {
-    //    public FrozenSet<AbsolutePath> Paths => _paths;
-
-    /// <summary>
-    ///     convert to the set
-    /// </summary>
-    /// <param name="paths"></param>
-    /// <returns></returns>
-    public static implicit operator FrozenSet<AbsolutePath>(LintPaths paths)
-    {
-        return paths.HasPaths ? paths._paths : Enumerable.Empty<AbsolutePath>().ToFrozenSet();
-    }
-
-    private readonly FrozenSet<AbsolutePath> _paths;
+    private readonly ImmutableArray<AbsolutePath> _paths;
 
     /// <summary>
     ///     Lint paths container
@@ -64,11 +53,12 @@ public class LintPaths
         Trigger = trigger;
         Message = message;
 
-        _paths = paths
-                .Select(z => z.Trim())
-                .Select(z => Path.IsPathRooted(z) ? (AbsolutePath)z : NukeBuild.RootDirectory / z)
-                .Match(matcher)
-                .ToFrozenSet();
+        _paths = [
+            ..paths
+             .Select(z => z.Trim())
+             .Select(z => Path.IsPathRooted(z) ? (AbsolutePath)z : NukeBuild.RootDirectory / z)
+             .Match(matcher)
+        ];
     }
 
     /// <summary>
@@ -89,19 +79,19 @@ public class LintPaths
     /// <summary>
     ///     Are there any paths?
     /// </summary>
-    public IEnumerable<AbsolutePath> Paths => _paths;
+    public ImmutableArray<AbsolutePath> Paths => _paths;
 
     /// <summary>
     ///     Are there any paths?
     /// </summary>
-    public IEnumerable<RelativePath> RelativePaths => _paths.GetRelativePaths();
+    public ImmutableArray<RelativePath> RelativePaths => _paths.GetRelativePaths();
 
     /// <summary>
     ///     Glob against a given matcher to included / exclude files
     /// </summary>
     /// <param name="matcher"></param>
     /// <returns></returns>
-    public IEnumerable<RelativePath> Glob(Matcher matcher)
+    public ImmutableArray<RelativePath> Glob(Matcher matcher)
     {
         return _paths.Match(matcher).GetRelativePaths();
     }
@@ -111,7 +101,7 @@ public class LintPaths
     /// </summary>
     /// <param name="matcher"></param>
     /// <returns></returns>
-    public IEnumerable<RelativePath> Glob(string matcher)
+    public ImmutableArray<RelativePath> Glob(string matcher)
     {
         return _paths.Match(new Matcher(StringComparison.OrdinalIgnoreCase).AddInclude(matcher)).GetRelativePaths();
     }

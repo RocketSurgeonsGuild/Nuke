@@ -80,7 +80,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
 
                                                   _ = arguments.Add("--binarylog {value}", LogsDirectory / "dotnet-format.binlog");
 
-                                                  if (LintPaths.HasPaths && LintPaths.Glob(DotnetFormatMatcher).ToArray() is { Length: > 0, } values)
+                                                  if (LintPaths.HasPaths && LintPaths.Glob(DotnetFormatMatcher) is { Length: > 0, } values)
                                                   {
                                                       _ = arguments.Add("--include {value}", string.Join(",", values.Select(z => z.ToString())));
                                                   }
@@ -117,11 +117,11 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                               "--disable-settings-layers={value}",
                                                                               "GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal"
                                                                           );
-                                                          if (LintPaths.HasPaths)
+                                                          if (LintPaths.HasPaths && LintPaths.Glob(JetBrainsCleanupCodeMatcher) is { Length: >0  } files)
                                                           {
-                                                              _ = arguments.Add("--include={value}", LintPaths.Glob(JetBrainsCleanupCodeMatcher), ';');
+                                                              arguments.Add("--include={value}", files, ';');
                                                           }
-                                                          else
+                                                          else if (LintPaths.Trigger == LintTrigger.Staged)
                                                           {
                                                               return;
                                                           }
