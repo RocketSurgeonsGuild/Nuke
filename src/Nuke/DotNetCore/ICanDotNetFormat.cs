@@ -27,7 +27,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
     /// <summary>
     ///     A list of diagnostic ids to exclude from the dotnet format
     /// </summary>
-    public ImmutableArray<string> DotNetFormatExcludedDiagnostics => [];
+    public ImmutableArray<string> DotNetFormatExcludedDiagnostics => ["RCS1060",];
 
     /// <summary>
     ///     A list of diagnostic ids to include in the dotnet format

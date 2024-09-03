@@ -61,20 +61,18 @@ public interface ICommonAnalyzerModel
 /// <summary>
 ///     A wrapper around the Analyzer Manager to provide a more strongly typed model for returning projects and solutions
 /// </summary>
-public class SolutionAnalyzerModel : ICommonAnalyzerModel
+/// <remarks>
+///     A wrapper around the Analyzer Manager to provide a more strongly typed model for returning projects and solutions
+/// </remarks>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public class SolutionAnalyzerModel(AnalyzerManager manager, EnvironmentOptions? environmentOptions = null) : ICommonAnalyzerModel
 {
-    private readonly AnalyzerManager _manager;
-    private readonly EnvironmentOptions _environmentOptions;
-    private readonly Dictionary<string, ProjectAnalyzerResults> _projectAnalyzerResults = new();
+    private readonly AnalyzerManager _manager = manager;
+    private readonly EnvironmentOptions _environmentOptions = environmentOptions ?? new();
+    private readonly Dictionary<string, ProjectAnalyzerResults> _projectAnalyzerResults = [];
 
-    /// <summary>
-    ///     A wrapper around the Analyzer Manager to provide a more strongly typed model for returning projects and solutions
-    /// </summary>
-    public SolutionAnalyzerModel(AnalyzerManager manager, EnvironmentOptions? environmentOptions = null)
-    {
-        _manager = manager;
-        _environmentOptions = environmentOptions ?? new();
-    }
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString();
 
     private IAsyncEnumerable<ProjectAnalyzerModel> GetProjectsImpl(LogEventLevel logEventLevel, string? targetFramework = null)
     {
@@ -159,29 +157,28 @@ public class SolutionAnalyzerModel : ICommonAnalyzerModel
         var projects = await GetProjectsImpl(LogEventLevel.Verbose).ToArrayAsync();
         sw.Stop();
         Log.Information("Analyzed solution {Solution} in {Elapsed}", _manager.SolutionFilePath, sw.Elapsed);
-        return [..projects,];
+        return [.. projects,];
     }
 }
 
 /// <summary>
 ///     A wrapper around the Analyzer Manager to provide a more strongly typed model for returning projects and solutions
 /// </summary>
-public class BinLogAnalyzerModel : ICommonAnalyzerModel
+/// <remarks>
+///     A wrapper around the Analyzer Manager to provide a more strongly typed model for returning projects and solutions
+/// </remarks>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public class BinLogAnalyzerModel(string binlogPath) : ICommonAnalyzerModel
 {
     private static readonly object _analyzedLock = new();
-    private readonly string _binlogPath;
+    private readonly string _binlogPath = binlogPath;
     private readonly AnalyzerManager _manager = new();
-    private readonly Dictionary<string, ProjectAnalyzerResults> _projectAnalyzerResults = new();
+    private readonly Dictionary<string, ProjectAnalyzerResults> _projectAnalyzerResults = [];
 
     private bool _analyzed;
 
-    /// <summary>
-    ///     A wrapper around the Analyzer Manager to provide a more strongly typed model for returning projects and solutions
-    /// </summary>
-    public BinLogAnalyzerModel(string binlogPath)
-    {
-        _binlogPath = binlogPath;
-    }
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString();
 
     private Task<ProjectAnalyzerModel> GetProjectImpl(string projectPath, string? targetFramework = null)
     {
@@ -196,12 +193,9 @@ public class BinLogAnalyzerModel : ICommonAnalyzerModel
     private async Task<ProjectAnalyzerModel> Analyze(string projectPath, string? targetFramework = null)
     {
         await AnalyzeBinLog();
-        if (!_projectAnalyzerResults.TryGetValue(projectPath, out var results))
-        {
-            throw new InvalidOperationException($"Project {projectPath} was not found in the binlog");
-        }
-
-        return results.GetProjectForTargetFramework(targetFramework);
+        return !_projectAnalyzerResults.TryGetValue(projectPath, out var results)
+            ? throw new InvalidOperationException($"Project {projectPath} was not found in the binlog")
+            : results.GetProjectForTargetFramework(targetFramework);
     }
 
     private Task AnalyzeBinLog()
@@ -211,10 +205,18 @@ public class BinLogAnalyzerModel : ICommonAnalyzerModel
             : Task.Run(
                 () =>
                 {
-                    if (_analyzed) return;
+                    if (_analyzed)
+                    {
+                        return;
+                    }
+
                     lock (_analyzedLock)
                     {
-                        if (_analyzed) return;
+                        if (_analyzed)
+                        {
+                            return;
+                        }
+
                         Log.Information("Reading {Log}", _binlogPath);
                         var sw = Stopwatch.StartNew();
                         var results = _manager.Analyze(_binlogPath);
@@ -282,7 +284,7 @@ internal record ProjectAnalyzerResults(IProjectAnalyzer Project, FrozenSet<IAnal
 {
     public ProjectAnalyzerModel GetProjectForTargetFramework(string? targetFramework = null)
     {
-        targetFramework ??= Results.Reverse().Select(z => z.TargetFramework).First();
+        targetFramework ??= Results.Reverse().Select(z => z.TargetFramework).FirstOrDefault();
         return new(Results.FirstOrDefault(z => z.TargetFramework == targetFramework) ?? returnDefault(Results.Last(), Project.ProjectFile.Path));
 
         static ProjectAnalyzerModel returnDefault(IAnalyzerResult result, string contextPath)
@@ -300,7 +302,11 @@ internal record ProjectAnalyzerResults(IProjectAnalyzer Project, FrozenSet<IAnal
 /// <summary>
 ///     A wrapper around the analyzer result to provide a more strongly typed model
 /// </summary>
-public class ProjectAnalyzerModel : IAnalyzerResult
+/// <remarks>
+///     A wrapper around the analyzer result to provide a more strongly typed model
+/// </remarks>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
+public class ProjectAnalyzerModel(IAnalyzerResult result) : IAnalyzerResult
 {
     /// <summary>
     ///     Implicitly convert the model to the project file path
@@ -312,16 +318,7 @@ public class ProjectAnalyzerModel : IAnalyzerResult
         return model.ProjectFilePath;
     }
 
-    private readonly IAnalyzerResult _result;
-
-    /// <summary>
-    ///     A wrapper around the analyzer result to provide a more strongly typed model
-    /// </summary>
-    public ProjectAnalyzerModel(IAnalyzerResult result)
-    {
-        Project = result.Analyzer;
-        _result = result;
-    }
+    private readonly IAnalyzerResult _result = result;
 
     /// <summary>
     ///     The project name
@@ -336,7 +333,7 @@ public class ProjectAnalyzerModel : IAnalyzerResult
     /// <summary>
     ///     The project file model
     /// </summary>
-    public ProjectAnalyzer Project { get; }
+    public ProjectAnalyzer Project { get; } = result.Analyzer;
 
     /// <summary>
     ///     The package id
@@ -365,6 +362,9 @@ public class ProjectAnalyzerModel : IAnalyzerResult
     /// </summary>
     public AbsolutePath Directory => ProjectFilePath.Parent!;
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString();
+
     /// <summary>
     ///     Get a property from the analyzer result supports a limited number of types
     /// </summary>
@@ -375,9 +375,12 @@ public class ProjectAnalyzerModel : IAnalyzerResult
     public T? GetProperty<T>(string name) where T : notnull
     {
         var value = _result.GetProperty(name);
-        if (typeof(T) == typeof(bool)) return (T?)(object?)( value is "enable" or "true" );
-        if (typeof(T) == typeof(string)) return (T?)(object?)value;
-        throw new NotSupportedException(typeof(T).FullName);
+        if (typeof(T) == typeof(bool))
+        {
+            return (T?)(object?)( value is "enable" or "true" );
+        }
+
+        return typeof(T) == typeof(string) ? (T?)(object?)value : throw new NotSupportedException(typeof(T).FullName);
     }
 
     string IAnalyzerResult.GetProperty(string name)
