@@ -70,7 +70,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
 
                                                   if (DotNetFormatIncludedDiagnostics is { Length: > 0, })
                                                   {
-                                                      _ = arguments.Add("--diagnostics {value}", string.Join(" ", DotNetFormatIncludedDiagnostics.Value));
+                                                      _ = arguments.Add("--diagnostics {value}", DotNetFormatIncludedDiagnostics.Value, ' ');
                                                   }
 
                                                   if (DotNetFormatExcludedDiagnostics is { Length: > 0, })
@@ -80,12 +80,16 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
 
                                                   _ = arguments.Add("--binarylog {value}", LogsDirectory / "dotnet-format.binlog");
 
-                                                  if (LintPaths.HasPaths && LintPaths.Glob(DotNetFormatMatcher).ToArray() is { Length: > 0, } values)
+                                                  if (LintPaths.HasPaths && LintPaths.Glob(DotnetFormatMatcher).ToArray() is { Length: > 0, } values)
                                                   {
                                                       _ = arguments.Add("--include {value}", string.Join(",", values.Select(z => z.ToString())));
                                                   }
+                                                  else
+                                                  {
+                                                      return;
+                                                  }
 
-                                                  return DotNetTasks.DotNet(
+                                                  _ = DotNetTasks.DotNet(
                                                       arguments.RenderForExecution(),
                                                       RootDirectory /*, logInvocation: false*/
                                                   );
@@ -115,13 +119,14 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                           );
                                                           if (LintPaths.HasPaths)
                                                           {
-                                                              _ = arguments.Add(
-                                                                  "--include={value}",
-                                                                  string.Join(";", LintPaths.Glob(JetBrainsCleanupCodeMatcher))
-                                                              );
+                                                              _ = arguments.Add("--include={value}", LintPaths.Glob(JetBrainsCleanupCodeMatcher), ';');
+                                                          }
+                                                          else
+                                                          {
+                                                              return;
                                                           }
 
-                                                          return DotNetTool.GetProperTool("jb")(arguments, RootDirectory /*, logInvocation: false*/);
+                                                          _ = DotNetTool.GetProperTool("jb")(arguments, RootDirectory /*, logInvocation: false*/);
                                                       }
                                                   );
 
@@ -138,6 +143,6 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
     /// <summary>
     ///     The default matcher for jetbrains cleanup code
     /// </summary>
-    public Matcher DotNetFormatMatcher => dnfMatcher ??= new Matcher(StringComparison.OrdinalIgnoreCase)
+    public Matcher DotnetFormatMatcher => dnfMatcher ??= new Matcher(StringComparison.OrdinalIgnoreCase)
        .AddInclude("**/*.cs");
 }
