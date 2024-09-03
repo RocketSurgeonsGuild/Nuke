@@ -77,7 +77,7 @@ public partial class Pipeline : NukeBuild,
     public Target Restore => _ => _;
     Nuke.Common.ProjectModel.Solution IHaveSolution.Solution => Solution;
 
-    [GitVersion(NoFetch = true)]
+    [GitVersion]
     public GitVersion GitVersion { get; } = null!;
 
     public Target Test => _ => _;
