@@ -369,7 +369,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             if (firstRun && localTool)
             {
                 firstRun = false;
-                initialArguments = new Arguments().Add("dotnet").Add(NukeBuild.RootDirectory.GetRelativePathTo(Assembly.GetEntryAssembly()!.Location));
+                initialArguments = new Arguments().Add("dotnet").Add(NukeBuild.RootDirectory.GetUnixRelativePathTo(Assembly.GetEntryAssembly()!.Location));
             }
 
             steps.Add(
