@@ -55,12 +55,12 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                   )
                                                                  .Add("--no-restore");
 
-                                                  if (DotNetFormatIncludedDiagnostics is { Length: > 1, })
+                                                  if (DotNetFormatIncludedDiagnostics is { Length: > 0, })
                                                   {
                                                       _ = arguments.Add("--diagnostics {value}", string.Join(" ", DotNetFormatIncludedDiagnostics.Value));
                                                   }
 
-                                                  if (DotNetFormatExcludedDiagnostics is { Length: > 1, })
+                                                  if (DotNetFormatExcludedDiagnostics is { Length: > 0, })
                                                   {
                                                       _ = arguments.Add("--exclude-diagnostics {value}", string.Join(" ", DotNetFormatExcludedDiagnostics));
                                                   }
