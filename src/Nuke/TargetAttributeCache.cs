@@ -65,7 +65,7 @@ internal static class TargetAttributeCache
               .ToImmutableSortedDictionary(z => z.Key, z => z.Targets);
     }
 
-    private static AbsolutePath AttributeCache => NukeBuild.RootDirectory / ".nuke" / "attributes.cache";
+    private static AbsolutePath AttributeCache => NukeBuild.TemporaryDirectory / "attributes.cache";
 
     private static FrozenDictionary<string, FrozenSet<string>> EnsureAttributeCacheIsUptoDate()
     {

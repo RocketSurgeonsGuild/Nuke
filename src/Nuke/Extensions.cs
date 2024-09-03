@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Reflection;
 using Microsoft.Extensions.FileSystemGlobbing;
@@ -111,9 +112,9 @@ public static class Extensions
     /// </summary>
     /// <param name="paths"></param>
     /// <returns></returns>
-    public static IEnumerable<RelativePath> GetRelativePaths(this IEnumerable<AbsolutePath> paths)
+    public static ImmutableArray<RelativePath> GetRelativePaths(this IEnumerable<AbsolutePath> paths)
     {
-        return paths.Select(z => NukeBuild.RootDirectory.GetRelativePathTo(z));
+        return [..paths.Select(z => NukeBuild.RootDirectory.GetRelativePathTo(z))];
     }
 
     /// <summary>
@@ -121,19 +122,19 @@ public static class Extensions
     /// </summary>
     /// <param name="paths"></param>
     /// <returns></returns>
-    public static IEnumerable<string> GetRelativePathStrings(this IEnumerable<AbsolutePath> paths)
+    public static ImmutableArray<string> GetRelativePathStrings(this IEnumerable<AbsolutePath> paths)
     {
-        return paths.Select(z => NukeBuild.RootDirectory.GetRelativePathTo(z).ToString());
+        return [..paths.Select(z => NukeBuild.RootDirectory.GetRelativePathTo(z).ToString())];
     }
 
     /// <summary>
     ///     Gets the relative paths that fit the matcher
     /// </summary>
     /// <returns></returns>
-    public static IEnumerable<RelativePath> Match(this IEnumerable<RelativePath> relativePaths, Matcher matcher)
+    public static ImmutableArray<RelativePath> Match(this IEnumerable<RelativePath> relativePaths, Matcher matcher)
     {
         return matcher.Match(NukeBuild.RootDirectory, relativePaths.Select(z => z.ToString())) is { HasMatches: true, Files: var files, }
-            ? files.Select(z => (RelativePath)z.Path)
+            ? [..files.Select(z => (RelativePath)z.Path)]
             : [];
     }
 
@@ -141,10 +142,10 @@ public static class Extensions
     ///     Gets the relative paths that fit the matcher
     /// </summary>
     /// <returns></returns>
-    public static IEnumerable<AbsolutePath> Match(this IEnumerable<AbsolutePath> absolutePaths, Matcher matcher)
+    public static ImmutableArray<AbsolutePath> Match(this IEnumerable<AbsolutePath> absolutePaths, Matcher matcher)
     {
         return matcher.Match(absolutePaths.Select(z => z.ToString())) is { HasMatches: true, Files: var files, }
-            ? files.Select(z => (RelativePath)z.Path).Select(z => NukeBuild.RootDirectory / z)
+            ? [..files.Select(z => (RelativePath)z.Path).Select(z => NukeBuild.RootDirectory / z)]
             : [];
     }
 
