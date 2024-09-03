@@ -38,6 +38,9 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
         "CS0246",
         "IDE1006",
         "RCS1175",
+        "IDE0052",
+        "RCS1246",
+        "RCS1112",
     ];
 
     /// <summary>
