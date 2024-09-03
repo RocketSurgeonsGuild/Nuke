@@ -14,6 +14,7 @@ using Solution = Solution;
 /// <summary>
 ///     Extensions for <see cref="Buildalyzer" />.
 /// </summary>
+[PublicAPI]
 public static class BuildalyzerExtensions
 {
     /// <summary>
@@ -81,14 +82,9 @@ public static class BuildalyzerExtensions
             : Task.Run(
                 () =>
                 {
-                    var sw = Stopwatch.StartNew();
-                    Log.Information("Analyzing solution {Solution}", solution.Path);
-                    var analyzerManager = new AnalyzerManager(solution.Path);
-                    _solutionReferences.TryAdd(solution, new(analyzerManager));
-                    sw.Stop();
-                    Log.Information("Analyzed solution {Solution} in {Elapsed}", solution.Path, sw.Elapsed);
-
-                    return new SolutionAnalyzerModel(analyzerManager, environmentOptions);
+                    var m = new SolutionAnalyzerModel(solution.Path, environmentOptions);
+                    _solutionReferences.TryAdd(solution, m);
+                    return m;
                 }
             );
     }

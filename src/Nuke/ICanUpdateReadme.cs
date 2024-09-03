@@ -28,13 +28,9 @@ public interface ICanUpdateReadme : IHaveSolution
                                         .Unlisted()
                                         .TryTriggeredBy<ICanLint>(z => z.Lint)
                                         .Executes(
-                                             async () =>
-                                             {
-                                                 var path = TemporaryDirectory / "readme-last-updated-at";
-                                                 var readmeContent = File.ReadAllText(ReadmeFilePath);
-                                                 readmeContent = await Readme.Process(readmeContent, this);
-                                                 File.WriteAllText(ReadmeFilePath, readmeContent);
-                                                 File.SetLastWriteTime(path, DateTime.Now);
-                                             }
+                                             async () => File.WriteAllText(
+                                                 ReadmeFilePath,
+                                                 await Readme.Process(File.ReadAllText(ReadmeFilePath), this)
+                                             )
                                          );
 }

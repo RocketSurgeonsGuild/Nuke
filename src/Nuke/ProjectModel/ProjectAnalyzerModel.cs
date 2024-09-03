@@ -4,10 +4,12 @@ using System.Diagnostics;
 using Buildalyzer;
 using Buildalyzer.Construction;
 using Buildalyzer.Environment;
+using Microsoft.Build.Construction;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Serilog;
 using Serilog.Events;
+using Serilog.Extensions.Logging;
 
 namespace Rocket.Surgery.Nuke.ProjectModel;
 
@@ -65,14 +67,31 @@ public interface ICommonAnalyzerModel
 ///     A wrapper around the Analyzer Manager to provide a more strongly typed model for returning projects and solutions
 /// </remarks>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public class SolutionAnalyzerModel(AnalyzerManager manager, EnvironmentOptions? environmentOptions = null) : ICommonAnalyzerModel
+public class SolutionAnalyzerModel : ICommonAnalyzerModel
 {
-    private readonly AnalyzerManager _manager = manager;
-    private readonly EnvironmentOptions _environmentOptions = environmentOptions ?? new();
+    private readonly EnvironmentOptions _environmentOptions;
     private readonly Dictionary<string, ProjectAnalyzerResults> _projectAnalyzerResults = [];
+    private readonly AnalyzerManager _manager;
+
+    /// <summary>
+    ///     A wrapper around the Analyzer Manager to provide a more strongly typed model for returning projects and solutions
+    /// </summary>
+    /// <remarks>
+    ///     A wrapper around the Analyzer Manager to provide a more strongly typed model for returning projects and solutions
+    /// </remarks>
+    public SolutionAnalyzerModel(string solution, EnvironmentOptions? environmentOptions = null)
+    {
+        _manager = new(solution) { LoggerFactory = new SerilogLoggerFactory(Log.Logger), };
+        _environmentOptions = environmentOptions ?? new();
+    }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => ToString();
+    private string DebuggerDisplay => _manager.SolutionFilePath;
+
+    /// <summary>
+    /// The solution file
+    /// </summary>
+    public SolutionFile SolutionFile => _manager.SolutionFile;
 
     private IAsyncEnumerable<ProjectAnalyzerModel> GetProjectsImpl(LogEventLevel logEventLevel, string? targetFramework = null)
     {
@@ -153,7 +172,7 @@ public class SolutionAnalyzerModel(AnalyzerManager manager, EnvironmentOptions? 
     public async Task<ImmutableArray<ProjectAnalyzerModel>> Analyze()
     {
         Log.Information("Analyzing solution {Solution}", _manager.SolutionFilePath);
-        var sw = new Stopwatch();
+        var sw = Stopwatch.StartNew();
         var projects = await GetProjectsImpl(LogEventLevel.Verbose).ToArrayAsync();
         sw.Stop();
         Log.Information("Analyzed solution {Solution} in {Elapsed}", _manager.SolutionFilePath, sw.Elapsed);
@@ -171,14 +190,13 @@ public class SolutionAnalyzerModel(AnalyzerManager manager, EnvironmentOptions? 
 public class BinLogAnalyzerModel(string binlogPath) : ICommonAnalyzerModel
 {
     private static readonly object _analyzedLock = new();
-    private readonly string _binlogPath = binlogPath;
-    private readonly AnalyzerManager _manager = new();
+    private readonly AnalyzerManager _manager = new() { LoggerFactory = new SerilogLoggerFactory(Log.Logger), };
     private readonly Dictionary<string, ProjectAnalyzerResults> _projectAnalyzerResults = [];
 
     private bool _analyzed;
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => ToString();
+    private string DebuggerDisplay => binlogPath;
 
     private Task<ProjectAnalyzerModel> GetProjectImpl(string projectPath, string? targetFramework = null)
     {
@@ -217,9 +235,9 @@ public class BinLogAnalyzerModel(string binlogPath) : ICommonAnalyzerModel
                             return;
                         }
 
-                        Log.Information("Reading {Log}", _binlogPath);
+                        Log.Information("Reading {Log}", binlogPath);
                         var sw = Stopwatch.StartNew();
-                        var results = _manager.Analyze(_binlogPath);
+                        var results = _manager.Analyze(binlogPath);
                         foreach (var result in results.GroupBy(z => z.ProjectFilePath))
                         {
                             var projectAnalyzer = _manager.GetProject(result.Key);
@@ -228,7 +246,7 @@ public class BinLogAnalyzerModel(string binlogPath) : ICommonAnalyzerModel
 
                         sw.Stop();
                         _analyzed = true;
-                        Log.Information("Read {Log} in {Elapsed}", _binlogPath, sw.Elapsed);
+                        Log.Information("Read {Log} in {Elapsed}", binlogPath, sw.Elapsed);
                     }
                 }
             );
@@ -375,12 +393,11 @@ public class ProjectAnalyzerModel(IAnalyzerResult result) : IAnalyzerResult
     public T? GetProperty<T>(string name) where T : notnull
     {
         var value = _result.GetProperty(name);
-        if (typeof(T) == typeof(bool))
-        {
-            return (T?)(object?)( value is "enable" or "true" );
-        }
-
-        return typeof(T) == typeof(string) ? (T?)(object?)value : throw new NotSupportedException(typeof(T).FullName);
+        return typeof(T) == typeof(bool)
+            ? (T?)(object?)( value is "enable" or "true" )
+            : typeof(T) == typeof(string)
+                ? (T?)(object?)value
+                : throw new NotSupportedException(typeof(T).FullName);
     }
 
     string IAnalyzerResult.GetProperty(string name)
