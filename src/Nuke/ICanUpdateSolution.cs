@@ -12,7 +12,8 @@ public interface ICanUpdateSolution : IHaveSolution
     public Target GenerateSolutionItems
         => d => d
                .Unlisted()
-               .TryTriggeredBy<ICanLint>(z => z.Lint)
+               .TryTriggeredBy<ICanLint>(z => z.PostLint)
+               .TryAfter<ICanLint>(z => z.PostLint)
                .Executes(
                     () =>
                     {

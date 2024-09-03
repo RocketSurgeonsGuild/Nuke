@@ -318,7 +318,6 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         var requiredInputs = new List<GitHubActionsInput>();
         var lookupTable = new LookupTable<ExecutableTarget, ExecutableTarget[]>();
         var initialArguments = localTool ? new Arguments().Add("dotnet").Add("nuke") : new Arguments().Add("nuke");
-        var firstRun = true;
         foreach (( var execute, var targets ) in relevantTargets
                                                 .Select(
                                                      x => ( ExecutableTarget: x,
@@ -365,12 +364,6 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                                    .ToDictionary(z => z.Key, z => $$$"""${{ {{{z.Value}}} }}"""),
                                 "{key} {value}"
                             );
-
-            if (firstRun && localTool)
-            {
-                firstRun = false;
-                initialArguments = new Arguments().Add("dotnet").Add(NukeBuild.RootDirectory.GetUnixRelativePathTo(Assembly.GetEntryAssembly()!.Location));
-            }
 
             steps.Add(
                 new RunStep(execute.Name.Humanize(LetterCasing.Title))
