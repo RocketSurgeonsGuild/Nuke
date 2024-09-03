@@ -22,7 +22,11 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
                          {
                              { Status: ChangeKind.Added or ChangeKind.Modified or ChangeKind.Renamed or ChangeKind.Copied, } => item.Path, _ => null,
                          };
-            if (string.IsNullOrWhiteSpace(result)) continue;
+            if (string.IsNullOrWhiteSpace(result))
+            {
+                continue;
+            }
+
             yield return item.Path;
         }
     }
@@ -65,7 +69,10 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
             {
                 // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
                 lastFolder = currentPath;
-                if (!string.IsNullOrWhiteSpace(currentPath)) Log.Information($"📂 {currentPath}");
+                if (!string.IsNullOrWhiteSpace(currentPath))
+                {
+                    Log.Information($"📂 {currentPath}");
+                }
             }
 
             // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
@@ -85,7 +92,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
                                   .Executes(
                                        () =>
                                        {
-                                           Log.Information("Linting {Count} files", LintPaths.Paths.Count());
+                                           Log.Information("Linting {Count} files with trigger {Trigger}", LintPaths.Paths.Count(), LintPaths.Trigger);
                                            WriteFileTreeWithEmoji(LintPaths.Paths);
                                        }
                                    );
@@ -109,11 +116,13 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
                  () =>
                  {
                      var toolInstalled = DotNetTool.IsInstalled("husky");
-                     if (toolInstalled)
+                     if (!toolInstalled)
                      {
-                         var tool = DotNetTool.GetTool("husky");
-                         _ = tool("run --group lint" /*, logInvocation: false*/);
+                         return;
                      }
+
+                     var tool = DotNetTool.GetTool("husky");
+                     _ = tool("run --group lint" /*, logInvocation: false*/);
                  }
              );
 
@@ -165,7 +174,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
     ///     The files to lint, if not given lints all files
     /// </summary>
     [Parameter("The files to lint, if not given lints all files", Separator = " ", Name = "lint-files")]
-    private string[] PrivateLintFiles => TryGetValue(() => PrivateLintFiles) ?? [];
+    private string[] PrivateLintFiles => TryGetValue(() => PrivateLintFiles) ?? Array.Empty<string>();
 
     private LintPaths ResolveLintPathsImpl()
     {
@@ -195,6 +204,6 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
 
         return files is { Count: > 0, }
             ? new(LintMatcher, trigger, message, files)
-            : new(LintMatcher, trigger, message, repo.Index.Where(z => z.StageLevel > 0).Select(z => z.Path));
+            : new(LintMatcher, trigger, message, GitTasks.Git("ls-files", logOutput: false, logInvocation: false).Select(z => z.Text));
     }
 }
