@@ -26,7 +26,8 @@ public interface ICanUpdateReadme : IHaveSolution
     /// </summary>
     public Target GenerateReadme => d => d
                                         .Unlisted()
-                                        .TryTriggeredBy<ICanLint>(z => z.Lint)
+                                        .TryTriggeredBy<ICanLint>(z => z.PostLint)
+                                        .TryAfter<ICanLint>(z => z.PostLint)
                                         .Executes(
                                              async () => File.WriteAllText(
                                                  ReadmeFilePath,

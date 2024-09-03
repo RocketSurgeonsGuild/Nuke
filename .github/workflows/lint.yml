@@ -75,14 +75,6 @@ jobs:
         id: restore
         run: |
           dotnet nuke DotnetCoreRestore Restore --skip --ThisIsAOtherVariable "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAnotherVariable "${{ vars.THIS_IS_ANOTHER_VARIABLE }}" --THIS_IS_A_VARIABLE "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAEnv "${{ env.THIS_IS_A_ENV || 'test' }}" --ThisIsASecret "${{ secrets.THIS_IS_A_SECRET }}" --GitHubToken "${{ secrets.GITHUB_TOKEN }}"
-      - name: Generate Solution Items
-        id: generateSolutionItems
-        run: |
-          dotnet .build/bin/Debug/.build.dll GenerateSolutionItems --skip --ThisIsAOtherVariable "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAnotherVariable "${{ vars.THIS_IS_ANOTHER_VARIABLE }}" --THIS_IS_A_VARIABLE "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAEnv "${{ env.THIS_IS_A_ENV || 'test' }}" --ThisIsASecret "${{ secrets.THIS_IS_A_SECRET }}" --GitHubToken "${{ secrets.GITHUB_TOKEN }}"
-      - name: Generate Readme
-        id: generateReadme
-        run: |
-          dotnet .build/bin/Debug/.build.dll GenerateReadme --skip --ThisIsAOtherVariable "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAnotherVariable "${{ vars.THIS_IS_ANOTHER_VARIABLE }}" --THIS_IS_A_VARIABLE "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAEnv "${{ env.THIS_IS_A_ENV || 'test' }}" --ThisIsASecret "${{ secrets.THIS_IS_A_SECRET }}" --GitHubToken "${{ secrets.GITHUB_TOKEN }}"
       - name: Dotnet Format
         id: dotnetFormat
         run: |
@@ -91,6 +83,14 @@ jobs:
         id: jetBrainsCleanupCode
         run: |
           dotnet .build/bin/Debug/.build.dll JetBrainsCleanupCode --skip --ThisIsAOtherVariable "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAnotherVariable "${{ vars.THIS_IS_ANOTHER_VARIABLE }}" --THIS_IS_A_VARIABLE "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAEnv "${{ env.THIS_IS_A_ENV || 'test' }}" --ThisIsASecret "${{ secrets.THIS_IS_A_SECRET }}" --GitHubToken "${{ secrets.GITHUB_TOKEN }}"
+      - name: Generate Solution Items
+        id: generateSolutionItems
+        run: |
+          dotnet .build/bin/Debug/.build.dll GenerateSolutionItems --skip --ThisIsAOtherVariable "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAnotherVariable "${{ vars.THIS_IS_ANOTHER_VARIABLE }}" --THIS_IS_A_VARIABLE "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAEnv "${{ env.THIS_IS_A_ENV || 'test' }}" --ThisIsASecret "${{ secrets.THIS_IS_A_SECRET }}" --GitHubToken "${{ secrets.GITHUB_TOKEN }}"
+      - name: Generate Readme
+        id: generateReadme
+        run: |
+          dotnet .build/bin/Debug/.build.dll GenerateReadme --skip --ThisIsAOtherVariable "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAnotherVariable "${{ vars.THIS_IS_ANOTHER_VARIABLE }}" --THIS_IS_A_VARIABLE "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAEnv "${{ env.THIS_IS_A_ENV || 'test' }}" --ThisIsASecret "${{ secrets.THIS_IS_A_SECRET }}" --GitHubToken "${{ secrets.GITHUB_TOKEN }}"
       - name: Add & Commit
         env:
           GITHUB_TOKEN: '${{ secrets.RSG_BOT_TOKEN }}'
