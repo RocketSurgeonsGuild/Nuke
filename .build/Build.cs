@@ -67,7 +67,9 @@ public partial class Pipeline : NukeBuild,
     [OptionalGitRepository]
     public GitRepository? GitRepository { get; }
 
-    public Target Lint => _ => _.Inherit<ICanLint>(x => x.Lint);
+    public Target Lint => _ => _.Inherit<ICanLint>(x => x.Lint)
+                                 //temp
+                                .DependsOn(Build);
 
     public Target Pack => _ => _;
 
