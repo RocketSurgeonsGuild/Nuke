@@ -13,7 +13,7 @@ ISCI=false
 if [ "$CI" == "true" ]; then
   ISCI=true
 fi
-EXEPATH = "$SCRIPT_DIR\.build\bin\Debug\.build"
+EXEPATH="$SCRIPT_DIR\.build\bin\Debug\.build"
 BUILD_PROJECT_FILE="$SCRIPT_DIR/.build/.build.csproj"
 TEMP_DIRECTORY="$SCRIPT_DIR//.nuke/temp"
 
