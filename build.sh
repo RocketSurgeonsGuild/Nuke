@@ -63,9 +63,9 @@ fi
 
 # only execute the build if not running in CI or if running in CI and the project has not been built
 if [ "$IsCI" == "true" ]; then
-    if [ ! -f "$PSScriptRoot/.nuke/temp/ci" ]; then
+    if [ ! -f "$SCRIPT_DIR/.nuke/temp/ci" ]; then
         "$DOTNET_EXE" build "$BUILD_PROJECT_FILE" /nodeReuse:false /p:UseSharedCompilation=false -nologo -clp:NoSummary --verbosity quiet
-        touch "$PSScriptRoot/.nuke/temp/ci"
+        touch "$SCRIPT_DIR/.nuke/temp/ci"
     fi
 else
   echo "Microsoft (R) .NET Core SDK version $("$DOTNET_EXE" --version)"
