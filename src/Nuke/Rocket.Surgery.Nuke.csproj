@@ -29,8 +29,7 @@
     <Using Include="Nuke.Common" />
     <Using Include="Nuke.Common.Utilities" />
     <None Remove="Temp\LiquidReporter\Resources\MdMultiReport.md" />
-    <EmbeddedResource Include="Temp\LiquidReporter\Resources\MdMultiReport.md"
-      LogicalName="MdMultiReport.md" />
+    <EmbeddedResource Include="Temp\LiquidReporter\Resources\MdMultiReport.md" LogicalName="MdMultiReport.md" />
 
     <AdditionalFiles Include="build/BannedSymbols.Rocket.Surgery.Nuke.txt" />
     <GlobalAnalyzerConfigFiles Include="build/banned_symbols.globalconfig" />

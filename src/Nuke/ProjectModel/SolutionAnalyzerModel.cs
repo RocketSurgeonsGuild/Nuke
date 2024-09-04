@@ -10,6 +10,7 @@ using Serilog;
 using Serilog.Events;
 using Serilog.Extensions.Logging;
 
+#pragma warning disable RS0026
 namespace Rocket.Surgery.Nuke.ProjectModel;
 
 /// <summary>
@@ -38,18 +39,21 @@ public class SolutionAnalyzerModel : ICommonAnalyzerModel
         _environmentOptions.TargetsToBuild.Remove("Clean");
     }
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => _manager.SolutionFilePath;
-
     /// <summary>
-    /// The solution file
+    ///     The solution file
     /// </summary>
     public SolutionFile SolutionFile => _manager.SolutionFile;
 
-    private IAsyncEnumerable<ProjectAnalyzerModel> GetProjectsImpl(LogEventLevel logEventLevel, string? targetFramework = null)
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => _manager.SolutionFilePath;
+
+    private IAsyncEnumerable<ProjectAnalyzerModel> GetProjectsImpl(LogEventLevel logEventLevel, string? targetFramework = null, bool includeHidden = false)
     {
-        return _manager.Projects.Values.ToAsyncEnumerable()
-                       .SelectAwait(async z => await GetProjectImpl(z.ProjectFile.Path, logEventLevel, targetFramework));
+        return _manager
+              .Projects.Values
+              .Where(z => includeHidden || !z.ProjectFile.Name.StartsWith("."))
+              .ToAsyncEnumerable()
+              .SelectAwait(async z => await GetProjectImpl(z.ProjectFile.Path, logEventLevel, targetFramework));
     }
 
     private Task<ProjectAnalyzerModel> GetProjectImpl(string projectPath, LogEventLevel logEventLevel, string? targetFramework = null)
@@ -85,9 +89,21 @@ public class SolutionAnalyzerModel : ICommonAnalyzerModel
     ///     Loads the project through <see cref="AnalyzerManager" /> and returns the result for the given target framework.
     /// </summary>
     /// <param name="project"></param>
+    /// <returns></returns>
+    public Task<ProjectAnalyzerModel> GetProject(Project project)
+    {
+        return _projectAnalyzerResults.TryGetValue(project.Path, out var results)
+            ? Task.FromResult(results.GetProjectForTargetFramework())
+            : GetProjectImpl(project.Path, LogEventLevel.Information);
+    }
+
+    /// <summary>
+    ///     Loads the project through <see cref="AnalyzerManager" /> and returns the result for the given target framework.
+    /// </summary>
+    /// <param name="project"></param>
     /// <param name="targetFramework"></param>
     /// <returns></returns>
-    public Task<ProjectAnalyzerModel> GetProject(Project project, string? targetFramework = null)
+    public Task<ProjectAnalyzerModel> GetProject(Project project, string targetFramework)
     {
         return _projectAnalyzerResults.TryGetValue(project.Path, out var results)
             ? Task.FromResult(results.GetProjectForTargetFramework(targetFramework))
@@ -100,7 +116,7 @@ public class SolutionAnalyzerModel : ICommonAnalyzerModel
     /// <param name="projectPath"></param>
     /// <param name="targetFramework"></param>
     /// <returns></returns>
-    public Task<ProjectAnalyzerModel> GetProject(AbsolutePath projectPath, string? targetFramework = null)
+    public Task<ProjectAnalyzerModel> GetProject(AbsolutePath projectPath, string targetFramework)
     {
         return _projectAnalyzerResults.TryGetValue(projectPath, out var results)
             ? Task.FromResult(results.GetProjectForTargetFramework(targetFramework))
@@ -108,13 +124,36 @@ public class SolutionAnalyzerModel : ICommonAnalyzerModel
     }
 
     /// <summary>
+    ///     Loads the project through <see cref="AnalyzerManager" /> and returns the result for the given target framework.
+    /// </summary>
+    /// <param name="projectPath"></param>
+    /// <returns></returns>
+    public Task<ProjectAnalyzerModel> GetProject(AbsolutePath projectPath)
+    {
+        return _projectAnalyzerResults.TryGetValue(projectPath, out var results)
+            ? Task.FromResult(results.GetProjectForTargetFramework())
+            : GetProjectImpl(projectPath, LogEventLevel.Information);
+    }
+
+    /// <summary>
     ///     Get all the projects from the analyzer manager
     /// </summary>
     /// <param name="targetFramework"></param>
+    /// <param name="includeHidden"></param>
     /// <returns></returns>
-    public IAsyncEnumerable<ProjectAnalyzerModel> GetProjects(string? targetFramework = null)
+    public IAsyncEnumerable<ProjectAnalyzerModel> GetProjects(string targetFramework, bool includeHidden = false)
     {
-        return GetProjectsImpl(LogEventLevel.Information, targetFramework);
+        return GetProjectsImpl(LogEventLevel.Information, targetFramework, includeHidden);
+    }
+
+    /// <summary>
+    ///     Get all the projects from the analyzer manager
+    /// </summary>
+    /// <param name="includeHidden"></param>
+    /// <returns></returns>
+    public IAsyncEnumerable<ProjectAnalyzerModel> GetProjects(bool includeHidden = false)
+    {
+        return GetProjectsImpl(LogEventLevel.Information, includeHidden: includeHidden);
     }
 
     /// <summary>

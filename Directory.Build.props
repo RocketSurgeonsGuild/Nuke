@@ -38,10 +38,8 @@
             Condition="Exists('$(MSBuildThisFileDirectory)/.nuke/temp/packageicon.png')"
             Pack="true"
             PackagePath="/images/"
-            Visible="false"
-        />
-        <None Include="$(MSBuildThisFileDirectory)/LICENSE" Pack="true" PackagePath="/"
             Visible="false" />
+        <None Include="$(MSBuildThisFileDirectory)/LICENSE" Pack="true" PackagePath="/" Visible="false" />
     </ItemGroup>
     <ItemGroup>
         <ProjectCapability Include="DynamicDependentFile" />
