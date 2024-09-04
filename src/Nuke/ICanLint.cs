@@ -20,9 +20,10 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
         foreach (var item in patch)
         {
             var result = item switch
-                         {
-                             { Status: ChangeKind.Added or ChangeKind.Modified or ChangeKind.Renamed or ChangeKind.Copied, } => item.Path, _ => null,
-                         };
+            {
+                { Status: ChangeKind.Added or ChangeKind.Modified or ChangeKind.Renamed or ChangeKind.Copied, } => item.Path,
+                _ => null,
+            };
             if (string.IsNullOrWhiteSpace(result))
             {
                 continue;
@@ -77,7 +78,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
             }
 
             // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-            Log.Information($"{' '.Repeat(currentFolder.Count > 0 ? 4 : 0)}📄 " + parts[^1]);
+            Log.Information($"{' '.Repeat(( currentFolder.Count > 0 ) ? 4 : 0)}📄 " + parts[^1]);
         }
     }
 
@@ -92,7 +93,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
                                   .Executes(
                                        () =>
                                        {
-                                           Log.Information("Linting {Count} files with trigger {Trigger}", LintPaths.Paths.Count(), LintPaths.Trigger);
+                                           Log.Information("Linting {Count} files with trigger {Trigger}", LintPaths.Paths.Length, LintPaths.Trigger);
                                            WriteFileTreeWithEmoji(LintPaths.Paths);
                                        }
                                    );
@@ -126,10 +127,10 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
                      _ = tool(
                          "run --group lint",
                          logOutput: true,
-                         // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-                         logger: static (t, s) => Log.Write(t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information, s),
                          logInvocation: Verbosity == Verbosity.Verbose
-                     );
+,
+                         // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
+                         logger: static (t, s) => Log.Write(( t == OutputType.Err ) ? LogEventLevel.Error : LogEventLevel.Information, s));
                  }
              );
 
@@ -201,7 +202,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
         {
             trigger = LintTrigger.PullRequest;
             message = "Linting only the files in the Pull Request";
-            var diff = repo.Diff.Compare<TreeChanges>([$"origin/{GitHubActions.Instance.BaseRef}", $"origin/{GitHubActions.Instance.HeadRef}",]);
+            var diff = repo.Diff.Compare<TreeChanges>(repo.Branches[$"origin/{GitHubActions.Instance.BaseRef}"].Tip.Tree, repo.Branches[$"origin/{GitHubActions.Instance.HeadRef}"].Tip.Tree);
             files.AddRange(FilterFiles(diff));
         }
         else if (IsLocalBuild && FilterFiles(repo.Diff.Compare<TreeChanges>(repo.Head.Tip?.Tree, DiffTargets.Index)).ToArray() is { Length: > 0, } stagedFiles)
@@ -211,7 +212,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
             files.AddRange(stagedFiles);
         }
 
-        return files is { Count: > 0, }
+        return ( files is { Count: > 0, } )
             ? new(LintMatcher, trigger, message, files)
             : new(LintMatcher, trigger, message, [] /*GitTasks.Git("ls-files", logOutput: false, logInvocation: false).Select(z => z.Text)*/);
     }
