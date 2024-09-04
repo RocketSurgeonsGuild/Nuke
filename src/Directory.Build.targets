@@ -3,7 +3,8 @@
         <PackageReference
             Include="Microsoft.CodeAnalysis.PublicApiAnalyzers"
             IncludeAssets="analyzers;build;buildMultitargeting;buildTransitive"
-            PrivateAssets="All" />
+            PrivateAssets="All"
+        />
     </ItemGroup>
     <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.targets', '$(MSBuildThisFileDirectory)../'))" />
 </Project>
