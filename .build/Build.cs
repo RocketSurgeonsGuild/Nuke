@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using Nuke.Common;
 using Nuke.Common.CI;
 using Nuke.Common.Execution;
@@ -26,16 +25,12 @@ public partial class Pipeline : NukeBuild,
     ICanTestWithDotNetCore,
     ICanPackWithDotNetCore,
     IHaveDataCollector,
-    ICanCleanStuff,
-    ICanDotNetFormat,
-    ICanPrettier,
-    IHavePublicApis,
-    ICanUpdateReadme,
-    ICanUpdateSolution,
+    ICanClean,
+    IHaveCommonLintTargets,
+    // IHavePublicApis,
     IGenerateCodeCoverageReport,
     IGenerateCodeCoverageSummary,
     IGenerateCodeCoverageBadges,
-    ICanRegenerateBuildConfiguration,
     IHaveConfiguration<Configuration>
 {
     /// <summary>
@@ -64,11 +59,6 @@ public partial class Pipeline : NukeBuild,
 
     public Target Build => _ => _;
 
-    [OptionalGitRepository]
-    public GitRepository? GitRepository { get; }
-
-    public Target Lint => _ => _.Inherit<ICanLint>(x => x.Lint);
-
     public Target Pack => _ => _;
 
 
@@ -81,6 +71,11 @@ public partial class Pipeline : NukeBuild,
     public GitVersion GitVersion { get; } = null!;
 
     public Target Test => _ => _;
+
+    [OptionalGitRepository]
+    public GitRepository? GitRepository { get; }
+
+    public Target Lint => _ => _.Inherit<ICanLint>(x => x.Lint);
 
     [Parameter("Configuration to build")]
     public Configuration Configuration { get; } = IsLocalBuild ? Configuration.Debug : Configuration.Release;

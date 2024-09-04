@@ -92,7 +92,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
                                   .Executes(
                                        () =>
                                        {
-                                           Log.Information("Linting {Count} files with trigger {Trigger}", LintPaths.Paths.Count(), LintPaths.Trigger);
+                                           Log.Information("Linting {Count} files with trigger {Trigger}", LintPaths.Paths.Length, LintPaths.Trigger);
                                            WriteFileTreeWithEmoji(LintPaths.Paths);
                                        }
                                    );
@@ -126,9 +126,9 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
                      _ = tool(
                          "run --group lint",
                          logOutput: true,
+                         logInvocation: Verbosity == Verbosity.Verbose,
                          // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-                         logger: static (t, s) => Log.Write(t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information, s),
-                         logInvocation: Verbosity == Verbosity.Verbose
+                         logger: static (t, s) => Log.Write(t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information, s)
                      );
                  }
              );
@@ -201,7 +201,10 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
         {
             trigger = LintTrigger.PullRequest;
             message = "Linting only the files in the Pull Request";
-            var diff = repo.Diff.Compare<TreeChanges>([$"origin/{GitHubActions.Instance.BaseRef}", $"origin/{GitHubActions.Instance.HeadRef}",]);
+            var diff = repo.Diff.Compare<TreeChanges>(
+                repo.Branches[$"origin/{GitHubActions.Instance.BaseRef}"].Tip.Tree,
+                repo.Branches[$"origin/{GitHubActions.Instance.HeadRef}"].Tip.Tree
+            );
             files.AddRange(FilterFiles(diff));
         }
         else if (IsLocalBuild && FilterFiles(repo.Diff.Compare<TreeChanges>(repo.Head.Tip?.Tree, DiffTargets.Index)).ToArray() is { Length: > 0, } stagedFiles)
