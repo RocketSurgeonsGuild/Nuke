@@ -297,20 +297,16 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         var implicitParameters =
             Build
                .GetType()
-               .GetMembers(
-                    BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy
-                )
+               .GetMembers(BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy)
                .Where(x => x.GetCustomAttribute<ParameterAttribute>() != null);
 
         var stepParameters = new List<KeyValuePair<string, string>>();
         foreach (var par in implicitParameters)
         {
             var key = par.GetCustomAttribute<ParameterAttribute>()?.Name ?? par.Name;
-            if (environmentVariables.TryGetValue(key, out var value) && value is not GitHubActionsInput)
-            {
-                var name = string.IsNullOrWhiteSpace(value.Prefix) ? value.Name : $"{value.Prefix}.{value.Name}";
-                stepParameters.Add(new(key, $"{name}{( string.IsNullOrWhiteSpace(value.Default) ? "" : $" || {value.Default}" )}"));
-            }
+            if (!environmentVariables.TryGetValue(key, out var value) || value is GitHubActionsInput) continue;
+            var name = string.IsNullOrWhiteSpace(value.Prefix) ? value.Name : $"{value.Prefix}.{value.Name}";
+            stepParameters.Add(new(key, $"{name}{( string.IsNullOrWhiteSpace(value.Default) ? "" : $" || {value.Default}" )}"));
         }
 
         var jobOutputs = new List<GitHubActionsStepOutput>();

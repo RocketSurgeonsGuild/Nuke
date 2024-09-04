@@ -7,6 +7,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore;
 /// <summary>
 ///     Adds a task for `dotnet tool restore` and `dotnet restore`
 /// </summary>
+[PublicAPI]
 public interface ICanRestoreWithDotNetCore : IHaveCleanTarget,
     IHaveSolution,
     IHaveOutputLogs,

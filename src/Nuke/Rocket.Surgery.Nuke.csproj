@@ -2,8 +2,6 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <NoWarn>$(NoWarn);CS0436</NoWarn>
-      <!-- This has to be turned on because in Nuke.Common.props it is turned off to false, which causes build failures when writing to the same dll multiple times with cross targeting -->
-      <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="Rocket.Surgery.Nuke.Tests" />
@@ -18,30 +16,21 @@
     <PackageReference Include="Humanizer.Core" />
     <PackageReference Include="LiquidTestReports.Core" />
     <PackageReference Include="Polyfill" />
+    <PackageReference Include="JetBrains.Annotations" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
     <None Include="build/*.*" Pack="true" PackagePath="build" />
     <None Include="buildMultiTargeting/*.*" Pack="true" PackagePath="buildMultiTargeting" />
     <None Include="buildTransitive/*.*" Pack="true" PackagePath="buildTransitive" />
-    <None Update="buildTransitive\Rocket.Surgery.Nuke.targets">
-      <Pack>true</Pack>
-      <PackagePath>buildMultiTargeting</PackagePath>
-    </None>
-    <None Update="buildTransitive\Rocket.Surgery.Nuke.props">
-      <Pack>true</Pack>
-      <PackagePath>buildMultiTargeting</PackagePath>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="default.runsettings" />
-    <Using Include="JetBrains.Annotations" />
-    <Using Include="System.Diagnostics.CodeAnalysis" />
     <Using Include="Humanizer" />
     <Using Include="Nuke.Common" />
     <Using Include="Nuke.Common.Utilities" />
     <None Remove="Temp\LiquidReporter\Resources\MdMultiReport.md" />
     <EmbeddedResource Include="Temp\LiquidReporter\Resources\MdMultiReport.md" LogicalName="MdMultiReport.md" />
-      
+
     <AdditionalFiles Include="build/BannedSymbols.Rocket.Surgery.Nuke.txt" />
     <GlobalAnalyzerConfigFiles Include="build/banned_symbols.globalconfig" />
   </ItemGroup>

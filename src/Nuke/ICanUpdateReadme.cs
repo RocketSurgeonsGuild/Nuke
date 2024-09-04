@@ -29,9 +29,19 @@ public interface ICanUpdateReadme : IHaveSolution
                                         .TryTriggeredBy<ICanLint>(z => z.PostLint)
                                         .TryAfter<ICanLint>(z => z.PostLint)
                                         .Executes(
-                                             async () => File.WriteAllText(
-                                                 ReadmeFilePath,
-                                                 await Readme.Process(File.ReadAllText(ReadmeFilePath), this)
-                                             )
+                                             async () =>
+                                             {
+                                                 try
+                                                 {
+                                                     File.WriteAllText(
+                                                         ReadmeFilePath,
+                                                         await Readme.Process(File.ReadAllText(ReadmeFilePath), this)
+                                                     );
+                                                 }
+                                                 catch
+                                                 {
+                                                     //?
+                                                 }
+                                             }
                                          );
 }

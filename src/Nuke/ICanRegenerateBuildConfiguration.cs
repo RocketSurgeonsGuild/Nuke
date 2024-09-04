@@ -16,7 +16,6 @@ public interface ICanRegenerateBuildConfiguration : ICanLint
     /// <summary>
     ///     Regenerate the build configurations
     /// </summary>
-    [NonEntryTarget]
     public Target RegenerateBuildConfigurations =>
         t => t
             .TriggeredBy<ICanLint>(static z => z.Lint)
@@ -44,8 +43,8 @@ public interface ICanRegenerateBuildConfiguration : ICanLint
                          DotNetTasks.DotNet(
                              args.RenderForExecution(),
                              environmentVariables: EnvironmentInfo.Variables.AddIfMissing("NUKE_INTERNAL_INTERCEPTOR", "1"),
-                             logOutput: true,
-                             logInvocation: false
+                             logOutput: Verbosity == Verbosity.Verbose,
+                             logInvocation: Verbosity == Verbosity.Verbose
                          );
                      }
                  }

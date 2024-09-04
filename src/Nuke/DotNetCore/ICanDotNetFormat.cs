@@ -3,6 +3,8 @@ using Microsoft.Extensions.FileSystemGlobbing;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
+using Serilog;
+using Serilog.Events;
 
 namespace Rocket.Surgery.Nuke.DotNetCore;
 
@@ -55,9 +57,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                       d
                                          .TriggeredBy(Lint)
                                          .Before(PostLint)
-                                         .OnlyWhenDynamic(
-                                              () => IsLocalBuild || ( LintPaths.HasPaths && LintPaths.Glob(DotnetFormatMatcher) is { Length: > 0 } )
-                                          )
+                                         .OnlyWhenDynamic(() => LintPaths.IsLocalLintOrMatches(DotnetFormatMatcher))
                                          .Executes(
                                               () =>
                                               {
@@ -82,14 +82,21 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
 
                                                   _ = arguments.Add("--binarylog {value}", LogsDirectory / "dotnet-format.binlog");
 
-                                                  if (LintPaths.HasPaths && LintPaths.Glob(DotnetFormatMatcher) is { Length: > 0, } values)
+                                                  if (LintPaths.Glob(DotnetFormatMatcher) is { Length: > 0, } values)
                                                   {
                                                       _ = arguments.Add("--include {value}", string.Join(",", values.Select(z => z.ToString())));
                                                   }
 
                                                   _ = DotNetTasks.DotNet(
                                                       arguments.RenderForExecution(),
-                                                      RootDirectory /*, logInvocation: false*/
+                                                      RootDirectory,
+                                                      logOutput: true,
+                                                      // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
+                                                      logger: static (t, s) => Log.Write(
+                                                                  t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information,
+                                                                  s
+                                                              ),
+                                                      logInvocation: Verbosity == Verbosity.Verbose
                                                   );
                                               }
                                           );
@@ -102,11 +109,8 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                  .TriggeredBy(Lint)
                                                  .After(DotnetFormat)
                                                  .Before(PostLint)
-                                                 .OnlyWhenDynamic(
-                                                      () => IsLocalBuild
-                                                       || ( LintPaths.HasPaths && LintPaths.Glob(JetBrainsCleanupCodeMatcher) is { Length: > 0 } )
-                                                  )
                                                  .OnlyWhenStatic(() => DotNetTool.IsInstalled("jb"))
+                                                 .OnlyWhenDynamic(() => LintPaths.IsLocalLintOrMatches(JetBrainsCleanupCodeMatcher))
                                                  .Executes(
                                                       () =>
                                                       {
@@ -118,12 +122,22 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                               "--disable-settings-layers={value}",
                                                                               "GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal"
                                                                           );
-                                                          if (LintPaths.HasPaths && LintPaths.Glob(JetBrainsCleanupCodeMatcher) is { Length: > 0 } files)
+                                                          if (LintPaths.Glob(JetBrainsCleanupCodeMatcher) is { Length: > 0, } files)
                                                           {
                                                               arguments.Add("--include={value}", files, ';');
                                                           }
 
-                                                          _ = DotNetTool.GetProperTool("jb")(arguments, RootDirectory /*, logInvocation: false*/);
+                                                          _ = DotNetTool.GetProperTool("jb")(
+                                                              arguments,
+                                                              RootDirectory,
+                                                              logOutput: true,
+                                                              // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
+                                                              logger: static (t, s) => Log.Write(
+                                                                          t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information,
+                                                                          s
+                                                                      ),
+                                                              logInvocation: Verbosity == Verbosity.Verbose
+                                                          );
                                                       }
                                                   );
 

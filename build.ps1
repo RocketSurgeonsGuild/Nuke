@@ -1,6 +1,6 @@
 [CmdletBinding()]
 Param(
-    [Parameter(Position=0,Mandatory=$false,ValueFromRemainingArguments=$true)]
+    [Parameter(Position = 0, Mandatory = $false, ValueFromRemainingArguments = $true)]
     [string[]]$BuildArguments
 )
 
@@ -15,9 +15,10 @@ $PSScriptRoot = Split-Path $MyInvocation.MyCommand.Path -Parent
 
 $IsCI = $env:CI -eq "true"
 $BuildProjectFile = "$PSScriptRoot\.build\.build.csproj"
-$TempDirectory = "$PSScriptRoot\\.nuke\temp"
+$ExePath = "$PSScriptRoot\.build\bin\Debug\.build.exe"
+$TempDirectory = "$PSScriptRoot\.nuke\temp"
 
-$DotNetGlobalFile = "$PSScriptRoot\\global.json"
+$DotNetGlobalFile = "$PSScriptRoot\global.json"
 $DotNetInstallUrl = "https://dot.net/v1/dotnet-install.ps1"
 $DotNetChannel = "Current"
 
@@ -36,7 +37,7 @@ function ExecSafe([scriptblock] $cmd) {
 
 # If dotnet CLI is installed globally and it matches requested version, use for execution
 if ($null -ne (Get-Command "dotnet" -ErrorAction SilentlyContinue) -and `
-     $(dotnet --version) -and $LASTEXITCODE -eq 0) {
+    $(dotnet --version) -and $LASTEXITCODE -eq 0) {
     $env:DOTNET_EXE = (Get-Command "dotnet").Path
 }
 else {
@@ -58,7 +59,8 @@ else {
     $DotNetDirectory = "$TempDirectory\dotnet-win"
     if (!(Test-Path variable:DotNetVersion)) {
         ExecSafe { & $DotNetInstallFile -InstallDir $DotNetDirectory -Channel $DotNetChannel -NoPath }
-    } else {
+    }
+    else {
         ExecSafe { & $DotNetInstallFile -InstallDir $DotNetDirectory -Version $DotNetVersion -NoPath }
     }
     $env:DOTNET_EXE = "$DotNetDirectory\dotnet.exe"
@@ -66,11 +68,12 @@ else {
 
 # only execute the build if not running in CI or if running in CI and the project has not been built
 if ($IsCI) {
-    if (-not (Test-Path "$PSScriptRoot\.nuke\temp\ci")) {
+    if (-not (Test-Path "$ExePath")) {
         ExecSafe { & $env:DOTNET_EXE build $BuildProjectFile /nodeReuse:false /p:UseSharedCompilation=false -nologo -clp:NoSummary --verbosity quiet }
         New-Item -Type File = "$PSScriptRoot\.nuke\temp\ci" | Out-Null
     }
-} else {
+}
+else {
     Write-Output "Microsoft (R) .NET Core SDK version $(& $env:DOTNET_EXE --version)"
     ExecSafe { & $env:DOTNET_EXE build $BuildProjectFile /nodeReuse:false /p:UseSharedCompilation=false -nologo -clp:NoSummary --verbosity quiet }
 }
