@@ -100,13 +100,13 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
     /// <summary>
     ///     A lint target that runs last
     /// </summary>
-    [NonEntryTarget]
+    [ExcludeTarget]
     public Target PostLint => t => t.Unlisted().After(Lint).TriggeredBy(Lint);
 
     /// <summary>
     ///     A ensure only the linted files are added to the commit
     /// </summary>
-    [NonEntryTarget]
+    [ExcludeTarget]
     public Target HuskyLint =>
         t => t
             .Unlisted()

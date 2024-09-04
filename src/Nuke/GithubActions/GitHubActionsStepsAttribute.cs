@@ -360,12 +360,6 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                                 "{key} {value}"
                             );
 
-            if (localTool)
-            {
-                localTool = false;
-                initialArguments = new Arguments().Add("dotnet").Add(NukeBuild.RootDirectory.GetUnixRelativePathTo(Assembly.GetEntryAssembly()!.Location));
-            }
-
             steps.Add(
                 new RunStep(execute.Name.Humanize(LetterCasing.Title))
                 {
