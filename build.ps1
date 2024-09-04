@@ -15,6 +15,7 @@ $PSScriptRoot = Split-Path $MyInvocation.MyCommand.Path -Parent
 
 $IsCI = $env:CI -eq "true"
 $BuildProjectFile = "$PSScriptRoot\.build\.build.csproj"
+$ExePath = "$PSScriptRoot\.build\bin\Debug\.build.exe"
 $TempDirectory = "$PSScriptRoot\\.nuke\temp"
 
 $DotNetGlobalFile = "$PSScriptRoot\\global.json"
@@ -67,8 +68,7 @@ else {
 
 # only execute the build if not running in CI or if running in CI and the project has not been built
 if ($IsCI) {
-    mkdir "$PSScriptRoot\.nuke\temp" -ErrorAction SilentlyContinue
-    if (-not (Test-Path "$PSScriptRoot\.nuke\temp\ci")) {
+    if (-not (Test-Path "$ExePath")) {
         ExecSafe { & $env:DOTNET_EXE build $BuildProjectFile /nodeReuse:false /p:UseSharedCompilation=false -nologo -clp:NoSummary --verbosity quiet }
         New-Item -Type File = "$PSScriptRoot\.nuke\temp\ci" | Out-Null
     }

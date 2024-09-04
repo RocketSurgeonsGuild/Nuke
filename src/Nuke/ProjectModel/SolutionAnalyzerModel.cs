@@ -48,9 +48,8 @@ public class SolutionAnalyzerModel : ICommonAnalyzerModel
 
     private IAsyncEnumerable<ProjectAnalyzerModel> GetProjectsImpl(LogEventLevel logEventLevel, string? targetFramework = null)
     {
-        return _manager
-              .Projects.Values.ToAsyncEnumerable()
-              .SelectAwait(async z => await GetProjectImpl(z.ProjectFile.Path, logEventLevel, targetFramework));
+        return _manager.Projects.Values.ToAsyncEnumerable()
+                       .SelectAwait(async z => await GetProjectImpl(z.ProjectFile.Path, logEventLevel, targetFramework));
     }
 
     private Task<ProjectAnalyzerModel> GetProjectImpl(string projectPath, LogEventLevel logEventLevel, string? targetFramework = null)

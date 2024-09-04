@@ -9,10 +9,11 @@ SCRIPT_DIR=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
 # CONFIGURATION
 ###########################################################################
 
-IsCI=false
+ISCI=false
 if [ "$CI" == "true" ]; then
-  IsCI=true
+  ISCI=true
 fi
+EXEPATH = "$SCRIPT_DIR\.build\bin\Debug\.build"
 BUILD_PROJECT_FILE="$SCRIPT_DIR/.build/.build.csproj"
 TEMP_DIRECTORY="$SCRIPT_DIR//.nuke/temp"
 
@@ -62,15 +63,14 @@ fi
 
 
 # only execute the build if not running in CI or if running in CI and the project has not been built
-if [ "$IsCI" == "true" ]; then
-    mkdir -p "$SCRIPT_DIR/.nuke/temp"
-    if [ ! -f "$SCRIPT_DIR/.nuke/temp/ci" ]; then
+if [ "$ISCI" == "true" ]; then
+    if [ ! -f "$EXEPATH" ]; then
+        echo "Microsoft (R) .NET Core SDK version $("$DOTNET_EXE" --version)"
         "$DOTNET_EXE" build "$BUILD_PROJECT_FILE" /nodeReuse:false /p:UseSharedCompilation=false -nologo -clp:NoSummary --verbosity quiet
-        touch "$SCRIPT_DIR/.nuke/temp/ci"
     fi
 else
-  echo "Microsoft (R) .NET Core SDK version $("$DOTNET_EXE" --version)"
-  "$DOTNET_EXE" build "$BUILD_PROJECT_FILE" /nodeReuse:false /p:UseSharedCompilation=false -nologo -clp:NoSummary --verbosity quiet
+    echo "Microsoft (R) .NET Core SDK version $("$DOTNET_EXE" --version)"
+    "$DOTNET_EXE" build "$BUILD_PROJECT_FILE" /nodeReuse:false /p:UseSharedCompilation=false -nologo -clp:NoSummary --verbosity quiet
 fi
 
 "$DOTNET_EXE" run --project "$BUILD_PROJECT_FILE" --no-build -- "$@"
