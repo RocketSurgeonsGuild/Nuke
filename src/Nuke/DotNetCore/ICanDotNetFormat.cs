@@ -11,6 +11,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore;
 /// <summary>
 ///     Defines the targets and properties for using DotNet Format
 /// </summary>
+[PublicAPI]
 public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
 {
     private static Matcher? jbMatcher;
@@ -110,6 +111,8 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                  .After(DotnetFormat)
                                                  .Before(PostLint)
                                                  .OnlyWhenStatic(() => DotNetTool.IsInstalled("jb"))
+                                                  // disable for local stagged runs, as it takes a long time.
+                                                 .OnlyWhenStatic(() => ( IsLocalBuild && LintPaths.Trigger != LintTrigger.Staged ) || !IsLocalBuild)
                                                  .OnlyWhenDynamic(() => LintPaths.IsLocalLintOrMatches(JetBrainsCleanupCodeMatcher))
                                                  .Executes(
                                                       () =>
