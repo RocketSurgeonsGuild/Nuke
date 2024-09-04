@@ -63,6 +63,7 @@ fi
 
 # only execute the build if not running in CI or if running in CI and the project has not been built
 if [ "$IsCI" == "true" ]; then
+    mkdir -p "$SCRIPT_DIR/.nuke/temp"
     if [ ! -f "$SCRIPT_DIR/.nuke/temp/ci" ]; then
         "$DOTNET_EXE" build "$BUILD_PROJECT_FILE" /nodeReuse:false /p:UseSharedCompilation=false -nologo -clp:NoSummary --verbosity quiet
         touch "$SCRIPT_DIR/.nuke/temp/ci"
