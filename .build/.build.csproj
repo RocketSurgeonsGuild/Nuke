@@ -13,6 +13,7 @@
     <ItemGroup>
         <PackageReference Include="GitVersion.Tool" ExcludeAssets="All" />
         <PackageReference Include="ReportGenerator" ExcludeAssets="All" />
+        <PackageReference Include="JetBrains.Annotations" PrivateAssets="all" />
         <PackageReference Include="Nuke.Common" />
         <PackageReference Include="Buildalyzer" />
         <ProjectReference Include="../src/Nuke/Rocket.Surgery.Nuke.csproj" />
