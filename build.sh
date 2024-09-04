@@ -9,6 +9,10 @@ SCRIPT_DIR=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
 # CONFIGURATION
 ###########################################################################
 
+IsCI=false
+if [ "$CI" == "true" ]; then
+  IsCI=true
+fi
 BUILD_PROJECT_FILE="$SCRIPT_DIR/.build/.build.csproj"
 TEMP_DIRECTORY="$SCRIPT_DIR//.nuke/temp"
 
@@ -56,7 +60,16 @@ else
     export DOTNET_EXE="$DOTNET_DIRECTORY/dotnet"
 fi
 
-echo "Microsoft (R) .NET Core SDK version $("$DOTNET_EXE" --version)"
 
-"$DOTNET_EXE" build "$BUILD_PROJECT_FILE" /nodeReuse:false /p:UseSharedCompilation=false -nologo -clp:NoSummary --verbosity quiet
+# only execute the build if not running in CI or if running in CI and the project has not been built
+if [ "$IsCI" == "true" ]; then
+    if [ ! -f "$PSScriptRoot/.nuke/temp/ci" ]; then
+        "$DOTNET_EXE" build "$BUILD_PROJECT_FILE" /nodeReuse:false /p:UseSharedCompilation=false -nologo -clp:NoSummary --verbosity quiet
+        touch "$PSScriptRoot/.nuke/temp/ci"
+    fi
+else
+  echo "Microsoft (R) .NET Core SDK version $("$DOTNET_EXE" --version)"
+  "$DOTNET_EXE" build "$BUILD_PROJECT_FILE" /nodeReuse:false /p:UseSharedCompilation=false -nologo -clp:NoSummary --verbosity quiet
+fi
+
 "$DOTNET_EXE" run --project "$BUILD_PROJECT_FILE" --no-build -- "$@"
