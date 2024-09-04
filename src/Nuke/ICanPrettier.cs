@@ -34,7 +34,7 @@ public interface ICanPrettier : ICanLint
 
                      return ProcessTasks
                            .StartProcess(
-                                ToolPathResolver.GetPathExecutable("npx"),
+                                ToolPathResolver.GetPathExecutable("npm"),
                                 args.RenderForExecution(),
                                 logOutput: true,
                                 // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
@@ -46,7 +46,7 @@ public interface ICanPrettier : ICanLint
 
                      static Arguments makeArgsForStagedFiles(IEnumerable<RelativePath> values)
                      {
-                         var a = new Arguments().Add("prettier").Add("--write");
+                         var a = new Arguments().Add("exec").Add("prettier").Add("--write");
                          values.ForEach(x => a.Add(x));
                          return a;
                      }

@@ -5,6 +5,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore;
 /// <summary>
 ///     Defines a `dotnet pack` run with logging and configuration output to the nuget package directory
 /// </summary>
+[PublicAPI]
 public interface ICanPackWithDotNetCore : IHaveBuildTarget,
     IHaveNuGetPackages,
     IHaveTestTarget,

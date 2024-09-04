@@ -120,8 +120,7 @@ public partial class Pipeline
            .AddNugetPublish()
            .Jobs.OfType<RocketSurgeonsGithubActionsJob>()
            .First(z => z.Name.Equals("Build", StringComparison.OrdinalIgnoreCase))
-           .UseDotNetSdks("6.0", "8.0")
-           .AddNuGetCache()
+           .UseDotNetSdks("8.0")
             // .ConfigureForGitVersion()
            .ConfigureStep<CheckoutStep>(step => step.FetchDepth = 0)
            .PublishLogs<Pipeline>();
@@ -134,7 +133,7 @@ public partial class Pipeline
         configuration
            .Jobs.OfType<RocketSurgeonsGithubActionsJob>()
            .First(z => z.Name.Equals("Build", StringComparison.OrdinalIgnoreCase))
-           .UseDotNetSdks("6.0", "8.0");
+           .UseDotNetSdks("8.0");
 
         return configuration;
     }
