@@ -12,11 +12,16 @@
     <PackageReference Include="System.Collections.Immutable" />
     <PackageReference Include="System.Interactive.Async" />
     <PackageReference Include="YamlDotNet" />
-    <PackageReference Include="Buildalyzer" />
     <PackageReference Include="Humanizer.Core" />
     <PackageReference Include="LiquidTestReports.Core" />
     <PackageReference Include="Polyfill" />
     <PackageReference Include="JetBrains.Annotations" PrivateAssets="all" />
+      
+    <PackageReference Include="Microsoft.Build.Locator" />
+    <PackageReference Include="Microsoft.Build" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.Build.Framework" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" ExcludeAssets="runtime" />
   </ItemGroup>
   <ItemGroup>
     <None Include="build/*.*" Pack="true" PackagePath="build" />
@@ -29,8 +34,7 @@
     <Using Include="Nuke.Common" />
     <Using Include="Nuke.Common.Utilities" />
     <None Remove="Temp\LiquidReporter\Resources\MdMultiReport.md" />
-    <EmbeddedResource Include="Temp\LiquidReporter\Resources\MdMultiReport.md"
-      LogicalName="MdMultiReport.md" />
+    <EmbeddedResource Include="Temp\LiquidReporter\Resources\MdMultiReport.md" LogicalName="MdMultiReport.md" />
 
     <AdditionalFiles Include="build/BannedSymbols.Rocket.Surgery.Nuke.txt" />
     <GlobalAnalyzerConfigFiles Include="build/banned_symbols.globalconfig" />

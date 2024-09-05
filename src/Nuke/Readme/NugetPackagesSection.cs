@@ -1,6 +1,5 @@
 using System.Security.Cryptography;
 using System.Text;
-using Nuke.Common.ProjectModel;
 
 namespace Rocket.Surgery.Nuke.Readme;
 
@@ -121,7 +120,7 @@ internal class NugetPackagesSection : IReadmeSection
             sb.AppendLine("| ------- | ----- |");
         }
 
-        await foreach (var package in packageNames.OrderBy(z => z))
+        foreach (var package in packageNames.OrderBy(z => z))
         {
             sb.AppendLine(GetResult(config, references, package));
         }

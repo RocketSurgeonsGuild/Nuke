@@ -75,14 +75,18 @@ jobs:
         id: lint
         run: |
           dotnet nuke Lint --skip --ThisIsAOtherVariable "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAnotherVariable "${{ vars.THIS_IS_ANOTHER_VARIABLE }}" --THIS_IS_A_VARIABLE "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAEnv "${{ env.THIS_IS_A_ENV || 'test' }}" --ThisIsASecret "${{ secrets.THIS_IS_A_SECRET }}" --GitHubToken "${{ secrets.GITHUB_TOKEN }}"
-      - name: Regenerate Build Configurations
-        id: regenerateBuildConfigurations
-        run: |
-          dotnet nuke RegenerateBuildConfigurations --skip --ThisIsAOtherVariable "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAnotherVariable "${{ vars.THIS_IS_ANOTHER_VARIABLE }}" --THIS_IS_A_VARIABLE "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAEnv "${{ env.THIS_IS_A_ENV || 'test' }}" --ThisIsASecret "${{ secrets.THIS_IS_A_SECRET }}" --GitHubToken "${{ secrets.GITHUB_TOKEN }}"
       - name: Lint Public Api Analyzers
         id: lintPublicApiAnalyzers
         run: |
           dotnet nuke LintPublicApiAnalyzers --skip --ThisIsAOtherVariable "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAnotherVariable "${{ vars.THIS_IS_ANOTHER_VARIABLE }}" --THIS_IS_A_VARIABLE "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAEnv "${{ env.THIS_IS_A_ENV || 'test' }}" --ThisIsASecret "${{ secrets.THIS_IS_A_SECRET }}" --GitHubToken "${{ secrets.GITHUB_TOKEN }}"
+      - name: Move Unshipped to Shipped
+        id: moveUnshippedToShipped
+        run: |
+          dotnet nuke MoveUnshippedToShipped --skip --ThisIsAOtherVariable "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAnotherVariable "${{ vars.THIS_IS_ANOTHER_VARIABLE }}" --THIS_IS_A_VARIABLE "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAEnv "${{ env.THIS_IS_A_ENV || 'test' }}" --ThisIsASecret "${{ secrets.THIS_IS_A_SECRET }}" --GitHubToken "${{ secrets.GITHUB_TOKEN }}"
+      - name: Regenerate Build Configurations
+        id: regenerateBuildConfigurations
+        run: |
+          dotnet nuke RegenerateBuildConfigurations --skip --ThisIsAOtherVariable "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAnotherVariable "${{ vars.THIS_IS_ANOTHER_VARIABLE }}" --THIS_IS_A_VARIABLE "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAEnv "${{ env.THIS_IS_A_ENV || 'test' }}" --ThisIsASecret "${{ secrets.THIS_IS_A_SECRET }}" --GitHubToken "${{ secrets.GITHUB_TOKEN }}"
       - name: Prettier
         id: prettier
         run: |
@@ -103,10 +107,6 @@ jobs:
         id: generateReadme
         run: |
           dotnet nuke GenerateReadme --skip --ThisIsAOtherVariable "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAnotherVariable "${{ vars.THIS_IS_ANOTHER_VARIABLE }}" --THIS_IS_A_VARIABLE "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAEnv "${{ env.THIS_IS_A_ENV || 'test' }}" --ThisIsASecret "${{ secrets.THIS_IS_A_SECRET }}" --GitHubToken "${{ secrets.GITHUB_TOKEN }}"
-      - name: Move Unshipped to Shipped
-        id: moveUnshippedToShipped
-        run: |
-          dotnet nuke MoveUnshippedToShipped --skip --ThisIsAOtherVariable "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAnotherVariable "${{ vars.THIS_IS_ANOTHER_VARIABLE }}" --THIS_IS_A_VARIABLE "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAEnv "${{ env.THIS_IS_A_ENV || 'test' }}" --ThisIsASecret "${{ secrets.THIS_IS_A_SECRET }}" --GitHubToken "${{ secrets.GITHUB_TOKEN }}"
       - name: Lint Git Add
         id: lintGitAdd
         run: |

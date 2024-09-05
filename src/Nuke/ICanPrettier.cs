@@ -15,6 +15,8 @@ public interface ICanPrettier : ICanLint
 {
     private static Matcher? matcher;
 
+    private static readonly Arguments _prettierBaseArgs = new Arguments().Add("exec").Add("prettier").Add("--");
+
     /// <summary>
     ///     The prettier target
     /// </summary>
@@ -30,7 +32,7 @@ public interface ICanPrettier : ICanLint
                      var args =
                          LintPaths.Active
                              ? makeArgsForStagedFiles(LintPaths.Glob(PrettierMatcher))
-                             : new Arguments().Add("prettier").Add(".").Add("--write");
+                             : new Arguments().Concatenate(_prettierBaseArgs).Add(".").Add("--write");
 
                      return ProcessTasks
                            .StartProcess(
@@ -46,7 +48,7 @@ public interface ICanPrettier : ICanLint
 
                      static Arguments makeArgsForStagedFiles(IEnumerable<RelativePath> values)
                      {
-                         var a = new Arguments().Add("exec").Add("prettier").Add("--write");
+                         var a = new Arguments().Concatenate(_prettierBaseArgs).Add("--write");
                          values.ForEach(x => a.Add(x));
                          return a;
                      }

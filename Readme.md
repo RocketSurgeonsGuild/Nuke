@@ -20,7 +20,6 @@ Every good Rocket Surgeon needs multiple choices of build systems to pick from t
 <!-- nuget packages -->
 | Package | NuGet |
 | ------- | ----- |
-| Rocket.Surgery.Nuke | [![nuget-version-6plqb7nwtdoa-badge]![nuget-downloads-6plqb7nwtdoa-badge]][nuget-6plqb7nwtdoa] |
 <!-- nuget packages -->
 
 <!-- generated references -->
@@ -33,9 +32,6 @@ Every good Rocket Surgeon needs multiple choices of build systems to pick from t
 [github]: https://github.com/RocketSurgeonsGuild/Nuke/actions?query=workflow%3Aci
 [github-badge]: https://img.shields.io/github/workflow/status/RocketSurgeonsGuild/Nuke/ci.svg?label=github&logo=github&color=b845fc&logoColor=b845fc&style=flat "GitHub Actions Status"
 [github-history-badge]: https://buildstats.info/github/chart/RocketSurgeonsGuild/Nuke?includeBuildsFromPullRequest=false "GitHub Actions History"
-[nuget-6plqb7nwtdoa]: https://www.nuget.org/packages/Rocket.Surgery.Nuke/
-[nuget-version-6plqb7nwtdoa-badge]: https://img.shields.io/nuget/v/Rocket.Surgery.Nuke.svg?color=004880&logo=nuget&style=flat-square "NuGet Version"
-[nuget-downloads-6plqb7nwtdoa-badge]: https://img.shields.io/nuget/dt/Rocket.Surgery.Nuke.svg?color=004880&logo=nuget&style=flat-square "NuGet Downloads"
 <!-- generated references -->
 
 <!-- nuke-data

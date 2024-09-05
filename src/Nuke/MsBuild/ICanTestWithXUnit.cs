@@ -6,13 +6,13 @@ namespace Rocket.Surgery.Nuke.MsBuild;
 ///     Defines a test task using msbuild
 /// </summary>
 public interface ICanTestWithXUnit : IHaveTestTarget,
-                                     IHaveBuildTarget,
-                                     IHaveTestArtifacts,
-                                     IHaveSolution,
-                                     IHaveConfiguration,
-                                     IHaveGitVersion,
-                                     IHaveOutputLogs,
-                                     ICan
+    IHaveBuildTarget,
+    IHaveTestArtifacts,
+    IHaveSolution,
+    IHaveConfiguration,
+    IHaveGitVersion,
+    IHaveOutputLogs,
+    ICan
 {
     /// <summary>
     ///     xunit test
@@ -23,13 +23,13 @@ public interface ICanTestWithXUnit : IHaveTestTarget,
                                  .Executes(
                                       async () =>
                                       {
-                                          await foreach (var project in Solution.GetTestProjects())
+                                          foreach (var project in Solution.GetTestProjects())
                                           {
                                               DotNetTasks
                                                  .DotNetTest(
                                                       settings =>
                                                           settings
-                                                             .SetProjectFile(project)
+                                                             .SetProjectFile(project.FilePath)
                                                              .SetConfiguration(Configuration)
                                                              .SetGitVersionEnvironment(GitVersion)
                                                              .SetDefaultLoggers(LogsDirectory / "test.log")
