@@ -34,6 +34,18 @@ public interface ICanPrettier : ICanLint
                              ? makeArgsForStagedFiles(LintPaths.Glob(PrettierMatcher))
                              : new Arguments().Concatenate(_prettierBaseArgs).Add(".").Add("--write");
 
+                     if (( NukeBuild.RootDirectory / "package.json" ).FileExists() && !NukeBuild.RootDirectory.ContainsDirectory("node_modules"))
+                     {
+                         ProcessTasks
+                            .StartProcess(
+                                 ToolPathResolver.GetPathExecutable("npm"),
+                                 NukeBuild.IsLocalBuild ? "install" : "ci --ignore-scripts",
+                                 NukeBuild.RootDirectory
+                             )
+                            .AssertWaitForExit()
+                            .AssertZeroExitCode();
+                     }
+
                      return ProcessTasks
                            .StartProcess(
                                 ToolPathResolver.GetPathExecutable("npm"),
