@@ -99,6 +99,9 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
                 }
             )
            .InsertAfterCheckOut(
+                new RunStep("npm ci --ignore-scripts") { Run = "npm ci --ignore-scripts", }
+            )
+           .InsertAfterCheckOut(
                 new RunStep("Get Head Commit Message") { Id = "commit-message", Run = "echo \"message=$(git show -s --format=%s)\" >> \"$GITHUB_OUTPUT\"", }
             )
            .AddStep(
