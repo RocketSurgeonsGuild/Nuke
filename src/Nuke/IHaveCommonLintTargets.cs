@@ -8,7 +8,6 @@ namespace Rocket.Surgery.Nuke;
 public interface IHaveCommonLintTargets :
     ICanDotNetFormat,
     ICanPrettier,
-    IHavePublicApis,
     ICanUpdateReadme,
     ICanUpdateSolution,
     ICanRegenerateBuildConfiguration;

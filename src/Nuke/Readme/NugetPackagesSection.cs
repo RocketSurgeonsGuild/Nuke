@@ -121,7 +121,7 @@ internal class NugetPackagesSection : IReadmeSection
             sb.AppendLine("| ------- | ----- |");
         }
 
-        await foreach (var package in packageNames.OrderBy(z => z))
+        foreach (var package in packageNames.OrderBy(z => z))
         {
             sb.AppendLine(GetResult(config, references, package));
         }

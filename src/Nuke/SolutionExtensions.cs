@@ -13,9 +13,11 @@ public static class SolutionExtensions
     /// </summary>
     /// <param name="solution">The solution.</param>
     /// <returns>An enumerable of projects.</returns>
-    public static IAsyncEnumerable<ProjectAnalyzerModel> WherePackable(this Solution solution)
+    public static IEnumerable<MsbProject> WherePackable(this Solution solution)
     {
-        return solution.AnalyzeAllProjects().Where(project => project is { IsPackable: true, IsTestProject: false, });
+        return solution
+              .AnalyzeAllProjects()
+              .Where(project => project is { IsPackable: true, IsTestProject: false, });
     }
 
     /// <summary>
@@ -23,7 +25,7 @@ public static class SolutionExtensions
     /// </summary>
     /// <param name="solution">The solution.</param>
     /// <returns></returns>
-    public static IAsyncEnumerable<ProjectAnalyzerModel> GetTestProjects(this Solution solution)
+    public static IEnumerable<MsbProject> GetTestProjects(this Solution solution)
     {
         return solution
               .AnalyzeAllProjects()

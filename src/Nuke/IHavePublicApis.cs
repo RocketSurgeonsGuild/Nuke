@@ -15,14 +15,14 @@ namespace Rocket.Surgery.Nuke;
 [PublicAPI]
 public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
 {
-    private static AbsolutePath GetShippedFilePath(ProjectAnalyzerModel project)
+    private static AbsolutePath GetShippedFilePath(MsbProject project)
     {
-        return project.Directory / "PublicAPI.Shipped.txt";
+        return AbsolutePath.Create(project.Directory) / "PublicAPI.Shipped.txt";
     }
 
-    private static AbsolutePath GetUnshippedFilePath(ProjectAnalyzerModel project)
+    private static AbsolutePath GetUnshippedFilePath(MsbProject project)
     {
-        return project.Directory / "PublicAPI.Unshipped.txt";
+        return AbsolutePath.Create(project.Directory) / "PublicAPI.Unshipped.txt";
     }
 
     /// <summary>
@@ -46,8 +46,10 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
                                                    .Executes(
                                                         async () =>
                                                         {
-                                                            await foreach (var project in GetPublicApiAnalyzerProjects(Solution))
+                                                            Log.Information("hello there {Solution}", Solution);
+                                                            foreach (var project in GetPublicApiAnalyzerProjects(Solution))
                                                             {
+                                                                Log.Information("hello there {Project}", project.Name);
                                                                 var shippedFilePath = GetShippedFilePath(project);
                                                                 var unshippedFilePath = GetUnshippedFilePath(project);
                                                                 if (!shippedFilePath.FileExists())
@@ -103,7 +105,7 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
                                                    .Executes(
                                                         async () =>
                                                         {
-                                                            await foreach (var project in GetPublicApiAnalyzerProjects(Solution))
+                                                            foreach (var project in GetPublicApiAnalyzerProjects(Solution))
                                                             {
                                                                 Log.Logger.Information("Moving unshipped to shipped for {ProjectName}", project.Name);
                                                                 var shippedFilePath = GetShippedFilePath(project);
@@ -141,16 +143,10 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
     /// <summary>
     ///     All the projects that depend on the Microsoft.CodeAnalysis.PublicApiAnalyzers package
     /// </summary>
-    private IAsyncEnumerable<ProjectAnalyzerModel> GetPublicApiAnalyzerProjects(Solution solution)
+    private IEnumerable<MsbProject> GetPublicApiAnalyzerProjects(Solution solution)
     {
         return solution
               .AnalyzeAllProjects()
-              .Where(
-                   project => project
-                             .PackageReferences
-                             .Values
-                             .SelectMany(z => z.Keys)
-                             .Any(z => z.Equals("Microsoft.CodeAnalysis.PublicApiAnalyzers", StringComparison.OrdinalIgnoreCase))
-               );
+              .Where(project => project.ContainsPackageReference("Microsoft.CodeAnalysis.PublicApiAnalyzers"));
     }
 }
