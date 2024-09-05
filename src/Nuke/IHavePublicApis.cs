@@ -46,10 +46,8 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
                                                    .Executes(
                                                         async () =>
                                                         {
-                                                            Log.Information("hello there {Solution}", Solution);
                                                             foreach (var project in GetPublicApiAnalyzerProjects(Solution))
                                                             {
-                                                                Log.Information("hello there {Project}", project.Name);
                                                                 var shippedFilePath = GetShippedFilePath(project);
                                                                 var unshippedFilePath = GetUnshippedFilePath(project);
                                                                 if (!shippedFilePath.FileExists())
