@@ -20,10 +20,9 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
         foreach (var item in patch)
         {
             var result = item switch
-            {
-                { Status: ChangeKind.Added or ChangeKind.Modified or ChangeKind.Renamed or ChangeKind.Copied, } => item.Path,
-                _ => null,
-            };
+                         {
+                             { Status: ChangeKind.Added or ChangeKind.Modified or ChangeKind.Renamed or ChangeKind.Copied, } => item.Path, _ => null,
+                         };
             if (string.IsNullOrWhiteSpace(result))
             {
                 continue;
@@ -78,7 +77,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
             }
 
             // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-            Log.Information($"{' '.Repeat(( currentFolder.Count > 0 ) ? 4 : 0)}📄 " + parts[^1]);
+            Log.Information($"{' '.Repeat(currentFolder.Count > 0 ? 4 : 0)}📄 " + parts[^1]);
         }
     }
 
@@ -129,7 +128,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
                          logOutput: true,
                          logInvocation: Verbosity == Verbosity.Verbose,
                          // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-                         logger: static (t, s) => Log.Write(( t == OutputType.Err ) ? LogEventLevel.Error : LogEventLevel.Information, s)
+                         logger: static (t, s) => Log.Write(t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information, s)
                      );
                  }
              );
@@ -145,7 +144,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
             .Executes(
                  () =>
                  {
-                     List<string> patterns = [".nuke/build.schema.json", ".github/workflows", "Readme.md"];
+                     List<string> patterns = [".nuke/build.schema.json", ".github/workflows", "Readme.md",];
                      if (this is IHavePublicApis)
                      {
                          patterns.Add("**/PublicAPI.Shipped.txt");
@@ -215,7 +214,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
             files.AddRange(stagedFiles);
         }
 
-        return ( files is { Count: > 0, } )
+        return files is { Count: > 0, }
             ? new(LintMatcher, trigger, message, files)
             : new(LintMatcher, trigger, message, [] /*GitTasks.Git("ls-files", logOutput: false, logInvocation: false).Select(z => z.Text)*/);
     }

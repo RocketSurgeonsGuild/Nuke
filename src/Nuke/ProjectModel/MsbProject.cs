@@ -1,8 +1,9 @@
 using System.Collections.Immutable;
+using System.Diagnostics;
 
 namespace Rocket.Surgery.Nuke.ProjectModel;
 
-[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public record MsbProject
 (
     string Name,
@@ -20,26 +21,26 @@ public record MsbProject
             Path.GetDirectoryName(msbProject.FullPath) ?? throw new InvalidOperationException("Could not get directory name"),
             [
                 .. msbProject.AllEvaluatedProperties
-                            .Select(
-                                 z => new MsbProperty(
-                                     z.Name,
-                                     z.EvaluatedValue,
-                                     z.IsGlobalProperty,
-                                     z.IsReservedProperty,
-                                     z.IsEnvironmentProperty,
-                                     z.IsImported
-                                 )
-                             ),
+                             .Select(
+                                  z => new MsbProperty(
+                                      z.Name,
+                                      z.EvaluatedValue,
+                                      z.IsGlobalProperty,
+                                      z.IsReservedProperty,
+                                      z.IsEnvironmentProperty,
+                                      z.IsImported
+                                  )
+                              ),
             ],
             [
                 .. msbProject.AllEvaluatedItems
-                            .Select(
-                                 z => new MsbItem(
-                                     z.ItemType,
-                                     z.EvaluatedInclude,
-                                     [.. z.Metadata.Select(m => new MsbItemMetadata(m.ItemType, m.Name, m.EvaluatedValue)),]
-                                 )
-                             ),
+                             .Select(
+                                  z => new MsbItem(
+                                      z.ItemType,
+                                      z.EvaluatedInclude,
+                                      [.. z.Metadata.Select(m => new MsbItemMetadata(m.ItemType, m.Name, m.EvaluatedValue)),]
+                                  )
+                              ),
             ]
         );
     }
@@ -49,7 +50,6 @@ public record MsbProject
 
     public bool IsPackable => GetBoolProperty("IsPackable");
     public bool IsTestProject => GetBoolProperty("IsTestProject");
-    public bool GetBoolProperty(string name) => GetProperty(name) is "true" or "enable" or "enabled";
     public string PackageId => GetProperty("PackageId") ?? Name;
 
     public string? OutputType => GetProperty("OutputType");
@@ -57,20 +57,37 @@ public record MsbProject
     public ImmutableArray<MsbPackageReference> PackageReferences { get; } =
     [
         .. Items
-         .Where(z => z.ItemType == "PackageReference")
-         .Select(z => new MsbPackageReference(z.Include, z.Metadata)),
+          .Where(z => z.ItemType == "PackageReference")
+          .Select(z => new MsbPackageReference(z.Include, z.Metadata)),
     ];
 
-    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private string DebuggerDisplay => ToString();
 
-    public bool ContainsPackageReference(string packageId) => Items.Any(z => z.ItemType == "PackageReference" && z.Include.Equals(packageId, StringComparison.OrdinalIgnoreCase));
+    public bool GetBoolProperty(string name)
+    {
+        return GetProperty(name) is "true" or "enable" or "enabled";
+    }
 
-    public string? GetProperty(string name) => Properties.FirstOrDefault(z => z.Name == name)?.Value;
+    public bool ContainsPackageReference(string packageId)
+    {
+        return Items.Any(z => z.ItemType == "PackageReference" && z.Include.Equals(packageId, StringComparison.OrdinalIgnoreCase));
+    }
 
-    public IReadOnlyCollection<string> GetPropertyValues(string name) => GetPropertyValues([name,]);
+    public string? GetProperty(string name)
+    {
+        return Properties.FirstOrDefault(z => z.Name == name)?.Value;
+    }
 
-    public IEnumerable<MsbItem> GetItems(string itemType) => Items.Where(z => z.ItemType == itemType);
+    public IReadOnlyCollection<string> GetPropertyValues(string name)
+    {
+        return GetPropertyValues([name,]);
+    }
+
+    public IEnumerable<MsbItem> GetItems(string itemType)
+    {
+        return Items.Where(z => z.ItemType == itemType);
+    }
 
     private IReadOnlyCollection<string> GetPropertyValues(params string[] names)
     {
