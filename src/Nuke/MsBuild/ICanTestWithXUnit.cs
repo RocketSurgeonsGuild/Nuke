@@ -6,13 +6,13 @@ namespace Rocket.Surgery.Nuke.MsBuild;
 ///     Defines a test task using msbuild
 /// </summary>
 public interface ICanTestWithXUnit : IHaveTestTarget,
-                                     IHaveBuildTarget,
-                                     IHaveTestArtifacts,
-                                     IHaveSolution,
-                                     IHaveConfiguration,
-                                     IHaveGitVersion,
-                                     IHaveOutputLogs,
-                                     ICan
+    IHaveBuildTarget,
+    IHaveTestArtifacts,
+    IHaveSolution,
+    IHaveConfiguration,
+    IHaveGitVersion,
+    IHaveOutputLogs,
+    ICan
 {
     /// <summary>
     ///     xunit test

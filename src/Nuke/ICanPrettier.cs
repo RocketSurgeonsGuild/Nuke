@@ -15,6 +15,8 @@ public interface ICanPrettier : ICanLint
 {
     private static Matcher? matcher;
 
+    private static readonly Arguments _prettierBaseArgs = new Arguments().Add("exec").Add("prettier").Add("--");
+
     /// <summary>
     ///     The prettier target
     /// </summary>
@@ -71,6 +73,4 @@ public interface ICanPrettier : ICanLint
                                                  .AddInclude("**/*.yaml")
                                                  .AddInclude("**/*.css")
                                                  .AddInclude("**/*.scss");
-
-    private static readonly Arguments _prettierBaseArgs = new Arguments().Add("exec").Add("prettier").Add("--");
 }

@@ -2,7 +2,8 @@ using System.Collections.Immutable;
 
 namespace Rocket.Surgery.Nuke.ProjectModel;
 
-public record MsbSolution(
+public record MsbSolution
+(
     string Name,
     string FilePath,
     string Directory,

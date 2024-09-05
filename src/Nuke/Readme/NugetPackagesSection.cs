@@ -1,6 +1,5 @@
 using System.Security.Cryptography;
 using System.Text;
-using Nuke.Common.ProjectModel;
 
 namespace Rocket.Surgery.Nuke.Readme;
 
