@@ -37,7 +37,11 @@ public interface ICanPrettier : ICanLint
                      if (( NukeBuild.RootDirectory / "package.json" ).FileExists() && !NukeBuild.RootDirectory.ContainsDirectory("node_modules"))
                      {
                          ProcessTasks
-                            .StartProcess(ToolPathResolver.GetPathExecutable("npm"), NukeBuild.IsLocalBuild ? "install" : "ci --ignore-scripts", NukeBuild.RootDirectory)
+                            .StartProcess(
+                                 ToolPathResolver.GetPathExecutable("npm"),
+                                 NukeBuild.IsLocalBuild ? "install" : "ci --ignore-scripts",
+                                 NukeBuild.RootDirectory
+                             )
                             .AssertWaitForExit()
                             .AssertZeroExitCode();
                      }
