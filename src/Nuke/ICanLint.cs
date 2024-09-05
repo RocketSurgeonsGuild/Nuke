@@ -144,7 +144,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
             .Executes(
                  () =>
                  {
-                     List<string> patterns = [".nuke/build.schema.json", ".github/workflows",];
+                     List<string> patterns = [".nuke/build.schema.json", ".github/workflows", "Readme.md",];
                      if (this is IHavePublicApis)
                      {
                          patterns.Add("**/PublicAPI.Shipped.txt");
