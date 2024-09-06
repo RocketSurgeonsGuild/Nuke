@@ -1,4 +1,3 @@
-using Rocket.Surgery.Nuke.GithubActions;
 using Serilog;
 
 namespace Rocket.Surgery.Nuke;
@@ -13,16 +12,16 @@ public interface IHaveBuildVersion : IHaveGitVersion, IHaveSolution, IHaveConfig
     ///     prints the build information.
     /// </summary>
     public Target BuildVersion => d => d
-       .Executes(
-            () =>
-            {
-                Log.Information(
-                    "Building version {NuGetVersion} of {SolutionName} ({Configuration}) using version {NukeVersion} of Nuke",
-                    GitVersion.NuGetVersionV2 ?? GitVersion.NuGetVersion,
-                    Solution.Name,
-                    Configuration,
-                    typeof(NukeBuild).Assembly.GetVersionText()
-                );
-            }
-        );
+                                     .Executes(
+                                          () =>
+                                          {
+                                              Log.Information(
+                                                  "Building version {NuGetVersion} of {SolutionName} ({Configuration}) using version {NukeVersion} of Nuke",
+                                                  GitVersion.NuGetVersionV2 ?? GitVersion.NuGetVersion,
+                                                  Solution.Name,
+                                                  Configuration,
+                                                  typeof(NukeBuild).Assembly.GetVersionText()
+                                              );
+                                          }
+                                      );
 }

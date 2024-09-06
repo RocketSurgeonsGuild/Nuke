@@ -1,6 +1,5 @@
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
-using Rocket.Surgery.Nuke.GithubActions;
 
 namespace Rocket.Surgery.Nuke;
 
@@ -15,7 +14,7 @@ public interface IGenerateDocFx : IHaveDocs
     /// </summary>
     [Parameter("serve the docs")]
     public bool? Serve => EnvironmentInfo.GetVariable<bool?>("Serve")
-     // ?? ValueInjectionUtility.TryGetValue(() => Serve)
+        // ?? ValueInjectionUtility.TryGetValue(() => Serve)
      ?? false;
 
     /// <summary>
@@ -28,25 +27,25 @@ public interface IGenerateDocFx : IHaveDocs
     /// </summary>
     [NonEntryTarget]
     public Target GenerateDocFx => d => d
-                                  .TryDependentFor<IHaveDocs>(z => z.Docs)
-                                  .OnlyWhenStatic(() => DocumentationDirectory.DirectoryExists())
-                                  .OnlyWhenStatic(() => ( DocumentationDirectory / "docfx.json" ).FileExists())
-                                  .Executes(
-                                       () =>
-                                       {
-                                           if (Serve == true)
-                                           {
-                                               Task.Run(() => Docfx($"{DocumentationDirectory / "docfx.json"} --serve"));
+                                       .TryDependentFor<IHaveDocs>(z => z.Docs)
+                                       .OnlyWhenStatic(() => DocumentationDirectory.DirectoryExists())
+                                       .OnlyWhenStatic(() => ( DocumentationDirectory / "docfx.json" ).FileExists())
+                                       .Executes(
+                                            () =>
+                                            {
+                                                if (Serve == true)
+                                                {
+                                                    Task.Run(() => Docfx($"{DocumentationDirectory / "docfx.json"} --serve"));
 
-                                               var watcher = new FileSystemWatcher(DocumentationDirectory) { EnableRaisingEvents = true, };
-                                               while (true)
-                                               {
-                                                   watcher.WaitForChanged(WatcherChangeTypes.All);
-                                                   Docfx($"{DocumentationDirectory / "docfx.json"}");
-                                               }
-                                           }
+                                                    var watcher = new FileSystemWatcher(DocumentationDirectory) { EnableRaisingEvents = true, };
+                                                    while (true)
+                                                    {
+                                                        watcher.WaitForChanged(WatcherChangeTypes.All);
+                                                        Docfx($"{DocumentationDirectory / "docfx.json"}");
+                                                    }
+                                                }
 
-                                           Docfx($"{DocumentationDirectory / "docfx.json"}");
-                                       }
-                                   );
+                                                Docfx($"{DocumentationDirectory / "docfx.json"}");
+                                            }
+                                        );
 }

@@ -10,5 +10,3 @@ public interface IHaveBuildTarget : IHave
     /// </summary>
     Target Build { get; }
 }
-
-

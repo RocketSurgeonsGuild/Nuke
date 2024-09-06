@@ -1,5 +1,3 @@
-using Rocket.Surgery.Nuke.GithubActions;
-
 namespace Rocket.Surgery.Nuke;
 
 /// <summary>

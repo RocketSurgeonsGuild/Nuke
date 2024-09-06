@@ -1,4 +1,3 @@
-using Rocket.Surgery.Nuke.GithubActions;
 using Serilog;
 
 namespace Rocket.Surgery.Nuke.ContinuousIntegration;
