@@ -7,7 +7,8 @@ namespace Rocket.Surgery.Nuke;
 /// <summary>
 ///     Interface used during docs generation
 /// </summary>
-public interface IGenerateDocFx : IHaveDocs, IHaveGenerateDocumentationTarget
+[PublicAPI]
+public interface IGenerateDocFx : IHaveDocs
 {
     /// <summary>
     ///     Parameter to be used to serve documentation
@@ -27,7 +28,7 @@ public interface IGenerateDocFx : IHaveDocs, IHaveGenerateDocumentationTarget
     /// </summary>
     [NonEntryTarget]
     public Target GenerateDocFx => d => d
-                                    .TryDependentFor<IHaveGenerateDocumentationTarget>(z => z.GenerateDocumentation)
+                                  .TryDependentFor<IHaveDocs>(z => z.Docs)
                                   .OnlyWhenStatic(() => DocumentationDirectory.DirectoryExists())
                                   .OnlyWhenStatic(() => ( DocumentationDirectory / "docfx.json" ).FileExists())
                                   .Executes(

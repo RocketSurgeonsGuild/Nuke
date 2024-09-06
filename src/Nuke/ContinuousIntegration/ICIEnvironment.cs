@@ -28,7 +28,6 @@ public interface ICIEnvironment : IHaveBuildVersion
     /// </summary>
     [NonEntryTarget]
     public Target CIEnvironment => d => d
-                                       .TriggeredBy(BuildVersion)
                                        .Unlisted()
                                        .OnlyWhenStatic(() => NukeBuild.IsServerBuild)
                                        .Executes(

@@ -12,14 +12,3 @@ public interface IHaveBuildTarget : IHave
 }
 
 
-/// <summary>
-///     Defines the build target
-/// </summary>
-public interface IHaveGenerateDocumentationTarget : IHave
-{
-    /// <summary>
-    ///     The Build Target
-    /// </summary>
-    Target GenerateDocumentation { get; }
-}
-

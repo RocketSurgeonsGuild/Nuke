@@ -13,13 +13,3 @@ public interface IHaveCleanTarget : IHave
     [ExcludeTarget]
     Target Clean { get; }
 }
-/// <summary>
-///     Defines a clean target
-/// </summary>
-public interface IHaveLintTarget : IHave
-{
-    /// <summary>
-    ///     The Lint Target
-    /// </summary>
-    Target Lint { get; }
-}

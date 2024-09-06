@@ -7,6 +7,7 @@ namespace Rocket.Surgery.Nuke;
 /// <summary>
 ///     Generates a code coverage badges
 /// </summary>
+[PublicAPI]
 public interface IGenerateCodeCoverageBadges : ITriggerCodeCoverageReports, IGenerate
 {
     /// <summary>

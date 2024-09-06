@@ -7,6 +7,7 @@ namespace Rocket.Surgery.Nuke;
 /// <summary>
 ///     Defines a task that generates a code coverage report from a given set of report documents
 /// </summary>
+[PublicAPI]
 public interface IGenerateCodeCoverageReport : ITriggerCodeCoverageReports, IGenerate
 {
     /// <summary>

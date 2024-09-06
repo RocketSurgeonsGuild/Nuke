@@ -6,12 +6,12 @@ namespace Rocket.Surgery.Nuke;
 /// <summary>
 ///     Defines a build version target
 /// </summary>
+[PublicAPI]
 public interface IHaveBuildVersion : IHaveGitVersion, IHaveSolution, IHaveConfiguration
 {
     /// <summary>
     ///     prints the build information.
     /// </summary>
-    [NonEntryTarget]
     public Target BuildVersion => d => d
        .Executes(
             () =>
