@@ -48,6 +48,7 @@ public partial class Pipeline : NukeBuild,
     [Parameter]
     public string? GitHubToken { get; }
 
+    [NonEntryTarget]
     private Target Default => _ => _
                                   .DependsOn(Restore)
                                   .DependsOn(Build)
@@ -75,7 +76,7 @@ public partial class Pipeline : NukeBuild,
     [OptionalGitRepository]
     public GitRepository? GitRepository { get; }
 
-    public Target Lint => _ => _.Inherit<ICanLint>(x => x.Lint);
+    public Target Lint => _ => _;
 
     [Parameter("Configuration to build")]
     public Configuration Configuration { get; } = IsLocalBuild ? Configuration.Debug : Configuration.Release;

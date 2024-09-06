@@ -1,12 +1,12 @@
 using Nuke.Common.IO;
 using Nuke.Common.Tools.ReportGenerator;
-using Rocket.Surgery.Nuke.GithubActions;
 
 namespace Rocket.Surgery.Nuke;
 
 /// <summary>
 ///     Generates a code coverage summary
 /// </summary>
+[PublicAPI]
 public interface IGenerateCodeCoverageSummary : ITriggerCodeCoverageReports, IGenerate
 {
     /// <summary>

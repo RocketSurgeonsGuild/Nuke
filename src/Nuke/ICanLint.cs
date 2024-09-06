@@ -86,16 +86,17 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
     /// <summary>
     ///     The lint target
     /// </summary>
-    public new Target Lint => t => t
-                                  .OnlyWhenDynamic(() => LintPaths.Active)
-                                  .TryDependsOn<IHaveRestoreTarget>(a => a.Restore)
-                                  .Executes(
-                                       () =>
-                                       {
-                                           Log.Information("Linting {Count} files with trigger {Trigger}", LintPaths.Paths.Length, LintPaths.Trigger);
-                                           WriteFileTreeWithEmoji(LintPaths.Paths);
-                                       }
-                                   );
+    public Target LintFiles => t => t
+                                   .OnlyWhenDynamic(() => LintPaths.Active)
+                                   .TryDependsOn<IHaveRestoreTarget>(a => a.Restore)
+                                   .TryDependentFor<IHaveLintTarget>(a => a.Lint)
+                                   .Executes(
+                                        () =>
+                                        {
+                                            Log.Information("Linting {Count} files with trigger {Trigger}", LintPaths.Paths.Length, LintPaths.Trigger);
+                                            WriteFileTreeWithEmoji(LintPaths.Paths);
+                                        }
+                                    );
 
     /// <summary>
     ///     A lint target that runs last

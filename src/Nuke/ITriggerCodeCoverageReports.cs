@@ -1,6 +1,5 @@
 using Nuke.Common.IO;
 using Nuke.Common.Tools.ReportGenerator;
-using Rocket.Surgery.Nuke.GithubActions;
 using static Nuke.Common.IO.FileSystemTasks;
 
 // ReSharper disable SuspiciousTypeConversion.Global
@@ -13,6 +12,7 @@ namespace Rocket.Surgery.Nuke;
 /// <remarks>
 ///     This causes code coverage to trigger
 /// </remarks>
+[PublicAPI]
 public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarget, ITrigger
 {
     /// <summary>

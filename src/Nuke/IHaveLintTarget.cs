@@ -3,11 +3,11 @@ namespace Rocket.Surgery.Nuke;
 /// <summary>
 ///     Defines a clean target
 /// </summary>
-public interface IHaveCleanTarget : IHave
+public interface IHaveLintTarget : IHave
 {
     /// <summary>
-    ///     The Clean Target
+    ///     The Lint Target
     /// </summary>
-    [ExcludeTarget]
-    Target Clean { get; }
+    [NonEntryTarget]
+    Target Lint { get; }
 }

@@ -1,4 +1,3 @@
-using Rocket.Surgery.Nuke.GithubActions;
 using Serilog;
 
 namespace Rocket.Surgery.Nuke.ContinuousIntegration;
@@ -28,7 +27,6 @@ public interface ICIEnvironment : IHaveBuildVersion
     /// </summary>
     [NonEntryTarget]
     public Target CIEnvironment => d => d
-                                       .TriggeredBy(BuildVersion)
                                        .Unlisted()
                                        .OnlyWhenStatic(() => NukeBuild.IsServerBuild)
                                        .Executes(
