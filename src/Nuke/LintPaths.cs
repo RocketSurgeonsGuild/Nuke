@@ -1,7 +1,7 @@
-using System.Collections.Frozen;
 using System.Collections.Immutable;
 using Microsoft.Extensions.FileSystemGlobbing;
 using Nuke.Common.IO;
+using Nuke.Common.Tools.Git;
 
 namespace Rocket.Surgery.Nuke;
 
@@ -39,7 +39,8 @@ public enum LintTrigger
 /// </summary>
 public class LintPaths
 {
-    private readonly Dictionary<Matcher, ImmutableArray<AbsolutePath>> _matches = new();
+    private readonly Dictionary<(Matcher Matcher, bool AllPaths), ImmutableArray<AbsolutePath>> _matches = new();
+    private readonly Lazy<ImmutableArray<AbsolutePath>> _allPaths;
 
     /// <summary>
     ///     Lint paths container
@@ -58,8 +59,24 @@ public class LintPaths
             ..paths
              .Select(z => z.Trim())
              .Select(z => Path.IsPathRooted(z) ? (AbsolutePath)z : NukeBuild.RootDirectory / z)
-             .Match(matcher)
+             .Match(matcher),
         ];
+
+        _allPaths = new(
+            () =>
+            [
+                ..matcher
+                 .Match(
+                      GitTasks
+                         .Git("ls-files", logOutput: false, logInvocation: false)
+                         .Select(z => z.Text.Trim())
+                         .Select(z => Path.IsPathRooted(z) ? z : (string)( NukeBuild.RootDirectory / z ))
+                  )
+                 .Files
+                 .Select(z => AbsolutePath.Create(z.Path))
+                 .OrderBy(z => z),
+            ]
+        );
     }
 
     /// <summary>
@@ -78,13 +95,6 @@ public class LintPaths
     public bool Active => Trigger != LintTrigger.None;
 
     /// <summary>
-    /// Determine if the task should run in the current context
-    /// </summary>
-    /// <param name="matcher"></param>
-    /// <returns></returns>
-    public bool IsLocalLintOrMatches(Matcher matcher) => Trigger == LintTrigger.None && NukeBuild.IsLocalBuild || matcher.Match(Paths.Select(z => z.ToString())).HasMatches;
-
-    /// <summary>
     ///     Are there any paths?
     /// </summary>
     public ImmutableArray<AbsolutePath> Paths { get; }
@@ -92,42 +102,61 @@ public class LintPaths
     /// <summary>
     ///     Are there any paths?
     /// </summary>
-    public ImmutableArray<RelativePath> RelativePaths => [..Paths.GetRelativePaths()];
+    public ImmutableArray<RelativePath> RelativePaths => [..Paths.GetRelativePaths(),];
 
     /// <summary>
-    ///     Glob against a given matcher to included / exclude files
+    ///     Determine if the task should run in the current context
     /// </summary>
     /// <param name="matcher"></param>
     /// <returns></returns>
-    public ImmutableArray<RelativePath> Glob(Matcher matcher) => [..GlobAbsolute(matcher).GetRelativePaths()];
-
-    /// <summary>
-    ///     Glob against a given matcher to included / exclude files
-    /// </summary>
-    /// <param name="matcher"></param>
-    /// <returns></returns>
-    public ImmutableArray<RelativePath> Glob(string matcher)
+    public bool IsLocalLintOrMatches(Matcher matcher)
     {
-        return [..Paths.Match(new Matcher(StringComparison.OrdinalIgnoreCase).AddInclude(matcher)).GetRelativePaths()];
+        return ( Trigger == LintTrigger.None && NukeBuild.IsLocalBuild ) || matcher.Match(Paths.Select(z => z.ToString())).HasMatches;
     }
 
     /// <summary>
     ///     Glob against a given matcher to included / exclude files
     /// </summary>
     /// <param name="matcher"></param>
+    /// <param name="allPaths"></param>
     /// <returns></returns>
-    public ImmutableArray<AbsolutePath> GlobAbsolute(Matcher matcher) =>
-        _matches.TryGetValue(matcher, out var results)
-            ? results
-            : _matches[matcher] = [..Paths.Match(matcher)];
+    public ImmutableArray<RelativePath> Glob(Matcher matcher, bool allPaths = false)
+    {
+        return [..GlobAbsolute(matcher, allPaths).GetRelativePaths(),];
+    }
 
     /// <summary>
     ///     Glob against a given matcher to included / exclude files
     /// </summary>
     /// <param name="matcher"></param>
+    /// <param name="allPaths"></param>
     /// <returns></returns>
-    public ImmutableArray<AbsolutePath> GlobAbsolute(string matcher)
+    public ImmutableArray<RelativePath> Glob(string matcher, bool allPaths = false)
     {
-        return [..Paths.Match(new Matcher(StringComparison.OrdinalIgnoreCase).AddInclude(matcher))];
+        return [..( allPaths ? _allPaths.Value : Paths ).Match(new Matcher(StringComparison.OrdinalIgnoreCase).AddInclude(matcher)).GetRelativePaths(),];
+    }
+
+    /// <summary>
+    ///     Glob against a given matcher to included / exclude files
+    /// </summary>
+    /// <param name="matcher"></param>
+    /// <param name="allPaths"></param>
+    /// <returns></returns>
+    public ImmutableArray<AbsolutePath> GlobAbsolute(Matcher matcher, bool allPaths = false)
+    {
+        return _matches.TryGetValue(( matcher, allPaths ), out var results)
+            ? results
+            : _matches[( matcher, allPaths )] = [..Paths.Match(matcher),];
+    }
+
+    /// <summary>
+    ///     Glob against a given matcher to included / exclude files
+    /// </summary>
+    /// <param name="matcher"></param>
+    /// <param name="allPaths"></param>
+    /// <returns></returns>
+    public ImmutableArray<AbsolutePath> GlobAbsolute(string matcher, bool allPaths = false)
+    {
+        return [..( allPaths ? _allPaths.Value : Paths ).Match(new Matcher(StringComparison.OrdinalIgnoreCase).AddInclude(matcher)),];
     }
 }

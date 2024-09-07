@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using Microsoft.Extensions.FileSystemGlobbing;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
@@ -29,10 +30,7 @@ public interface ICanPrettier : ICanLint
             .Executes(
                  () =>
                  {
-                     var args =
-                         LintPaths.Active
-                             ? makeArgsForStagedFiles(LintPaths.Glob(PrettierMatcher))
-                             : new Arguments().Concatenate(_prettierBaseArgs).Add(".").Add("--write");
+                     var args = makeArgsForStagedFiles(LintPaths.Glob(PrettierMatcher, !LintPaths.Active));
 
                      if (( NukeBuild.RootDirectory / "package.json" ).FileExists() && !NukeBuild.RootDirectory.ContainsDirectory("node_modules"))
                      {
@@ -58,8 +56,13 @@ public interface ICanPrettier : ICanLint
                            .AssertWaitForExit()
                            .AssertZeroExitCode();
 
-                     static Arguments makeArgsForStagedFiles(IEnumerable<RelativePath> values)
+                     static Arguments makeArgsForStagedFiles(ImmutableArray<RelativePath> values)
                      {
+                         if (values.Length == 0)
+                         {
+                             return new Arguments().Concatenate(_prettierBaseArgs).Add(".").Add("--write");
+                         }
+
                          var a = new Arguments().Concatenate(_prettierBaseArgs).Add("--write");
                          values.ForEach(x => a.Add(x));
                          return a;
