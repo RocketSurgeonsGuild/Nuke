@@ -87,7 +87,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                   {
                                                       _ = arguments.Add("--include {value}", string.Join(",", values.Select(z => z.ToString())));
                                                   }
-                                                  else if (LintPaths.Glob(DotnetFormatMatcher, true) is { Length: > 0 } allFiles)
+                                                  else if (LintPaths.Glob(DotnetFormatMatcher, true) is { Length: > 0, } allFiles)
                                                   {
                                                       arguments.Add("--include={value}", allFiles, ';');
                                                   }
@@ -133,9 +133,9 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                           {
                                                               arguments.Add("--include={value}", files, ';');
                                                           }
-                                                          else if (LintPaths.Glob(JetBrainsCleanupCodeMatcher, true) is { Length: > 0 } allFiles)
+                                                          else if (LintPaths.Glob(JetBrainsCleanupCodeMatcher, true) is { Length: > 0, } allFiles)
                                                           {
-                                                                arguments.Add("--include={value}", allFiles, ';');
+                                                              arguments.Add("--include={value}", allFiles, ';');
                                                           }
 
                                                           _ = DotNetTool.GetProperTool("jb")(

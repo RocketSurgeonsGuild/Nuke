@@ -1,4 +1,3 @@
-using System.Collections.Frozen;
 using System.Collections.Immutable;
 using Microsoft.Extensions.FileSystemGlobbing;
 using Nuke.Common.IO;
@@ -60,7 +59,7 @@ public class LintPaths
             ..paths
              .Select(z => z.Trim())
              .Select(z => Path.IsPathRooted(z) ? (AbsolutePath)z : NukeBuild.RootDirectory / z)
-             .Match(matcher)
+             .Match(matcher),
         ];
 
         _allPaths = new(
@@ -75,7 +74,7 @@ public class LintPaths
                   )
                  .Files
                  .Select(z => AbsolutePath.Create(z.Path))
-                 .OrderBy(z => z)
+                 .OrderBy(z => z),
             ]
         );
     }
@@ -96,14 +95,6 @@ public class LintPaths
     public bool Active => Trigger != LintTrigger.None;
 
     /// <summary>
-    /// Determine if the task should run in the current context
-    /// </summary>
-    /// <param name="matcher"></param>
-    /// <returns></returns>
-    public bool IsLocalLintOrMatches(Matcher matcher) =>
-        ( Trigger == LintTrigger.None && NukeBuild.IsLocalBuild ) || matcher.Match(Paths.Select(z => z.ToString())).HasMatches;
-
-    /// <summary>
     ///     Are there any paths?
     /// </summary>
     public ImmutableArray<AbsolutePath> Paths { get; }
@@ -111,7 +102,17 @@ public class LintPaths
     /// <summary>
     ///     Are there any paths?
     /// </summary>
-    public ImmutableArray<RelativePath> RelativePaths => [..Paths.GetRelativePaths()];
+    public ImmutableArray<RelativePath> RelativePaths => [..Paths.GetRelativePaths(),];
+
+    /// <summary>
+    ///     Determine if the task should run in the current context
+    /// </summary>
+    /// <param name="matcher"></param>
+    /// <returns></returns>
+    public bool IsLocalLintOrMatches(Matcher matcher)
+    {
+        return ( Trigger == LintTrigger.None && NukeBuild.IsLocalBuild ) || matcher.Match(Paths.Select(z => z.ToString())).HasMatches;
+    }
 
     /// <summary>
     ///     Glob against a given matcher to included / exclude files
@@ -119,7 +120,10 @@ public class LintPaths
     /// <param name="matcher"></param>
     /// <param name="allPaths"></param>
     /// <returns></returns>
-    public ImmutableArray<RelativePath> Glob(Matcher matcher, bool allPaths = false) => [..GlobAbsolute(matcher, allPaths).GetRelativePaths()];
+    public ImmutableArray<RelativePath> Glob(Matcher matcher, bool allPaths = false)
+    {
+        return [..GlobAbsolute(matcher, allPaths).GetRelativePaths(),];
+    }
 
     /// <summary>
     ///     Glob against a given matcher to included / exclude files
@@ -129,7 +133,7 @@ public class LintPaths
     /// <returns></returns>
     public ImmutableArray<RelativePath> Glob(string matcher, bool allPaths = false)
     {
-        return [..( allPaths ? _allPaths.Value : Paths ).Match(new Matcher(StringComparison.OrdinalIgnoreCase).AddInclude(matcher)).GetRelativePaths()];
+        return [..( allPaths ? _allPaths.Value : Paths ).Match(new Matcher(StringComparison.OrdinalIgnoreCase).AddInclude(matcher)).GetRelativePaths(),];
     }
 
     /// <summary>
@@ -138,10 +142,12 @@ public class LintPaths
     /// <param name="matcher"></param>
     /// <param name="allPaths"></param>
     /// <returns></returns>
-    public ImmutableArray<AbsolutePath> GlobAbsolute(Matcher matcher, bool allPaths = false) =>
-        _matches.TryGetValue(( matcher, allPaths ), out var results)
+    public ImmutableArray<AbsolutePath> GlobAbsolute(Matcher matcher, bool allPaths = false)
+    {
+        return _matches.TryGetValue(( matcher, allPaths ), out var results)
             ? results
-            : _matches[( matcher, allPaths )] = [..Paths.Match(matcher)];
+            : _matches[( matcher, allPaths )] = [..Paths.Match(matcher),];
+    }
 
     /// <summary>
     ///     Glob against a given matcher to included / exclude files
@@ -151,6 +157,6 @@ public class LintPaths
     /// <returns></returns>
     public ImmutableArray<AbsolutePath> GlobAbsolute(string matcher, bool allPaths = false)
     {
-        return [..( allPaths ? _allPaths.Value : Paths ).Match(new Matcher(StringComparison.OrdinalIgnoreCase).AddInclude(matcher))];
+        return [..( allPaths ? _allPaths.Value : Paths ).Match(new Matcher(StringComparison.OrdinalIgnoreCase).AddInclude(matcher)),];
     }
 }
