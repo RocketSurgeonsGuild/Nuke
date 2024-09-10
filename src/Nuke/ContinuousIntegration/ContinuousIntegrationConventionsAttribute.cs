@@ -88,3 +88,4 @@ public class ContinuousIntegrationConventionsAttribute : BuildExtensionAttribute
         }
     }
 }
+

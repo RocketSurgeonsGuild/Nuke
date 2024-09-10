@@ -9,6 +9,11 @@ SCRIPT_DIR=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
 # CONFIGURATION
 ###########################################################################
 
+ISCI=false
+if [ "$CI" == "true" ]; then
+  ISCI=true
+fi
+EXEPATH="$SCRIPT_DIR/.build/bin/Debug/.build"
 BUILD_PROJECT_FILE="$SCRIPT_DIR/.build/.build.csproj"
 TEMP_DIRECTORY="$SCRIPT_DIR//.nuke/temp"
 
@@ -56,11 +61,19 @@ else
     export PATH="$DOTNET_DIRECTORY:$PATH"
 fi
 
-echo "Microsoft (R) .NET SDK version $("$DOTNET_EXE" --version)"
-
 if [[ ! -z ${NUKE_ENTERPRISE_TOKEN+x} && "$NUKE_ENTERPRISE_TOKEN" != "" ]]; then
     "$DOTNET_EXE" nuget remove source "nuke-enterprise" &>/dev/null || true
     "$DOTNET_EXE" nuget add source "https://f.feedz.io/nuke/enterprise/nuget" --name "nuke-enterprise" --username "PAT" --password "$NUKE_ENTERPRISE_TOKEN" --store-password-in-clear-text &>/dev/null || true
+fi
+
+# only execute the build if not running in CI or if running in CI and the project has not been built
+if [ "$ISCI" == "true" ]; then
+    if [ ! -f "$EXEPATH" ]; then
+        "$DOTNET_EXE" build "$BUILD_PROJECT_FILE" /nodeReuse:false /p:UseSharedCompilation=false -nologo -clp:NoSummary --verbosity quiet
+    fi
+else
+    echo "Microsoft (R) .NET Core SDK version $("$DOTNET_EXE" --version)"
+    "$DOTNET_EXE" build "$BUILD_PROJECT_FILE" /nodeReuse:false /p:UseSharedCompilation=false -nologo -clp:NoSummary --verbosity quiet
 fi
 
 "$DOTNET_EXE" build "$BUILD_PROJECT_FILE" /nodeReuse:false /p:UseSharedCompilation=false -nologo -clp:NoSummary --verbosity quiet
