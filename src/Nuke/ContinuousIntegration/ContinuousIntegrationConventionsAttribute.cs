@@ -1,8 +1,8 @@
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
 using Nuke.Common.IO;
-using Rocket.Surgery.Nuke.Temp.LiquidReporter;
-using Serilog;
+using Nuke.Common.Tooling;
+using Nuke.Common.Tools.DotNet;
 
 namespace Rocket.Surgery.Nuke.ContinuousIntegration;
 
@@ -12,30 +12,63 @@ namespace Rocket.Surgery.Nuke.ContinuousIntegration;
 [PublicAPI]
 #pragma warning disable CA1813
 [AttributeUsage(AttributeTargets.Class)]
+[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class ContinuousIntegrationConventionsAttribute : BuildExtensionAttributeBase, IOnBuildFinished
 #pragma warning restore CA1813
 {
-    private static void HandleGithubActions(INukeBuild build)
+    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay
     {
-        if (EnvironmentInfo.GetVariable<AbsolutePath>("GITHUB_STEP_SUMMARY") is not { } summary) return;
+        get
+        {
+            return ToString();
+        }
+    }
 
+    /// <inheritdoc />
+    public void OnBuildFinished()
+    {
+        if (Build is not IHaveArtifacts nukeBuild)
+        {
+            return;
+        }
+
+        switch (nukeBuild.Host)
+        {
+            case GitHubActions:
+                {
+                    EmitTestSummaryMarkdown(Build, GitHubActions.Instance.StepSummaryFile);
+                    break;
+                }
+
+            default:
+                {
+                    EmitTestSummaryMarkdown(Build, nukeBuild.ArtifactsDirectory / "github" / "summary.md");
+                    break;
+                }
+        }
+    }
+
+    private void EmitTestSummaryMarkdown(INukeBuild build, AbsolutePath summary)
+    {
         // ReSharper disable once SuspiciousTypeConversion.Global
         if (build.ExecutionPlan.Any(z => z.Name == nameof(IHaveTestTarget.Test))
          && build is IHaveTestArtifacts testResultReports
          && testResultReports.TestResultsDirectory.GlobFiles("**/*.trx") is
-                { Count: > 0, } results)
+         { Count: > 0, } results)
         {
-            summary.TouchFile();
-            var reporter = new LiquidReporter(results.Select(z => z.ToString()), Log.Logger);
-            var report = reporter.Run("Test results");
-            summary.WriteAllText(summary.ReadAllText().TrimStart() + "\n" + report);
-            //            DotNet(
-            //                new Arguments()
-            //                   .Add("liquid")
-            //                   .Add("--inputs {0}", results.Select(z => "File=" + z), ' ', quoteMultiple: true)
-            //                   .Add("--output {0}", EnvironmentInfo.GetVariable<string>("GITHUB_STEP_SUMMARY"))
-            //                   .ToString()
-            //            );
+            //            summary.TouchFile();
+            //            var reporter = new LiquidReporter(results.Select(z => z.ToString()), Log.Logger);
+            //            var report = reporter.Run("Test results");
+            //            summary.WriteAllText(summary.ReadAllText().TrimStart() + "\n" + report);
+            _ = DotNetTasks.DotNet(
+                new Arguments()
+                   .Add("liquid")
+                   .Add("--inputs {0}", results.Select(z => $"File={z}"), ' ', quoteMultiple: true)
+                   .Add("--output-file {0}", summary)
+                   .RenderForExecution(),
+                workingDirectory: build.RootDirectory
+            );
         }
 
         // ReSharper disable once SuspiciousTypeConversion.Global
@@ -43,24 +76,14 @@ public class ContinuousIntegrationConventionsAttribute : BuildExtensionAttribute
          && build is IGenerateCodeCoverageSummary codeCoverage
          && ( codeCoverage.CoverageSummaryDirectory / "Summary.md" ).FileExists())
         {
-            summary.TouchFile();
+            _ = summary.TouchFile();
             var coverageSummary = ( codeCoverage.CoverageSummaryDirectory / "Summary.md" ).ReadAllText();
-            if (coverageSummary.IndexOf("|**Name**", StringComparison.Ordinal) is > -1 and var index) coverageSummary = coverageSummary[..( index - 1 )];
+            if (coverageSummary.IndexOf("|**Name**", StringComparison.Ordinal) is > -1 and var index)
+            {
+                coverageSummary = coverageSummary[..( index - 1 )];
+            }
 
-            summary.WriteAllText(summary.ReadAllText().TrimStart() + "\n" + coverageSummary);
-        }
-    }
-
-    /// <inheritdoc />
-    public void OnBuildFinished()
-    {
-        if (Build is not { } nukeBuild) return;
-        if (nukeBuild.IsLocalBuild) return;
-        switch (nukeBuild.Host)
-        {
-            case GitHubActions:
-                HandleGithubActions(Build);
-                break;
+            _ = summary.WriteAllText(coverageSummary + summary.ReadAllText().TrimStart());
         }
     }
 }
