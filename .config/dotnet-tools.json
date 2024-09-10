@@ -61,12 +61,6 @@
     "liquidtestreports.cli": {
       "version": "2.0.0-beta.2",
       "commands": [
-        "liquid"],
-      "rollForward": false
-    },
-    "liquidtestreports.cli": {
-      "version": "2.0.0-beta.2",
-      "commands": [
         "liquid"
       ],
       "rollForward": false

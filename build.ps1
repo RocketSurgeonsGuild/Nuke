@@ -13,10 +13,12 @@ $PSScriptRoot = Split-Path $MyInvocation.MyCommand.Path -Parent
 # CONFIGURATION
 ###########################################################################
 
-$BuildProjectFile = "$PSScriptRoot\.build\.build.csproj"
-$TempDirectory = "$PSScriptRoot\\.nuke\temp"
+$IsCI = $env:CI -eq "true"
+$ExePath = "$PSScriptRoot/.build/bin/Debug/.build.exe"
+$BuildProjectFile = "$PSScriptRoot/.build/.build.csproj"
+$TempDirectory = "$PSScriptRoot/.nuke/temp"
 
-$DotNetGlobalFile = "$PSScriptRoot\\global.json"
+$DotNetGlobalFile = "$PSScriptRoot/global.json"
 $DotNetInstallUrl = "https://dot.net/v1/dotnet-install.ps1"
 $DotNetChannel = "STS"
 
@@ -39,7 +41,7 @@ if ($null -ne (Get-Command "dotnet" -ErrorAction SilentlyContinue) -and `
 }
 else {
     # Download install script
-    $DotNetInstallFile = "$TempDirectory\dotnet-install.ps1"
+    $DotNetInstallFile = "$TempDirectory/dotnet-install.ps1"
     New-Item -ItemType Directory -Path $TempDirectory -Force | Out-Null
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     (New-Object System.Net.WebClient).DownloadFile($DotNetInstallUrl, $DotNetInstallFile)
@@ -53,22 +55,31 @@ else {
     }
 
     # Install by channel or version
-    $DotNetDirectory = "$TempDirectory\dotnet-win"
+    $DotNetDirectory = "$TempDirectory/dotnet-win"
     if (!(Test-Path variable:DotNetVersion)) {
         ExecSafe { & powershell $DotNetInstallFile -InstallDir $DotNetDirectory -Channel $DotNetChannel -NoPath }
     } else {
         ExecSafe { & powershell $DotNetInstallFile -InstallDir $DotNetDirectory -Version $DotNetVersion -NoPath }
     }
-    $env:DOTNET_EXE = "$DotNetDirectory\dotnet.exe"
+    $env:DOTNET_EXE = "$DotNetDirectory/dotnet.exe"
     $env:PATH = "$DotNetDirectory;$env:PATH"
 }
-
-Write-Output "Microsoft (R) .NET SDK version $(& $env:DOTNET_EXE --version)"
 
 if (Test-Path env:NUKE_ENTERPRISE_TOKEN) {
     & $env:DOTNET_EXE nuget remove source "nuke-enterprise" > $null
     & $env:DOTNET_EXE nuget add source "https://f.feedz.io/nuke/enterprise/nuget" --name "nuke-enterprise" --username "PAT" --password $env:NUKE_ENTERPRISE_TOKEN > $null
 }
 
-ExecSafe { & $env:DOTNET_EXE build $BuildProjectFile /nodeReuse:false /p:UseSharedCompilation=false -nologo -clp:NoSummary --verbosity quiet }
+# only execute the build if not running in CI or if running in CI and the project has not been built
+if ($IsCI) {
+    if (-not (Test-Path "$ExePath")) {
+        ExecSafe { & $env:DOTNET_EXE build $BuildProjectFile /nodeReuse:false /p:UseSharedCompilation=false -nologo -clp:NoSummary --verbosity quiet }
+        New-Item -Type File = "$PSScriptRoot/.nuke/temp/ci" | Out-Null
+    }
+}
+else {
+    Write-Output "Microsoft (R) .NET Core SDK version $(& $env:DOTNET_EXE --version)"
+    ExecSafe { & $env:DOTNET_EXE build $BuildProjectFile /nodeReuse:false /p:UseSharedCompilation=false -nologo -clp:NoSummary --verbosity quiet }
+}
+
 ExecSafe { & $env:DOTNET_EXE run --project $BuildProjectFile --no-build -- $BuildArguments }
