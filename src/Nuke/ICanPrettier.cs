@@ -2,7 +2,6 @@ using System.Collections.Immutable;
 using Microsoft.Extensions.FileSystemGlobbing;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
-using Nuke.Common.Utilities.Collections;
 using Serilog;
 using Serilog.Events;
 
