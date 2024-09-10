@@ -13,7 +13,6 @@
     <PackageReference Include="System.Interactive.Async" />
     <PackageReference Include="YamlDotNet" />
     <PackageReference Include="Humanizer.Core" />
-    <PackageReference Include="LiquidTestReports.Core" />
     <PackageReference Include="Polyfill" />
     <PackageReference Include="JetBrains.Annotations" PrivateAssets="all" />
       
@@ -33,8 +32,6 @@
     <Using Include="Humanizer" />
     <Using Include="Nuke.Common" />
     <Using Include="Nuke.Common.Utilities" />
-    <None Remove="Temp\LiquidReporter\Resources\MdMultiReport.md" />
-    <EmbeddedResource Include="Temp\LiquidReporter\Resources\MdMultiReport.md" LogicalName="MdMultiReport.md" />
 
     <AdditionalFiles Include="build/BannedSymbols.Rocket.Surgery.Nuke.txt" />
     <GlobalAnalyzerConfigFiles Include="build/banned_symbols.globalconfig" />

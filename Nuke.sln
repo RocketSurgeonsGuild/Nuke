@@ -34,7 +34,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{AE7B2A
 		build.ps1 = build.ps1
 		build.sh = build.sh
 		GitReleaseManager.yaml = GitReleaseManager.yaml
-		.appveyor.yml = .appveyor.yml
 		.codecov.yml = .codecov.yml
 		GitVersion.yml = GitVersion.yml
 		LICENSE = LICENSE
@@ -44,7 +43,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{AE7B2A
 		.gitmodules = .gitmodules
 		.prettierignore = .prettierignore
 		.prettierrc = .prettierrc
-		.lintstagedrc.js = .lintstagedrc.js
 		NuGet.config = NuGet.config
 		package.json = package.json
 	EndProjectSection

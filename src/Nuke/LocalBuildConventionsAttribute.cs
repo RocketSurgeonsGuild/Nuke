@@ -13,8 +13,6 @@ public sealed class LocalBuildConventionsAttribute : BuildExtensionAttributeBase
     /// <inheritdoc />
     public void OnBuildCreated(IReadOnlyCollection<ExecutableTarget> executableTargets)
     {
-        if (!EnvironmentInfo.HasVariable("RSG_NUKE_LINT_STAGED")) return;
-
         Log.Logger = new LoggerConfiguration()
                     .ConfigureEnricher()
                     .ConfigureConsole(null)

@@ -1,46 +1,69 @@
 {
-    "version": 1,
-    "isRoot": true,
-    "tools": {
-        "gitversion.tool": {
-            "version": "6.0.2",
-            "commands": ["dotnet-gitversion"],
-            "rollForward": false
-        },
-        "dotnet-reportgenerator-globaltool": {
-            "version": "5.3.9",
-            "commands": ["reportgenerator"],
-            "rollForward": false
-        },
-        "nuke.globaltool": {
-            "version": "8.1.0",
-            "commands": ["nuke"],
-            "rollForward": false
-        },
-        "codecov.tool": {
-            "version": "1.13.0",
-            "commands": ["codecov"],
-            "rollForward": false
-        },
-        "jetbrains.resharper.globaltools": {
-            "version": "2024.2.4",
-            "commands": ["jb"],
-            "rollForward": false
-        },
-        "nukeeper": {
-            "version": "0.35.0",
-            "commands": ["nukeeper"],
-            "rollForward": false
-        },
-        "dotnet-outdated-tool": {
-            "version": "4.6.4",
-            "commands": ["dotnet-outdated"],
-            "rollForward": false
-        },
-        "husky": {
-            "version": "0.7.1",
-            "commands": ["husky"],
-            "rollForward": false
-        }
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "gitversion.tool": {
+      "version": "6.0.2",
+      "commands": [
+        "dotnet-gitversion"
+      ],
+      "rollForward": false
+    },
+    "dotnet-reportgenerator-globaltool": {
+      "version": "5.3.9",
+      "commands": [
+        "reportgenerator"
+      ],
+      "rollForward": false
+    },
+    "nuke.globaltool": {
+      "version": "8.1.0",
+      "commands": [
+        "nuke"
+      ],
+      "rollForward": false
+    },
+    "codecov.tool": {
+      "version": "1.13.0",
+      "commands": [
+        "codecov"
+      ],
+      "rollForward": false
+    },
+    "jetbrains.resharper.globaltools": {
+      "version": "2024.2.4",
+      "commands": [
+        "jb"
+      ],
+      "rollForward": false
+    },
+    "nukeeper": {
+      "version": "0.35.0",
+      "commands": [
+        "nukeeper"
+      ],
+      "rollForward": false
+    },
+    "dotnet-outdated-tool": {
+      "version": "4.6.4",
+      "commands": [
+        "dotnet-outdated"
+      ],
+      "rollForward": false
+    },
+    "husky": {
+      "version": "0.7.1",
+      "commands": [
+        "husky"
+      ],
+      "rollForward": false
+    },
+    "liquidtestreports.cli": {
+      "version": "2.0.0-beta.2",
+      "commands": [
+        "liquid"
+      ],
+      "rollForward": false
     }
+  }
 }

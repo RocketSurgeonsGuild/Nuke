@@ -15,12 +15,9 @@ internal static class SolutionUpdater
         IEnumerable<string> additionalIgnoreFolderFilePatterns
     )
     {
-        if (EnvironmentInfo.HasVariable("RSG_NUKE_LINT_STAGED")) return;
         if (solution.GetSolutionFolder("config") is not { } configFolder) configFolder = solution.AddSolutionFolder("config");
 
-        ReplaceDotBuildFolder(solution, configFolder);
-        ReplaceDotBuildFolder(solution, configFolder);
-        ReplaceDotSolutionFolder(solution, configFolder);
+        NormalizePaths(solution);
         AddConfigurationFiles(
             solution,
             additionalRelativeFolderFilePatterns,
@@ -31,7 +28,7 @@ internal static class SolutionUpdater
         AddNukeBuilds(solution, configFolder);
         NormalizePaths(solution);
 
-        Log.Logger.Information("Updating solution to match newly found files");
+        Log.Logger.Information("Saving solution to contain newly found files");
         solution.Save();
     }
 
@@ -50,7 +47,7 @@ internal static class SolutionUpdater
     {
         if (solution.Directory != NukeBuild.RootDirectory) return;
         var projectPaths = NukeBuild
-                          .RootDirectory.GlobFiles(".build/*.csproj", "build/*.csproj", "_build/*.csproj")
+                          .RootDirectory.GlobFiles("*build/*.csproj")
                           .Where(z => solution.AllProjects.All(p => p.Path != z));
 
         foreach (var project in projectPaths)
@@ -68,21 +65,41 @@ internal static class SolutionUpdater
         var projects = solution
                       .AllProjects
                       .Where(
-                           z => z.Name.Equals(".build", StringComparison.OrdinalIgnoreCase)
-                            || z.Name.Equals("build", StringComparison.OrdinalIgnoreCase)
-                            || z.Name.Equals("_build", StringComparison.OrdinalIgnoreCase)
+                           z =>
+                               z.Name.Equals("build", StringComparison.OrdinalIgnoreCase)
+                            || z.Name[1..].Equals("build", StringComparison.OrdinalIgnoreCase)
                        )
                       .Where(z => z.Configurations.Count > 0)
                       .SelectMany(
-                           project => project
-                                     .Configurations
-                                     .Where(z => z.Key.Contains(".Build.", StringComparison.OrdinalIgnoreCase)),
+                           project => project.Configurations.Where(z => z.Key.Contains(".Build.", StringComparison.OrdinalIgnoreCase)),
                            (project, pair) => ( Project: project, Key: pair.Key )
                        )
                       .ToArray();
         foreach (var (project, key) in projects)
         {
+            Log.Logger.Information("Removing {Key} from {Project} configuration", key, project.Name);
             project.Configurations.Remove(key);
+        }
+
+        var itemsToRemove = solution
+                      .AllSolutionFolders
+                      .SelectMany(z => z.Items, (folder, pair) => (Folder: folder, ItemPath: pair.Key, FilePath: pair.Value ))
+                      .Where(z => !AbsolutePath.Create(z.FilePath).FileExists())
+                      .ToArray();
+        foreach (var (folder, itemPath, _) in itemsToRemove)
+        {
+            Log.Logger.Information("Removing {ItemPath} from {Folder}", itemPath, folder.Name);
+            folder.Items.Remove(itemPath);
+        }
+
+        var emptyFoldersToRemove = solution
+                           .AllSolutionFolders
+                           .Where(z => z.Items.Count == 0 && z.Projects.Count == 0)
+                           .ToArray();
+        foreach (var folder in emptyFoldersToRemove)
+        {
+            Log.Logger.Information("Removing {Folder}", folder.Name);
+            solution.RemoveSolutionFolder(folder);
         }
     }
 
@@ -118,18 +135,18 @@ internal static class SolutionUpdater
     {
         foreach (var folder in solution.AllSolutionFolders)
         {
-                             if (folder.Items.Values.All(z => ( (RelativePath)z ).ToUnixRelativePath() == z)) return;
-                             if (folder.Items.Keys.All(z => ( (RelativePath)z ).ToUnixRelativePath() == z)) return;
-                             foreach (var item in folder
-                                                 .Items.Where(
-                                                      z => ( (RelativePath)z.Key ).ToUnixRelativePath() != z.Key
-                                                       || ( (RelativePath)z.Value ).ToUnixRelativePath() != z.Value
-                                                  )
-                                                 .ToArray())
-                             {
-                                 folder.Items.Remove(item.Key);
-                                 folder.Items.Add(( (RelativePath)item.Key ).ToUnixRelativePath(), ( (RelativePath)item.Value ).ToUnixRelativePath());
-                             }
+            if (folder.Items.Values.All(z => ( (RelativePath)z ).ToUnixRelativePath() == z)) return;
+            if (folder.Items.Keys.All(z => ( (RelativePath)z ).ToUnixRelativePath() == z)) return;
+            foreach (var item in folder
+                                .Items.Where(
+                                     z => ( (RelativePath)z.Key ).ToUnixRelativePath() != z.Key
+                                      || ( (RelativePath)z.Value ).ToUnixRelativePath() != z.Value
+                                 )
+                                .ToArray())
+            {
+                folder.Items.Remove(item.Key);
+                folder.Items.Add(( (RelativePath)item.Key ).ToUnixRelativePath(), ( (RelativePath)item.Value ).ToUnixRelativePath());
+            }
         }
     }
 
@@ -166,36 +183,7 @@ internal static class SolutionUpdater
         if (folder.Items.Values.Select(z => ( (RelativePath)z ).ToUnixRelativePath().ToString()).Any(z => z == path)) return;
         if (folder.Items.Keys.Select(z => ( (RelativePath)z ).ToUnixRelativePath().ToString()).Any(z => z == path)) return;
         if (folder.Items.ContainsKey(path)) return;
+        Log.Logger.Information("Adding {Path} to {Folder}", path, folder.Name);
         folder.Items.Add(path, path);
-    }
-
-    private static void ReplaceDotBuildFolder(Solution solution, SolutionFolder configFolder)
-    {
-        // sunset .build folder
-        if (solution.GetSolutionFolder(".build") is not { } buildFolder) return;
-        ReplaceFolder(solution, configFolder, buildFolder);
-    }
-
-    private static void ReplaceDotSolutionFolder(Solution solution, SolutionFolder configFolder)
-    {
-        // sunset .build folder
-        if (solution.GetSolutionFolder(".solution") is not { } buildFolder) return;
-        solution.RemoveSolutionFolder(buildFolder);
-    }
-
-    private static void ReplaceFolder(Solution solution, SolutionFolder configFolder, SolutionFolder buildFolder)
-    {
-        foreach (var project in buildFolder.Projects)
-        {
-            project.SolutionFolder = configFolder;
-        }
-
-        if (solution.GetSolutionFolder(buildFolder.Name) is { } folder)
-            solution.RemoveSolutionFolder(folder);
-
-        foreach (var item in buildFolder.Items)
-        {
-            if (!configFolder.Items.ContainsKey(item.Key)) configFolder.Items.Add(item.Key, item.Value);
-        }
     }
 }

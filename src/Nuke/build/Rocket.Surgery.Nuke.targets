@@ -28,6 +28,7 @@
         <None Include="$(_NukeRoot)\.github\**" Link="$([MSBuild]::MakeRelative($(_NukeRoot), %(FullPath)))" />
         <None Include="$(_NukeRoot)\.vscode\**" Link="$([MSBuild]::MakeRelative($(_NukeRoot), %(FullPath)))" />
         <None Include="$(_NukeRoot)\.idea\**" Link="$([MSBuild]::MakeRelative($(_NukeRoot), %(FullPath)))" />
+        <None Include="$(_NukeRoot)\.nuke\**" Link="$([MSBuild]::MakeRelative($(_NukeRoot), %(FullPath)))" />
         <None Include="$(_NukeRoot)\.devcontainer\**" Link="$([MSBuild]::MakeRelative($(_NukeRoot), %(FullPath)))" />
         <None Include="$(_NukeRoot)\*.props;$(_NukeRoot)\*.targets" Link=".config\$([MSBuild]::MakeRelative($(_NukeRoot), %(FullPath)))" />
         <None Include="$(_NukeRoot)\version\*.props;$(_NukeRoot)\version\*.targets" Link=".config\$([MSBuild]::MakeRelative($(_NukeRoot), %(FullPath)))" />

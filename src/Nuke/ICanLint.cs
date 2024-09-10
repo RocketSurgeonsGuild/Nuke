@@ -152,6 +152,11 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
                          patterns.Add("**/PublicAPI.Unshipped.txt");
                      }
 
+                     if (this is ICanUpdateSolution sln)
+                     {
+                         patterns.Add(sln.Solution.Path);
+                     }
+
                      if (LintPaths.Active)
                      {
                          patterns.AddRange(LintPaths.RelativePaths.Select(z => z.ToString()));
