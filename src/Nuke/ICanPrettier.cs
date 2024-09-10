@@ -58,14 +58,14 @@ public interface ICanPrettier : ICanLint
 
                      static Arguments makeArgsForStagedFiles(ImmutableArray<RelativePath> values)
                      {
-                         if (values.Length == 0)
-                         {
-                             return new Arguments().Concatenate(_prettierBaseArgs).Add(".").Add("--write");
-                         }
-
-                         var a = new Arguments().Concatenate(_prettierBaseArgs).Add("--write");
-                         values.ForEach(x => a.Add(x));
-                         return a;
+                         var args = new Arguments().Concatenate(_prettierBaseArgs);
+                         return values.Length == 0
+                             ? args
+                              .Add("--write")
+                              .Add(".")
+                             : args
+                              .Add("--write")
+                              .Add("{value}", values, ' ');
                      }
                  }
              );
