@@ -67,7 +67,8 @@ public class ContinuousIntegrationConventionsAttribute : BuildExtensionAttribute
                    .Add("--inputs {0}", results.Select(z => $"File={z}"), ' ', quoteMultiple: true)
                    .Add("--output-file {0}", summary)
                    .RenderForExecution(),
-                workingDirectory: build.RootDirectory
+                workingDirectory: build.RootDirectory,
+                logOutput: false
             );
         }
 
