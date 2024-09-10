@@ -89,7 +89,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                   }
                                                   else if (LintPaths.Glob(DotnetFormatMatcher, true) is { Length: > 0, } allFiles)
                                                   {
-                                                      arguments.Add("--include={value}", allFiles, ';');
+                                                      _ = arguments.Add("--include {value}", string.Join(",", allFiles.Select(z => z.ToString())));
                                                   }
 
                                                   _ = DotNetTasks.DotNet(

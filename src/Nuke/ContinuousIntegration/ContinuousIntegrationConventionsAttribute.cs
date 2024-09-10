@@ -41,11 +41,12 @@ public class ContinuousIntegrationConventionsAttribute : BuildExtensionAttribute
             _ = DotNetTasks.DotNet(
                 new Arguments()
                    .Add("liquid")
-                   .Add("--inputs {0}", results.Select(z => $"File={z}"), ' ', quoteMultiple: true)
+                   .Add("--inputs {0}", results.Select(z => $"File={z}"), ' ')
                    .Add("--output-file {0}", summary)
                    .RenderForExecution(),
                 build.RootDirectory,
-                logOutput: false
+                logOutput: build.Verbosity == Verbosity.Verbose,
+                logInvocation: build.Verbosity == Verbosity.Verbose
             );
         }
 
