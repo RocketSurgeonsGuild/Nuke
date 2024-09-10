@@ -3,6 +3,7 @@ using Nuke.Common.Execution;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
+using Serilog;
 
 namespace Rocket.Surgery.Nuke.ContinuousIntegration;
 
@@ -17,13 +18,7 @@ public class ContinuousIntegrationConventionsAttribute : BuildExtensionAttribute
 #pragma warning restore CA1813
 {
     [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay
-    {
-        get
-        {
-            return ToString();
-        }
-    }
+    private string DebuggerDisplay => ToString();
 
     /// <inheritdoc />
     public void OnBuildFinished()
@@ -57,6 +52,10 @@ public class ContinuousIntegrationConventionsAttribute : BuildExtensionAttribute
          && testResultReports.TestResultsDirectory.GlobFiles("**/*.trx") is
          { Count: > 0, } results)
         {
+            if (!DotNetTool.IsInstalled("liquidtestreports.cli"))
+            {
+                Log.Warning("liquidtestreports.cli is not installed, skipping test summary generation");
+            }
             //            summary.TouchFile();
             //            var reporter = new LiquidReporter(results.Select(z => z.ToString()), Log.Logger);
             //            var report = reporter.Run("Test results");
