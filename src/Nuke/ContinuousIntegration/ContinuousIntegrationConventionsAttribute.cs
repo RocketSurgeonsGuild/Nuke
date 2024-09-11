@@ -25,10 +25,13 @@ public class ContinuousIntegrationConventionsAttribute : BuildExtensionAttribute
     {
         // ReSharper disable once SuspiciousTypeConversion.Global
         if (build.ExecutionPlan.Any(z => z.Name == nameof(IHaveTestTarget.Test))
-         && build is IHaveTestArtifacts testResultReports
-         && testResultReports.TestResultsDirectory.GlobFiles("**/*.trx") is { Count: > 0, } results)
+         && build is IHaveTestArtifacts { TestResultsDirectory: {} testResultsDirectory  }
+         && testResultsDirectory.GlobFiles("**/*.trx") is { Count: > 0, } results)
         {
-            var relativeResults = results.GetRelativePaths(testResultReports.TestResultsDirectory);
+            var pathArgs = results
+                          .GetRelativePaths(testResultsDirectory)
+                          .Aggregate(new Arguments(), (arguments, path) => arguments.Add("--inputs {value}", $"File={path}"));
+
             if (!DotNetTool.IsInstalled("liquidtestreports.cli"))
             {
                 Log.Warning("liquidtestreports.cli is not installed, skipping test summary generation");
@@ -41,10 +44,10 @@ public class ContinuousIntegrationConventionsAttribute : BuildExtensionAttribute
             _ = DotNetTasks.DotNet(
                 new Arguments()
                    .Add("liquid")
-                   .Add("--inputs {0}", relativeResults.Select(z => $"File={z}"), ' ')
+                   .Concatenate(pathArgs)
                    .Add("--output-file {0}", summary)
                    .RenderForExecution(),
-                testResultReports.TestResultsDirectory,
+                testResultsDirectory,
                 logOutput: true /* temp */,
                 logInvocation: build.Verbosity == Verbosity.Verbose
             );
