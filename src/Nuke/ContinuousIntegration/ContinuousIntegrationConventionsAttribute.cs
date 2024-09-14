@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Text.RegularExpressions;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
 using Nuke.Common.IO;
@@ -28,7 +27,7 @@ public partial class ContinuousIntegrationConventionsAttribute : BuildExtensionA
         var toolInstalled = DotNetTool.IsInstalled("liquidtestreports.cli");
         // ReSharper disable once SuspiciousTypeConversion.Global
         if (build.ExecutionPlan.Any(z => z.Name == nameof(IHaveTestTarget.Test))
-         && build is IHaveTestArtifacts { TestResultsDirectory: { } testResultsDirectory }
+         && build is IHaveTestArtifacts { TestResultsDirectory: { } testResultsDirectory, }
          && testResultsDirectory.GlobFiles("**/*.trx") is { Count: > 0, } results)
         {
             var pathArgs =
@@ -99,7 +98,4 @@ public partial class ContinuousIntegrationConventionsAttribute : BuildExtensionA
                 }
         }
     }
-
-    [GeneratedRegex("\\[\\d+\\]")]
-    private static partial Regex MyRegex();
 }
