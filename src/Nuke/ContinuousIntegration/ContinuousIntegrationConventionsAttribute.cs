@@ -15,27 +15,29 @@ namespace Rocket.Surgery.Nuke.ContinuousIntegration;
 #pragma warning disable CA1813
 [AttributeUsage(AttributeTargets.Class)]
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public class ContinuousIntegrationConventionsAttribute : BuildExtensionAttributeBase, IOnBuildFinished
+public partial class ContinuousIntegrationConventionsAttribute : BuildExtensionAttributeBase, IOnBuildFinished
 #pragma warning restore CA1813
 {
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private string DebuggerDisplay => ToString();
 
+
     private void EmitTestSummaryMarkdown(INukeBuild build, AbsolutePath summary)
     {
+        var toolInstalled = DotNetTool.IsInstalled("liquidtestreports.cli");
         // ReSharper disable once SuspiciousTypeConversion.Global
         if (build.ExecutionPlan.Any(z => z.Name == nameof(IHaveTestTarget.Test))
-         && build is IHaveTestArtifacts { TestResultsDirectory: {} testResultsDirectory  }
+         && build is IHaveTestArtifacts { TestResultsDirectory: { } testResultsDirectory, }
          && testResultsDirectory.GlobFiles("**/*.trx") is { Count: > 0, } results)
         {
-            var pathArgs = results
-                          .GetRelativePaths(testResultsDirectory)
-                          .Aggregate(new Arguments(), (arguments, path) => arguments.Add("--inputs {value}", $"File={path}"));
-
-            if (!DotNetTool.IsInstalled("liquidtestreports.cli"))
-            {
-                Log.Warning("liquidtestreports.cli is not installed, skipping test summary generation");
-            }
+            var pathArgs =
+                results
+                   .Select(
+                        path => testResultsDirectory.GetRelativePathTo(
+                            path.RenameWithoutExtension(static path => path.Name.Replace("[", "").Replace("]", ""))
+                        )
+                    )
+                   .Aggregate(new Arguments(), (arguments, path) => arguments.Add("--inputs {value}", $"File={path}"));
 
             //            summary.TouchFile();
             //            var reporter = new LiquidReporter(results.Select(z => z.ToString()), Log.Logger);
@@ -51,6 +53,10 @@ public class ContinuousIntegrationConventionsAttribute : BuildExtensionAttribute
                 logOutput: true /* temp */,
                 logInvocation: build.Verbosity == Verbosity.Verbose
             );
+        }
+        else if (!toolInstalled)
+        {
+            Log.Warning("liquidtestreports.cli is not installed, skipping test summary generation");
         }
 
         // ReSharper disable once SuspiciousTypeConversion.Global
