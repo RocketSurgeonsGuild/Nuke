@@ -165,16 +165,15 @@ internal static class SolutionUpdater
         AddSolutionItemToFolder(folder, NukeBuild.RootDirectory.GetUnixRelativePathTo(path));
     }
 
-    private static SolutionFolder? GetNestedFolder(Solution solution, SolutionFolder? folder, UnixRelativePath path)
+    private static SolutionFolder? GetNestedFolder(Solution solution, SolutionFolder? placedInto, UnixRelativePath path)
     {
         return path
               .ToString()
               .Split('/')
               .Where(z => !string.IsNullOrWhiteSpace(z))
               .Aggregate(
-                   folder,
-                   (acc, pathPart) => solution.GetSolutionFolder(pathPart)
-                    ?? acc?.GetSolutionFolder(pathPart) ?? solution.AddSolutionFolder(pathPart, solutionFolder: acc)
+                   placedInto,
+                   (parent, pathPart) => parent?.GetSolutionFolder(pathPart) ?? solution.GetSolutionFolder(pathPart) ?? solution.AddSolutionFolder(pathPart, solutionFolder: parent)
                );
     }
 

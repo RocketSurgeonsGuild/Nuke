@@ -26,7 +26,8 @@ public partial class ContinuousIntegrationConventionsAttribute : BuildExtensionA
     {
         var toolInstalled = DotNetTool.IsInstalled("liquidtestreports.cli");
         // ReSharper disable once SuspiciousTypeConversion.Global
-        if (build.ExecutionPlan.Any(z => z.Name == nameof(IHaveTestTarget.Test))
+        if (toolInstalled
+         &&build.ExecutionPlan.Any(z => z.Name == nameof(IHaveTestTarget.Test))
          && build is IHaveTestArtifacts { TestResultsDirectory: { } testResultsDirectory, }
          && testResultsDirectory.GlobFiles("**/*.trx") is { Count: > 0, } results)
         {
@@ -38,6 +39,7 @@ public partial class ContinuousIntegrationConventionsAttribute : BuildExtensionA
                         )
                     )
                    .Aggregate(new Arguments(), (arguments, path) => arguments.Add("--inputs {value}", $"File={path}"));
+
 
             //            summary.TouchFile();
             //            var reporter = new LiquidReporter(results.Select(z => z.ToString()), Log.Logger);
