@@ -36,7 +36,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
     ) : base(name)
     {
         _images = Enumerable
-                 .Concat(new[] { image }, images)
+                 .Concat(new[] { image, }, images)
                  .Select(z => z.GetValue().Replace(".", "_", StringComparison.Ordinal))
                  .ToArray();
         _isGithubHosted = true;
@@ -54,7 +54,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         params string[] images
     ) : base(name)
     {
-        _images = Enumerable.Concat(new[] { image }, images).ToArray();
+        _images = Enumerable.Concat(new[] { image, }, images).ToArray();
     }
 
     /// <summary>
@@ -71,7 +71,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
     public override string IdPostfix => Name;
 
     /// <inheritdoc />
-    public override IEnumerable<AbsolutePath> GeneratedFiles => new[] { ConfigurationFile };
+    public override IEnumerable<AbsolutePath> GeneratedFiles => new[] { ConfigurationFile, };
 
     /// <summary>
     ///     Determine if you always want to build the nuke project during the ci run
@@ -145,7 +145,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                 .. onePasswordServiceAccountSecrets
                   .DistinctBy(z => z.Variable)
                   .Where(z => !z.Path.StartsWith("op://") && !string.IsNullOrWhiteSpace(z.Variable))
-                  // ReSharper disable once NullableWarningSuppressionIsUsed
+                   // ReSharper disable once NullableWarningSuppressionIsUsed
                   .Select(s => new GitHubActionsVariable(s.Variable!)),
             ];
 
@@ -160,14 +160,14 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                             Outputs = secrets
                                      .Select(secret => new GitHubActionsOutput(secret.Name, secret.Description))
                                      .ToList(),
-                            With = new() { ["export-env"] = "false" },
+                            With = new() { ["export-env"] = "false", },
                             Environment = Enumerable
                                          .Concat(
                                               secrets
                                                  .Select(
                                                       z => new KeyValuePair<string, string>(
                                                           z.Name,
-                                                          ( string.IsNullOrWhiteSpace(z.Variable) )
+                                                          string.IsNullOrWhiteSpace(z.Variable)
                                                               ? $"{z.Path}"
                                                               : $$$"""${{ vars.{{{z.Variable}}} }}/{{{z.Path.TrimStart('/')}}}"""
                                                       )
@@ -206,7 +206,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                 .. onePasswordConnectServerSecrets
                   .DistinctBy(z => z.Variable)
                   .Where(z => !z.Path.StartsWith("op://") && !string.IsNullOrWhiteSpace(z.Variable))
-                  // ReSharper disable once NullableWarningSuppressionIsUsed
+                   // ReSharper disable once NullableWarningSuppressionIsUsed
                   .Select(s => new GitHubActionsVariable(s.Variable!)),
             ];
 
@@ -221,14 +221,14 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                             Outputs = secrets
                                      .Select(secret => new GitHubActionsOutput(secret.Name, secret.Description))
                                      .ToList(),
-                            With = new() { ["export-env"] = "false" },
+                            With = new() { ["export-env"] = "false", },
                             Environment = Enumerable
                                          .Concat(
                                               secrets
                                                  .Select(
                                                       z => new KeyValuePair<string, string>(
                                                           z.Name,
-                                                          ( string.IsNullOrWhiteSpace(z.Variable) )
+                                                          string.IsNullOrWhiteSpace(z.Variable)
                                                               ? $"{z.Path}"
                                                               : $$$"""${{ vars.{{{z.Variable}}} }}/{{{z.Path.TrimStart('/')}}}"""
                                                       )
@@ -254,7 +254,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
 
         var globalToolStep = new RunStep("Install Nuke Global Tool")
         {
-            Run = "dotnet tool install -g Nuke.GlobalTool"
+            Run = "dotnet tool install -g Nuke.GlobalTool",
         };
         // TODO: Add configuration to disable this?
         steps.Add(
@@ -270,7 +270,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             steps.Add(
                 new RunStep("dotnet tool restore")
                 {
-                    Run = "dotnet tool restore"
+                    Run = "dotnet tool restore",
                 }
             );
         }
@@ -285,13 +285,13 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             Enumerable
                .Concat(
                     GetAllSecrets(secrets)
-                       // ReSharper disable CoVariantArrayConversion
+                        // ReSharper disable CoVariantArrayConversion
                        .Concat<ITriggerValue>(variables)
                        .Concat(onePasswordConnectServerSecrets)
                        .Concat(onePasswordServiceAccountSecrets),
                     environmentAttributes
                 )
-               // ReSharper enable CoVariantArrayConversion
+                // ReSharper enable CoVariantArrayConversion
                .SelectMany(
                     z =>
                     {
@@ -320,18 +320,18 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                 continue;
             }
 
-            var name = ( string.IsNullOrWhiteSpace(value.Prefix) ) ? value.Name : $"{value.Prefix}.{value.Name}";
-            stepParameters.Add(new(key, $"{name}{( ( string.IsNullOrWhiteSpace(value.Default) ) ? "" : $" || {value.Default}" )}"));
+            var name = string.IsNullOrWhiteSpace(value.Prefix) ? value.Name : $"{value.Prefix}.{value.Name}";
+            stepParameters.Add(new(key, $"{name}{( string.IsNullOrWhiteSpace(value.Default) ? "" : $" || {value.Default}" )}"));
         }
 
         var jobOutputs = new List<GitHubActionsStepOutput>();
         var requiredInputs = new List<GitHubActionsInput>();
         var lookupTable = new LookupTable<ExecutableTarget, ExecutableTarget[]>();
         var initialArguments = localTool ? new Arguments().Add("dotnet").Add("nuke") : new Arguments().Add("nuke");
-        foreach ((var execute, var targets) in relevantTargets
+        foreach (( var execute, var targets ) in relevantTargets
                                                 .Select(
-                                                     x => (ExecutableTarget: x,
-                                                            Targets: GetInvokedTargets(x, relevantTargets).ToArray())
+                                                     x => ( ExecutableTarget: x,
+                                                            Targets: GetInvokedTargets(x, relevantTargets).ToArray() )
                                                  )
                                                 .ForEachLazy(x => lookupTable.Add(x.ExecutableTarget, [.. x.Targets,]))
                 )
@@ -356,7 +356,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                             0,
                             new(
                                 key,
-                                $"{value.Prefix}.{value.Name}{( ( string.IsNullOrWhiteSpace(value.Default) ) ? "" : $" || {value.Default}" )}"
+                                $"{value.Prefix}.{value.Name}{( string.IsNullOrWhiteSpace(value.Default) ? "" : $" || {value.Default}" )}"
                             )
                         );
                     }
@@ -406,7 +406,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         {
             Steps = steps,
             Outputs = jobOutputs,
-            RunsOn = ( !_isGithubHosted ) ? _images : [],
+            RunsOn = !_isGithubHosted ? _images : [],
             Matrix = _isGithubHosted ? _images : [],
             // TODO: Figure out what this looks like here
             //                    Environment = inputs
@@ -465,7 +465,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                     steps.IndexOf(step),
                     new UploadArtifactStep($$$"""{{{step.StepName}}} (${{ matrix.os }})""")
                     {
-                        If = ( step.If is { } ) ? $"{step.If} && matrix.os != '{mainOs}'" : $"matrix.os != '{mainOs}'",
+                        If = step.If is { } ? $"{step.If} && matrix.os != '{mainOs}'" : $"matrix.os != '{mainOs}'",
                         Name = $$$"""${{ matrix.os }}-{{{step.Name}}}""",
                         Path = step.Path,
                         Environment = step.Environment.ToDictionary(z => z.Key, z => z.Value),
@@ -479,7 +479,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                         IfNoFilesFound = step.IfNoFilesFound,
                     }
                 );
-                step.If = ( step.If is { } ) ? $"{step.If} && matrix.os == '{mainOs}'" : $"matrix.os == '{mainOs}'";
+                step.If = step.If is { } ? $"{step.If} && matrix.os == '{mainOs}'" : $"matrix.os == '{mainOs}'";
             }
         }
 
@@ -515,8 +515,8 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                        )
                       .Select(
                            // ReSharper disable once NullableWarningSuppressionIsUsed
-                           z => (name: ( (YamlScalarNode)z.Children[key] ).Value!.Split("@")[0],
-                                  value: ( (YamlScalarNode)z.Children[key] ).Value)
+                           z => ( name: ( (YamlScalarNode)z.Children[key] ).Value!.Split("@")[0],
+                                  value: ( (YamlScalarNode)z.Children[key] ).Value )
                        )
                       .DistinctBy(z => z.name)
                       .ToDictionary(
@@ -532,7 +532,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             }
 
             var nodeKey = uses.Split('@')[0];
-            return ( nodeList.TryGetValue(nodeKey, out var value) ) ? value : uses;
+            return nodeList.TryGetValue(nodeKey, out var value) ? value : uses;
         }
 
         foreach (var job in config.Jobs)
