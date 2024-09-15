@@ -83,6 +83,8 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
 
     private static LintPaths? lintPaths;
 
+    private static Matcher? _lintMatcher;
+
     /// <summary>
     ///     The lint target
     /// </summary>
@@ -176,12 +178,10 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
     /// </summary>
     public Matcher LintMatcher => _lintMatcher ??= ResolveLintMatcher();
 
-    private static Matcher? _lintMatcher;
-
-                                            /// <summary>
-                                            ///     The files to lint, if not given lints all files
-                                            /// </summary>
-                                            [Parameter("The files to lint, if not given lints all files", Separator = " ", Name = "lint-files")]
+    /// <summary>
+    ///     The files to lint, if not given lints all files
+    /// </summary>
+    [Parameter("The files to lint, if not given lints all files", Separator = " ", Name = "lint-files")]
     private string[] PrivateLintFiles => TryGetValue(() => PrivateLintFiles) ?? Array.Empty<string>();
 
     private Matcher ResolveLintMatcher()

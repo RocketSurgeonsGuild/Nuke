@@ -57,12 +57,14 @@ public class LintPaths
         Trigger = trigger;
         Message = message;
 
-        _paths = new (() =>
-        [
-            ..paths
-             .Select(z => z.Trim())
-             .Select(z => Path.IsPathRooted(z) ? (AbsolutePath)z : NukeBuild.RootDirectory / z),
-        ]);
+        _paths = new(
+            () =>
+            [
+                ..paths
+                 .Select(z => z.Trim())
+                 .Select(z => Path.IsPathRooted(z) ? (AbsolutePath)z : NukeBuild.RootDirectory / z),
+            ]
+        );
 
         _allPaths = new(
             () =>
