@@ -87,7 +87,6 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
     }
 
     private static LintPaths? lintPaths;
-    private static Matcher? lintMatcher;
 
     private static Matcher ResolveLintMatcher()
     {
