@@ -72,17 +72,16 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
     /// <inheritdoc />
     public override IEnumerable<AbsolutePath> GeneratedFiles => new[] { ConfigurationFile };
 
+    /// <summary>
+    /// Determine if you always want to build the nuke project during the ci run
+    /// </summary>
+    public bool AlwaysBuildNukeProject { get; set; }
+
     /// <inheritdoc />
     public override IEnumerable<string> RelevantTargetNames => InvokedTargets;
 
     [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay
-    {
-        get
-        {
-            return ToString();
-        }
-    }
+    private string DebuggerDisplay => ToString();
 
     // public override IEnumerable<string> IrrelevantTargetNames => new string[0];
 
@@ -171,7 +170,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                                                  .Select(
                                                       z => new KeyValuePair<string, string>(
                                                           z.Name,
-                                                          ( string.IsNullOrWhiteSpace(z.Variable) )
+                                                           ( string.IsNullOrWhiteSpace(z.Variable) )
                                                               ? $"{z.Path}"
                                                               : $$$"""${{ vars.{{{z.Variable}}} }}/{{{z.Path.TrimStart('/')}}}"""
                                                       )
@@ -237,7 +236,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                                                  .Select(
                                                       z => new KeyValuePair<string, string>(
                                                           z.Name,
-                                                          ( string.IsNullOrWhiteSpace(z.Variable) )
+                                                           ( string.IsNullOrWhiteSpace(z.Variable) )
                                                               ? $"{z.Path}"
                                                               : $$$"""${{ vars.{{{z.Variable}}} }}/{{{z.Path.TrimStart('/')}}}"""
                                                       )
@@ -384,6 +383,11 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                                    .ToDictionary(z => z.Key, z => $$$"""${{ {{{z.Value}}} }}"""),
                                 "{key} {value}"
                             );
+
+            if (!AlwaysBuildNukeProject)
+            {
+                initialArguments = new Arguments().Add("dotnet").Add(NukeBuild.RootDirectory.GetRelativePathTo(Assembly.GetEntryAssembly()?.Location));
+            }
 
             steps.Add(
                 new RunStep(execute.Name.Humanize(LetterCasing.Title))
