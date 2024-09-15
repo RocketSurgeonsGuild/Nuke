@@ -56,7 +56,7 @@ public partial class ContinuousIntegrationConventionsAttribute : BuildExtensionA
                 logInvocation: build.Verbosity == Verbosity.Verbose,
                 exitHandler: process => process.AssertWaitForExit()
             );
-            ( testResultsDirectory / "liquidtestreports.log" ).WriteAllText(liquidResult.StdToText());
+            _ = ( testResultsDirectory / "liquidtestreports.log" ).WriteAllText(liquidResult.StdToText());
         }
         else if (!toolInstalled)
         {
