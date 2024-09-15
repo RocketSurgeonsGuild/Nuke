@@ -382,7 +382,13 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
 
             if (!AlwaysBuildNukeProject)
             {
-                initialArguments = new Arguments().Add("dotnet").Add(NukeBuild.RootDirectory.GetRelativePathTo(Assembly.GetEntryAssembly()?.Location));
+                initialArguments = new Arguments()
+                                  .Add("dotnet")
+                                  .Add(
+                                       NukeBuild
+                                          .RootDirectory.GetRelativePathTo(Assembly.GetEntryAssembly()?.Location)
+                                          .ToUnixRelativePath()
+                                   );
             }
 
             steps.Add(
