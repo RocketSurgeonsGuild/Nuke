@@ -13,7 +13,7 @@ $PSScriptRoot = Split-Path $MyInvocation.MyCommand.Path -Parent
 # CONFIGURATION
 ###########################################################################
 
-$IsCI = $env:CI -eq "true"
+$IsCI = $env:CI -ne $null -and $env:CI -ne ""
 $ExePath = "$PSScriptRoot/.build/bin/Debug/.build.exe"
 $BuildProjectFile = "$PSScriptRoot/.build/.build.csproj"
 $TempDirectory = "$PSScriptRoot/.nuke/temp"
@@ -32,6 +32,10 @@ $env:DOTNET_NOLOGO = 1
 function ExecSafe([scriptblock] $cmd) {
     & $cmd
     if ($LASTEXITCODE) { exit $LASTEXITCODE }
+}
+
+function buildProject() {
+    ExecSafe { & $env:DOTNET_EXE build $BuildProjectFile /nodeReuse:false /p:UseSharedCompilation=false -nologo -clp:NoSummary --verbosity quiet }
 }
 
 # If dotnet CLI is installed globally and it matches requested version, use for execution
@@ -73,13 +77,12 @@ if (Test-Path env:NUKE_ENTERPRISE_TOKEN) {
 # only execute the build if not running in CI or if running in CI and the project has not been built
 if ($IsCI) {
     if (-not (Test-Path "$ExePath")) {
-        ExecSafe { & $env:DOTNET_EXE build $BuildProjectFile /nodeReuse:false /p:UseSharedCompilation=false -nologo -clp:NoSummary --verbosity quiet }
-        New-Item -Type File = "$PSScriptRoot/.nuke/temp/ci" | Out-Null
+        buildProject
     }
 }
 else {
     Write-Output "Microsoft (R) .NET Core SDK version $(& $env:DOTNET_EXE --version)"
-    ExecSafe { & $env:DOTNET_EXE build $BuildProjectFile /nodeReuse:false /p:UseSharedCompilation=false -nologo -clp:NoSummary --verbosity quiet }
+    buildProject
 }
 
 ExecSafe { & $env:DOTNET_EXE run --project $BuildProjectFile --no-build -- $BuildArguments }
