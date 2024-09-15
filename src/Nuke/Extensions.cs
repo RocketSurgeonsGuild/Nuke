@@ -162,6 +162,50 @@ public static class Extensions
     }
 
     /// <summary>
+    /// Gets the relative paths that fit the matcher
+    /// </summary>
+    /// <param name="patcher"></param>
+    /// <param name="path"></param>
+    /// <returns></returns>
+    public static Matcher AddInclude(this Matcher patcher, AbsolutePath path)
+    {
+        return patcher.AddInclude(NukeBuild.RootDirectory.GetUnixRelativePathTo(path));
+    }
+
+    /// <summary>
+    /// Gets the relative paths that fit the matcher
+    /// </summary>
+    /// <param name="patcher"></param>
+    /// <param name="path"></param>
+    /// <returns></returns>
+    public static Matcher AddInclude(this Matcher patcher, RelativePath path)
+    {
+        return patcher.AddInclude(path.ToUnixRelativePath());
+    }
+
+    /// <summary>
+    /// Gets the relative paths that fit the matcher
+    /// </summary>
+    /// <param name="patcher"></param>
+    /// <param name="path"></param>
+    /// <returns></returns>
+    public static Matcher AddExclude(this Matcher patcher, AbsolutePath path)
+    {
+        return patcher.AddExclude(NukeBuild.RootDirectory.GetUnixRelativePathTo(path));
+    }
+
+    /// <summary>
+    /// Gets the relative paths that fit the matcher
+    /// </summary>
+    /// <param name="patcher"></param>
+    /// <param name="path"></param>
+    /// <returns></returns>
+    public static Matcher AddExclude(this Matcher patcher, RelativePath path)
+    {
+        return patcher.AddExclude(path.ToUnixRelativePath());
+    }
+
+    /// <summary>
     ///     <p>
     ///         <em>Sets <see cref="ReportGeneratorSettings.Reports" /> to a new list</em>
     ///     </p>

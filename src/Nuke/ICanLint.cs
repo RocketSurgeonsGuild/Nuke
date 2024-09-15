@@ -176,15 +176,20 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
     /// <summary>
     ///     The default matcher to exclude files from linting
     /// </summary>
-    public Matcher LintMatcher => _lintMatcher ??= ResolveLintMatcher();
+    public Matcher LintMatcher => DefaultLintMatcher;
+
+    /// <summary>
+    ///     The default matcher to exclude files from linting
+    /// </summary>
+    public static Matcher DefaultLintMatcher { get; } = ResolveLintMatcher();
 
     /// <summary>
     ///     The files to lint, if not given lints all files
     /// </summary>
     [Parameter("The files to lint, if not given lints all files", Separator = " ", Name = "lint-files")]
-    private string[] PrivateLintFiles => TryGetValue(() => PrivateLintFiles) ?? Array.Empty<string>();
+    private string[] PrivateLintFiles => TryGetValue(() => PrivateLintFiles) ?? [];
 
-    private Matcher ResolveLintMatcher()
+    private static Matcher ResolveLintMatcher()
     {
         return new Matcher(StringComparison.OrdinalIgnoreCase)
               .AddInclude("**/*")
@@ -194,6 +199,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
               .AddExclude(".nuke/**/*")
               .AddExclude("**/bin/**/*")
               .AddExclude("**/obj/**/*")
+              .AddExclude("**/*.g.*")
               .AddExclude("**/*.verified.*")
               .AddExclude("**/*.received.*");
     }
