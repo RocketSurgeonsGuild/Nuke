@@ -87,23 +87,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
     }
 
     private static LintPaths? lintPaths;
-
-    private static Matcher? _lintMatcher;
-
-    private static Matcher ResolveLintMatcher()
-    {
-        return new Matcher(StringComparison.OrdinalIgnoreCase)
-              .AddInclude("**/*")
-              .AddExclude("**/node_modules/**/*")
-              .AddExclude(".idea/**/*")
-              .AddExclude(".vscode/**/*")
-              .AddExclude(".nuke/**/*")
-              .AddExclude("**/bin/**/*")
-              .AddExclude("**/obj/**/*")
-              .AddExclude("**/*.g.*")
-              .AddExclude("**/*.verified.*")
-              .AddExclude("**/*.received.*");
-    }
+    private static Matcher? lintMatcher;
 
     /// <summary>
     ///     The lint target
@@ -203,6 +187,21 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
     /// </summary>
     [Parameter("The files to lint, if not given lints all files", Separator = " ", Name = "lint-files")]
     private string[] PrivateLintFiles => TryGetValue(() => PrivateLintFiles) ?? [];
+
+    private static Matcher ResolveLintMatcher()
+    {
+        return new Matcher(StringComparison.OrdinalIgnoreCase)
+              .AddInclude("**/*")
+              .AddExclude("**/node_modules/**/*")
+              .AddExclude(".idea/**/*")
+              .AddExclude(".vscode/**/*")
+              .AddExclude(".nuke/**/*")
+              .AddExclude("**/bin/**/*")
+              .AddExclude("**/obj/**/*")
+              .AddExclude("**/*.g.*")
+              .AddExclude("**/*.verified.*")
+              .AddExclude("**/*.received.*");
+    }
 
     private LintPaths ResolveLintPathsImpl()
     {
