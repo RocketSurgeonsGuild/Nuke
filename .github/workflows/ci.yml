@@ -121,15 +121,15 @@ jobs:
       - name: ⚙️ Build
         id: build
         run: |
-          dotnet .build\bin\Debug\.build.dll --target DotnetCoreBuild Build --ThisIsAOtherVariable "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAnotherVariable "${{ vars.THIS_IS_ANOTHER_VARIABLE }}" --THIS_IS_A_VARIABLE "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAEnv "${{ env.THIS_IS_A_ENV || 'test' }}" --ThisIsASecret "${{ secrets.THIS_IS_A_SECRET }}" --GitHubToken "${{ secrets.GITHUB_TOKEN }}"
+          dotnet .build/bin/Debug/.build.dll --target DotnetCoreBuild Build --ThisIsAOtherVariable "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAnotherVariable "${{ vars.THIS_IS_ANOTHER_VARIABLE }}" --THIS_IS_A_VARIABLE "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAEnv "${{ env.THIS_IS_A_ENV || 'test' }}" --ThisIsASecret "${{ secrets.THIS_IS_A_SECRET }}" --GitHubToken "${{ secrets.GITHUB_TOKEN }}"
       - name: 🚦 Test
         id: test
         run: |
-          dotnet .build\bin\Debug\.build.dll --target DotnetCoreTest Test TriggerCodeCoverageReports GenerateCodeCoverageReportCobertura GenerateCodeCoverageBadges GenerateCodeCoverageSummary GenerateCodeCoverageReport --ThisIsAOtherVariable "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAnotherVariable "${{ vars.THIS_IS_ANOTHER_VARIABLE }}" --THIS_IS_A_VARIABLE "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAEnv "${{ env.THIS_IS_A_ENV || 'test' }}" --ThisIsASecret "${{ secrets.THIS_IS_A_SECRET }}" --GitHubToken "${{ secrets.GITHUB_TOKEN }}"
+          dotnet .build/bin/Debug/.build.dll --target DotnetCoreTest Test TriggerCodeCoverageReports GenerateCodeCoverageReportCobertura GenerateCodeCoverageBadges GenerateCodeCoverageSummary GenerateCodeCoverageReport --ThisIsAOtherVariable "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAnotherVariable "${{ vars.THIS_IS_ANOTHER_VARIABLE }}" --THIS_IS_A_VARIABLE "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAEnv "${{ env.THIS_IS_A_ENV || 'test' }}" --ThisIsASecret "${{ secrets.THIS_IS_A_SECRET }}" --GitHubToken "${{ secrets.GITHUB_TOKEN }}"
       - name: 📦 Pack
         id: pack
         run: |
-          dotnet .build\bin\Debug\.build.dll --target DotnetCorePack Pack --skip Build --ThisIsAOtherVariable "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAnotherVariable "${{ vars.THIS_IS_ANOTHER_VARIABLE }}" --THIS_IS_A_VARIABLE "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAEnv "${{ env.THIS_IS_A_ENV || 'test' }}" --ThisIsASecret "${{ secrets.THIS_IS_A_SECRET }}" --GitHubToken "${{ secrets.GITHUB_TOKEN }}"
+          dotnet .build/bin/Debug/.build.dll --target DotnetCorePack Pack --skip Build --ThisIsAOtherVariable "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAnotherVariable "${{ vars.THIS_IS_ANOTHER_VARIABLE }}" --THIS_IS_A_VARIABLE "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAEnv "${{ env.THIS_IS_A_ENV || 'test' }}" --ThisIsASecret "${{ secrets.THIS_IS_A_SECRET }}" --GitHubToken "${{ secrets.GITHUB_TOKEN }}"
       - name: 🏺 Publish coverage data
         if: always()
         uses: actions/upload-artifact@v4
