@@ -72,17 +72,16 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
     /// <inheritdoc />
     public override IEnumerable<AbsolutePath> GeneratedFiles => new[] { ConfigurationFile };
 
+    /// <summary>
+    /// Determine if you always want to build the nuke project during the ci run
+    /// </summary>
+    public bool AlwaysBuildNukeProject { get; set; }
+
     /// <inheritdoc />
     public override IEnumerable<string> RelevantTargetNames => InvokedTargets;
 
     [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay
-    {
-        get
-        {
-            return ToString();
-        }
-    }
+    private string DebuggerDisplay => ToString();
 
     // public override IEnumerable<string> IrrelevantTargetNames => new string[0];
 
@@ -132,25 +131,21 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         {
             secrets =
             [
-                .. secrets
-,
+                .. secrets,
                 .. onePasswordServiceAccountSecrets
-                   .Select(z => z.Secret)
-                   .Distinct()
-                   .Select(z => new GitHubActionsSecret(z))
-,
+                  .Select(z => z.Secret)
+                  .Distinct()
+                  .Select(z => new GitHubActionsSecret(z)),
             ];
 
             variables =
             [
-                .. variables
-,
+                .. variables,
                 .. onePasswordServiceAccountSecrets
-                   .DistinctBy(z => z.Variable)
-                   .Where(z => !z.Path.StartsWith("op://") && !string.IsNullOrWhiteSpace(z.Variable))
-                   // ReSharper disable once NullableWarningSuppressionIsUsed
-                   .Select(s => new GitHubActionsVariable(s.Variable!))
-,
+                  .DistinctBy(z => z.Variable)
+                  .Where(z => !z.Path.StartsWith("op://") && !string.IsNullOrWhiteSpace(z.Variable))
+                  // ReSharper disable once NullableWarningSuppressionIsUsed
+                  .Select(s => new GitHubActionsVariable(s.Variable!)),
             ];
 
             steps.AddRange(
@@ -171,7 +166,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                                                  .Select(
                                                       z => new KeyValuePair<string, string>(
                                                           z.Name,
-                                                          ( string.IsNullOrWhiteSpace(z.Variable) )
+                                                           ( string.IsNullOrWhiteSpace(z.Variable) )
                                                               ? $"{z.Path}"
                                                               : $$$"""${{ vars.{{{z.Variable}}} }}/{{{z.Path.TrimStart('/')}}}"""
                                                       )
@@ -193,30 +188,25 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         {
             secrets =
             [
-                .. secrets
-,
+                .. secrets,
                 .. onePasswordConnectServerSecrets
-                   .Select(z => z.ConnectToken)
-                   .Distinct()
-                   .Select(z => new GitHubActionsSecret(z))
-,
+                  .Select(z => z.ConnectToken)
+                  .Distinct()
+                  .Select(z => new GitHubActionsSecret(z)),
             ];
 
             variables =
             [
-                .. variables
-,
+                .. variables,
                 .. onePasswordConnectServerSecrets
-                   .Select(z => z.ConnectHost)
-                   .Distinct()
-                   .Select(z => new GitHubActionsVariable(z))
-,
+                  .Select(z => z.ConnectHost)
+                  .Distinct()
+                  .Select(z => new GitHubActionsVariable(z)),
                 .. onePasswordConnectServerSecrets
-                   .DistinctBy(z => z.Variable)
-                   .Where(z => !z.Path.StartsWith("op://") && !string.IsNullOrWhiteSpace(z.Variable))
-                   // ReSharper disable once NullableWarningSuppressionIsUsed
-                   .Select(s => new GitHubActionsVariable(s.Variable!))
-,
+                  .DistinctBy(z => z.Variable)
+                  .Where(z => !z.Path.StartsWith("op://") && !string.IsNullOrWhiteSpace(z.Variable))
+                  // ReSharper disable once NullableWarningSuppressionIsUsed
+                  .Select(s => new GitHubActionsVariable(s.Variable!)),
             ];
 
             steps.AddRange(
@@ -237,7 +227,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                                                  .Select(
                                                       z => new KeyValuePair<string, string>(
                                                           z.Name,
-                                                          ( string.IsNullOrWhiteSpace(z.Variable) )
+                                                           ( string.IsNullOrWhiteSpace(z.Variable) )
                                                               ? $"{z.Path}"
                                                               : $$$"""${{ vars.{{{z.Variable}}} }}/{{{z.Path.TrimStart('/')}}}"""
                                                       )
@@ -375,7 +365,11 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             var arguments = new Arguments()
                            .Concatenate(initialArguments)
                            .Add("--target {value}", targets.Select(z => z.Name), ' ')
-                           .Add("--skip {value}", GetInvokedTargets(execute, targets).SelectMany(GetTargetDependencies).Except(targets).Select(z => z.Name), ' ')
+                           .Add(
+                                "--skip {value}",
+                                GetInvokedTargets(execute, targets).SelectMany(GetTargetDependencies).Except(targets).Select(z => z.Name),
+                                ' '
+                            )
                            .Add(
                                 "--{value}",
                                 localStepParameters
@@ -384,6 +378,13 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                                    .ToDictionary(z => z.Key, z => $$$"""${{ {{{z.Value}}} }}"""),
                                 "{key} {value}"
                             );
+
+            if (!AlwaysBuildNukeProject)
+            {
+                initialArguments = new Arguments()
+                                  .Add("dotnet")
+                                  .Add(NukeBuild.RootDirectory.GetRelativePathTo(Assembly.GetEntryAssembly()?.Location).ToUnixRelativePath());
+            }
 
             steps.Add(
                 new RunStep(execute.Name.Humanize(LetterCasing.Title))
