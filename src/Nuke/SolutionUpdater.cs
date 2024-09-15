@@ -1,4 +1,3 @@
-using System.Text;
 using GlobExpressions;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
@@ -9,8 +8,6 @@ namespace Rocket.Surgery.Nuke;
 
 internal static class SolutionUpdater
 {
-    private static SolutionFolder _configFolder;
-
     public static void UpdateSolution(
         Solution solution,
         string configFolderName,
@@ -37,6 +34,8 @@ internal static class SolutionUpdater
         Log.Logger.Information("Saving solution to contain newly found files");
         solution.Save();
     }
+
+    private static SolutionFolder _configFolder;
 
     private static readonly string[] _relativeFolderFilePatterns = { "**/Directory.*.props", "**/Directory.*.targets", "**/.editorconfig", };
 
@@ -70,14 +69,14 @@ internal static class SolutionUpdater
         }
 
         var projects = solution
-                      .AllProjects.Join(projectPaths, z => z.Path, z => z, ( (project, path) => project ))
+                      .AllProjects.Join(projectPaths, z => z.Path, z => z, (project, path) => project)
                       .Where(z => z.Configurations.Count > 0)
                       .SelectMany(
                            project => project.Configurations.Where(z => z.Key.Contains(".Build.", StringComparison.OrdinalIgnoreCase)),
-                           (project, pair) => ( Project: project, Key: pair.Key )
+                           (project, pair) => ( Project: project, pair.Key )
                        )
                       .ToArray();
-        foreach (var (project, key) in projects)
+        foreach (( var project, var key ) in projects)
         {
             Log.Logger.Information("Removing {Key} from {Project} configuration", key, project.Name);
             project.Configurations.Remove(key);
@@ -94,7 +93,7 @@ internal static class SolutionUpdater
                                 .SelectMany(z => z.Items, (folder, pair) => ( Folder: folder, ItemPath: pair.Key, FilePath: solution.Directory / pair.Value ))
                                 .Where(z => !z.FilePath.FileExists() && !implicitConfigItems.Contains(z.FilePath))
                                 .ToArray();
-        foreach (var (folder, itemPath, _) in itemValuesToRemove)
+        foreach (( var folder, var itemPath, _ ) in itemValuesToRemove)
         {
             done = true;
             Log.Logger.Information("Removing {ItemPath} from {Folder}", GetItemRelativePath(folder, itemPath), GetSolutionFolderPath(folder));
@@ -106,11 +105,12 @@ internal static class SolutionUpdater
                               .SelectMany(
                                    z => z.Items,
                                    (folder, pair) => ( Folder: folder, ItemPath: pair.Key,
-                                                       FilePath: GetItemPath(solution, GetItemRelativeFilePath(folder, pair.Key)), RealFilePath: solution.Directory / pair.Value )
+                                                       FilePath: GetItemPath(solution, GetItemRelativeFilePath(folder, pair.Key)),
+                                                       RealFilePath: solution.Directory / pair.Value )
                                )
                               .Where(z => !z.FilePath.FileExists() && !implicitConfigItems.Contains(z.RealFilePath))
                               .ToArray();
-        foreach (var (folder, itemPath, _, _) in itemKeysToRemove)
+        foreach (( var folder, var itemPath, _, _ ) in itemKeysToRemove)
         {
             done = true;
             Log.Logger.Information("Removing {ItemPath} from {Folder}", GetItemRelativePath(folder, itemPath), GetSolutionFolderPath(folder));
@@ -200,7 +200,7 @@ internal static class SolutionUpdater
     {
         return path
               .ToString()
-              .Split(['/', '\\'], StringSplitOptions.RemoveEmptyEntries)
+              .Split(['/', '\\',], StringSplitOptions.RemoveEmptyEntries)
               .Aggregate(
                    placedInto,
                    (parent, pathPart) =>
@@ -221,9 +221,21 @@ internal static class SolutionUpdater
         folder.Items.Add(key, path);
     }
 
-    private static AbsolutePath GetItemPath(Solution solution, RelativePath relativePath) => solution.Directory / relativePath;
-    private static RelativePath GetItemRelativeFilePath(SolutionFolder folder, string path) => GetSolutionFolderPath(folder, true) / path;
-    private static RelativePath GetItemRelativePath(SolutionFolder folder, string path) => GetSolutionFolderPath(folder) / path;
+    private static AbsolutePath GetItemPath(Solution solution, RelativePath relativePath)
+    {
+        return solution.Directory / relativePath;
+    }
+
+    private static RelativePath GetItemRelativeFilePath(SolutionFolder folder, string path)
+    {
+        return GetSolutionFolderPath(folder, true) / path;
+    }
+
+    private static RelativePath GetItemRelativePath(SolutionFolder folder, string path)
+    {
+        return GetSolutionFolderPath(folder) / path;
+    }
+
     private static RelativePath GetSolutionFolderPath(SolutionFolder folder, bool withoutConfig = false)
     {
         var parts = new List<string>();

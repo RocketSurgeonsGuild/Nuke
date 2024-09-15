@@ -36,7 +36,7 @@ public interface ICanUpdateSolution : IHaveSolution
                 );
 
     /// <summary>
-    /// The name of the folder that contains the solution configuration files in the solution
+    ///     The name of the folder that contains the solution configuration files in the solution
     /// </summary>
     public string SolutionConfigFolderName => "config";
 }
