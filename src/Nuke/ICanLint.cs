@@ -83,6 +83,8 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
 
     private static LintPaths? lintPaths;
 
+    private static Matcher? _lintMatcher;
+
     /// <summary>
     ///     The lint target
     /// </summary>
@@ -93,7 +95,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
                                    .Executes(
                                         () =>
                                         {
-                                            Log.Information("Linting {Count} files with trigger {Trigger}", LintPaths.Paths.Length, LintPaths.Trigger);
+                                            Log.Information("Linting files with trigger {Trigger}", LintPaths.Trigger);
                                             WriteFileTreeWithEmoji(LintPaths.Paths);
                                         }
                                     );
@@ -174,22 +176,27 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
     /// <summary>
     ///     The default matcher to exclude files from linting
     /// </summary>
-    public Matcher LintMatcher => new Matcher(StringComparison.OrdinalIgnoreCase)
-                                 .AddInclude("**/*")
-                                 .AddExclude("**/node_modules/**/*")
-                                 .AddExclude(".idea/**/*")
-                                 .AddExclude(".vscode/**/*")
-                                 .AddExclude(".nuke/**/*")
-                                 .AddExclude("**/bin/**/*")
-                                 .AddExclude("**/obj/**/*")
-                                 .AddExclude("**/*.verified.*")
-                                 .AddExclude("**/*.received.*");
+    public Matcher LintMatcher => _lintMatcher ??= ResolveLintMatcher();
 
     /// <summary>
     ///     The files to lint, if not given lints all files
     /// </summary>
     [Parameter("The files to lint, if not given lints all files", Separator = " ", Name = "lint-files")]
     private string[] PrivateLintFiles => TryGetValue(() => PrivateLintFiles) ?? Array.Empty<string>();
+
+    private Matcher ResolveLintMatcher()
+    {
+        return new Matcher(StringComparison.OrdinalIgnoreCase)
+              .AddInclude("**/*")
+              .AddExclude("**/node_modules/**/*")
+              .AddExclude(".idea/**/*")
+              .AddExclude(".vscode/**/*")
+              .AddExclude(".nuke/**/*")
+              .AddExclude("**/bin/**/*")
+              .AddExclude("**/obj/**/*")
+              .AddExclude("**/*.verified.*")
+              .AddExclude("**/*.received.*");
+    }
 
     private LintPaths ResolveLintPathsImpl()
     {
