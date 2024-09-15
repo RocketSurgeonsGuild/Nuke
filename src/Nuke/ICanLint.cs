@@ -32,6 +32,11 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
         }
     }
 
+    /// <summary>
+    ///     The default matcher to exclude files from linting
+    /// </summary>
+    public static Matcher DefaultLintMatcher { get; } = ResolveLintMatcher();
+
     private static void WriteFileTreeWithEmoji(IEnumerable<AbsolutePath> stagedFiles)
     {
         var currentFolder = new Stack<string>();
@@ -84,6 +89,21 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
     private static LintPaths? lintPaths;
 
     private static Matcher? _lintMatcher;
+
+    private static Matcher ResolveLintMatcher()
+    {
+        return new Matcher(StringComparison.OrdinalIgnoreCase)
+              .AddInclude("**/*")
+              .AddExclude("**/node_modules/**/*")
+              .AddExclude(".idea/**/*")
+              .AddExclude(".vscode/**/*")
+              .AddExclude(".nuke/**/*")
+              .AddExclude("**/bin/**/*")
+              .AddExclude("**/obj/**/*")
+              .AddExclude("**/*.g.*")
+              .AddExclude("**/*.verified.*")
+              .AddExclude("**/*.received.*");
+    }
 
     /// <summary>
     ///     The lint target
@@ -176,27 +196,13 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
     /// <summary>
     ///     The default matcher to exclude files from linting
     /// </summary>
-    public Matcher LintMatcher => _lintMatcher ??= ResolveLintMatcher();
+    public Matcher LintMatcher => DefaultLintMatcher;
 
     /// <summary>
     ///     The files to lint, if not given lints all files
     /// </summary>
     [Parameter("The files to lint, if not given lints all files", Separator = " ", Name = "lint-files")]
-    private string[] PrivateLintFiles => TryGetValue(() => PrivateLintFiles) ?? Array.Empty<string>();
-
-    private Matcher ResolveLintMatcher()
-    {
-        return new Matcher(StringComparison.OrdinalIgnoreCase)
-              .AddInclude("**/*")
-              .AddExclude("**/node_modules/**/*")
-              .AddExclude(".idea/**/*")
-              .AddExclude(".vscode/**/*")
-              .AddExclude(".nuke/**/*")
-              .AddExclude("**/bin/**/*")
-              .AddExclude("**/obj/**/*")
-              .AddExclude("**/*.verified.*")
-              .AddExclude("**/*.received.*");
-    }
+    private string[] PrivateLintFiles => TryGetValue(() => PrivateLintFiles) ?? [];
 
     private LintPaths ResolveLintPathsImpl()
     {
