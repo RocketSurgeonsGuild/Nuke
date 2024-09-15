@@ -1,22 +1,28 @@
+using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.Git;
 
 namespace Rocket.Surgery.Nuke;
 
-class HuskyEngine : IGitHooksEngine
+internal class HuskyEngine : IGitHooksEngine
 {
     public bool AreHooksInstalled(IReadOnlyCollection<string> hooks)
     {
-        if (NukeBuild.IsServerBuild) return true;
+        if (NukeBuild.IsServerBuild)
+        {
+            return true;
+        }
+
         try
         {
-            var hooksOutput = GitTasks.Git($"config --get core.hookspath", logOutput: false, logInvocation: false);
+            var hooksOutput = GitTasks.Git("config --get core.hookspath", logOutput: false, logInvocation: false);
             var hooksPath = hooksOutput.StdToText().Trim();
-            return hooksPath.StartsWith(".husky");
+
+            return hooksPath.StartsWith(".husky") && AbsolutePath.Create(NukeBuild.RootDirectory / hooksPath / "_" / "husky.sh").FileExists();
         }
-        #pragma warning disable CA1031
+#pragma warning disable CA1031
         catch
-            #pragma warning restore CA1031
+#pragma warning restore CA1031
         {
             return false;
         }
@@ -24,9 +30,11 @@ class HuskyEngine : IGitHooksEngine
 
     public void InstallHooks(IReadOnlyCollection<string> hooks)
     {
-        if (!AreHooksInstalled(hooks))
+        if (AreHooksInstalled(hooks))
         {
-            DotNetTool.GetTool("husky")("install");
+            return;
         }
+
+        _ = DotNetTool.GetTool("husky")("install");
     }
 }
