@@ -27,7 +27,7 @@ public partial class ContinuousIntegrationConventionsAttribute : BuildExtensionA
         var toolInstalled = DotNetTool.IsInstalled("liquidtestreports.cli");
         // ReSharper disable once SuspiciousTypeConversion.Global
         if (toolInstalled
-         &&build.ExecutionPlan.Any(z => z.Name == nameof(IHaveTestTarget.Test))
+         && build.ExecutionPlan.Any(z => z.Name == nameof(IHaveTestTarget.Test))
          && build is IHaveTestArtifacts { TestResultsDirectory: { } testResultsDirectory, }
          && testResultsDirectory.GlobFiles("**/*.trx") is { Count: > 0, } results)
         {
@@ -45,16 +45,18 @@ public partial class ContinuousIntegrationConventionsAttribute : BuildExtensionA
             //            var reporter = new LiquidReporter(results.Select(z => z.ToString()), Log.Logger);
             //            var report = reporter.Run("Test results");
             //            summary.WriteAllText(summary.ReadAllText().TrimStart() + "\n" + report);
-            _ = DotNetTasks.DotNet(
+            var liquidResult = DotNetTasks.DotNet(
                 new Arguments()
                    .Add("liquid")
                    .Concatenate(pathArgs)
                    .Add("--output-file {0}", summary)
                    .RenderForExecution(),
                 testResultsDirectory,
-                logOutput: true /* temp */,
-                logInvocation: build.Verbosity == Verbosity.Verbose
+                logOutput: false,
+                logInvocation: build.Verbosity == Verbosity.Verbose,
+                exitHandler: process => process.AssertWaitForExit()
             );
+            _ = ( testResultsDirectory / "liquidtestreports.log" ).WriteAllText(liquidResult.StdToText());
         }
         else if (!toolInstalled)
         {

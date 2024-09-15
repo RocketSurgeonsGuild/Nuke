@@ -10,14 +10,14 @@ SCRIPT_DIR=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
 ###########################################################################
 
 ISCI=false
-if [ "$CI" == "true" ]; then
+if [ -n "$CI" ]; then
   ISCI=true
 fi
 EXEPATH="$SCRIPT_DIR/.build/bin/Debug/.build"
 BUILD_PROJECT_FILE="$SCRIPT_DIR/.build/.build.csproj"
-TEMP_DIRECTORY="$SCRIPT_DIR//.nuke/temp"
+TEMP_DIRECTORY="$SCRIPT_DIR/.nuke/temp"
 
-DOTNET_GLOBAL_FILE="$SCRIPT_DIR//global.json"
+DOTNET_GLOBAL_FILE="$SCRIPT_DIR/global.json"
 DOTNET_INSTALL_URL="https://dot.net/v1/dotnet-install.sh"
 DOTNET_CHANNEL="STS"
 
