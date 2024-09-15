@@ -8,6 +8,11 @@ namespace Rocket.Surgery.Nuke;
 public interface IComprehendTests : IComprehend
 {
     /// <summary>
+    /// The build configuration to use for testing
+    /// </summary>
+    string TestBuildConfiguration => "Debug";
+
+    /// <summary>
     ///     The directory where tests will be placed
     /// </summary>
     AbsolutePath TestsDirectory => FilePathExtensions.PickDirectory(NukeBuild.RootDirectory / "test", NukeBuild.RootDirectory / "tests");
