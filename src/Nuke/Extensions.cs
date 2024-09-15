@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Reflection;
 using Microsoft.Extensions.FileSystemGlobbing;
@@ -113,15 +112,20 @@ public static class Extensions
     /// <param name="paths"></param>
     /// <param name="rootDirectory"></param>
     /// <returns></returns>
-    public static IEnumerable<RelativePath> GetRelativePaths(this IEnumerable<AbsolutePath> paths, AbsolutePath rootDirectory) =>
-        paths.Select(z => rootDirectory.GetRelativePathTo(z));
+    public static IEnumerable<RelativePath> GetRelativePaths(this IEnumerable<AbsolutePath> paths, AbsolutePath rootDirectory)
+    {
+        return paths.Select(z => rootDirectory.GetRelativePathTo(z));
+    }
 
     /// <summary>
     ///     Gets the relative paths from the root directory.
     /// </summary>
     /// <param name="paths"></param>
     /// <returns></returns>
-    public static IEnumerable<RelativePath> GetRelativePaths(this IEnumerable<AbsolutePath> paths) => GetRelativePaths(paths, NukeBuild.RootDirectory);
+    public static IEnumerable<RelativePath> GetRelativePaths(this IEnumerable<AbsolutePath> paths)
+    {
+        return GetRelativePaths(paths, NukeBuild.RootDirectory);
+    }
 
     /// <summary>
     ///     Gets the relative paths from the root directory.
@@ -129,15 +133,20 @@ public static class Extensions
     /// <param name="paths"></param>
     /// <param name="rootDirectory"></param>
     /// <returns></returns>
-    public static IEnumerable<string> GetRelativePathStrings(this IEnumerable<AbsolutePath> paths, AbsolutePath rootDirectory) =>
-        paths.Select(z => rootDirectory.GetRelativePathTo(z).ToString());
+    public static IEnumerable<string> GetRelativePathStrings(this IEnumerable<AbsolutePath> paths, AbsolutePath rootDirectory)
+    {
+        return paths.Select(z => rootDirectory.GetRelativePathTo(z).ToString());
+    }
 
     /// <summary>
     ///     Gets the relative paths from the root directory.
     /// </summary>
     /// <param name="paths"></param>
     /// <returns></returns>
-    public static IEnumerable<string> GetRelativePathStrings(this IEnumerable<AbsolutePath> paths) => GetRelativePathStrings(paths, NukeBuild.RootDirectory);
+    public static IEnumerable<string> GetRelativePathStrings(this IEnumerable<AbsolutePath> paths)
+    {
+        return GetRelativePathStrings(paths, NukeBuild.RootDirectory);
+    }
 
     /// <summary>
     ///     Gets the relative paths that fit the matcher
@@ -162,7 +171,7 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Gets the relative paths that fit the matcher
+    ///     Gets the relative paths that fit the matcher
     /// </summary>
     /// <param name="patcher"></param>
     /// <param name="path"></param>
@@ -173,7 +182,7 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Gets the relative paths that fit the matcher
+    ///     Gets the relative paths that fit the matcher
     /// </summary>
     /// <param name="patcher"></param>
     /// <param name="path"></param>
@@ -184,7 +193,7 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Gets the relative paths that fit the matcher
+    ///     Gets the relative paths that fit the matcher
     /// </summary>
     /// <param name="patcher"></param>
     /// <param name="path"></param>
@@ -195,7 +204,7 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Gets the relative paths that fit the matcher
+    ///     Gets the relative paths that fit the matcher
     /// </summary>
     /// <param name="patcher"></param>
     /// <param name="path"></param>
