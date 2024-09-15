@@ -27,10 +27,16 @@ public interface ICanUpdateSolution : IHaveSolution
                                         .ToArray();
                         SolutionUpdater.UpdateSolution(
                             Solution,
+                            SolutionConfigFolderName,
                             attributes.SelectMany(z => z.AdditionalRelativeFolderFilePatterns),
                             attributes.SelectMany(z => z.AdditionalConfigFolderFilePatterns),
                             attributes.SelectMany(z => z.AdditionalIgnoreFolderFilePatterns)
                         );
                     }
                 );
+
+    /// <summary>
+    /// The name of the folder that contains the solution configuration files in the solution
+    /// </summary>
+    public string SolutionConfigFolderName => "config";
 }

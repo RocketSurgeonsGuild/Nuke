@@ -1,3 +1,4 @@
+using System.Text;
 using GlobExpressions;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
@@ -8,14 +9,18 @@ namespace Rocket.Surgery.Nuke;
 
 internal static class SolutionUpdater
 {
+    private static SolutionFolder _configFolder;
+
     public static void UpdateSolution(
         Solution solution,
+        string configFolderName,
         IEnumerable<string> additionalRelativeFolderFilePatterns,
         IEnumerable<string> additionalConfigFolderFilePatterns,
         IEnumerable<string> additionalIgnoreFolderFilePatterns
     )
     {
-        if (solution.GetSolutionFolder("config") is not { } configFolder) configFolder = solution.AddSolutionFolder("config");
+        if (solution.GetSolutionFolder(configFolderName) is not { } configFolder) configFolder = solution.AddSolutionFolder(configFolderName);
+        _configFolder = configFolder;
 
         NormalizePaths(solution);
         AddConfigurationFiles(
@@ -27,6 +32,7 @@ internal static class SolutionUpdater
         );
         AddNukeBuilds(solution, configFolder);
         NormalizePaths(solution);
+        while (CleanupSolution(solution)) { }
 
         Log.Logger.Information("Saving solution to contain newly found files");
         solution.Save();
@@ -48,7 +54,8 @@ internal static class SolutionUpdater
         if (solution.Directory != NukeBuild.RootDirectory) return;
         var projectPaths = NukeBuild
                           .RootDirectory.GlobFiles("*build/*.csproj")
-                          .Where(z => solution.AllProjects.All(p => p.Path != z));
+                          .Where(z => solution.AllProjects.All(p => p.Path != z))
+                          .ToArray();
 
         foreach (var project in projectPaths)
         {
@@ -63,12 +70,7 @@ internal static class SolutionUpdater
         }
 
         var projects = solution
-                      .AllProjects
-                      .Where(
-                           z =>
-                               z.Name.Equals("build", StringComparison.OrdinalIgnoreCase)
-                            || z.Name[1..].Equals("build", StringComparison.OrdinalIgnoreCase)
-                       )
+                      .AllProjects.Join(projectPaths, z => z.Path, z => z, ( (project, path) => project ))
                       .Where(z => z.Configurations.Count > 0)
                       .SelectMany(
                            project => project.Configurations.Where(z => z.Key.Contains(".Build.", StringComparison.OrdinalIgnoreCase)),
@@ -80,27 +82,53 @@ internal static class SolutionUpdater
             Log.Logger.Information("Removing {Key} from {Project} configuration", key, project.Name);
             project.Configurations.Remove(key);
         }
+    }
 
-        var itemsToRemove = solution
-                      .AllSolutionFolders
-                      .SelectMany(z => z.Items, (folder, pair) => (Folder: folder, ItemPath: pair.Key, FilePath: pair.Value ))
-                      .Where(z => !AbsolutePath.Create(z.FilePath).FileExists())
-                      .ToArray();
-        foreach (var (folder, itemPath, _) in itemsToRemove)
+    private static bool CleanupSolution(Solution solution)
+    {
+        var implicitConfigItems = solution.Directory.GlobFiles(".config/*").ToHashSet();
+
+        var done = false;
+        var itemValuesToRemove = solution
+                                .AllSolutionFolders
+                                .SelectMany(z => z.Items, (folder, pair) => ( Folder: folder, ItemPath: pair.Key, FilePath: solution.Directory / pair.Value ))
+                                .Where(z => !z.FilePath.FileExists() && !implicitConfigItems.Contains(z.FilePath))
+                                .ToArray();
+        foreach (var (folder, itemPath, _) in itemValuesToRemove)
         {
-            Log.Logger.Information("Removing {ItemPath} from {Folder}", itemPath, folder.Name);
+            done = true;
+            Log.Logger.Information("Removing {ItemPath} from {Folder}", GetItemRelativePath(folder, itemPath), GetSolutionFolderPath(folder));
+            folder.Items.Remove(itemPath);
+        }
+
+        var itemKeysToRemove = solution
+                              .AllSolutionFolders
+                              .SelectMany(
+                                   z => z.Items,
+                                   (folder, pair) => ( Folder: folder, ItemPath: pair.Key,
+                                                       FilePath: GetItemPath(solution, GetItemRelativeFilePath(folder, pair.Key)), RealFilePath: solution.Directory / pair.Value )
+                               )
+                              .Where(z => !z.FilePath.FileExists() && !implicitConfigItems.Contains(z.RealFilePath))
+                              .ToArray();
+        foreach (var (folder, itemPath, _, _) in itemKeysToRemove)
+        {
+            done = true;
+            Log.Logger.Information("Removing {ItemPath} from {Folder}", GetItemRelativePath(folder, itemPath), GetSolutionFolderPath(folder));
             folder.Items.Remove(itemPath);
         }
 
         var emptyFoldersToRemove = solution
-                           .AllSolutionFolders
-                           .Where(z => z.Items.Count == 0 && z.Projects.Count == 0)
-                           .ToArray();
+                                  .AllSolutionFolders
+                                  .Where(z => z.Items.Count == 0 && z.Projects.Count == 0 && z.SolutionFolders.Count == 0)
+                                  .ToArray();
         foreach (var folder in emptyFoldersToRemove)
         {
-            Log.Logger.Information("Removing {Folder}", folder.Name);
+            done = true;
+            Log.Logger.Information("Removing {Folder}", GetSolutionFolderPath(folder));
             solution.RemoveSolutionFolder(folder);
         }
+
+        return done;
     }
 
     private static void AddConfigurationFiles(
@@ -116,7 +144,7 @@ internal static class SolutionUpdater
         solution
            .Directory
            .GlobFiles(".config/*")
-           .ForEach(path => AddSolutionItemToFolder(configFolder, NukeBuild.RootDirectory.GetUnixRelativePathTo(path)));
+           .ForEach(path => AddSolutionItemToFolder(configFolder, NukeBuild.RootDirectory.GetRelativePathTo(path)));
 
         solution
            .Directory
@@ -135,18 +163,21 @@ internal static class SolutionUpdater
     {
         foreach (var folder in solution.AllSolutionFolders)
         {
-            if (folder.Items.Values.All(z => ( (RelativePath)z ).ToUnixRelativePath() == z)) return;
-            if (folder.Items.Keys.All(z => ( (RelativePath)z ).ToUnixRelativePath() == z)) return;
-            foreach (var item in folder
-                                .Items.Where(
-                                     z => ( (RelativePath)z.Key ).ToUnixRelativePath() != z.Key
-                                      || ( (RelativePath)z.Value ).ToUnixRelativePath() != z.Value
-                                 )
-                                .ToArray())
+            foreach (var item in folder.Items.ToArray())
             {
                 folder.Items.Remove(item.Key);
-                folder.Items.Add(( (RelativePath)item.Key ).ToUnixRelativePath(), ( (RelativePath)item.Value ).ToUnixRelativePath());
+                folder.Items.Add(toSolutionPath(item.Key), toSolutionPath(item.Value));
             }
+        }
+
+        static string toSolutionPath(string path)
+        {
+            return path.Replace('/', '\\');
+        }
+
+        static bool isUsingSolutionPath(KeyValuePair<string, string> item)
+        {
+            return item.Value.Contains('\\');
         }
     }
 
@@ -155,34 +186,54 @@ internal static class SolutionUpdater
         var folder = path.Parent == NukeBuild.RootDirectory
             ? configFolder
             // ReSharper disable once NullableWarningSuppressionIsUsed
-            : GetNestedFolder(solution, null, NukeBuild.RootDirectory.GetRelativePathTo(path.Parent).ToUnixRelativePath())!;
-        AddSolutionItemToFolder(folder, NukeBuild.RootDirectory.GetUnixRelativePathTo(path));
+            : GetNestedFolder(solution, null, NukeBuild.RootDirectory.GetRelativePathTo(path.Parent))!;
+        AddSolutionItemToFolder(folder, NukeBuild.RootDirectory.GetRelativePathTo(path));
     }
 
     private static void AddSolutionItemToRelativeConfigFolder(Solution solution, SolutionFolder configFolder, AbsolutePath path)
     {
-        var folder = GetNestedFolder(solution, configFolder, NukeBuild.RootDirectory.GetRelativePathTo(path.Parent).ToUnixRelativePath()) ?? configFolder;
-        AddSolutionItemToFolder(folder, NukeBuild.RootDirectory.GetUnixRelativePathTo(path));
+        var folder = GetNestedFolder(solution, configFolder, NukeBuild.RootDirectory.GetRelativePathTo(path.Parent)) ?? configFolder;
+        AddSolutionItemToFolder(folder, NukeBuild.RootDirectory.GetRelativePathTo(path));
     }
 
-    private static SolutionFolder? GetNestedFolder(Solution solution, SolutionFolder? placedInto, UnixRelativePath path)
+    private static SolutionFolder? GetNestedFolder(Solution solution, SolutionFolder? placedInto, RelativePath path)
     {
         return path
               .ToString()
-              .Split('/')
-              .Where(z => !string.IsNullOrWhiteSpace(z))
+              .Split(['/', '\\'], StringSplitOptions.RemoveEmptyEntries)
               .Aggregate(
                    placedInto,
-                   (parent, pathPart) => parent?.GetSolutionFolder(pathPart) ?? solution.GetSolutionFolder(pathPart) ?? solution.AddSolutionFolder(pathPart, solutionFolder: parent)
+                   (parent, pathPart) =>
+                   {
+                       var folder = parent is null ? solution.GetSolutionFolder(pathPart) : parent.GetSolutionFolder(pathPart);
+                       if (folder is null) return solution.AddSolutionFolder(pathPart, solutionFolder: parent);
+                       return folder;
+                   }
                );
     }
 
-    private static void AddSolutionItemToFolder(SolutionFolder folder, UnixRelativePath path)
+    private static void AddSolutionItemToFolder(SolutionFolder folder, RelativePath path)
     {
-        if (folder.Items.Values.Select(z => ( (RelativePath)z ).ToUnixRelativePath().ToString()).Any(z => z == path)) return;
-        if (folder.Items.Keys.Select(z => ( (RelativePath)z ).ToUnixRelativePath().ToString()).Any(z => z == path)) return;
-        if (folder.Items.ContainsKey(path)) return;
-        Log.Logger.Information("Adding {Path} to {Folder}", path, folder.Name);
-        folder.Items.Add(path, path);
+        path = path.ToWinRelativePath();
+        var key = Path.GetFileName(path);
+        if (folder.Items.ContainsKey(key)) return;
+        Log.Logger.Information("Adding {Path} to {Folder}", path, GetSolutionFolderPath(folder));
+        folder.Items.Add(key, path);
+    }
+
+    private static AbsolutePath GetItemPath(Solution solution, RelativePath relativePath) => solution.Directory / relativePath;
+    private static RelativePath GetItemRelativeFilePath(SolutionFolder folder, string path) => GetSolutionFolderPath(folder, true) / path;
+    private static RelativePath GetItemRelativePath(SolutionFolder folder, string path) => GetSolutionFolderPath(folder) / path;
+    private static RelativePath GetSolutionFolderPath(SolutionFolder folder, bool withoutConfig = false)
+    {
+        var parts = new List<string>();
+        while (folder is { })
+        {
+            if (withoutConfig && ( folder == _configFolder || ( folder.Name == _configFolder.Name && folder.SolutionFolder is null ) )) break;
+            parts.Insert(0, folder.Name);
+            folder = folder.SolutionFolder;
+        }
+
+        return ( (RelativePath)string.Join("/", parts) ).ToWinRelativePath();
     }
 }
