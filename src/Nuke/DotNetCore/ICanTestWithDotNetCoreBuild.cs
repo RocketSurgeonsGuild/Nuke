@@ -1,4 +1,3 @@
-using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
@@ -8,6 +7,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore;
 /// <summary>
 ///     Defines a `dotnet test` test run with code coverage via coverlet
 /// </summary>
+[PublicAPI]
 public interface ICanTestWithDotNetCoreBuild : IHaveCollectCoverage,
     IHaveBuildTarget,
     ITriggerCodeCoverageReports,
@@ -29,14 +29,13 @@ public interface ICanTestWithDotNetCoreBuild : IHaveCollectCoverage,
                                              .After(Build)
                                              .TryDependentFor<IHaveTestTarget>(a => a.Test)
                                              .TryAfter<IHaveRestoreTarget>(a => a.Restore)
-                                             .OnlyWhenDynamic(() => TestsDirectory.GlobFiles("**/*.csproj").Count > 0)
                                              .WhenSkipped(DependencyBehavior.Execute)
                                              .Executes(
                                                   () => MSBuildTasks.MSBuild(
                                                       settings =>
                                                           settings
                                                              .SetSolutionFile(Solution)
-                                                             .SetConfiguration(Configuration)
+                                                             .SetConfiguration(TestBuildConfiguration)
                                                              .SetDefaultLoggers(LogsDirectory / "test.build.log")
                                                              .SetGitVersionEnvironment(GitVersion)
                                                              .SetAssemblyVersion(GitVersion.AssemblySemVer)
@@ -54,7 +53,7 @@ public interface ICanTestWithDotNetCoreBuild : IHaveCollectCoverage,
                                                           .SetGitVersionEnvironment(GitVersion)
                                                           .EnableNoRestore()
                                                           .SetLoggers("trx")
-                                                          .SetConfiguration(Configuration)
+                                                          .SetConfiguration(TestBuildConfiguration)
                                                           .EnableNoBuild()
                                                           .SetResultsDirectory(TestResultsDirectory)
                                                           .When(
