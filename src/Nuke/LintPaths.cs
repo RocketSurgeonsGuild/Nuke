@@ -71,17 +71,17 @@ public class LintPaths
     public bool Active => Trigger != LintTrigger.None;
 
     /// <summary>
-    /// The filtered paths
+    ///     The filtered paths
     /// </summary>
     public IEnumerable<AbsolutePath> Paths => _paths.Value.Match(_matcher);
 
     /// <summary>
-    /// All the paths
+    ///     All the paths
     /// </summary>
     public LintPaths AllPaths => _allPaths.Value;
 
     /// <summary>
-    /// The relative paths
+    ///     The relative paths
     /// </summary>
     public IEnumerable<RelativePath> RelativePaths => _paths.Value.Match(_matcher).GetRelativePaths();
 
@@ -100,26 +100,38 @@ public class LintPaths
     /// </summary>
     /// <param name="matcher"></param>
     /// <returns></returns>
-    public ImmutableList<RelativePath> Glob(Matcher matcher) => _relativeCache.GetValue(matcher, m => [.. _paths.Value.Match(m).GetRelativePaths()]);
+    public ImmutableList<RelativePath> Glob(Matcher matcher)
+    {
+        return _relativeCache.GetValue(matcher, m => [.. _paths.Value.Match(m).GetRelativePaths(),]);
+    }
 
     /// <summary>
     ///     Glob against a given matcher to included / exclude files
     /// </summary>
     /// <param name="pattern"></param>
     /// <returns></returns>
-    public ImmutableList<RelativePath> Glob(string pattern) => Glob(new Matcher(StringComparison.OrdinalIgnoreCase).AddInclude(pattern));
+    public ImmutableList<RelativePath> Glob(string pattern)
+    {
+        return Glob(new Matcher(StringComparison.OrdinalIgnoreCase).AddInclude(pattern));
+    }
 
     /// <summary>
     ///     Glob against a given matcher to included / exclude files
     /// </summary>
     /// <param name="matcher"></param>
     /// <returns></returns>
-    public ImmutableList<AbsolutePath> GlobAbsolute(Matcher matcher) => _pathsCache.GetValue(matcher, m => [.. _paths.Value.Match(m)]);
+    public ImmutableList<AbsolutePath> GlobAbsolute(Matcher matcher)
+    {
+        return _pathsCache.GetValue(matcher, m => [.. _paths.Value.Match(m),]);
+    }
 
     /// <summary>
     ///     Glob against a given matcher to included / exclude files
     /// </summary>
     /// <param name="pattern"></param>
     /// <returns></returns>
-    public ImmutableList<AbsolutePath> GlobAbsolute(string pattern) => GlobAbsolute(new Matcher(StringComparison.OrdinalIgnoreCase).AddInclude(pattern));
+    public ImmutableList<AbsolutePath> GlobAbsolute(string pattern)
+    {
+        return GlobAbsolute(new Matcher(StringComparison.OrdinalIgnoreCase).AddInclude(pattern));
+    }
 }
