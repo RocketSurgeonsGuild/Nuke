@@ -29,7 +29,7 @@ public interface ICanPrettier : ICanLint
             .Executes(
                  () =>
                  {
-                     var args = makeArgsForStagedFiles(LintPaths.Glob(PrettierMatcher, !LintPaths.Active));
+                     var args = makeArgsForStagedFiles(LintPaths.Active ? LintPaths.Glob(PrettierMatcher) : LintPaths.AllPaths.Glob(PrettierMatcher));
 
                      if (( NukeBuild.RootDirectory / "package.json" ).FileExists() && !NukeBuild.RootDirectory.ContainsDirectory("node_modules"))
                      {
@@ -55,10 +55,10 @@ public interface ICanPrettier : ICanLint
                            .AssertWaitForExit()
                            .AssertZeroExitCode();
 
-                     static Arguments makeArgsForStagedFiles(ImmutableArray<RelativePath> values)
+                     static Arguments makeArgsForStagedFiles(ImmutableList<RelativePath> values)
                      {
                          var args = new Arguments().Concatenate(_prettierBaseArgs);
-                         return values.Length == 0
+                         return values.Count == 0
                              ? args
                               .Add("--write")
                               .Add(".")

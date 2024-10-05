@@ -73,26 +73,26 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
 
                                                   if (DotNetFormatIncludedDiagnostics is { Length: > 0, })
                                                   {
-                                                      _ = arguments.Add("--diagnostics {value}", DotNetFormatIncludedDiagnostics.Value, ' ');
+                                                      arguments.Add("--diagnostics {value}", DotNetFormatIncludedDiagnostics.Value, ' ');
                                                   }
 
                                                   if (DotNetFormatExcludedDiagnostics is { Length: > 0, })
                                                   {
-                                                      _ = arguments.Add("--exclude-diagnostics {value}", DotNetFormatExcludedDiagnostics, ' ');
+                                                      arguments.Add("--exclude-diagnostics {value}", DotNetFormatExcludedDiagnostics, ' ');
                                                   }
 
-                                                  _ = arguments.Add("--binarylog {value}", LogsDirectory / "dotnet-format.binlog");
+                                                  arguments.Add("--binarylog {value}", LogsDirectory / "dotnet-format.binlog");
 
-                                                  if (LintPaths.Glob(DotnetFormatMatcher) is { Length: > 0, } values)
+                                                  if (LintPaths.Glob(DotnetFormatMatcher) is { Count: > 0, } values)
                                                   {
-                                                      _ = arguments.Add("--include {value}", string.Join(",", values.Select(z => z.ToString())));
+                                                      arguments.Add("--include {value}", string.Join(",", values.Select(z => z.ToString())));
                                                   }
-                                                  else if (LintPaths.Glob(DotnetFormatMatcher, true) is { Length: > 0, } allFiles)
+                                                  else if (LintPaths.AllPaths.Glob(DotnetFormatMatcher) is { Count: > 0, } allFiles)
                                                   {
-                                                      _ = arguments.Add("--include {value}", string.Join(",", allFiles.Select(z => z.ToString())));
+                                                      arguments.Add("--include {value}", string.Join(",", allFiles.Select(z => z.ToString())));
                                                   }
 
-                                                  _ = DotNetTasks.DotNet(
+                                                  DotNetTasks.DotNet(
                                                       arguments.RenderForExecution(),
                                                       RootDirectory,
                                                       logOutput: true,
@@ -129,16 +129,16 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                               "--disable-settings-layers={value}",
                                                                               "GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal"
                                                                           );
-                                                          if (LintPaths.Glob(JetBrainsCleanupCodeMatcher) is { Length: > 0, } files)
+                                                          if (LintPaths.Glob(JetBrainsCleanupCodeMatcher) is { Count: > 0, } files)
                                                           {
                                                               arguments.Add("--include={value}", files, ';');
                                                           }
-                                                          else if (LintPaths.Glob(JetBrainsCleanupCodeMatcher, true) is { Length: > 0, } allFiles)
+                                                          else if (LintPaths.AllPaths.Glob(JetBrainsCleanupCodeMatcher) is { Count: > 0, } allFiles)
                                                           {
                                                               arguments.Add("--include={value}", allFiles, ';');
                                                           }
 
-                                                          _ = DotNetTool.GetProperTool("jb")(
+                                                          DotNetTool.GetProperTool("jb")(
                                                               arguments,
                                                               RootDirectory,
                                                               logOutput: true,
