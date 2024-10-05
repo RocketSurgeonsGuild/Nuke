@@ -47,6 +47,7 @@ public interface ICanPrettier : ICanLint
                            .StartProcess(
                                 ToolPathResolver.GetPathExecutable("npm"),
                                 args.RenderForExecution(),
+                                RootDirectory,
                                 logOutput: true,
                                 // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
                                 logger: static (t, s) => Log.Write(t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information, s),

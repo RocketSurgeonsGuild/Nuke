@@ -1,4 +1,5 @@
 using Nuke.Common.IO;
+using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
@@ -25,7 +26,7 @@ public interface ICanRestoreWithDotNetCore : IHaveCleanTarget,
                                            .After(Clean)
                                            .TryDependentFor<IHaveRestoreTarget>(a => a.Restore)
                                            .OnlyWhenStatic(() => ( NukeBuild.RootDirectory / ".config" / "dotnet-tools.json" ).FileExists())
-                                           .Executes(() => DotNet($"tool restore"));
+                                           .Executes(() => DotNet($"tool restore", RootDirectory));
 
     /// <summary>
     ///     dotnet restore
@@ -40,6 +41,7 @@ public interface ICanRestoreWithDotNetCore : IHaveCleanTarget,
                                            .Executes(
                                                 () => DotNetRestore(
                                                     s => s
+                                                        .SetProcessWorkingDirectory(RootDirectory)
                                                         .SetProjectFile(Solution)
                                                         .SetDefaultLoggers(LogsDirectory / "restore.log")
                                                         .SetGitVersionEnvironment(GitVersion)
