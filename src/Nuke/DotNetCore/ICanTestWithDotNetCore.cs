@@ -32,6 +32,7 @@ public interface ICanTestWithDotNetCore : IHaveCollectCoverage,
                                         .Executes(
                                              () => DotNetTasks.DotNetBuild(
                                                  s => s
+                                                     .SetProcessWorkingDirectory(RootDirectory)
                                                      .SetProjectFile(Solution)
                                                      .SetDefaultLoggers(LogsDirectory / "test.build.log")
                                                      .SetGitVersionEnvironment(GitVersion)
@@ -45,6 +46,7 @@ public interface ICanTestWithDotNetCore : IHaveCollectCoverage,
                                         .Executes(
                                              () => DotNetTasks.DotNetTest(
                                                  s => s
+                                                     .SetProcessWorkingDirectory(RootDirectory)
                                                      .SetProjectFile(Solution)
                                                      .SetDefaultLoggers(LogsDirectory / "test.log")
                                                      .SetGitVersionEnvironment(GitVersion)

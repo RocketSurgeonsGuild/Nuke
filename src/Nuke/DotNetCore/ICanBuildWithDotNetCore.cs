@@ -1,3 +1,4 @@
+using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 
 namespace Rocket.Surgery.Nuke.DotNetCore;
@@ -26,6 +27,7 @@ public interface ICanBuildWithDotNetCore : IHaveRestoreTarget,
                                          .Executes(
                                               () => DotNetTasks.DotNetBuild(
                                                   s => s
+                                                      .SetProcessWorkingDirectory(RootDirectory)
                                                       .SetProjectFile(Solution)
                                                       .SetDefaultLoggers(LogsDirectory / "build.log")
                                                       .SetGitVersionEnvironment(GitVersion)

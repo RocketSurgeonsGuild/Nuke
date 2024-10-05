@@ -47,7 +47,7 @@ public class LintPaths
                     LintTrigger.None,
                     Message,
                     GitTasks
-                       .Git("ls-files", logOutput: false, logInvocation: false)
+                       .Git("ls-files", NukeBuild.RootDirectory, logOutput: false, logInvocation: false)
                        .Select(z => z.Text.Trim())
                        .Select(z => Path.IsPathRooted(z) ? z : (string)( NukeBuild.RootDirectory / z ))
                 );

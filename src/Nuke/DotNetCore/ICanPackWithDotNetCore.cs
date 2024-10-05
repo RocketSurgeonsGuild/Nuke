@@ -1,3 +1,4 @@
+using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 
 namespace Rocket.Surgery.Nuke.DotNetCore;
@@ -31,6 +32,7 @@ public interface ICanPackWithDotNetCore : IHaveBuildTarget,
                                         .Executes(
                                              () => DotNetTasks.DotNetPack(
                                                  s => s
+                                                     .SetProcessWorkingDirectory(RootDirectory)
                                                      .SetProject(Solution)
                                                      .SetDefaultLoggers(LogsDirectory / "pack.log")
                                                      .SetGitVersionEnvironment(GitVersion)

@@ -42,7 +42,8 @@ public interface ICanRegenerateBuildConfiguration : ICanLint
 
                          DotNetTasks.DotNet(
                              args.RenderForExecution(),
-                             environmentVariables: EnvironmentInfo.Variables.AddIfMissing("NUKE_INTERNAL_INTERCEPTOR", "1"),
+                             RootDirectory,
+                             EnvironmentInfo.Variables.AddIfMissing("NUKE_INTERNAL_INTERCEPTOR", "1"),
                              logOutput: Verbosity == Verbosity.Verbose,
                              logInvocation: Verbosity == Verbosity.Verbose
                          );

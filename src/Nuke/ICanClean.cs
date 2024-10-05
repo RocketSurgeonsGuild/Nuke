@@ -23,36 +23,36 @@ public interface ICanClean : IHaveCleanTarget, IHaveBuildTarget
                                                            {
                                                                if (this is IHaveArtifacts artifacts)
                                                                {
-                                                                   _ = artifacts.ArtifactsDirectory.CreateOrCleanDirectory();
+                                                                   artifacts.ArtifactsDirectory.CreateOrCleanDirectory();
                                                                    if (artifacts is IHaveOutputLogs logs)
                                                                    {
-                                                                       _ = logs.LogsDirectory.CreateDirectory();
+                                                                       logs.LogsDirectory.CreateDirectory();
                                                                    }
 
                                                                    if (artifacts is IHaveTestArtifacts testArtifacts)
                                                                    {
-                                                                       _ = testArtifacts.TestResultsDirectory.CreateDirectory();
+                                                                       testArtifacts.TestResultsDirectory.CreateDirectory();
                                                                    }
 
                                                                    if (artifacts is IHaveNuGetPackages nuGetArtifacts)
                                                                    {
-                                                                       _ = nuGetArtifacts.NuGetPackageDirectory.CreateDirectory();
+                                                                       nuGetArtifacts.NuGetPackageDirectory.CreateDirectory();
                                                                    }
 
                                                                    if (artifacts is IHavePublishArtifacts publishArtifacts)
                                                                    {
-                                                                       _ = publishArtifacts.PublishDirectory.CreateDirectory();
+                                                                       publishArtifacts.PublishDirectory.CreateDirectory();
                                                                    }
 
                                                                    if (artifacts is IHaveOutputArtifacts outputArtifacts)
                                                                    {
-                                                                       _ = outputArtifacts.OutputArtifactsDirectory.CreateDirectory();
+                                                                       outputArtifacts.OutputArtifactsDirectory.CreateDirectory();
                                                                    }
                                                                }
 
                                                                if (this is IHaveCodeCoverage codeCoverage)
                                                                {
-                                                                   _ = codeCoverage.CoverageDirectory.CreateOrCleanDirectory();
+                                                                   codeCoverage.CoverageDirectory.CreateOrCleanDirectory();
                                                                }
 
                                                                // ReSharper disable SuspiciousTypeConversion.Global
