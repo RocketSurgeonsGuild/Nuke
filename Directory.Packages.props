@@ -34,7 +34,7 @@
         <PackageVersion Include="Microsoft.Extensions.FileSystemGlobbing" Version="8.0.0" />
         <PackageVersion Include="Docfx.App" Version="2.77.0" />
         <PackageVersion Include="Buildalyzer" Version="7.0.2" />
-        <PackageVersion Include="GitVersion.Tool" Version="6.0.2" />
+        <PackageVersion Include="GitVersion.Tool" Version="6.0.3" />
         <PackageVersion Include="Humanizer.Core" Version="2.14.1" />
         <PackageVersion Include="Nuke.Common" Version="8.1.1" />
         <PackageVersion Include="ReportGenerator" Version="5.3.11" />
