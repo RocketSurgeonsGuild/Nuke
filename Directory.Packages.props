@@ -30,7 +30,7 @@
         <PackageVersion Include="JetBrains.ExternalAnnotations" Version="10.2.153" />
         <PackageVersion Include="LibGit2Sharp" Version="0.30.0" />
         <PackageVersion Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="3.3.4" />
-        <PackageVersion Include="Polyfill" Version="7.2.0" />
+        <PackageVersion Include="Polyfill" Version="7.3.0" />
         <PackageVersion Include="Microsoft.Extensions.FileSystemGlobbing" Version="8.0.0" />
         <PackageVersion Include="Docfx.App" Version="2.77.0" />
         <PackageVersion Include="Buildalyzer" Version="7.0.2" />
