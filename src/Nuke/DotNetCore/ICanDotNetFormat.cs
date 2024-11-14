@@ -74,35 +74,35 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
 
                                                   if (DotNetFormatIncludedDiagnostics is { Length: > 0, })
                                                   {
-                                                      arguments.Add("--diagnostics {value}", DotNetFormatIncludedDiagnostics.Value, ' ');
+                                                      _ = arguments.Add("--diagnostics {value}", DotNetFormatIncludedDiagnostics.Value, ' ');
                                                   }
 
                                                   if (DotNetFormatExcludedDiagnostics is { Length: > 0, })
                                                   {
-                                                      arguments.Add("--exclude-diagnostics {value}", DotNetFormatExcludedDiagnostics, ' ');
+                                                      _ = arguments.Add("--exclude-diagnostics {value}", DotNetFormatExcludedDiagnostics, ' ');
                                                   }
 
-                                                  arguments.Add("--binarylog {value}", LogsDirectory / "dotnet-format.binlog");
+                                                  _ = arguments.Add("--binarylog {value}", LogsDirectory / "dotnet-format.binlog");
 
                                                   if (LintPaths.Glob(DotnetFormatMatcher) is { Count: > 0, } values)
                                                   {
-                                                      arguments.Add("--include {value}", string.Join(",", values.Select(z => z.ToString())));
+                                                      _ = arguments.Add("--include {value}", string.Join(",", values.Select(z => z.ToString())));
                                                   }
                                                   else if (LintPaths.AllPaths.Glob(DotnetFormatMatcher) is { Count: > 0, } allFiles)
                                                   {
-                                                      arguments.Add("--include {value}", string.Join(",", allFiles.Select(z => z.ToString())));
+                                                      _ = arguments.Add("--include {value}", string.Join(",", allFiles.Select(z => z.ToString())));
                                                   }
 
-                                                  DotNetTasks.DotNet(
+                                                  _ = DotNetTasks.DotNet(
                                                       arguments.RenderForExecution(),
                                                       RootDirectory,
                                                       logOutput: true,
+                                                      logInvocation: Verbosity == Verbosity.Verbose,
                                                       // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
                                                       logger: static (t, s) => Log.Write(
                                                                   t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information,
                                                                   s
-                                                              ),
-                                                      logInvocation: Verbosity == Verbosity.Verbose
+                                                              )
                                                   );
                                               }
                                           );
@@ -119,6 +119,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                   // disable for local stagged runs, as it takes a long time.
                                                  .OnlyWhenStatic(() => ( IsLocalBuild && LintPaths.Trigger != LintTrigger.Staged ) || !IsLocalBuild)
                                                  .OnlyWhenDynamic(() => LintPaths.IsLocalLintOrMatches(JetBrainsCleanupCodeMatcher))
+                                                 .Net9MsBuildFix()
                                                  .Executes(
                                                       () =>
                                                       {
@@ -132,23 +133,23 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                           );
                                                           if (LintPaths.Glob(JetBrainsCleanupCodeMatcher) is { Count: > 0, } files)
                                                           {
-                                                              arguments.Add("--include={value}", files, ';');
+                                                              _ = arguments.Add("--include={value}", files, ';');
                                                           }
                                                           else if (LintPaths.AllPaths.Glob(JetBrainsCleanupCodeMatcher) is { Count: > 0, } allFiles)
                                                           {
-                                                              arguments.Add("--include={value}", allFiles, ';');
+                                                              _ = arguments.Add("--include={value}", allFiles, ';');
                                                           }
 
-                                                          DotNetTool.GetProperTool("jb")(
+                                                          _ = DotNetTool.GetProperTool("jb")(
                                                               arguments,
                                                               RootDirectory,
                                                               logOutput: true,
+                                                              logInvocation: Verbosity == Verbosity.Verbose,
                                                               // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
                                                               logger: static (t, s) => Log.Write(
                                                                           t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information,
                                                                           s
-                                                                      ),
-                                                              logInvocation: Verbosity == Verbosity.Verbose
+                                                                      )
                                                           );
                                                       }
                                                   );
