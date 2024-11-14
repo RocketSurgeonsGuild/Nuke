@@ -1,15 +1,11 @@
-using Microsoft.Build.Locator;
 using Nuke.Common;
 using Nuke.Common.CI;
 using Nuke.Common.Execution;
 using Nuke.Common.Git;
-using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
-using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Tools.MSBuild;
-using Nuke.Common.Utilities;
 using Rocket.Surgery.Nuke.DotNetCore;
 
 [PublicAPI]
@@ -22,8 +18,8 @@ using Rocket.Surgery.Nuke.DotNetCore;
 [ShutdownDotNetAfterServerBuild]
 [LocalBuildConventions]
 #pragma warning disable CA1050
-public partial class Pipeline : NukeBuild,
-    #pragma warning restore CA1050
+internal partial class Pipeline : NukeBuild,
+#pragma warning restore CA1050
     ICanRestoreWithDotNetCore,
     ICanBuildWithDotNetCore,
     ICanTestWithDotNetCore,
@@ -44,10 +40,7 @@ public partial class Pipeline : NukeBuild,
     ///     - Microsoft VisualStudio     https://nuke.build/visualstudio
     ///     - Microsoft VSCode           https://nuke.build/vscode
     /// </summary>
-    public static int Main()
-    {
-        return Execute<Pipeline>(x => x.Default);
-    }
+    public static int Main() => Execute<Pipeline>(x => x.Default);
 
     [Parameter]
     public string? GitHubToken { get; }
