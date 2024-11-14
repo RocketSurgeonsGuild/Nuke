@@ -59,6 +59,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                          .TriggeredBy(Lint)
                                          .Before(PostLint)
                                          .OnlyWhenDynamic(() => LintPaths.IsLocalLintOrMatches(DotnetFormatMatcher))
+                                         .Net9MsBuildFix()
                                          .Executes(
                                               () =>
                                               {

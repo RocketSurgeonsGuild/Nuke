@@ -39,17 +39,7 @@ public interface ICanRestoreWithDotNetCore : IHaveCleanTarget,
                                            .TryDependentFor<IHaveRestoreTarget>(a => a.Restore)
                                            .After(Clean)
                                            .DependsOn(DotnetToolRestore)
-                                           .Executes(
-                                                () =>
-                                                {
-                                                    if (IsLocalBuild)
-                                                    {
-                                                        EnvironmentInfo.SetVariable("MSBuildExtensionsPath", "");
-                                                        EnvironmentInfo.SetVariable("MSBUILD_EXE_PATH", "");
-                                                        EnvironmentInfo.SetVariable("MSBuildSDKsPath", "");
-                                                    }
-                                                }
-                                            )
+                                           .Net9MsBuildFix()
                                            .Executes(
                                                 () => DotNetRestore(
                                                     s => s

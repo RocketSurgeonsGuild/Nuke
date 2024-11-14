@@ -29,6 +29,7 @@ public interface ICanTestWithDotNetCore : IHaveCollectCoverage,
                                         .TryDependentFor<IHaveTestTarget>(a => a.Test)
                                         .TryAfter<IHaveRestoreTarget>(a => a.Restore)
                                         .WhenSkipped(DependencyBehavior.Execute)
+                                        .Net9MsBuildFix()
                                         .Executes(
                                              () => DotNetTasks.DotNetBuild(
                                                  s => s
@@ -43,6 +44,7 @@ public interface ICanTestWithDotNetCore : IHaveCollectCoverage,
                                         .CreateOrCleanDirectory(TestResultsDirectory)
                                         .CleanCoverageDirectory(CoverageDirectory)
                                         .EnsureRunSettingsExists(RunSettings)
+                                        .Net9MsBuildFix()
                                         .Executes(
                                              () => DotNetTasks.DotNetTest(
                                                  s => s

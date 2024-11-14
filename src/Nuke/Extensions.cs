@@ -100,10 +100,34 @@ public static class Extensions
 
         foreach (var mapping in mappings[typeof(T)])
         {
-            if (mapping.Verbosity == NukeBuild.Verbosity) return (T)mapping.MappedVerbosity;
+            if (mapping.Verbosity == verbosity) return (T)mapping.MappedVerbosity;
         }
 
         return @default;
+    }
+
+    /// <summary>
+    /// allow disabling the temporary fix for net9 msbuild issues
+    /// </summary>
+    public static bool DisableNet9MsBuildFix { get; set; }
+
+    /// <summary>
+    /// temporary fix for net9 msbuild issues
+    /// </summary>
+    /// <param name="target"></param>
+    /// <returns></returns>
+    public static ITargetDefinition Net9MsBuildFix(this ITargetDefinition target)
+    {
+        return target
+           .Executes(
+                () =>
+                {
+                    if (!NukeBuild.IsLocalBuild || DisableNet9MsBuildFix) return;
+                    EnvironmentInfo.SetVariable("MSBuildExtensionsPath", "");
+                    EnvironmentInfo.SetVariable("MSBUILD_EXE_PATH", "");
+                    EnvironmentInfo.SetVariable("MSBuildSDKsPath", "");
+                }
+            );
     }
 
     /// <summary>
