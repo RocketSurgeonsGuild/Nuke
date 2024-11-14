@@ -46,6 +46,7 @@ public interface ICanTestWithDotNetCoreBuild : IHaveCollectCoverage,
                                              .CreateOrCleanDirectory(TestResultsDirectory)
                                              .CleanCoverageDirectory(CoverageDirectory)
                                              .EnsureRunSettingsExists(RunSettings)
+                                             .Net9MsBuildFix()
                                              .Executes(
                                                   () => DotNetTasks.DotNetTest(
                                                       s => s

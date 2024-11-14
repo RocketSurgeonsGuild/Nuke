@@ -22,10 +22,7 @@ public static class Extensions
     /// <param name="value"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public static T As<T>(this T value) where T : notnull
-    {
-        return value;
-    }
+    public static T As<T>(this T value) where T : notnull => value;
 
     /// <summary>
     ///     Convert a given build into it's implementation interface
@@ -33,10 +30,7 @@ public static class Extensions
     /// <param name="value"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public static T CastAs<T>(this object value) where T : notnull
-    {
-        return (T)value;
-    }
+    public static T CastAs<T>(this object value) where T : notnull => (T)value;
 
     // ReSharper disable once CommentTypo
     /// <summary>
@@ -45,10 +39,7 @@ public static class Extensions
     /// <param name="target"></param>
     /// <param name="testResultsDirectory"></param>
     /// <returns></returns>
-    public static ITargetDefinition CreateOrCleanDirectory(this ITargetDefinition target, AbsolutePath testResultsDirectory)
-    {
-        return target.Executes(testResultsDirectory.CreateOrCleanDirectory);
-    }
+    public static ITargetDefinition CreateOrCleanDirectory(this ITargetDefinition target, AbsolutePath testResultsDirectory) => target.Executes(testResultsDirectory.CreateOrCleanDirectory);
 
     /// <summary>
     ///     Should we update?!
@@ -61,7 +52,11 @@ public static class Extensions
     {
         if (!path.FileExists())
         {
-            if (!createFile) return true;
+            if (!createFile)
+            {
+                return true;
+            }
+
             using var _ = File.Create(path);
             _.Close();
         }
@@ -89,7 +84,7 @@ public static class Extensions
                                                                                         .GetRuntimeFields()
                                                                                         .Single(z => z.Name == "Mappings")
                                                                                         .NotNull()
-                                                                                         // ReSharper disable once NullableWarningSuppressionIsUsed
+                                                                                        // ReSharper disable once NullableWarningSuppressionIsUsed
                                                                                         .GetValue(null)!;
 
         if (!mappings.Contains(typeof(T)))
@@ -100,32 +95,54 @@ public static class Extensions
 
         foreach (var mapping in mappings[typeof(T)])
         {
-            if (mapping.Verbosity == NukeBuild.Verbosity) return (T)mapping.MappedVerbosity;
+            if (mapping.Verbosity == verbosity)
+            {
+                return (T)mapping.MappedVerbosity;
+            }
         }
 
         return @default;
     }
 
     /// <summary>
+    /// allow disabling the temporary fix for net9 msbuild issues
+    /// </summary>
+    public static bool DisableNet9MsBuildFix { get; set; }
+
+    /// <summary>
+    /// temporary fix for net9 msbuild issues
+    /// </summary>
+    /// <param name="target"></param>
+    /// <returns></returns>
+    public static ITargetDefinition Net9MsBuildFix(this ITargetDefinition target) => target
+           .Executes(
+                () =>
+                {
+                    if (DisableNet9MsBuildFix)
+                    {
+                        return;
+                    }
+
+                    EnvironmentInfo.SetVariable("MSBuildExtensionsPath", "");
+                    EnvironmentInfo.SetVariable("MSBUILD_EXE_PATH", "");
+                    EnvironmentInfo.SetVariable("MSBuildSDKsPath", "");
+                }
+            );
+
+    /// <summary>
     ///     Gets the relative paths from the root directory.
     /// </summary>
     /// <param name="paths"></param>
     /// <param name="rootDirectory"></param>
     /// <returns></returns>
-    public static IEnumerable<RelativePath> GetRelativePaths(this IEnumerable<AbsolutePath> paths, AbsolutePath rootDirectory)
-    {
-        return paths.Select(z => rootDirectory.GetRelativePathTo(z));
-    }
+    public static IEnumerable<RelativePath> GetRelativePaths(this IEnumerable<AbsolutePath> paths, AbsolutePath rootDirectory) => paths.Select(z => rootDirectory.GetRelativePathTo(z));
 
     /// <summary>
     ///     Gets the relative paths from the root directory.
     /// </summary>
     /// <param name="paths"></param>
     /// <returns></returns>
-    public static IEnumerable<RelativePath> GetRelativePaths(this IEnumerable<AbsolutePath> paths)
-    {
-        return GetRelativePaths(paths, NukeBuild.RootDirectory);
-    }
+    public static IEnumerable<RelativePath> GetRelativePaths(this IEnumerable<AbsolutePath> paths) => GetRelativePaths(paths, NukeBuild.RootDirectory);
 
     /// <summary>
     ///     Gets the relative paths from the root directory.
@@ -133,42 +150,30 @@ public static class Extensions
     /// <param name="paths"></param>
     /// <param name="rootDirectory"></param>
     /// <returns></returns>
-    public static IEnumerable<string> GetRelativePathStrings(this IEnumerable<AbsolutePath> paths, AbsolutePath rootDirectory)
-    {
-        return paths.Select(z => rootDirectory.GetRelativePathTo(z).ToString());
-    }
+    public static IEnumerable<string> GetRelativePathStrings(this IEnumerable<AbsolutePath> paths, AbsolutePath rootDirectory) => paths.Select(z => rootDirectory.GetRelativePathTo(z).ToString());
 
     /// <summary>
     ///     Gets the relative paths from the root directory.
     /// </summary>
     /// <param name="paths"></param>
     /// <returns></returns>
-    public static IEnumerable<string> GetRelativePathStrings(this IEnumerable<AbsolutePath> paths)
-    {
-        return GetRelativePathStrings(paths, NukeBuild.RootDirectory);
-    }
+    public static IEnumerable<string> GetRelativePathStrings(this IEnumerable<AbsolutePath> paths) => GetRelativePathStrings(paths, NukeBuild.RootDirectory);
 
     /// <summary>
     ///     Gets the relative paths that fit the matcher
     /// </summary>
     /// <returns></returns>
-    public static IEnumerable<RelativePath> Match(this IEnumerable<RelativePath> relativePaths, Matcher matcher)
-    {
-        return matcher.Match(NukeBuild.RootDirectory, relativePaths.Select(z => z.ToString())) is { HasMatches: true, Files: var files, }
+    public static IEnumerable<RelativePath> Match(this IEnumerable<RelativePath> relativePaths, Matcher matcher) => ( matcher.Match(NukeBuild.RootDirectory, relativePaths.Select(z => z.ToString())) is { HasMatches: true, Files: var files, } )
             ? files.Select(z => (RelativePath)z.Path)
             : [];
-    }
 
     /// <summary>
     ///     Gets the relative paths that fit the matcher
     /// </summary>
     /// <returns></returns>
-    public static IEnumerable<AbsolutePath> Match(this IEnumerable<AbsolutePath> absolutePaths, Matcher matcher)
-    {
-        return matcher.Match(absolutePaths.Select(z => z.ToString())) is { HasMatches: true, Files: var files, }
+    public static IEnumerable<AbsolutePath> Match(this IEnumerable<AbsolutePath> absolutePaths, Matcher matcher) => ( matcher.Match(absolutePaths.Select(z => z.ToString())) is { HasMatches: true, Files: var files, } )
             ? files.Select(z => (RelativePath)z.Path).Select(z => NukeBuild.RootDirectory / z)
             : [];
-    }
 
     /// <summary>
     ///     Gets the relative paths that fit the matcher
@@ -176,10 +181,7 @@ public static class Extensions
     /// <param name="patcher"></param>
     /// <param name="path"></param>
     /// <returns></returns>
-    public static Matcher AddInclude(this Matcher patcher, AbsolutePath path)
-    {
-        return patcher.AddInclude(NukeBuild.RootDirectory.GetUnixRelativePathTo(path));
-    }
+    public static Matcher AddInclude(this Matcher patcher, AbsolutePath path) => patcher.AddInclude(NukeBuild.RootDirectory.GetUnixRelativePathTo(path));
 
     /// <summary>
     ///     Gets the relative paths that fit the matcher
@@ -187,10 +189,7 @@ public static class Extensions
     /// <param name="patcher"></param>
     /// <param name="path"></param>
     /// <returns></returns>
-    public static Matcher AddInclude(this Matcher patcher, RelativePath path)
-    {
-        return patcher.AddInclude(path.ToUnixRelativePath());
-    }
+    public static Matcher AddInclude(this Matcher patcher, RelativePath path) => patcher.AddInclude(path.ToUnixRelativePath());
 
     /// <summary>
     ///     Gets the relative paths that fit the matcher
@@ -198,10 +197,7 @@ public static class Extensions
     /// <param name="patcher"></param>
     /// <param name="path"></param>
     /// <returns></returns>
-    public static Matcher AddExclude(this Matcher patcher, AbsolutePath path)
-    {
-        return patcher.AddExclude(NukeBuild.RootDirectory.GetUnixRelativePathTo(path));
-    }
+    public static Matcher AddExclude(this Matcher patcher, AbsolutePath path) => patcher.AddExclude(NukeBuild.RootDirectory.GetUnixRelativePathTo(path));
 
     /// <summary>
     ///     Gets the relative paths that fit the matcher
@@ -209,10 +205,7 @@ public static class Extensions
     /// <param name="patcher"></param>
     /// <param name="path"></param>
     /// <returns></returns>
-    public static Matcher AddExclude(this Matcher patcher, RelativePath path)
-    {
-        return patcher.AddExclude(path.ToUnixRelativePath());
-    }
+    public static Matcher AddExclude(this Matcher patcher, RelativePath path) => patcher.AddExclude(path.ToUnixRelativePath());
 
     /// <summary>
     ///     <p>
@@ -221,20 +214,14 @@ public static class Extensions
     ///     <p>The coverage reports that should be parsed (separated by semicolon). Wildcards are allowed.</p>
     /// </summary>
     [Pure]
-    public static T SetReports<T>(this T toolSettings, IEnumerable<AbsolutePath> reports) where T : ReportGeneratorSettings
-    {
-        return toolSettings.SetReports(reports.Select(z => z.ToString()).ToArray());
-    }
+    public static T SetReports<T>(this T toolSettings, IEnumerable<AbsolutePath> reports) where T : ReportGeneratorSettings => toolSettings.SetReports(reports.Select(z => z.ToString()).ToArray());
 
     /// <summary>
     ///     Determine if there is a pullrequest happening or not.
     /// </summary>
     /// <param name="actions"></param>
     /// <returns></returns>
-    public static bool IsPullRequest(this GitHubActions? actions)
-    {
-        return actions?.EventName is "pull_request" or "pull_request_target";
-    }
+    public static bool IsPullRequest(this GitHubActions? actions) => actions?.EventName is "pull_request" or "pull_request_target";
 
     /// <summary>
     ///     Add a value to the dictionary if it's missing
@@ -247,7 +234,11 @@ public static class Extensions
     /// <returns></returns>
     public static IDictionary<TKey, TValue> AddIfMissing<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue value) where TKey : notnull
     {
-        if (dictionary.TryGetValue(key, out _)) return dictionary;
+        if (dictionary.TryGetValue(key, out _))
+        {
+            return dictionary;
+        }
+
         dictionary[key] = value;
         return dictionary;
     }
@@ -264,7 +255,10 @@ public static class Extensions
     public static IReadOnlyDictionary<TKey, TValue> AddIfMissing<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> dictionary, TKey key, TValue value)
         where TKey : notnull
     {
-        if (dictionary.TryGetValue(key, out _)) return dictionary;
+        if (dictionary.TryGetValue(key, out _))
+        {
+            return dictionary;
+        }
 
         var newDictionary = dictionary.ToDictionary(z => z.Key, z => z.Value);
         newDictionary[key] = value;

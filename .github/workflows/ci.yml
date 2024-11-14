@@ -107,6 +107,10 @@ jobs:
         uses: actions/setup-dotnet@v4.1.0
         with:
           dotnet-version: '8.0.x'
+      - name: 🔨 Use .NET Core 9.0 SDK
+        uses: actions/setup-dotnet@v4.1.0
+        with:
+          dotnet-version: '9.0.x'
       - name: 🚒 dotnet workload restore
         continue-on-error: true
         run: |

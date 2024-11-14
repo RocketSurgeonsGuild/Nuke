@@ -29,6 +29,7 @@ public interface ICanPackWithDotNetCore : IHaveBuildTarget,
                                         .TryDependentFor<IHavePackTarget>(a => a.Pack)
                                         .TryDependsOn<IHaveBuildTarget>(b => b.Build)
                                         .TryAfter<IHaveRestoreTarget>(a => a.Restore)
+                                        .Net9MsBuildFix()
                                         .Executes(
                                              () => DotNetTasks.DotNetPack(
                                                  s => s

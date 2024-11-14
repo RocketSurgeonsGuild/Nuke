@@ -18,8 +18,8 @@ using Rocket.Surgery.Nuke.DotNetCore;
 [ShutdownDotNetAfterServerBuild]
 [LocalBuildConventions]
 #pragma warning disable CA1050
-public partial class Pipeline : NukeBuild,
-    #pragma warning restore CA1050
+internal partial class Pipeline : NukeBuild,
+#pragma warning restore CA1050
     ICanRestoreWithDotNetCore,
     ICanBuildWithDotNetCore,
     ICanTestWithDotNetCore,
@@ -40,10 +40,7 @@ public partial class Pipeline : NukeBuild,
     ///     - Microsoft VisualStudio     https://nuke.build/visualstudio
     ///     - Microsoft VSCode           https://nuke.build/vscode
     /// </summary>
-    public static int Main()
-    {
-        return Execute<Pipeline>(x => x.Default);
-    }
+    public static int Main() => Execute<Pipeline>(x => x.Default);
 
     [Parameter]
     public string? GitHubToken { get; }

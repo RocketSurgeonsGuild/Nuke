@@ -63,7 +63,8 @@ using Rocket.Surgery.Nuke.GithubActions;
 [UploadLogs]
 [TitleEvents]
 [ContinuousIntegrationConventions]
-public partial class Pipeline
+[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
+internal partial class Pipeline
 {
     public static RocketSurgeonGitHubActionsConfiguration CiIgnoreMiddleware(RocketSurgeonGitHubActionsConfiguration configuration)
     {
@@ -71,7 +72,7 @@ public partial class Pipeline
         [
             new RunStep("N/A")
             {
-                Run = "echo \"No build required\"",
+                Run = "echo \"No build required\""
             },
         ];
 
@@ -82,7 +83,7 @@ public partial class Pipeline
                                       .ProducesGithubActionsOutput("iSetAThing", "Some output value")
                                       .Requires(() => ThisIsAInput)
                                       .Executes(() => GitHubActions.Instance?.SetOutput("iSetAThing", "myValue"));
-    #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     [Parameter]
     public string ThisIsAInput { get; set; }
 
@@ -113,15 +114,24 @@ public partial class Pipeline
     [Parameter]
     public string MyOtherOnepasswordText { get; set; }
 
+    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay
+    {
+        get
+        {
+            return ToString();
+        }
+    }
+
     public static RocketSurgeonGitHubActionsConfiguration CiMiddleware(RocketSurgeonGitHubActionsConfiguration configuration)
     {
-        configuration
+        _ = configuration
            .ExcludeRepositoryConfigurationFiles()
            .AddNugetPublish()
            .Jobs.OfType<RocketSurgeonsGithubActionsJob>()
            .First(z => z.Name.Equals("Build", StringComparison.OrdinalIgnoreCase))
-           .UseDotNetSdks("8.0")
-            // .ConfigureForGitVersion()
+           .UseDotNetSdks("8.0", "9.0")
+           // .ConfigureForGitVersion()
            .ConfigureStep<CheckoutStep>(step => step.FetchDepth = 0)
            .PublishLogs<Pipeline>();
 
@@ -130,10 +140,10 @@ public partial class Pipeline
 
     public static RocketSurgeonGitHubActionsConfiguration LintStagedMiddleware(RocketSurgeonGitHubActionsConfiguration configuration)
     {
-        configuration
+        _ = configuration
            .Jobs.OfType<RocketSurgeonsGithubActionsJob>()
            .First(z => z.Name.Equals("Build", StringComparison.OrdinalIgnoreCase))
-           .UseDotNetSdks("8.0");
+           .UseDotNetSdks("8.0", "9.0");
 
         return configuration;
     }

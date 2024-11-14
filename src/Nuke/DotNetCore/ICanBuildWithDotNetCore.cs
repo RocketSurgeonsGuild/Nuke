@@ -24,6 +24,7 @@ public interface ICanBuildWithDotNetCore : IHaveRestoreTarget,
                                          .Unlisted()
                                          .TryDependentFor<IHaveBuildTarget>(a => a.Build)
                                          .TryAfter<IHaveRestoreTarget>(a => a.Restore)
+                                         .Net9MsBuildFix()
                                          .Executes(
                                               () => DotNetTasks.DotNetBuild(
                                                   s => s
