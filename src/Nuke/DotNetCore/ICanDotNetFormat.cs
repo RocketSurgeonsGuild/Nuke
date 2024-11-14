@@ -97,13 +97,13 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                       arguments.RenderForExecution(),
                                                       RootDirectory,
                                                       logOutput: true,
-                                                      logInvocation: Verbosity == Verbosity.Verbose
-,
+                                                      logInvocation: Verbosity == Verbosity.Verbose,
                                                       // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
                                                       logger: static (t, s) => Log.Write(
-                                                                  ( t == OutputType.Err ) ? LogEventLevel.Error : LogEventLevel.Information,
+                                                                  t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information,
                                                                   s
-                                                              ));
+                                                              )
+                                                  );
                                               }
                                           );
 
@@ -116,7 +116,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                  .After(DotnetFormat)
                                                  .Before(PostLint)
                                                  .OnlyWhenStatic(() => DotNetTool.IsInstalled("jb"))
-                                                 // disable for local stagged runs, as it takes a long time.
+                                                  // disable for local stagged runs, as it takes a long time.
                                                  .OnlyWhenStatic(() => ( IsLocalBuild && LintPaths.Trigger != LintTrigger.Staged ) || !IsLocalBuild)
                                                  .OnlyWhenDynamic(() => LintPaths.IsLocalLintOrMatches(JetBrainsCleanupCodeMatcher))
                                                  .Net9MsBuildFix()
@@ -144,13 +144,13 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                               arguments,
                                                               RootDirectory,
                                                               logOutput: true,
-                                                              logInvocation: Verbosity == Verbosity.Verbose
-,
+                                                              logInvocation: Verbosity == Verbosity.Verbose,
                                                               // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
                                                               logger: static (t, s) => Log.Write(
-                                                                          ( t == OutputType.Err ) ? LogEventLevel.Error : LogEventLevel.Information,
+                                                                          t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information,
                                                                           s
-                                                                      ));
+                                                                      )
+                                                          );
                                                       }
                                                   );
 
