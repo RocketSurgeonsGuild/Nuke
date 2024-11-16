@@ -99,7 +99,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@3b9b8c884f6b4bb4d5be2779c26374abadae0871
+        uses: actions/checkout@cbb722410c2e876e24abbe8de2cc27693e501dcb
         with:
           clean: 'false'
           fetch-depth: '0'
@@ -142,7 +142,7 @@ jobs:
           path: 'coverage/'
       - name: 📫 Publish Coverage
         if: (github.event_name != 'pull_request' && github.event_name != 'pull_request_target') || ((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]')
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           name: 'actions-${{ matrix.os }}'
           token: '${{ secrets.CODECOV_TOKEN }}'
