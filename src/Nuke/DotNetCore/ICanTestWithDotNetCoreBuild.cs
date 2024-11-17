@@ -61,6 +61,6 @@ public interface ICanTestWithDotNetCoreBuild : IHaveBuildTarget,
                                                           .SetSettingsFile(RunSettings)
                                                           .SetDataCollector(DataCollector)
                                                   )
-                                              )
-                                             .CollectCoverage(TestResultsDirectory, CoverageDirectory);
+                                              );
+
 }
