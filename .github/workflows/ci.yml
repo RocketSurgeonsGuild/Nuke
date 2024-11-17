@@ -183,7 +183,7 @@ jobs:
         if: always()
         uses: EnricoMi/publish-unit-test-result-action@v2
         with:
-          files: 'test-results/**/*.trx'
+          files: 'artifacts/test/**/*.trx'
       - name: 🏺 Publish NuGet Packages
         if: always()
         uses: actions/upload-artifact@v4
