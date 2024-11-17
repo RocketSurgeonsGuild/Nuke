@@ -6,16 +6,14 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 ///     A wrapper around the SetupXvfb step in order to run commands in headless mode
 /// </summary>
 [PublicAPI]
+[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class HeadlessRunStep : UsingStep
 {
     /// <summary>
     ///     The default constructor
     /// </summary>
     /// <param name="name"></param>
-    public HeadlessRunStep(string name) : base(name)
-    {
-        Uses = "coactions/setup-xvfb@v1";
-    }
+    public HeadlessRunStep(string name) : base(name) => Uses = "coactions/setup-xvfb@v1";
 
     // ReSharper disable once NullableWarningSuppressionIsUsed
     /// <summary>The script to run</summary>
@@ -32,6 +30,15 @@ public class HeadlessRunStep : UsingStep
     /// </summary>
     public string? Options { get; set; }
 
+    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay
+    {
+        get
+        {
+            return ToString();
+        }
+    }
+
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
@@ -44,16 +51,14 @@ public class HeadlessRunStep : UsingStep
 ///     A wrapper around the Sticky Pull Request Comment step
 /// </summary>
 [PublicAPI]
+[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class StickyPullRequestStep : UsingStep
 {
     /// <summary>
     ///     The default constructor
     /// </summary>
     /// <param name="name"></param>
-    public StickyPullRequestStep(string name) : base(name)
-    {
-        Uses = "marocchino/sticky-pull-request-comment@v2";
-    }
+    public StickyPullRequestStep(string name) : base(name) => Uses = "marocchino/sticky-pull-request-comment@v2";
 
     /// <summary>The header to determine if the comment is to be updated</summary>
     public string? Header { get; set; }
@@ -115,11 +120,20 @@ public class StickyPullRequestStep : UsingStep
     [IgnoreDataMember]
     public string? GithubToken { get; set; }
 
+    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay
+    {
+        get
+        {
+            return ToString();
+        }
+    }
+
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
         WithProperties(x => x.Kebaberize());
-        writer.WriteValue(new ("GITHUB_TOKEN", GithubToken ?? "${{ secrets.GITHUB_TOKEN }}"));
+        _ = ( (IDictionary<string, string>)With ).AddIfMissing("GITHUB_TOKEN", GithubToken ?? "${{ secrets.GITHUB_TOKEN }}");
         base.Write(writer);
     }
 }
