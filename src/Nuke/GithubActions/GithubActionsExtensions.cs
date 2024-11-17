@@ -292,6 +292,30 @@ public static class GithubActionsExtensions
             job.Permissions.Contents = job.Permissions.Contents == GitHubActionsPermission.None ? GitHubActionsPermission.Read : job.Permissions.Contents;
             job.Permissions.Issues = job.Permissions.Issues == GitHubActionsPermission.None ? GitHubActionsPermission.Read : job.Permissions.Issues;
 
+            AddStep(
+                job,
+                new UsingStep("Publish Test Results")
+                {
+                    Uses = "EnricoMi/publish-unit-test-result-action@v2",
+                    If = "always()",
+                    With = new()
+                    {
+                        ["files"] = "test-results/**/*.trx",
+                        // TODO: Matrix support?
+                        // [""] = "Test Results"
+                    },
+                }
+            );
+
+
+        }
+
+            job.Permissions ??= new();
+            job.Permissions.Checks = GitHubActionsPermission.Write;
+            job.Permissions.PullRequests = GitHubActionsPermission.Write;
+            job.Permissions.Contents = job.Permissions.Contents == GitHubActionsPermission.None ? GitHubActionsPermission.Read : job.Permissions.Contents;
+            job.Permissions.Issues = job.Permissions.Issues == GitHubActionsPermission.None ? GitHubActionsPermission.Read : job.Permissions.Issues;
+
             _ = AddStep(
                 job,
                 new UsingStep("Publish Test Results")
