@@ -11,11 +11,9 @@ public class SetupDotNetStep : UsingStep
     ///     The default constructor
     /// </summary>
     /// <param name="name"></param>
-    public SetupDotNetStep(string name) : base(name)
-    {
+    public SetupDotNetStep(string name) : base(name) =>
         // temporary to deal with sxs issue roll back once https://github.com/actions/setup-dotnet/pull/71 is merged
         Uses = "actions/setup-dotnet@v3";
-    }
 
     /// <summary>SDK version to use. Example: 2.2.104</summary>
     public string? DotNetVersion { get; set; }

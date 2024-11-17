@@ -21,14 +21,8 @@ public sealed class GitHubActionsVariableAttribute : TriggerValueAttribute
     ///     Convert to a variable
     /// </summary>
     /// <returns></returns>
-    public GitHubActionsVariable ToVariable()
-    {
-        return new(Name, Description, Alias);
-    }
+    public GitHubActionsVariable ToVariable() => new(Name, Description, Alias);
 
     /// <inheritdoc />
-    public override ITriggerValue ToTriggerValue()
-    {
-        return ToVariable();
-    }
+    public override ITriggerValue ToTriggerValue() => ToVariable();
 }

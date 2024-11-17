@@ -10,10 +10,7 @@ public class DownloadArtifactSet : UsingStep
     ///     The default constructor
     /// </summary>
     /// <param name="name"></param>
-    public DownloadArtifactSet(string name) : base(name)
-    {
-        Uses = "actions/download-artifact@v3";
-    }
+    public DownloadArtifactSet(string name) : base(name) => Uses = "actions/download-artifact@v3";
 
     /// <summary>
     ///     Gets or sets the name of the artifact to download. If unspecified, all artifacts for the run are downloaded.
@@ -64,8 +61,5 @@ public class DownloadArtifactSet : UsingStep
     }
 
     /// <inheritdoc />
-    protected override string ComputeStepName(string name)
-    {
-        return $"🚀 {name}";
-    }
+    protected override string ComputeStepName(string name) => $"🚀 {name}";
 }

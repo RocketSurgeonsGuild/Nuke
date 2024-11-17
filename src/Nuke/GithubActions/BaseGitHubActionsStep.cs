@@ -73,8 +73,5 @@ public abstract class BaseGitHubActionsStep : GitHubActionsStep
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    protected virtual string ComputeStepName(string name)
-    {
-        return Symbols.StepName(name);
-    }
+    protected virtual string ComputeStepName(string name) => Symbols.StepName(name);
 }

@@ -32,14 +32,14 @@ public static class Extensions
     /// <returns></returns>
     public static T CastAs<T>(this object value) where T : notnull => (T)value;
 
-    // ReSharper disable once CommentTypo
     /// <summary>
     ///     A method that ensures the given directory exists or is cleaned
     /// </summary>
     /// <param name="target"></param>
     /// <param name="testResultsDirectory"></param>
     /// <returns></returns>
-    public static ITargetDefinition CreateOrCleanDirectory(this ITargetDefinition target, AbsolutePath testResultsDirectory) => target.Executes(testResultsDirectory.CreateOrCleanDirectory);
+    public static ITargetDefinition CreateOrCleanDirectory(this ITargetDefinition target, AbsolutePath testResultsDirectory) =>
+        target.Executes(testResultsDirectory.CreateOrCleanDirectory);
 
     /// <summary>
     ///     Should we update?!
@@ -84,7 +84,7 @@ public static class Extensions
                                                                                         .GetRuntimeFields()
                                                                                         .Single(z => z.Name == "Mappings")
                                                                                         .NotNull()
-                                                                                        // ReSharper disable once NullableWarningSuppressionIsUsed
+                                                                                         // ReSharper disable once NullableWarningSuppressionIsUsed
                                                                                         .GetValue(null)!;
 
         if (!mappings.Contains(typeof(T)))
@@ -105,29 +105,29 @@ public static class Extensions
     }
 
     /// <summary>
-    /// allow disabling the temporary fix for net9 msbuild issues
+    ///     allow disabling the temporary fix for net9 msbuild issues
     /// </summary>
     public static bool DisableNet9MsBuildFix { get; set; }
 
     /// <summary>
-    /// temporary fix for net9 msbuild issues
+    ///     temporary fix for net9 msbuild issues
     /// </summary>
     /// <param name="target"></param>
     /// <returns></returns>
     public static ITargetDefinition Net9MsBuildFix(this ITargetDefinition target) => target
-           .Executes(
-                () =>
+       .Executes(
+            () =>
+            {
+                if (DisableNet9MsBuildFix)
                 {
-                    if (DisableNet9MsBuildFix)
-                    {
-                        return;
-                    }
-
-                    EnvironmentInfo.SetVariable("MSBuildExtensionsPath", "");
-                    EnvironmentInfo.SetVariable("MSBUILD_EXE_PATH", "");
-                    EnvironmentInfo.SetVariable("MSBuildSDKsPath", "");
+                    return;
                 }
-            );
+
+                EnvironmentInfo.SetVariable("MSBuildExtensionsPath", "");
+                EnvironmentInfo.SetVariable("MSBUILD_EXE_PATH", "");
+                EnvironmentInfo.SetVariable("MSBuildSDKsPath", "");
+            }
+        );
 
     /// <summary>
     ///     Gets the relative paths from the root directory.
@@ -135,7 +135,8 @@ public static class Extensions
     /// <param name="paths"></param>
     /// <param name="rootDirectory"></param>
     /// <returns></returns>
-    public static IEnumerable<RelativePath> GetRelativePaths(this IEnumerable<AbsolutePath> paths, AbsolutePath rootDirectory) => paths.Select(z => rootDirectory.GetRelativePathTo(z));
+    public static IEnumerable<RelativePath> GetRelativePaths(this IEnumerable<AbsolutePath> paths, AbsolutePath rootDirectory) =>
+        paths.Select(z => rootDirectory.GetRelativePathTo(z));
 
     /// <summary>
     ///     Gets the relative paths from the root directory.
@@ -150,7 +151,8 @@ public static class Extensions
     /// <param name="paths"></param>
     /// <param name="rootDirectory"></param>
     /// <returns></returns>
-    public static IEnumerable<string> GetRelativePathStrings(this IEnumerable<AbsolutePath> paths, AbsolutePath rootDirectory) => paths.Select(z => rootDirectory.GetRelativePathTo(z).ToString());
+    public static IEnumerable<string> GetRelativePathStrings(this IEnumerable<AbsolutePath> paths, AbsolutePath rootDirectory) =>
+        paths.Select(z => rootDirectory.GetRelativePathTo(z).ToString());
 
     /// <summary>
     ///     Gets the relative paths from the root directory.
@@ -163,7 +165,8 @@ public static class Extensions
     ///     Gets the relative paths that fit the matcher
     /// </summary>
     /// <returns></returns>
-    public static IEnumerable<RelativePath> Match(this IEnumerable<RelativePath> relativePaths, Matcher matcher) => ( matcher.Match(NukeBuild.RootDirectory, relativePaths.Select(z => z.ToString())) is { HasMatches: true, Files: var files, } )
+    public static IEnumerable<RelativePath> Match(this IEnumerable<RelativePath> relativePaths, Matcher matcher) =>
+        matcher.Match(NukeBuild.RootDirectory, relativePaths.Select(z => z.ToString())) is { HasMatches: true, Files: var files, }
             ? files.Select(z => (RelativePath)z.Path)
             : [];
 
@@ -171,7 +174,8 @@ public static class Extensions
     ///     Gets the relative paths that fit the matcher
     /// </summary>
     /// <returns></returns>
-    public static IEnumerable<AbsolutePath> Match(this IEnumerable<AbsolutePath> absolutePaths, Matcher matcher) => ( matcher.Match(absolutePaths.Select(z => z.ToString())) is { HasMatches: true, Files: var files, } )
+    public static IEnumerable<AbsolutePath> Match(this IEnumerable<AbsolutePath> absolutePaths, Matcher matcher) =>
+        matcher.Match(absolutePaths.Select(z => z.ToString())) is { HasMatches: true, Files: var files, }
             ? files.Select(z => (RelativePath)z.Path).Select(z => NukeBuild.RootDirectory / z)
             : [];
 
@@ -214,7 +218,8 @@ public static class Extensions
     ///     <p>The coverage reports that should be parsed (separated by semicolon). Wildcards are allowed.</p>
     /// </summary>
     [Pure]
-    public static T SetReports<T>(this T toolSettings, IEnumerable<AbsolutePath> reports) where T : ReportGeneratorSettings => toolSettings.SetReports(reports.Select(z => z.ToString()).ToArray());
+    public static T SetReports<T>(this T toolSettings, IEnumerable<AbsolutePath> reports) where T : ReportGeneratorSettings =>
+        toolSettings.SetReports(reports.Select(z => z.ToString()).ToArray());
 
     /// <summary>
     ///     Determine if there is a pullrequest happening or not.
@@ -296,4 +301,6 @@ public static class Extensions
         newDictionary[key] = value;
         return new ReadOnlyDictionary<TKey, TValue>(newDictionary);
     }
+
+    // ReSharper disable once CommentTypo
 }

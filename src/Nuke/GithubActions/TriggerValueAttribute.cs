@@ -10,10 +10,7 @@ public abstract class TriggerValueAttribute : Attribute
     ///     The default constructor
     /// </summary>
     /// <param name="name"></param>
-    protected TriggerValueAttribute(string name)
-    {
-        Name = name;
-    }
+    protected TriggerValueAttribute(string name) => Name = name;
 
     /// <summary>
     ///     The name of the trigger value

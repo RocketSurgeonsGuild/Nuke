@@ -27,6 +27,7 @@
         "Build",
         "Clean",
         "CleanWellKnownTemporaryFiles",
+        "CollectCodeCoverage",
         "Default",
         "DotnetCoreBuild",
         "DotnetCorePack",
@@ -54,7 +55,6 @@
         "Restore",
         "ShipPublicApis",
         "Test",
-        "TriggerCodeCoverageReports",
         "WithOutputs"
       ]
     },

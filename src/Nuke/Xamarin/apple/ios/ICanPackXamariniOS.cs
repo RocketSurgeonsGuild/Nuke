@@ -9,32 +9,34 @@ namespace Rocket.Surgery.Nuke.Xamarin;
 ///     Xamarin iOS Pack
 /// </summary>
 public interface ICanPackXamariniOS : IHavePackTarget,
-                                      IHaveConfiguration,
-                                      IHaveTestTarget,
-                                      IHaveOutputLogs,
-                                      IHaveGitVersion,
-                                      IHaveSolution,
-                                      IHaveiOSTargetPlatform,
-                                      ICan
+    IHaveConfiguration,
+    IHaveTestTarget,
+    IHaveOutputLogs,
+    IHaveGitVersion,
+    IHaveSolution,
+    IHaveiOSTargetPlatform,
+    ICan
 {
     /// <summary>
     ///     packages a binary for distribution.
     /// </summary>
-    public Target PackiPhone => d => d.DependsOn(Test)
-                                      .OnlyWhenStatic(() => EnvironmentInfo.Platform == PlatformFamily.OSX)
-                                      .Executes(
-                                           () =>
-                                               MSBuild(
-                                                   settings =>
-                                                       settings.SetSolutionFile(Solution)
-                                                               .SetProperty("Platform", iOSTargetPlatform)
-                                                               .SetProperty("BuildIpa", "true")
-                                                               .SetProperty("ArchiveOnBuild", "true")
-                                                               .SetConfiguration(Configuration)
-                                                               .SetDefaultLoggers(LogsDirectory / "package.log")
-                                                               .SetGitVersionEnvironment(GitVersion)
-                                                               .SetAssemblyVersion(GitVersion.AssemblyVersion())
-                                                               .SetPackageVersion(GitVersion.PackageVersion())
-                                               )
-                                       );
+    public Target PackiPhone => d => d
+                                    .DependsOn(Test)
+                                    .OnlyWhenStatic(() => EnvironmentInfo.Platform == PlatformFamily.OSX)
+                                    .Executes(
+                                         () =>
+                                             MSBuild(
+                                                 settings =>
+                                                     settings
+                                                        .SetSolutionFile(Solution)
+                                                        .SetProperty("Platform", iOSTargetPlatform)
+                                                        .SetProperty("BuildIpa", "true")
+                                                        .SetProperty("ArchiveOnBuild", "true")
+                                                        .SetConfiguration(Configuration)
+                                                        .SetDefaultLoggers(LogsDirectory / "package.log")
+                                                        .SetGitVersionEnvironment(GitVersion)
+                                                        .SetAssemblyVersion(GitVersion.AssemblyVersion())
+                                                        .SetPackageVersion(GitVersion.PackageVersion())
+                                             )
+                                     );
 }

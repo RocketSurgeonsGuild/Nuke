@@ -11,8 +11,5 @@ public static class Helpers
     /// </summary>
     /// <param name="nugetPackageName"></param>
     /// <returns></returns>
-    public static bool IsDotNetToolInstalled(string nugetPackageName)
-    {
-        return DotNetTool.IsInstalled(nugetPackageName);
-    }
+    public static bool IsDotNetToolInstalled(string nugetPackageName) => DotNetTool.IsInstalled(nugetPackageName);
 }

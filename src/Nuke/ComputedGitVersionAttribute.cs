@@ -81,10 +81,7 @@ public class ComputedGitVersionAttribute : ValueInjectionAttributeBase
     ///     Computes the GitVersion for the repository.
     /// </summary>
     /// <param name="frameworkVersion">The framework version to use with GitVersion.</param>
-    public ComputedGitVersionAttribute(string? frameworkVersion)
-    {
-        _frameworkVersion = frameworkVersion;
-    }
+    public ComputedGitVersionAttribute(string? frameworkVersion) => _frameworkVersion = frameworkVersion;
 
     /// <summary>
     ///     DisableOnUnix

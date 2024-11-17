@@ -13,6 +13,6 @@ public interface IHaveIpa : IHaveArtifacts
     /// </summary>
     [Parameter("The directory where artifacts are to be dropped", Name = "Ipa")]
     public AbsolutePath IpaDirectory => EnvironmentInfo.GetVariable<AbsolutePath>("Ipa")
-                                     ?? TryGetValue(() => IpaDirectory)
-                                     ?? NukeBuild.RootDirectory / "artifacts" / "ios";
+     ?? TryGetValue(() => IpaDirectory)
+     ?? NukeBuild.RootDirectory / "artifacts" / "ios";
 }

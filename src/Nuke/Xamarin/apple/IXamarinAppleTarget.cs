@@ -12,27 +12,27 @@ public partial interface IXamarinAppleTarget : IHaveBundleIdentifier, IHaveGitVe
     ///     modify info.plist
     /// </summary>
     public Target ModifyInfoPlist => d => d
-       .Executes(
-            () =>
-            {
-                Log.Verbose("Info.plist Path: {InfoPlist}", InfoPlist);
-                var plist = Plist.Deserialize(InfoPlist);
+                                        .Executes(
+                                             () =>
+                                             {
+                                                 Log.Verbose("Info.plist Path: {InfoPlist}", InfoPlist);
+                                                 var plist = Plist.Deserialize(InfoPlist);
 
-#pragma warning disable CA1304, CA1308
-                plist["CFBundleIdentifier"] = $"{BundleIdentifier}.{Suffix.ToLowerInvariant()}".TrimEnd('.');
-#pragma warning restore CA1304, CA1308
-                Log.Information("CFBundleIdentifier: {CFBundleIdentifier}", plist["CFBundleIdentifier"]);
+                                                 #pragma warning disable CA1304, CA1308
+                                                 plist["CFBundleIdentifier"] = $"{BundleIdentifier}.{Suffix.ToLowerInvariant()}".TrimEnd('.');
+                                                 #pragma warning restore CA1304, CA1308
+                                                 Log.Information("CFBundleIdentifier: {CFBundleIdentifier}", plist["CFBundleIdentifier"]);
 
-                plist["CFBundleShortVersionString"] = GitVersion.MajorMinorPatch();
-                Log.Information(
-                    "CFBundleShortVersionString: {CFBundleShortVersionString}",
-                    plist["CFBundleShortVersionString"]
-                );
+                                                 plist["CFBundleShortVersionString"] = GitVersion.MajorMinorPatch();
+                                                 Log.Information(
+                                                     "CFBundleShortVersionString: {CFBundleShortVersionString}",
+                                                     plist["CFBundleShortVersionString"]
+                                                 );
 
-                plist["CFBundleVersion"] = GitVersion.AssemblyVersion();
-                Log.Information("CFBundleVersion: {CFBundleVersion}", plist["CFBundleVersion"]);
+                                                 plist["CFBundleVersion"] = GitVersion.AssemblyVersion();
+                                                 Log.Information("CFBundleVersion: {CFBundleVersion}", plist["CFBundleVersion"]);
 
-                Plist.Serialize(InfoPlist, plist);
-            }
-        );
+                                                 Plist.Serialize(InfoPlist, plist);
+                                             }
+                                         );
 }

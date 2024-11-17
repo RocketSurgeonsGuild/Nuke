@@ -7,11 +7,11 @@ namespace Rocket.Surgery.Nuke.Xamarin;
 ///     xamarin build with MSBuild
 /// </summary>
 public interface ICanBuildXamarin : IHaveRestoreTarget,
-                                    IHaveSolution,
-                                    IHaveConfiguration,
-                                    IHaveGitVersion,
-                                    IHaveOutputLogs,
-                                    ICan
+    IHaveSolution,
+    IHaveConfiguration,
+    IHaveGitVersion,
+    IHaveOutputLogs,
+    ICan
 {
     /// <summary>
     ///     msbuild
@@ -21,13 +21,14 @@ public interface ICanBuildXamarin : IHaveRestoreTarget,
                                .Executes(
                                     () => MSBuild(
                                         settings =>
-                                            settings.SetSolutionFile(Solution)
-                                                    .SetTargetPlatform(MSBuildTargetPlatform.x64)
-                                                    .SetConfiguration(Configuration)
-                                                    .SetDefaultLoggers(LogsDirectory / "build.log")
-                                                    .SetGitVersionEnvironment(GitVersion)
-                                                    .SetAssemblyVersion(GitVersion.AssemblyVersion())
-                                                    .SetPackageVersion(GitVersion.PackageVersion())
+                                            settings
+                                               .SetSolutionFile(Solution)
+                                               .SetTargetPlatform(MSBuildTargetPlatform.x64)
+                                               .SetConfiguration(Configuration)
+                                               .SetDefaultLoggers(LogsDirectory / "build.log")
+                                               .SetGitVersionEnvironment(GitVersion)
+                                               .SetAssemblyVersion(GitVersion.AssemblyVersion())
+                                               .SetPackageVersion(GitVersion.PackageVersion())
                                     )
                                 );
 }

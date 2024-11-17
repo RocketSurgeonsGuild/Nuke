@@ -11,10 +11,7 @@ public sealed class OnePasswordServiceAccountSecretAttribute : TriggerValueAttri
     /// </summary>
     /// <param name="name">The name of the variable to be output</param>
     /// <param name="path">The reference path to the item</param>
-    public OnePasswordServiceAccountSecretAttribute(string name, string path) : base(name)
-    {
-        Path = path;
-    }
+    public OnePasswordServiceAccountSecretAttribute(string name, string path) : base(name) => Path = path;
 
     /// <summary>
     ///     The constructor for the <see cref="OnePasswordServiceAccountSecretAttribute" />
@@ -23,10 +20,7 @@ public sealed class OnePasswordServiceAccountSecretAttribute : TriggerValueAttri
     /// <param name="variable">The GitHub variable to item path part for the op reference (eg. op://vault/item)</param>
     /// <param name="path">The second half the op reference path</param>
     /// param>
-    public OnePasswordServiceAccountSecretAttribute(string name, string variable, string path) : this(name, path)
-    {
-        Variable = variable;
-    }
+    public OnePasswordServiceAccountSecretAttribute(string name, string variable, string path) : this(name, path) => Variable = variable;
 
     /// <summary>
     ///     The github variable that defines the item in the vault
@@ -52,9 +46,8 @@ public sealed class OnePasswordServiceAccountSecretAttribute : TriggerValueAttri
     ///     Convert to a secret
     /// </summary>
     /// <returns></returns>
-    public OnePasswordServiceAccountSecret ToSecret()
-    {
-        return new(
+    public OnePasswordServiceAccountSecret ToSecret() =>
+        new(
             Path,
             Name,
             Description,
@@ -62,11 +55,7 @@ public sealed class OnePasswordServiceAccountSecretAttribute : TriggerValueAttri
             Variable,
             Secret ?? "OP_SERVICE_ACCOUNT_TOKEN"
         );
-    }
 
     /// <inheritdoc />
-    public override ITriggerValue ToTriggerValue()
-    {
-        return ToSecret();
-    }
+    public override ITriggerValue ToTriggerValue() => ToSecret();
 }

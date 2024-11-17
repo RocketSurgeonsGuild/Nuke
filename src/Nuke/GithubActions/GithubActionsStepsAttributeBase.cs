@@ -204,10 +204,7 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     }
 
     /// <inheritdoc />
-    public override CustomFileWriter CreateWriter(StreamWriter streamWriter)
-    {
-        return new(streamWriter, 2, "#");
-    }
+    public override CustomFileWriter CreateWriter(StreamWriter streamWriter) => new(streamWriter, 2, "#");
 
     /// <summary>
     ///     Gets the list of triggers as defined

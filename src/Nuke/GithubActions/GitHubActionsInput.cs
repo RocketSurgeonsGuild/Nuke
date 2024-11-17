@@ -9,7 +9,8 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// <param name="Description"></param>
 /// <param name="Required"></param>
 /// <param name="Alias"></param>
-public record GitHubActionsInput(
+public record GitHubActionsInput
+(
     string Name,
     GitHubActionsInputType Type = GitHubActionsInputType.String,
     string? Default = null,

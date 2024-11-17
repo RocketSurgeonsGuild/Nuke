@@ -26,9 +26,8 @@ public sealed class GitHubActionsInputAttribute : TriggerValueAttribute
     ///     Convert the attribute into an input
     /// </summary>
     /// <returns></returns>
-    public GitHubActionsInput ToInput()
-    {
-        return new(
+    public GitHubActionsInput ToInput() =>
+        new(
             Name,
             Type,
             Default,
@@ -36,11 +35,7 @@ public sealed class GitHubActionsInputAttribute : TriggerValueAttribute
             Required,
             Alias
         );
-    }
 
     /// <inheritdoc />
-    public override ITriggerValue ToTriggerValue()
-    {
-        return ToInput();
-    }
+    public override ITriggerValue ToTriggerValue() => ToInput();
 }

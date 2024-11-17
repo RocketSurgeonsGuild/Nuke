@@ -18,30 +18,21 @@ public static class DotNetTool
     /// </summary>
     /// <param name="nugetPackageName"></param>
     /// <returns></returns>
-    public static bool IsInstalled(string nugetPackageName)
-    {
-        return ResolveToolsManifest().IsInstalled(nugetPackageName);
-    }
+    public static bool IsInstalled(string nugetPackageName) => ResolveToolsManifest().IsInstalled(nugetPackageName);
 
     /// <summary>
     ///     Gets the tool definition for a given local dotnet tool
     /// </summary>
     /// <param name="nugetPackageName"></param>
     /// <returns></returns>
-    public static Tool GetTool(string nugetPackageName)
-    {
-        return ResolveToolsManifest().GetTool(nugetPackageName);
-    }
+    public static Tool GetTool(string nugetPackageName) => ResolveToolsManifest().GetTool(nugetPackageName);
 
     /// <summary>
     ///     Gets the tool definition for a given local dotnet tool
     /// </summary>
     /// <param name="nugetPackageName"></param>
     /// <returns></returns>
-    public static ProperTool GetProperTool(string nugetPackageName)
-    {
-        return ResolveToolsManifest().GetProperTool(nugetPackageName);
-    }
+    public static ProperTool GetProperTool(string nugetPackageName) => ResolveToolsManifest().GetProperTool(nugetPackageName);
 
     private static ResolvedToolsManifest? toolsManifest;
     private static Lazy<AbsolutePath> ToolsManifestLocation { get; } = new(() => NukeBuild.RootDirectory / ".config/dotnet-tools.json");
@@ -157,9 +148,9 @@ internal class ToolsManifset
 
 internal class ToolDefinition
 {
-    // ReSharper disable once NullableWarningSuppressionIsUsed
     public string Version { get; set; } = null!;
     public string[] Commands { get; set; } = [];
+    // ReSharper disable once NullableWarningSuppressionIsUsed
 }
 
 /// <summary>

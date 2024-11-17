@@ -1,5 +1,4 @@
 <RunSettings>
-  <Format>Cobertura</Format>
   <DataCollectionRunSettings>
     <DataCollectors>
       <DataCollector friendlyName="Code Coverage"
@@ -7,6 +6,7 @@
         assemblyQualifiedName="Microsoft.VisualStudio.Coverage.DynamicCoverageDataCollector, Microsoft.VisualStudio.TraceCollector, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
         <Configuration>
           <CodeCoverage>
+            <Format>Cobertura</Format>
             <Attributes>
               <Exclude>
                 <!-- Don't forget "Attribute" at the end of the name -->
@@ -30,18 +30,13 @@
                 <Function>^Microsoft\..*</Function>
                 <Function>^System\..*</Function>
                 <Function>^JetBrains\..*</Function>
-                <Function>^JetBrains\..*</Function>
+                <Function>^DryIoc\..*</Function>
+                <Function>^Nuke\..*</Function>
+                <Function>^FluentAssertions\..*</Function>
+                <Function>^Serilog\..*</Function>
               </Exclude>
             </Functions>
           </CodeCoverage>
-        </Configuration>
-      </DataCollector>
-      <DataCollector friendlyName="XPlat code coverage">
-        <Configuration>
-          <Format>json,lcov,cobertura,opencover</Format>
-          <Exclude>
-            [Bogus*]*,[Autofac*]*,[FakeItEasy*]*,[Moq*]*,[xunit*]*,[Microsoft.*]*,[XunitXml*]*,[coverlet.*]*,[System.*]*,[*]JetBrains.Annotations*</Exclude>
-          <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute</ExcludeByAttribute>
         </Configuration>
       </DataCollector>
     </DataCollectors>

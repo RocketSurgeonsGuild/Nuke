@@ -12,8 +12,5 @@ public static class StringExtensions
     /// </summary>
     /// <param name="input">The input string.</param>
     /// <returns>The string with no alpha characters.</returns>
-    public static string RemoveAlphaCharacters(this string input)
-    {
-        return Regex.Replace(input, "[^0-9.]", "");
-    }
+    public static string RemoveAlphaCharacters(this string input) => Regex.Replace(input, "[^0-9.]", "");
 }

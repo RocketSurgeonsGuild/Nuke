@@ -1,6 +1,5 @@
 using Nuke.Common.IO;
 using Nuke.Common.Tools.ReportGenerator;
-using static Nuke.Common.IO.FileSystemTasks;
 
 // ReSharper disable SuspiciousTypeConversion.Global
 
@@ -13,7 +12,7 @@ namespace Rocket.Surgery.Nuke;
 ///     This causes code coverage to trigger
 /// </remarks>
 [PublicAPI]
-public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarget, ITrigger
+public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarget, IHaveTestArtifacts, ITrigger
 {
     /// <summary>
     ///     The input reports
@@ -21,20 +20,33 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
     /// <remarks>
     ///     used to determine if any coverage was emitted, if not the tasks will skip to avoid errors
     /// </remarks>
-    public IEnumerable<AbsolutePath> InputReports => CoverageDirectory
-       .GlobFiles("**/*.cobertura.xml");
+    public IEnumerable<AbsolutePath> InputReports => CoverageDirectory.GlobFiles("**/*.cobertura.xml");
 
     /// <summary>
     ///     This will generate code coverage reports from emitted coverage data
     /// </summary>
     [NonEntryTarget]
-    public Target TriggerCodeCoverageReports => d => d
-                                                    .TriggeredBy(Test)
-                                                    .Unlisted()
-                                                    .After(Test)
-                                                    .Description("Generates code coverage reports")
-                                                    .Unlisted()
-                                                    .OnlyWhenDynamic(() => InputReports.Any());
+    public Target CollectCodeCoverage => d => d
+                                             .TriggeredBy(Test)
+                                             .After(Test)
+                                             .Description("Collects code coverage results")
+                                             .AssuredAfterFailure()
+                                             .Executes(
+                                                  () =>
+                                                  {
+                                                      // Ensure anything that has been dropped in the test results from a collector is
+                                                      // into the coverage directory
+                                                      foreach (var file in TestResultsDirectory.GlobFiles("**/*.cobertura.xml"))
+//                                                                                      .Where(x => Guid.TryParse(Path.GetFileName(x.Parent), out _))
+                                                      {
+                                                          var relativePath = TestResultsDirectory.GetRelativePathTo(file);
+                                                          file.Copy(
+                                                              CoverageDirectory.CreateOrCleanDirectory() / relativePath,
+                                                              ExistsPolicy.FileOverwriteIfNewer
+                                                          );
+                                                      }
+                                                  }
+                                              );
 
 
     /// <summary>
@@ -42,30 +54,10 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
     /// </summary>
     [NonEntryTarget]
     public Target GenerateCodeCoverageReportCobertura => d => d
-                                                             .TriggeredBy(TriggerCodeCoverageReports)
+                                                             .TriggeredBy(CollectCodeCoverage)
                                                              .Unlisted()
+                                                             .AssuredAfterFailure()
                                                              .OnlyWhenDynamic(() => InputReports.Any())
-                                                             .Executes(
-                                                                  () =>
-                                                                  {
-                                                                      if (this is IHaveTestArtifacts { TestResultsDirectory: { } testResultsDirectory, })
-                                                                          // Ensure anything that has been dropped in the test results from a collector is
-                                                                          // into the coverage directory
-                                                                          foreach (var file in testResultsDirectory
-                                                                                              .GlobFiles("**/*.cobertura.xml")
-                                                                                              .Where(x => Guid.TryParse(Path.GetFileName(x.Parent), out var _))
-                                                                                              .SelectMany(coverage => coverage.Parent.GlobFiles("*.*")))
-                                                                          {
-                                                                              var folderName = Path.GetFileName(file.Parent);
-                                                                              var extensionPart = string.Join(".", Path.GetFileName(file).Split('.').Skip(1));
-                                                                              CopyFile(
-                                                                                  file,
-                                                                                  CoverageDirectory / $"{folderName}.{extensionPart}",
-                                                                                  FileExistsPolicy.OverwriteIfNewer
-                                                                              );
-                                                                          }
-                                                                  }
-                                                              )
                                                              .Executes(
                                                                   () =>
                                                                   {
@@ -76,20 +68,13 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                                               .SetReportTypes(ReportTypes.Cobertura)
                                                                       );
 
-                                                                      CopyFile(
-                                                                          CoverageDirectory / "Cobertura.xml",
+                                                                      ( CoverageDirectory / "Cobertura.xml" ).Copy(
                                                                           CoverageDirectory / "solution.cobertura",
-                                                                          FileExistsPolicy.OverwriteIfNewer
+                                                                          ExistsPolicy.FileOverwriteIfNewer
                                                                       );
-                                                                      CopyFile(
-                                                                          CoverageDirectory / "Cobertura.xml",
+                                                                      ( CoverageDirectory / "Cobertura.xml" ).Copy(
                                                                           CoverageDirectory / "solution.xml",
-                                                                          FileExistsPolicy.OverwriteIfNewer
-                                                                      );
-                                                                      RenameFile(
-                                                                          CoverageDirectory / "solution.xml",
-                                                                          CoverageDirectory / "cobertura.xml",
-                                                                          FileExistsPolicy.OverwriteIfNewer
+                                                                          ExistsPolicy.FileOverwriteIfNewer
                                                                       );
                                                                   }
                                                               );

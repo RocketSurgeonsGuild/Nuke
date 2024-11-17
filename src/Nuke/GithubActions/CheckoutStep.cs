@@ -9,10 +9,7 @@ public class CheckoutStep : UsingStep
     ///     Uses the checkout resource action
     /// </summary>
     /// <param name="name"></param>
-    public CheckoutStep(string name) : base(name)
-    {
-        Uses = "actions/checkout@v4";
-    }
+    public CheckoutStep(string name) : base(name) => Uses = "actions/checkout@v4";
 
     /// <summary>
     ///     Repository name with owner. For example, actions/checkout

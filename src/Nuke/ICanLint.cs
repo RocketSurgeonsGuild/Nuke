@@ -88,20 +88,18 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
 
     private static LintPaths? lintPaths;
 
-    private static Matcher ResolveLintMatcher()
-    {
-        return new Matcher(StringComparison.OrdinalIgnoreCase)
-              .AddInclude("**/*")
-              .AddExclude("**/node_modules/**/*")
-              .AddExclude(".idea/**/*")
-              .AddExclude(".vscode/**/*")
-              .AddExclude(".nuke/**/*")
-              .AddExclude("**/bin/**/*")
-              .AddExclude("**/obj/**/*")
-              .AddExclude("**/*.g.*")
-              .AddExclude("**/*.verified.*")
-              .AddExclude("**/*.received.*");
-    }
+    private static Matcher ResolveLintMatcher() =>
+        new Matcher(StringComparison.OrdinalIgnoreCase)
+           .AddInclude("**/*")
+           .AddExclude("**/node_modules/**/*")
+           .AddExclude(".idea/**/*")
+           .AddExclude(".vscode/**/*")
+           .AddExclude(".nuke/**/*")
+           .AddExclude("**/bin/**/*")
+           .AddExclude("**/obj/**/*")
+           .AddExclude("**/*.g.*")
+           .AddExclude("**/*.verified.*")
+           .AddExclude("**/*.received.*");
 
     /// <summary>
     ///     The lint target

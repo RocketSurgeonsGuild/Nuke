@@ -20,8 +20,9 @@ public interface IGenerateCodeCoverageReport : ITriggerCodeCoverageReports, IGen
     [NonEntryTarget]
     public Target GenerateCodeCoverageReport => d => d
                                                     .After(GenerateCodeCoverageReportCobertura)
-                                                    .TriggeredBy(TriggerCodeCoverageReports)
+                                                    .TriggeredBy(CollectCodeCoverage)
                                                     .Unlisted()
+                                                    .AssuredAfterFailure()
                                                     .OnlyWhenDynamic(() => InputReports.Any())
                                                     .Executes(
                                                          () => ReportGeneratorTasks.ReportGenerator(

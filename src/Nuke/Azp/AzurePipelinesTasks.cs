@@ -17,13 +17,14 @@ public class AzurePipelinesTasks
     ///     Gets a value that determines if the build is running on Azure DevOps.
     /// </summary>
     public static Func<bool> IsRunningOnAzurePipelines => () =>
-        NukeBuild.Host is AzurePipelines || Environment.GetEnvironmentVariable("LOGNAME") == "vsts";
+                                                              NukeBuild.Host is AzurePipelines || Environment.GetEnvironmentVariable("LOGNAME") == "vsts";
 
     /// <summary>
     ///     Gets a value that determines if the build is not running on Azure DevOps.
     /// </summary>
     public static Func<bool> IsNotRunningOnAzurePipelines => () =>
-        !( NukeBuild.Host is AzurePipelines || Environment.GetEnvironmentVariable("LOGNAME") == "vsts" );
+                                                                 !( NukeBuild.Host is AzurePipelines
+                                                                  || Environment.GetEnvironmentVariable("LOGNAME") == "vsts" );
 
     /// <summary>
     ///     Print the azure pipelines environment
@@ -39,16 +40,19 @@ public class AzurePipelinesTasks
                                                                   Log.Information("AGENT_JOBNAME: {AgentJobName}", GetVariable<string>("AGENT_JOBNAME"));
                                                                   Log.Information("AGENT_JOBSTATUS: {AgentJobStatus}", GetVariable<string>("AGENT_JOBSTATUS"));
                                                                   Log.Information(
-                                                                      "AGENT_MACHINE_NAME: {AgentMachineName}", GetVariable<string>("AGENT_MACHINE_NAME")
+                                                                      "AGENT_MACHINE_NAME: {AgentMachineName}",
+                                                                      GetVariable<string>("AGENT_MACHINE_NAME")
                                                                   );
                                                                   Log.Information("\n");
 
                                                                   Log.Information("BUILD_BUILDID: {BuildBuildId}", GetVariable<string>("BUILD_BUILDID"));
                                                                   Log.Information(
-                                                                      "BUILD_BUILDNUMBER: {BuildBuildnumber}", GetVariable<string>("BUILD_BUILDNUMBER")
+                                                                      "BUILD_BUILDNUMBER: {BuildBuildnumber}",
+                                                                      GetVariable<string>("BUILD_BUILDNUMBER")
                                                                   );
                                                                   Log.Information(
-                                                                      "BUILD_DEFINITIONNAME: {BuildDefinitionName}", GetVariable<string>("BUILD_DEFINITIONNAME")
+                                                                      "BUILD_DEFINITIONNAME: {BuildDefinitionName}",
+                                                                      GetVariable<string>("BUILD_DEFINITIONNAME")
                                                                   );
                                                                   Log.Information(
                                                                       "BUILD_DEFINITIONVERSION: {BuildDefinitionVersion}",
@@ -62,7 +66,8 @@ public class AzurePipelinesTasks
                                                                       GetVariable<string>("BUILD_SOURCEBRANCHNAME")
                                                                   );
                                                                   Log.Information(
-                                                                      "BUILD_SOURCEVERSION: {BuildSourceVersion}", GetVariable<string>("BUILD_SOURCEVERSION")
+                                                                      "BUILD_SOURCEVERSION: {BuildSourceVersion}",
+                                                                      GetVariable<string>("BUILD_SOURCEVERSION")
                                                                   );
                                                                   Log.Information(
                                                                       "BUILD_REPOSITORY_NAME: {BuildRepositoryName}",

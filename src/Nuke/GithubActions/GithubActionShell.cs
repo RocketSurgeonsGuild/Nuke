@@ -8,38 +8,18 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 public class GithubActionShell
 {
     /// <summary>
-    ///     The default constructor
-    /// </summary>
-    /// <param name="shell"></param>
-    public GithubActionShell(string shell)
-    {
-        Shell = shell;
-    }
-
-    /// <summary>
-    ///     The shell
-    /// </summary>
-    public string Shell { get; }
-
-    /// <summary>
     ///     Get a shell from a given string
     /// </summary>
     /// <param name="shell"></param>
     /// <returns></returns>
-    public static implicit operator GithubActionShell(string shell)
-    {
-        return new GithubActionShell(shell);
-    }
+    public static implicit operator GithubActionShell(string shell) => new(shell);
 
     /// <summary>
     ///     Convert a string into a shell
     /// </summary>
     /// <param name="shell"></param>
     /// <returns></returns>
-    public static implicit operator string(GithubActionShell shell)
-    {
-        return shell.Shell;
-    }
+    public static implicit operator string(GithubActionShell shell) => shell.Shell;
 
     /// <summary>
     ///     Bash shell
@@ -71,9 +51,17 @@ public class GithubActionShell
     /// </summary>
     public static GithubActionShell Powershell { get; } = new("powershell");
 
+    /// <summary>
+    ///     The default constructor
+    /// </summary>
+    /// <param name="shell"></param>
+    public GithubActionShell(string shell) => Shell = shell;
+
+    /// <summary>
+    ///     The shell
+    /// </summary>
+    public string Shell { get; }
+
     /// <inheritdoc />
-    public override string ToString()
-    {
-        return Shell;
-    }
+    public override string ToString() => Shell;
 }

@@ -12,8 +12,5 @@ public record GitHubActionsWorkflowOutput(string JobName, string OutputName, str
     ///     Convert to the github actions template for the workflow output
     /// </summary>
     /// <returns></returns>
-    public override string ToString()
-    {
-        return $$$"""${{ jobs.{{{JobName}}}.outputs.{{{OutputName}}} }}""";
-    }
+    public override string ToString() => $$$"""${{ jobs.{{{JobName}}}.outputs.{{{OutputName}}} }}""";
 }

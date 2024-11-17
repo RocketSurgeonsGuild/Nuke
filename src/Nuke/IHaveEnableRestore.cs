@@ -10,6 +10,6 @@ public interface IHaveEnableRestore : IHave
     /// </summary>
     [Parameter("A value indicating whether to enable restoring for a given target", Name = "EnableRestore")]
     public bool EnableRestore => EnvironmentInfo.GetVariable<bool?>("EnableRestore")
-                              ?? TryGetValue<bool?>(() => EnableRestore)
-                              ?? false;
+     ?? TryGetValue<bool?>(() => EnableRestore)
+     ?? false;
 }

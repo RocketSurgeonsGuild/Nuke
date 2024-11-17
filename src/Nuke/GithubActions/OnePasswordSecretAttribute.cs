@@ -1,7 +1,7 @@
 namespace Rocket.Surgery.Nuke.GithubActions;
 
 /// <summary>
-/// A one password secret
+///     A one password secret
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 public sealed class OnePasswordSecretAttribute : TriggerValueAttribute
@@ -15,10 +15,7 @@ public sealed class OnePasswordSecretAttribute : TriggerValueAttribute
     /// </summary>
     /// <param name="name">The name of the variable to be output</param>
     /// <param name="path">The reference path to the item</param>
-    public OnePasswordSecretAttribute(string name, string path) : base(name)
-    {
-        Path = path;
-    }
+    public OnePasswordSecretAttribute(string name, string path) : base(name) => Path = path;
 
     /// <summary>
     ///     The constructor for the <see cref="GitHubActionsSecretAttribute" />
@@ -27,10 +24,7 @@ public sealed class OnePasswordSecretAttribute : TriggerValueAttribute
     /// <param name="variable">The GitHub variable to item path part for the op reference (eg. op://vault/item)</param>
     /// <param name="path">The second half the op reference path</param>
     /// param>
-    public OnePasswordSecretAttribute(string name, string variable, string path) : this(name, path)
-    {
-        Variable = variable;
-    }
+    public OnePasswordSecretAttribute(string name, string variable, string path) : this(name, path) => Variable = variable;
 
     /// <summary>
     ///     If you are using a service account for connect server
@@ -123,8 +117,5 @@ public sealed class OnePasswordSecretAttribute : TriggerValueAttribute
     }
 
     /// <inheritdoc />
-    public override ITriggerValue ToTriggerValue()
-    {
-        return ToSecret();
-    }
+    public override ITriggerValue ToTriggerValue() => ToSecret();
 }

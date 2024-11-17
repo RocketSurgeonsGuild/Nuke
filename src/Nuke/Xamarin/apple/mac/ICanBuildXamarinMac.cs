@@ -9,12 +9,12 @@ namespace Rocket.Surgery.Nuke.Xamarin;
 ///     Xamarin mac build
 /// </summary>
 public interface ICanBuildXamarinMac : IXamarinAppleTarget,
-                                       IHaveBuildTarget,
-                                       IHaveRestoreTarget,
-                                       IHaveSolution,
-                                       IHaveConfiguration,
-                                       IHaveOutputLogs,
-                                       ICan
+    IHaveBuildTarget,
+    IHaveRestoreTarget,
+    IHaveSolution,
+    IHaveConfiguration,
+    IHaveOutputLogs,
+    ICan
 {
     /// <summary>
     ///     msbuild

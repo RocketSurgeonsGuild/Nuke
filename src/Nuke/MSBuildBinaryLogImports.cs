@@ -16,5 +16,5 @@ public enum MSBuildBinaryLogImports
     Embed = 3,
 
     /// <summary>Produce a separate .ProjectImports.zip</summary>
-    ZipFile = 4
+    ZipFile = 4,
 }

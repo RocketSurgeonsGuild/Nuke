@@ -14,37 +14,37 @@ public class XamarinConfiguration : Enumeration
     /// <summary>
     ///     The debug mock
     /// </summary>
-    public static XamarinConfiguration DebugMock = new() { Value = nameof(DebugMock) };
+    public static XamarinConfiguration DebugMock = new() { Value = nameof(DebugMock), };
 
     /// <summary>
     ///     The debug dev
     /// </summary>
-    public static XamarinConfiguration DebugDev = new() { Value = nameof(DebugDev) };
+    public static XamarinConfiguration DebugDev = new() { Value = nameof(DebugDev), };
 
     /// <summary>
     ///     The debug test
     /// </summary>
-    public static XamarinConfiguration DebugTest = new() { Value = nameof(DebugTest) };
+    public static XamarinConfiguration DebugTest = new() { Value = nameof(DebugTest), };
 
     /// <summary>
     ///     The mock
     /// </summary>
-    public static XamarinConfiguration Mock = new() { Value = nameof(Mock) };
+    public static XamarinConfiguration Mock = new() { Value = nameof(Mock), };
 
     /// <summary>
     ///     The dev
     /// </summary>
-    public static XamarinConfiguration Dev = new() { Value = nameof(Dev) };
+    public static XamarinConfiguration Dev = new() { Value = nameof(Dev), };
 
     /// <summary>
     ///     The test
     /// </summary>
-    public static XamarinConfiguration Test = new() { Value = nameof(Test) };
+    public static XamarinConfiguration Test = new() { Value = nameof(Test), };
 
     /// <summary>
     ///     The store
     /// </summary>
-    public static XamarinConfiguration Store = new() { Value = nameof(Store) };
+    public static XamarinConfiguration Store = new() { Value = nameof(Store), };
 
     /// <summary>
     ///     Performs an implicit conversion from <see cref="XamarinConfiguration" /> to <see cref="System.String" />.
@@ -53,14 +53,8 @@ public class XamarinConfiguration : Enumeration
     /// <returns>
     ///     The result of the conversion.
     /// </returns>
-    public static implicit operator string(XamarinConfiguration configuration)
-    {
-        return configuration.Value;
-    }
+    public static implicit operator string(XamarinConfiguration configuration) => configuration.Value;
 
     /// <inheritdoc />
-    public override string ToString()
-    {
-        return this;
-    }
+    public override string ToString() => this;
 }

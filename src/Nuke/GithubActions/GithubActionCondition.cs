@@ -8,38 +8,18 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 public class GithubActionCondition
 {
     /// <summary>
-    ///     The default constructor
-    /// </summary>
-    /// <param name="condition"></param>
-    public GithubActionCondition(string condition)
-    {
-        Condition = condition;
-    }
-
-    /// <summary>
-    ///     The condition expression
-    /// </summary>
-    public string? Condition { get; }
-
-    /// <summary>
     ///     Convert the condition expression to a string.
     /// </summary>
     /// <param name="condition"></param>
     /// <returns></returns>
-    public static implicit operator string?(GithubActionCondition? condition)
-    {
-        return condition?.Condition;
-    }
+    public static implicit operator string?(GithubActionCondition? condition) => condition?.Condition;
 
     /// <summary>
     ///     Convert an expression string into a GithubActionCondition
     /// </summary>
     /// <param name="condition"></param>
     /// <returns></returns>
-    public static implicit operator GithubActionCondition(string condition)
-    {
-        return new GithubActionCondition(condition);
-    }
+    public static implicit operator GithubActionCondition(string condition) => new(condition);
 
     /// <summary>
     ///     The success condition
@@ -61,9 +41,17 @@ public class GithubActionCondition
     /// </summary>
     public static GithubActionCondition Failure { get; } = new("failure()");
 
+    /// <summary>
+    ///     The default constructor
+    /// </summary>
+    /// <param name="condition"></param>
+    public GithubActionCondition(string condition) => Condition = condition;
+
+    /// <summary>
+    ///     The condition expression
+    /// </summary>
+    public string? Condition { get; }
+
     /// <inheritdoc />
-    public override string? ToString()
-    {
-        return Condition;
-    }
+    public override string? ToString() => Condition;
 }

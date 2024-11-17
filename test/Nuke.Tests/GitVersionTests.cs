@@ -18,9 +18,7 @@ public class GitVersionTests : AutoFakeTest
         ComputedGitVersionAttribute.HasGitVer().Should().BeTrue();
     }
 
-    public GitVersionTests(ITestOutputHelper outputHelper) : base(outputHelper, LogLevel.Trace)
-    {
-    }
+    public GitVersionTests(ITestOutputHelper outputHelper) : base(outputHelper, LogLevel.Trace) { }
 }
 
 public class MiscTests : AutoFakeTest
@@ -42,7 +40,5 @@ public class MiscTests : AutoFakeTest
         attr.Verbose.Should().Be(nameof(NuGetVerbosity.Detailed));
     }
 
-    public MiscTests(ITestOutputHelper outputHelper) : base(outputHelper)
-    {
-    }
+    public MiscTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 }

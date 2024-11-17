@@ -62,5 +62,4 @@ public interface ICanTestWithDotNetCoreBuild : IHaveBuildTarget,
                                                           .SetDataCollector(DataCollector)
                                                   )
                                               );
-
 }

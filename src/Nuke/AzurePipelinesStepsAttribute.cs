@@ -49,10 +49,7 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
     public string[] Parameters { get; set; } = [];
 
     /// <inheritdoc />
-    public override CustomFileWriter CreateWriter(StreamWriter streamWriter)
-    {
-        return new(streamWriter, 2, "#");
-    }
+    public override CustomFileWriter CreateWriter(StreamWriter streamWriter) => new(streamWriter, 2, "#");
 
     /// <inheritdoc />
     public override ConfigurationEntity GetConfiguration(

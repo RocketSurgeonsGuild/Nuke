@@ -64,10 +64,7 @@ public record MsbProject
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private string DebuggerDisplay => ToString();
 
-    public bool GetBoolProperty(string name)
-    {
-        return GetProperty(name) is "true" or "enable" or "enabled";
-    }
+    public bool GetBoolProperty(string name) => GetProperty(name) is "true" or "enable" or "enabled";
 
     public bool ContainsPackageReference(string packageId)
     {
@@ -79,10 +76,7 @@ public record MsbProject
         return Properties.FirstOrDefault(z => z.Name == name)?.Value;
     }
 
-    public IReadOnlyCollection<string> GetPropertyValues(string name)
-    {
-        return GetPropertyValues([name,]);
-    }
+    public IReadOnlyCollection<string> GetPropertyValues(string name) => GetPropertyValues([name,]);
 
     public IEnumerable<MsbItem> GetItems(string itemType)
     {

@@ -15,15 +15,9 @@ namespace Rocket.Surgery.Nuke;
 [PublicAPI]
 public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
 {
-    private static AbsolutePath GetShippedFilePath(MsbProject project)
-    {
-        return AbsolutePath.Create(project.Directory) / "PublicAPI.Shipped.txt";
-    }
+    private static AbsolutePath GetShippedFilePath(MsbProject project) => AbsolutePath.Create(project.Directory) / "PublicAPI.Shipped.txt";
 
-    private static AbsolutePath GetUnshippedFilePath(MsbProject project)
-    {
-        return AbsolutePath.Create(project.Directory) / "PublicAPI.Unshipped.txt";
-    }
+    private static AbsolutePath GetUnshippedFilePath(MsbProject project) => AbsolutePath.Create(project.Directory) / "PublicAPI.Unshipped.txt";
 
     /// <summary>
     ///     Determine if Unshipped apis should always be pushed the Shipped file used in lint-staged to automatically update the shipped file

@@ -221,20 +221,11 @@ internal static class SolutionUpdater
         folder.Items.Add(key, path);
     }
 
-    private static AbsolutePath GetItemPath(Solution solution, RelativePath relativePath)
-    {
-        return solution.Directory / relativePath;
-    }
+    private static AbsolutePath GetItemPath(Solution solution, RelativePath relativePath) => solution.Directory / relativePath;
 
-    private static RelativePath GetItemRelativeFilePath(SolutionFolder folder, string path)
-    {
-        return GetSolutionFolderPath(folder, true) / path;
-    }
+    private static RelativePath GetItemRelativeFilePath(SolutionFolder folder, string path) => GetSolutionFolderPath(folder, true) / path;
 
-    private static RelativePath GetItemRelativePath(SolutionFolder folder, string path)
-    {
-        return GetSolutionFolderPath(folder) / path;
-    }
+    private static RelativePath GetItemRelativePath(SolutionFolder folder, string path) => GetSolutionFolderPath(folder) / path;
 
     private static RelativePath GetSolutionFolderPath(SolutionFolder folder, bool withoutConfig = false)
     {

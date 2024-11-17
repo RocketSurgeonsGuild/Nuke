@@ -10,14 +10,14 @@ namespace Rocket.Surgery.Nuke.Xamarin;
 ///     Xamarin iOS build
 /// </summary>
 public interface ICanBuildXamariniOS : IXamarinAppleTarget,
-                                       IHaveBuildTarget,
-                                       IHaveRestoreTarget,
-                                       IHaveSolution,
-                                       IHaveConfiguration,
-                                       IHaveIpa,
-                                       IHaveOutputLogs,
-                                       IHaveiOSTargetPlatform,
-                                       ICan
+    IHaveBuildTarget,
+    IHaveRestoreTarget,
+    IHaveSolution,
+    IHaveConfiguration,
+    IHaveIpa,
+    IHaveOutputLogs,
+    IHaveiOSTargetPlatform,
+    ICan
 {
     /// <summary>
     ///     msbuild
@@ -26,13 +26,14 @@ public interface ICanBuildXamariniOS : IXamarinAppleTarget,
                                      .DependsOn(Restore)
                                      .Executes(
                                           () => MSBuild(
-                                              settings => settings.SetSolutionFile(Solution)
-                                                                  .SetProperty("Platform", iOSTargetPlatform)
-                                                                  .SetConfiguration(Configuration)
-                                                                  .SetDefaultLoggers(LogsDirectory / "build.log")
-                                                                  .SetGitVersionEnvironment(GitVersion)
-                                                                  .SetAssemblyVersion(GitVersion.AssemblyVersion())
-                                                                  .SetPackageVersion(GitVersion.PackageVersion())
+                                              settings => settings
+                                                         .SetSolutionFile(Solution)
+                                                         .SetProperty("Platform", iOSTargetPlatform)
+                                                         .SetConfiguration(Configuration)
+                                                         .SetDefaultLoggers(LogsDirectory / "build.log")
+                                                         .SetGitVersionEnvironment(GitVersion)
+                                                         .SetAssemblyVersion(GitVersion.AssemblyVersion())
+                                                         .SetPackageVersion(GitVersion.PackageVersion())
                                           )
                                       );
 }
