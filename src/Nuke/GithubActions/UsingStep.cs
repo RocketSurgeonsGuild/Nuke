@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Runtime.Serialization;
 
 // ReSharper disable MemberCanBeProtected.Global
 #pragma warning disable CA1308
@@ -34,7 +35,9 @@ public class UsingStep : BaseGitHubActionsStep
     {
         foreach (var property in GetType()
                                 .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                                .Where(z => z.CanRead && z.CanWrite && z.DeclaringType == GetType()))
+                                .Where(z => z is { CanRead: true, CanWrite: true } && z.DeclaringType == GetType())
+                                .Where(z => z.GetCustomAttribute<IgnoreDataMemberAttribute>() is null)
+                )
         {
             var value = property.GetValue(this);
             if (value == null) continue;

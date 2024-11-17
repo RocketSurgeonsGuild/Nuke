@@ -237,6 +237,13 @@ public static class GithubActionsExtensions
                 }
             );
 
+            AddStep(job, new StickyPullRequestStep("Coverage Comment")
+            {
+                If = "github.event_name == 'pull_request'",
+                Header = "Coverage",
+                Path = "coverage/summary/summary.md",
+            });
+
             if (DotNetTool.IsInstalled("codecov.tool"))
                 AddStep(
                     job,
@@ -266,6 +273,7 @@ public static class GithubActionsExtensions
             );
 
         if (typeof(IHaveTestArtifacts).IsAssignableFrom(typeof(T)))
+        {
             AddStep(
                 job,
                 new UploadArtifactStep("Publish test data")
@@ -275,6 +283,30 @@ public static class GithubActionsExtensions
                     If = "always()",
                 }
             );
+
+            job.Permissions ??= new();
+            job.Permissions.Checks = GitHubActionsPermission.Write;
+            job.Permissions.PullRequests = GitHubActionsPermission.Write;
+            job.Permissions.Contents = job.Permissions.Contents == GitHubActionsPermission.None ? GitHubActionsPermission.Read : job.Permissions.Contents;
+            job.Permissions.Issues = job.Permissions.Issues == GitHubActionsPermission.None ? GitHubActionsPermission.Read : job.Permissions.Issues;
+
+            AddStep(
+                job,
+                new UsingStep("Publish Test Results")
+                {
+                    Uses = "EnricoMi/publish-unit-test-result-action@v2",
+                    If = "always()",
+                    With = new()
+                    {
+                        ["files"] = "test-results/**/*.trx",
+                        // TODO: Matrix support?
+                        // [""] = "Test Results"
+                    },
+                }
+            );
+
+
+        }
 
         PublishArtifacts<T>(job);
 
