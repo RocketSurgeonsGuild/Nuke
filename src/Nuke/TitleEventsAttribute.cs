@@ -10,12 +10,14 @@ public sealed class TitleEventsAttribute : BuildExtensionAttributeBase, IOnBuild
 {
     private static short ProgressPercent(IReadOnlyCollection<ExecutableTarget> plan, ref int step)
     {
+        if (NukeBuild.IsServerBuild) return 0;
         var total = plan.Count + 1;
         return (short)Math.Round(( (double)step++ / total ) * 100);
     }
 
     private static void ProgressBar(ProgressBarState state, short progress = 0)
     {
+        if (NukeBuild.IsServerBuild) return;
         Console.Write($"\x1b]9;4;{state};{progress}\x07");
     }
 

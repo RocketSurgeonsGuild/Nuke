@@ -40,10 +40,7 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
 //                                                                                      .Where(x => Guid.TryParse(Path.GetFileName(x.Parent), out _))
                                                       {
                                                           var relativePath = TestResultsDirectory.GetRelativePathTo(file);
-                                                          file.Copy(
-                                                              CoverageDirectory.CreateOrCleanDirectory() / relativePath,
-                                                              ExistsPolicy.FileOverwriteIfNewer
-                                                          );
+                                                          file.Copy(CoverageDirectory.CreateOrCleanDirectory() / relativePath, ExistsPolicy.FileOverwriteIfNewer);
                                                       }
                                                   }
                                               );
