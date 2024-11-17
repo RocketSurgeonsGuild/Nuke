@@ -7,8 +7,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore;
 ///     Defines a `dotnet test` test run with code coverage via coverlet
 /// </summary>
 [PublicAPI]
-public interface ICanTestWithDotNetCore : IHaveCollectCoverage,
-    IHaveBuildTarget,
+public interface ICanTestWithDotNetCore : IHaveBuildTarget,
     ITriggerCodeCoverageReports,
     IComprehendTests,
     IHaveTestArtifacts,
@@ -58,7 +57,7 @@ public interface ICanTestWithDotNetCore : IHaveCollectCoverage,
                                                      .SetLoggers("trx")
                                                      .SetResultsDirectory(TestResultsDirectory)
                                                      .SetSettingsFile(RunSettings)
-                                                     .When(CollectCoverage, x => x.SetDataCollector(DataCollector))
+                                                     .SetDataCollector(DataCollector)
                                              )
                                          )
                                         .CollectCoverage(TestResultsDirectory, CoverageDirectory);
