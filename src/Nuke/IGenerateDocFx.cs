@@ -37,7 +37,7 @@ public interface IGenerateDocFx : IHaveDocs
                                                 {
                                                     Task.Run(() => Docfx($"{DocumentationDirectory / "docfx.json"} --serve"));
 
-                                                    var watcher = new FileSystemWatcher(DocumentationDirectory) { EnableRaisingEvents = true, };
+                                                    var watcher = new FileSystemWatcher(DocumentationDirectory) { EnableRaisingEvents = true };
                                                     while (true)
                                                     {
                                                         watcher.WaitForChanged(WatcherChangeTypes.All);

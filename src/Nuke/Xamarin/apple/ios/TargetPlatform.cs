@@ -16,17 +16,17 @@ public class TargetPlatform : Enumeration
     /// <summary>
     ///     iPhone Target
     /// </summary>
-    public static readonly TargetPlatform iPhone = new() { Value = nameof(iPhone), };
+    public static readonly TargetPlatform iPhone = new() { Value = nameof(iPhone) };
 
     /// <summary>
     ///     iPhone Simulator Target
     /// </summary>
-    public static readonly TargetPlatform iPhoneSimulator = new() { Value = nameof(iPhoneSimulator), };
+    public static readonly TargetPlatform iPhoneSimulator = new() { Value = nameof(iPhoneSimulator) };
 
     /// <summary>
     ///     Any CPU Target
     /// </summary>
-    public static readonly TargetPlatform AnyCPU = new() { Value = "Any CPU", };
+    public static readonly TargetPlatform AnyCPU = new() { Value = "Any CPU" };
 
     /// <summary>
     ///     Performs an implicit conversion from <see cref="XamarinConfiguration" /> to <see cref="System.String" />.

@@ -76,7 +76,7 @@ public static class NukeSolutionExtensions
                               .OrderBy(x => x)
                               .ToList();
 
-        if (targetFramework is null && targetFrameworks is { Count: > 0, })
+        if (targetFramework is null && targetFrameworks is { Count: > 0 })
         {
             projectCollection.UnloadProject(msbuildProject);
             targetFramework = targetFrameworks[0];

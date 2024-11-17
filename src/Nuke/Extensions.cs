@@ -166,7 +166,7 @@ public static class Extensions
     /// </summary>
     /// <returns></returns>
     public static IEnumerable<RelativePath> Match(this IEnumerable<RelativePath> relativePaths, Matcher matcher) =>
-        matcher.Match(NukeBuild.RootDirectory, relativePaths.Select(z => z.ToString())) is { HasMatches: true, Files: var files, }
+        matcher.Match(NukeBuild.RootDirectory, relativePaths.Select(z => z.ToString())) is { HasMatches: true, Files: var files }
             ? files.Select(z => (RelativePath)z.Path)
             : [];
 
@@ -175,7 +175,7 @@ public static class Extensions
     /// </summary>
     /// <returns></returns>
     public static IEnumerable<AbsolutePath> Match(this IEnumerable<AbsolutePath> absolutePaths, Matcher matcher) =>
-        matcher.Match(absolutePaths.Select(z => z.ToString())) is { HasMatches: true, Files: var files, }
+        matcher.Match(absolutePaths.Select(z => z.ToString())) is { HasMatches: true, Files: var files }
             ? files.Select(z => (RelativePath)z.Path).Select(z => NukeBuild.RootDirectory / z)
             : [];
 

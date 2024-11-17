@@ -17,7 +17,7 @@ public static class FilePathExtensions
     /// <param name="path"></param>
     /// <param name="paths"></param>
     /// <returns></returns>
-    public static AbsolutePath PickDirectory(AbsolutePath path, params AbsolutePath[] paths) => PickDirectory([path, .. paths,]);
+    public static AbsolutePath PickDirectory(AbsolutePath path, params AbsolutePath[] paths) => PickDirectory([path, .. paths]);
 
     /// <summary>
     ///     Returns the first directory that exists on disk
@@ -53,7 +53,7 @@ public static class FilePathExtensions
     /// <param name="path"></param>
     /// <param name="paths"></param>
     /// <returns></returns>
-    public static AbsolutePath PickFile(AbsolutePath path, params AbsolutePath[] paths) => PickFile([path, .. paths,]);
+    public static AbsolutePath PickFile(AbsolutePath path, params AbsolutePath[] paths) => PickFile([path, .. paths]);
 
     /// <summary>
     ///     Returns the first file that exists on disk

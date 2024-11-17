@@ -6,7 +6,7 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 [PublicAPI]
 public class RunStep : BaseGitHubActionsStep
 {
-    private static readonly string[] separator = { "\r\n", "\n", };
+    private static readonly string[] separator = { "\r\n", "\n" };
 
     /// <summary>
     ///     The default constructor

@@ -10,11 +10,11 @@ using Rocket.Surgery.Nuke.GithubActions;
     "ci-ignore",
     GitHubActionsImage.UbuntuLatest,
     AutoGenerate = false,
-    On = [RocketSurgeonGitHubActionsTrigger.Push,],
-    OnPushTags = ["v*",],
-    OnPushBranches = ["master", "main", "next",],
-    OnPullRequestBranches = ["master", "main", "next",],
-    Enhancements = [nameof(CiIgnoreMiddleware),]
+    On = [RocketSurgeonGitHubActionsTrigger.Push],
+    OnPushTags = ["v*"],
+    OnPushBranches = ["master", "main", "next"],
+    OnPullRequestBranches = ["master", "main", "next"],
+    Enhancements = [nameof(CiIgnoreMiddleware)]
 )]
 [GitHubActionsSteps(
     "ci",
@@ -25,26 +25,26 @@ using Rocket.Surgery.Nuke.GithubActions;
         RocketSurgeonGitHubActionsTrigger.WorkflowCall,
         RocketSurgeonGitHubActionsTrigger.WorkflowDispatch,
     ],
-    OnPushTags = ["v*",],
-    OnPushBranches = ["master", "main", "next",],
-    OnPullRequestBranches = ["master", "main", "next",],
-    InvokedTargets = [nameof(Default),],
-    NonEntryTargets = [nameof(Default),],
-    Enhancements = [nameof(CiMiddleware),]
+    OnPushTags = ["v*"],
+    OnPushBranches = ["master", "main", "next"],
+    OnPullRequestBranches = ["master", "main", "next"],
+    InvokedTargets = [nameof(Default)],
+    NonEntryTargets = [nameof(Default)],
+    Enhancements = [nameof(CiMiddleware)]
 )]
 [GitHubActionsLint(
     "lint",
     GitHubActionsImage.UbuntuLatest,
     AutoGenerate = false,
-    OnPullRequestTargetBranches = ["master", "main", "next",],
-    Enhancements = [nameof(LintStagedMiddleware),]
+    OnPullRequestTargetBranches = ["master", "main", "next"],
+    Enhancements = [nameof(LintStagedMiddleware)]
 )]
 [GitHubActionsSteps(
     "inputs",
     GitHubActionsImage.UbuntuLatest,
     AutoGenerate = false,
-    On = [RocketSurgeonGitHubActionsTrigger.WorkflowCall,],
-    InvokedTargets = [nameof(WithOutputs),]
+    On = [RocketSurgeonGitHubActionsTrigger.WorkflowCall],
+    InvokedTargets = [nameof(WithOutputs)]
 )]
 [GitHubActionsVariable("THIS_IS_A_VARIABLE", Alias = "ThisIsAOtherVariable")]
 [GitHubActionsVariable("THIS_IS_ANOTHER_VARIABLE")]

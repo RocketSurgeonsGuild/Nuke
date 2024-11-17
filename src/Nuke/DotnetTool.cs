@@ -47,7 +47,7 @@ public static class DotNetTool
                 // ReSharper disable once NullableWarningSuppressionIsUsed
                 JsonSerializer.Deserialize<ToolsManifset>(
                     File.ReadAllText(ToolsManifestLocation.Value),
-                    new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, }
+                    new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }
                 )!
             );
             #pragma warning restore CA1869
