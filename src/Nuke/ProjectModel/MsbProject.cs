@@ -38,7 +38,7 @@ public record MsbProject
                                   z => new MsbItem(
                                       z.ItemType,
                                       z.EvaluatedInclude,
-                                      [.. z.Metadata.Select(m => new MsbItemMetadata(m.ItemType, m.Name, m.EvaluatedValue)),]
+                                      [.. z.Metadata.Select(m => new MsbItemMetadata(m.ItemType, m.Name, m.EvaluatedValue))]
                                   )
                               ),
             ]
@@ -76,7 +76,7 @@ public record MsbProject
         return Properties.FirstOrDefault(z => z.Name == name)?.Value;
     }
 
-    public IReadOnlyCollection<string> GetPropertyValues(string name) => GetPropertyValues([name,]);
+    public IReadOnlyCollection<string> GetPropertyValues(string name) => GetPropertyValues([name]);
 
     public IEnumerable<MsbItem> GetItems(string itemType)
     {
@@ -88,7 +88,7 @@ public record MsbProject
         foreach (var name in names)
         {
             var property = GetProperty(name);
-            if (property is { Length: > 0, })
+            if (property is { Length: > 0 })
             {
                 return property.Split(';');
             }

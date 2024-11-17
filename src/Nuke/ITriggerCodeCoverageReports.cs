@@ -88,9 +88,9 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
     {
         return ( this switch
                  {
-                     IHaveGitVersion gitVersion                               => settings.SetTag(gitVersion.GitVersion.InformationalVersion),
-                     IHaveGitRepository { GitRepository: { }, } gitRepository => settings.SetTag(gitRepository.GitRepository.Head),
-                     _                                                        => settings,
+                     IHaveGitVersion gitVersion                              => settings.SetTag(gitVersion.GitVersion.InformationalVersion),
+                     IHaveGitRepository { GitRepository: { } } gitRepository => settings.SetTag(gitRepository.GitRepository.Head),
+                     _                                                       => settings,
                  }
                )
               .SetReports(InputReports)

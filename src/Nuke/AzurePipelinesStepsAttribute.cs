@@ -33,7 +33,7 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
     public override Type HostType => typeof(AzurePipelines);
 
     /// <inheritdoc />
-    public override IEnumerable<AbsolutePath> GeneratedFiles => new[] { ConfigurationFile, };
+    public override IEnumerable<AbsolutePath> GeneratedFiles => new[] { ConfigurationFile };
 
     /// <inheritdoc />
     public override IEnumerable<string> RelevantTargetNames => InvokeTargets;

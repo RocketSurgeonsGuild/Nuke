@@ -36,7 +36,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
     ) : base(name)
     {
         _images = Enumerable
-                 .Concat(new[] { image, }, images)
+                 .Concat(new[] { image }, images)
                  .Select(z => z.GetValue().Replace(".", "_", StringComparison.Ordinal))
                  .ToArray();
         _isGithubHosted = true;
@@ -54,7 +54,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         params string[] images
     ) : base(name)
     {
-        _images = Enumerable.Concat(new[] { image, }, images).ToArray();
+        _images = Enumerable.Concat(new[] { image }, images).ToArray();
     }
 
     /// <summary>
@@ -71,7 +71,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
     public override string IdPostfix => Name;
 
     /// <inheritdoc />
-    public override IEnumerable<AbsolutePath> GeneratedFiles => new[] { ConfigurationFile, };
+    public override IEnumerable<AbsolutePath> GeneratedFiles => new[] { ConfigurationFile };
 
     /// <summary>
     ///     Determine if you always want to build the nuke project during the ci run
@@ -160,7 +160,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                             Outputs = secrets
                                      .Select(secret => new GitHubActionsOutput(secret.Name, secret.Description))
                                      .ToList(),
-                            With = new() { ["export-env"] = "false", },
+                            With = new() { ["export-env"] = "false" },
                             Environment = Enumerable
                                          .Concat(
                                               secrets
@@ -221,7 +221,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                             Outputs = secrets
                                      .Select(secret => new GitHubActionsOutput(secret.Name, secret.Description))
                                      .ToList(),
-                            With = new() { ["export-env"] = "false", },
+                            With = new() { ["export-env"] = "false" },
                             Environment = Enumerable
                                          .Concat(
                                               secrets
@@ -333,7 +333,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                                                      x => ( ExecutableTarget: x,
                                                             Targets: GetInvokedTargets(x, relevantTargets).ToArray() )
                                                  )
-                                                .ForEachLazy(x => lookupTable.Add(x.ExecutableTarget, [.. x.Targets,]))
+                                                .ForEachLazy(x => lookupTable.Add(x.ExecutableTarget, [.. x.Targets]))
                 )
         {
             var localStepParameters = stepParameters.ToList();
@@ -426,10 +426,10 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         var config = new RocketSurgeonGitHubActionsConfiguration
         {
             Name = Name,
-            DetailedTriggers = [.. triggers,],
+            DetailedTriggers = [.. triggers],
             // TODO: Figure out what this looks like here
             //            Environment = environmentAttributes
-            Jobs = [buildJob,],
+            Jobs = [buildJob],
         };
 
         ApplyEnhancements(config);
@@ -456,7 +456,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             }
         }
 
-        if (_isGithubHosted && _images is { Length: > 1, })
+        if (_isGithubHosted && _images is { Length: > 1 })
         {
             var mainOs = _images.First();
             foreach (var step in steps.OfType<UploadArtifactStep>().ToList())
@@ -469,7 +469,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                         Name = $$$"""${{ matrix.os }}-{{{step.Name}}}""",
                         Path = step.Path,
                         Environment = step.Environment.ToDictionary(z => z.Key, z => z.Value),
-                        Outputs = [.. step.Outputs,],
+                        Outputs = [.. step.Outputs],
                         With = step.With.ToDictionary(z => z.Key, z => z.Value),
                         Uses = step.Uses,
                         Overwrite = step.Overwrite,

@@ -102,7 +102,7 @@ public class LintPaths
     /// <returns></returns>
     public ImmutableList<RelativePath> Glob(Matcher matcher)
     {
-        return _relativeCache.GetValue(matcher, m => [.. _paths.Value.Match(m).GetRelativePaths(),]);
+        return _relativeCache.GetValue(matcher, m => [.. _paths.Value.Match(m).GetRelativePaths()]);
     }
 
     /// <summary>
@@ -119,7 +119,7 @@ public class LintPaths
     /// <returns></returns>
     public ImmutableList<AbsolutePath> GlobAbsolute(Matcher matcher)
     {
-        return _pathsCache.GetValue(matcher, m => [.. _paths.Value.Match(m),]);
+        return _pathsCache.GetValue(matcher, m => [.. _paths.Value.Match(m)]);
     }
 
     /// <summary>

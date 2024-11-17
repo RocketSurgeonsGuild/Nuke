@@ -64,7 +64,7 @@ public class ComputedGitVersionAttribute : ValueInjectionAttributeBase
                    );
         // ReSharper disable once NullableWarningSuppressionIsUsed
         return json.ToObject<GitVersion>(
-            new() { ContractResolver = new AllWritableContractResolver(), }
+            new() { ContractResolver = new AllWritableContractResolver() }
         )!;
     }
 

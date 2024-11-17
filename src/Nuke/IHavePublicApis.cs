@@ -107,7 +107,7 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                 var unshipped = await GetLines(unshippedFilePath);
                                                                 foreach (var item in unshipped)
                                                                 {
-                                                                    if (item is not { Length: > 0, })
+                                                                    if (item is not { Length: > 0 })
                                                                     {
                                                                         continue;
                                                                     }

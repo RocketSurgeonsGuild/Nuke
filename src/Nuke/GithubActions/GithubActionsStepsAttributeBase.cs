@@ -149,8 +149,8 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
             foreach (var method in Enhancements.Join(Build.GetType().GetMethods(), z => z, z => z.Name, (_, e) => e))
             {
                 config = method.IsStatic
-                    ? method.Invoke(null, [config,]) as RocketSurgeonGitHubActionsConfiguration ?? config
-                    : method.Invoke(Build, [config,]) as RocketSurgeonGitHubActionsConfiguration
+                    ? method.Invoke(null, [config]) as RocketSurgeonGitHubActionsConfiguration ?? config
+                    : method.Invoke(Build, [config]) as RocketSurgeonGitHubActionsConfiguration
                  ?? config;
             }
 
@@ -236,20 +236,20 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
             yield return new RocketSurgeonGitHubActionsVcsTrigger
             {
                 Kind = RocketSurgeonGitHubActionsTrigger.Push,
-                Branches = [.. OnPushBranches,],
-                Tags = [.. OnPushTags,],
-                IncludePaths = [.. OnPushIncludePaths,],
-                ExcludePaths = [.. OnPushExcludePaths,],
+                Branches = [.. OnPushBranches],
+                Tags = [.. OnPushTags],
+                IncludePaths = [.. OnPushIncludePaths],
+                ExcludePaths = [.. OnPushExcludePaths],
             };
 
         if (OnPullRequestBranches.Length > 0 || OnPullRequestTags.Length > 0 || OnPullRequestIncludePaths.Length > 0 || OnPullRequestExcludePaths.Length > 0)
             yield return new RocketSurgeonGitHubActionsVcsTrigger
             {
                 Kind = RocketSurgeonGitHubActionsTrigger.PullRequest,
-                Branches = [.. OnPullRequestBranches,],
-                Tags = [.. OnPullRequestTags,],
-                IncludePaths = [.. OnPullRequestIncludePaths,],
-                ExcludePaths = [.. OnPullRequestExcludePaths,],
+                Branches = [.. OnPullRequestBranches],
+                Tags = [.. OnPullRequestTags],
+                IncludePaths = [.. OnPullRequestIncludePaths],
+                ExcludePaths = [.. OnPullRequestExcludePaths],
             };
 
         if (OnPullRequestTargetBranches.Length > 0
@@ -259,14 +259,14 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
             yield return new RocketSurgeonGitHubActionsVcsTrigger
             {
                 Kind = RocketSurgeonGitHubActionsTrigger.PullRequestTarget,
-                Branches = [.. OnPullRequestTargetBranches,],
-                Tags = [.. OnPullRequestTargetTags,],
-                IncludePaths = [.. OnPullRequestTargetIncludePaths,],
-                ExcludePaths = [.. OnPullRequestTargetExcludePaths,],
+                Branches = [.. OnPullRequestTargetBranches],
+                Tags = [.. OnPullRequestTargetTags],
+                IncludePaths = [.. OnPullRequestTargetIncludePaths],
+                ExcludePaths = [.. OnPullRequestTargetExcludePaths],
             };
 
         if (OnCronSchedule != null)
-            yield return new GitHubActionsScheduledTrigger { Cron = OnCronSchedule, };
+            yield return new GitHubActionsScheduledTrigger { Cron = OnCronSchedule };
     }
 
     /// <summary>
