@@ -234,7 +234,7 @@ public static class GithubActionsExtensions
             {
                 If = "github.event_name == 'pull_request'",
                 Header = "Coverage",
-                Path = "coverage/summary/summary.md",
+                Path = "coverage/summary/Summary.md",
             });
 
             if (DotNetTool.IsInstalled("codecov.tool"))
