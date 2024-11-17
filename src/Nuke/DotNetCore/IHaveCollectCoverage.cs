@@ -10,4 +10,9 @@ public interface IHaveCollectCoverage : IHave
     /// </summary>
     /// <value></value>
     bool CollectCoverage { get; }
+
+    /// <summary>
+    /// The coverage data collector
+    /// </summary>
+    public string DataCollector => "Code Coverage";
 }

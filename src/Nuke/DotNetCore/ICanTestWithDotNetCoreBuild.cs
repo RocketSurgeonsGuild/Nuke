@@ -59,19 +59,8 @@ public interface ICanTestWithDotNetCoreBuild : IHaveCollectCoverage,
                                                           .SetConfiguration(TestBuildConfiguration)
                                                           .EnableNoBuild()
                                                           .SetResultsDirectory(TestResultsDirectory)
-                                                          .When(
-                                                               !CollectCoverage,
-                                                               x => x
-                                                                   .SetProperty((string)"CollectCoverage", "true")
-                                                                   .SetProperty("CoverageDirectory", CoverageDirectory)
-                                                           )
-                                                          .When(
-                                                               CollectCoverage,
-                                                               x => x
-                                                                   .SetProperty("CollectCoverage", "false")
-                                                                   .SetDataCollector("XPlat Code Coverage")
-                                                                   .SetSettingsFile(RunSettings)
-                                                           )
+                                                            .SetSettingsFile(RunSettings)
+                                                          .When(CollectCoverage, x => x.SetDataCollector(DataCollector))
                                                   )
                                               )
                                              .CollectCoverage(TestResultsDirectory, CoverageDirectory);
