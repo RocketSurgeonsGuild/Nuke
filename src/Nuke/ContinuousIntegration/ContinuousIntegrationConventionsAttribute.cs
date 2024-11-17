@@ -2,9 +2,6 @@ using System.Diagnostics;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
 using Nuke.Common.IO;
-using Nuke.Common.Tooling;
-using Nuke.Common.Tools.DotNet;
-using Serilog;
 
 namespace Rocket.Surgery.Nuke.ContinuousIntegration;
 

@@ -1,10 +1,12 @@
+using System.Diagnostics;
+
 namespace Rocket.Surgery.Nuke.GithubActions;
 
 /// <summary>
 ///     A wrapper around the SetupXvfb step in order to run commands in headless mode
 /// </summary>
 [PublicAPI]
-[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class HeadlessRunStep : UsingStep
 {
     /// <summary>
@@ -28,14 +30,8 @@ public class HeadlessRunStep : UsingStep
     /// </summary>
     public string? Options { get; set; }
 
-    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay
-    {
-        get
-        {
-            return ToString();
-        }
-    }
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString();
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)

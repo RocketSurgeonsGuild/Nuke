@@ -35,7 +35,7 @@ public class UsingStep : BaseGitHubActionsStep
     {
         foreach (var property in GetType()
                                 .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                                .Where(z => z is { CanRead: true, CanWrite: true } && z.DeclaringType == GetType())
+                                .Where(z => z is { CanRead: true, CanWrite: true, } && z.DeclaringType == GetType())
                                 .Where(z => z.GetCustomAttribute<IgnoreDataMemberAttribute>() is null)
                 )
         {
