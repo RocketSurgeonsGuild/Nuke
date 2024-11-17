@@ -159,7 +159,7 @@ jobs:
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: 'Coverage'
-          path: 'coverage/summary/Summary.md'
+          path: 'coverage/summary/SummaryGithub.md'
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
       - name: 📫 Publish Coverage
         if: (github.event_name != 'pull_request' && github.event_name != 'pull_request_target') || ((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]')

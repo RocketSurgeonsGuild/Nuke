@@ -27,7 +27,7 @@ public interface IGenerateCodeCoverageReport : ITriggerCodeCoverageReports, IGen
                                                          () => ReportGeneratorTasks.ReportGenerator(
                                                              s => Defaults(s)
                                                                  .SetTargetDirectory(CoverageReportDirectory)
-                                                                 .SetReportTypes(ReportTypes.HtmlInline_AzurePipelines_Dark)
+                                                                 .SetReportTypes(ReportTypes.HtmlInline_AzurePipelines_Dark, ReportTypes.Html_Dark)
                                                          )
                                                      );
 }

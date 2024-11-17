@@ -238,7 +238,7 @@ public static class GithubActionsExtensions
                 {
                     If = "github.event_name == 'pull_request'",
                     Header = "Coverage",
-                    Path = "coverage/summary/Summary.md",
+                    Path = "coverage/summary/SummaryGithub.md",
                 }
             );
 
