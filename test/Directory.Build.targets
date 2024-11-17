@@ -4,7 +4,7 @@
         <PackageReference Include="Rocket.Surgery.Extensions.Testing.FakeItEasy" />
         <PackageReference Include="Rocket.Surgery.Extensions.Testing.XUnit" />
         <PackageReference Include="Bogus" />
-        <PackageReference Include="coverlet.collector" />
+        <PackageReference Include="Microsoft.CodeCoverage" />
         <PackageReference Include="FakeItEasy" />
         <PackageReference Include="FluentAssertions" />
         <PackageReference Include="xunit" />

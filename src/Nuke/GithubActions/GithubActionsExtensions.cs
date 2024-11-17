@@ -1,5 +1,4 @@
 using System.Collections.Concurrent;
-using System.Collections.Immutable;
 using System.Reflection;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
@@ -95,20 +94,16 @@ public static class GithubActionsExtensions
     /// </summary>
     /// <param name="configuration"></param>
     /// <returns></returns>
-    public static RocketSurgeonGitHubActionsConfiguration IncludeRepositoryConfigurationFiles(this RocketSurgeonGitHubActionsConfiguration configuration)
-    {
-        return IncludePaths(configuration, _pathsIgnore);
-    }
+    public static RocketSurgeonGitHubActionsConfiguration IncludeRepositoryConfigurationFiles(this RocketSurgeonGitHubActionsConfiguration configuration) =>
+        IncludePaths(configuration, _pathsIgnore);
 
     /// <summary>
     ///     Adds common paths that should be excluded from triggering a full CI build in github actions
     /// </summary>
     /// <param name="configuration"></param>
     /// <returns></returns>
-    public static RocketSurgeonGitHubActionsConfiguration ExcludeRepositoryConfigurationFiles(this RocketSurgeonGitHubActionsConfiguration configuration)
-    {
-        return ExcludePaths(configuration, _pathsIgnore);
-    }
+    public static RocketSurgeonGitHubActionsConfiguration ExcludeRepositoryConfigurationFiles(this RocketSurgeonGitHubActionsConfiguration configuration) =>
+        ExcludePaths(configuration, _pathsIgnore);
 
     /// <summary>
     ///     Adds paths that should be included to trigger a full CI build in github actions
@@ -120,7 +115,7 @@ public static class GithubActionsExtensions
     {
         foreach (var item in configuration.DetailedTriggers.OfType<RocketSurgeonGitHubActionsVcsTrigger>())
         {
-            item.IncludePaths = [..Enumerable.Concat(item.IncludePaths, paths).Distinct()];
+            item.IncludePaths = [.. Enumerable.Concat(item.IncludePaths, paths).Distinct(),];
         }
 
         return configuration;
@@ -136,7 +131,7 @@ public static class GithubActionsExtensions
     {
         foreach (var item in configuration.DetailedTriggers.OfType<RocketSurgeonGitHubActionsVcsTrigger>())
         {
-            item.ExcludePaths = [..Enumerable.Concat(item.IncludePaths, paths).Distinct()];
+            item.ExcludePaths = [.. Enumerable.Concat(item.IncludePaths, paths).Distinct(),];
         }
 
         return configuration;
@@ -150,7 +145,7 @@ public static class GithubActionsExtensions
     public static RocketSurgeonsGithubActionsJob AddNuGetCache(this RocketSurgeonsGithubActionsJob job)
     {
         job.Environment["NUGET_PACKAGES"] = "${{ github.workspace }}/.nuget/packages";
-        job.InsertAfterCheckOut(
+        _ = job.InsertAfterCheckOut(
             new UsingStep("NuGet Cache")
             {
                 Uses = "actions/cache@v3",
@@ -174,7 +169,7 @@ public static class GithubActionsExtensions
     /// <returns></returns>
     public static RocketSurgeonsGithubActionsJob ConfigureForGitVersion(this RocketSurgeonsGithubActionsJob job)
     {
-        job.InsertAfterCheckOut(new RunStep("Fetch all history for all tags and branches") { Run = "git fetch --prune", });
+        _ = job.InsertAfterCheckOut(new RunStep("Fetch all history for all tags and branches") { Run = "git fetch --prune", });
         return job;
     }
 
@@ -189,7 +184,7 @@ public static class GithubActionsExtensions
         // fallback for projects not yet calling publish artifacts
         if (typeof(IHaveNuGetPackages).IsAssignableFrom(typeof(T)) && !job.InternalData.TryGetValue(typeof(IHaveNuGetPackages), out _))
         {
-            AddStep(
+            _ = AddStep(
                 job,
                 new UploadArtifactStep("Publish NuGet Packages")
                 {
@@ -203,7 +198,7 @@ public static class GithubActionsExtensions
 
         if (typeof(IGenerateDocFx).IsAssignableFrom(typeof(T)) && !job.InternalData.TryGetValue(typeof(IGenerateDocFx), out _))
         {
-            AddStep(
+            _ = AddStep(
                 job,
                 new UploadArtifactStep("Publish Documentation")
                 {
@@ -227,7 +222,7 @@ public static class GithubActionsExtensions
     {
         if (typeof(IHaveCodeCoverage).IsAssignableFrom(typeof(T)))
         {
-            AddStep(
+            _ = AddStep(
                 job,
                 new UploadArtifactStep("Publish coverage data")
                 {
@@ -237,8 +232,19 @@ public static class GithubActionsExtensions
                 }
             );
 
+            _ = AddStep(
+                job,
+                new StickyPullRequestStep("Coverage Comment")
+                {
+                    If = "github.event_name == 'pull_request'",
+                    Header = "Coverage",
+                    Path = "coverage/summary/SummaryGithub.md",
+                }
+            );
+
             if (DotNetTool.IsInstalled("codecov.tool"))
-                AddStep(
+            {
+                _ = AddStep(
                     job,
                     new UsingStep("Publish Coverage")
                     {
@@ -252,10 +258,12 @@ public static class GithubActionsExtensions
                         },
                     }
                 );
+            }
         }
 
         if (typeof(IHaveOutputLogs).IsAssignableFrom(typeof(T)))
-            AddStep(
+        {
+            _ = AddStep(
                 job,
                 new UploadArtifactStep("Publish logs")
                 {
@@ -264,9 +272,11 @@ public static class GithubActionsExtensions
                     If = "always()",
                 }
             );
+        }
 
         if (typeof(IHaveTestArtifacts).IsAssignableFrom(typeof(T)))
-            AddStep(
+        {
+            _ = AddStep(
                 job,
                 new UploadArtifactStep("Publish test data")
                 {
@@ -276,7 +286,29 @@ public static class GithubActionsExtensions
                 }
             );
 
-        PublishArtifacts<T>(job);
+            job.Permissions ??= new();
+            job.Permissions.Checks = GitHubActionsPermission.Write;
+            job.Permissions.PullRequests = GitHubActionsPermission.Write;
+            job.Permissions.Contents = job.Permissions.Contents == GitHubActionsPermission.None ? GitHubActionsPermission.Read : job.Permissions.Contents;
+            job.Permissions.Issues = job.Permissions.Issues == GitHubActionsPermission.None ? GitHubActionsPermission.Read : job.Permissions.Issues;
+
+            _ = AddStep(
+                job,
+                new UsingStep("Publish Test Results")
+                {
+                    Uses = "EnricoMi/publish-unit-test-result-action@v2",
+                    If = "always()",
+                    With = new()
+                    {
+                        ["files"] = "artifacts/test/**/*.trx",
+                        // TODO: Matrix support?
+                        // [""] = "Test Results"
+                    },
+                }
+            );
+        }
+
+        _ = PublishArtifacts<T>(job);
 
         return job;
     }
@@ -309,7 +341,7 @@ public static class GithubActionsExtensions
     {
         foreach (var version in versions.Reverse())
         {
-            job.UseDotNetSdk(version);
+            _ = job.UseDotNetSdk(version);
         }
 
         return job;
@@ -325,7 +357,7 @@ public static class GithubActionsExtensions
     public static RocketSurgeonsGithubActionsJob UseDotNetSdk(this RocketSurgeonsGithubActionsJob job, string version, string? exactVersion = null)
     {
         exactVersion ??= version + ".x";
-        job.InsertAfterCheckOut(new SetupDotNetStep($"Use .NET Core {version} SDK") { DotNetVersion = exactVersion, });
+        _ = job.InsertAfterCheckOut(new SetupDotNetStep($"Use .NET Core {version} SDK") { DotNetVersion = exactVersion, });
         return job;
     }
 
@@ -354,7 +386,7 @@ public static class GithubActionsExtensions
     {
         if (!outputPaths.TryGetValue(target, out var paths))
         {
-            paths = new();
+            paths = [];
             outputPaths[target] = paths;
         }
 
@@ -367,15 +399,18 @@ public static class GithubActionsExtensions
     {
         // ReSharper disable once NullableWarningSuppressionIsUsed
         var def = (ITargetDefinition)DefinitionProperty.GetValue(target)!;
-        if (outputPaths.TryGetValue(def, out var paths)) return paths;
+        if (outputPaths.TryGetValue(def, out var paths))
+        {
+            return paths;
+        }
 
-        paths = new();
+        paths = [];
         outputPaths[def] = paths;
         return paths;
     }
 
     private static readonly string[] _pathsIgnore =
-    {
+    [
         ".codecov.yml",
         ".editorconfig",
         ".gitattributes",
@@ -394,7 +429,7 @@ public static class GithubActionsExtensions
         ".github/labels.yml",
         ".github/release.yml",
         ".github/renovate.json",
-    };
+    ];
 
     private static readonly ConcurrentDictionary<ITargetDefinition, List<GitHubActionsOutput>> outputPaths = new();
 

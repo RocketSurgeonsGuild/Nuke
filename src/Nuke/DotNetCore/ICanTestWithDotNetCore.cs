@@ -7,8 +7,7 @@ namespace Rocket.Surgery.Nuke.DotNetCore;
 ///     Defines a `dotnet test` test run with code coverage via coverlet
 /// </summary>
 [PublicAPI]
-public interface ICanTestWithDotNetCore : IHaveCollectCoverage,
-    IHaveBuildTarget,
+public interface ICanTestWithDotNetCore : IHaveBuildTarget,
     ITriggerCodeCoverageReports,
     IComprehendTests,
     IHaveTestArtifacts,
@@ -57,19 +56,8 @@ public interface ICanTestWithDotNetCore : IHaveCollectCoverage,
                                                      .EnableNoBuild()
                                                      .SetLoggers("trx")
                                                      .SetResultsDirectory(TestResultsDirectory)
-                                                     .When(
-                                                          !CollectCoverage,
-                                                          x => x
-                                                              .SetProperty((string)"CollectCoverage", "true")
-                                                              .SetProperty("CoverageDirectory", CoverageDirectory)
-                                                      )
-                                                     .When(
-                                                          CollectCoverage,
-                                                          x => x
-                                                              .SetProperty("CollectCoverage", "false")
-                                                              .SetDataCollector("XPlat Code Coverage")
-                                                              .SetSettingsFile(RunSettings)
-                                                      )
+                                                     .SetSettingsFile(RunSettings)
+                                                     .SetDataCollector(DataCollector)
                                              )
                                          )
                                         .CollectCoverage(TestResultsDirectory, CoverageDirectory);
