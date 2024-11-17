@@ -32,7 +32,7 @@ public interface IComprehendTests : IComprehend
      ?? NukeBuild.TemporaryDirectory / "default.runsettings";
 
     /// <summary>
-    ///     The coverage data collector
+    /// The coverage data collector
     /// </summary>
     public string DataCollector => "Code Coverage";
 }
