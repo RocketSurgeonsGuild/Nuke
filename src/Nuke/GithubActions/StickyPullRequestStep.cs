@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Runtime.Serialization;
 
 namespace Rocket.Surgery.Nuke.GithubActions;
@@ -6,7 +7,7 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 ///     A wrapper around the Sticky Pull Request Comment step
 /// </summary>
 [PublicAPI]
-[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class StickyPullRequestStep : UsingStep
 {
     /// <summary>
@@ -70,19 +71,13 @@ public class StickyPullRequestStep : UsingStep
     public string? Repo { get; set; }
 
     /// <summary>
-    /// The github token, defaults to use the secret if not provided
+    ///     The github token, defaults to use the secret if not provided
     /// </summary>
     [IgnoreDataMember]
     public string? GithubToken { get; set; }
 
-    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay
-    {
-        get
-        {
-            return ToString();
-        }
-    }
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString();
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
