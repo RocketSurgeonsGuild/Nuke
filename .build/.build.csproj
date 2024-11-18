@@ -14,7 +14,7 @@
         <PackageReference Include="GitVersion.Tool" ExcludeAssets="All" />
         <PackageReference Include="ReportGenerator" ExcludeAssets="All" />
         <PackageReference Include="JetBrains.Annotations" PrivateAssets="all" />
-        <PackageReference Include="JetBrains.ReSharper.CommandLineTools" ExcludeAssets="All" />
+        <PackageReference Include="JetBrains.ReSharper.GlobalTools" ExcludeAssets="All" />
         <PackageReference Include="JetBrains.dotCover.CommandLineTools" ExcludeAssets="All" />
         <PackageReference Include="Nuke.Common" />
         <PackageReference Include="Buildalyzer" />
