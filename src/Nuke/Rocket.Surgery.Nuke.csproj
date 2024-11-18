@@ -14,7 +14,6 @@
     <PackageReference Include="System.Interactive.Async" />
     <PackageReference Include="YamlDotNet" />
     <PackageReference Include="Humanizer.Core" />
-    <PackageReference Include="Polyfill" />
     <PackageReference Include="JetBrains.Annotations" PrivateAssets="all" />
       
     <PackageReference Include="Microsoft.Build.Locator" />
