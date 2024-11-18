@@ -58,6 +58,7 @@ public static class ToolSettingsExtensions
             var existingArgs = settings.ProcessArgumentConfigurator;
             settings = settings.SetProcessArgumentConfigurator(args => existingArgs(args).Add("/tl"));
         }
+
         return settings
               .SetBinaryLogger((AbsolutePath)Path.ChangeExtension(path, "binlog"))
               .SetFileLogger((AbsolutePath)Path.ChangeExtension(path, "log"), verbosity);
