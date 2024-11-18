@@ -45,7 +45,7 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                       );
 
                                                       _ = ( CoverageDirectory / "Cobertura.xml" ).Move(
-                                                          CoverageDirectory / "solution.cobertura.xml",
+                                                          TestResultsDirectory / "test.cobertura.xml",
                                                           ExistsPolicy.FileOverwriteIfNewer
                                                       );
                                                   }

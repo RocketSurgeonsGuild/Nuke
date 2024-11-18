@@ -77,6 +77,4 @@ internal partial class Pipeline : NukeBuild,
 
     [Parameter("Configuration to build")]
     public Configuration Configuration { get; } = IsLocalBuild ? Configuration.Debug : Configuration.Release;
-
-    AbsolutePath IComprehendTests.RunSettings => RootDirectory / "src" / "Nuke" / "default.runsettings";
 }

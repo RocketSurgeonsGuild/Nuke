@@ -103,19 +103,29 @@ internal record ResolvedToolsManifest(ImmutableDictionary<string, FullToolComman
 
     public Tool GetTool(string nugetPackageName)
     {
-        return CommandDefinitions.TryGetValue(nugetPackageName, out var tool)
-            ? (arguments, directory, variables, timeout, output, invocation, logger, handler) => DotNetTasks.DotNet(
-                  string.Concat(tool.Command, " ", arguments.ToStringAndClear()),
-                  directory,
-                  variables,
-                  timeout,
-                  output,
-                  invocation,
-                  // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-                  logger ?? DefaultLogger,
-                  handler
-              )
-            : throw new InvalidOperationException($"Tool {nugetPackageName} is not installed");
+        if (CommandDefinitions.TryGetValue(nugetPackageName, out var tool))
+        {
+            return (arguments, directory, variables, timeout, output, invocation, logger, handler) =>
+                   {
+                       var newArgs = new ArgumentStringHandler();
+                       newArgs.AppendLiteral(tool.Command);
+                       newArgs.AppendLiteral(" ");
+                       newArgs.AppendLiteral(arguments.ToStringAndClear().TrimMatchingDoubleQuotes());
+                       arguments.AppendLiteral(newArgs.ToStringAndClear());
+                       return DotNetTasks.DotNet(
+                           arguments,
+                           directory,
+                           variables,
+                           timeout,
+                           output,
+                           invocation,
+                           // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
+                           logger ?? DefaultLogger,
+                           handler
+                       );
+                   };
+        }
+        throw new InvalidOperationException($"Tool {nugetPackageName} is not installed");
     }
 
     public ProperTool GetProperTool(string nugetPackageName)

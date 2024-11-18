@@ -40,24 +40,33 @@ public interface ICanTestWithDotNetCore : IHaveBuildTarget,
                                              )
                                          )
                                         .CreateOrCleanDirectory(TestResultsDirectory)
-                                        .EnsureRunSettingsExists(RunSettings)
+                                        .EnsureRunSettingsExists(this)
                                         .Net9MsBuildFix()
                                         .Executes(
-                                             () => DotNetTasks.DotNetTest(
-                                                 s => CustomizeDotNetTestSettings(
-                                                     s
-                                                        .SetProcessWorkingDirectory(RootDirectory)
-                                                        .SetProjectFile(Solution)
-                                                        .SetDefaultLoggers(LogsDirectory / "test.log")
-                                                        .SetGitVersionEnvironment(GitVersion)
-                                                        .SetConfiguration(TestBuildConfiguration)
-                                                        .EnableNoRestore()
-                                                        .EnableNoBuild()
-                                                        .SetLoggers("trx")
-                                                        .SetResultsDirectory(TestResultsDirectory)
-                                                        .SetSettingsFile(RunSettings)
-                                                        .SetDataCollector(DataCollector)
-                                                 )
+                                             () => DotNetTool.GetTool("dotnet-coverage")(
+                                                 $"{new Arguments()
+                                                   .Add("collect")
+                                                   .Add("--settings {value}", RunSettings)
+                                                   .Add("--output {value}", CoverageDirectory / "coverage.cobertura.xml")
+                                                   .Add("--output-format {value}", "cobertura")
+                                                   .Add("--")
+                                                   .Add("dotnet")
+                                                   .Concatenate(
+                                                        (Arguments)CustomizeDotNetTestSettings(
+                                                                new DotNetTestSettings()
+                                                                   .SetProcessWorkingDirectory(RootDirectory)
+                                                                   .SetProjectFile(Solution)
+                                                                   .SetDefaultLoggers(LogsDirectory / "test.log")
+                                                                   .SetGitVersionEnvironment(GitVersion)
+                                                                   .SetConfiguration(TestBuildConfiguration)
+                                                                   .EnableNoRestore()
+                                                                   .EnableNoBuild()
+                                                                   .SetLoggers("trx")
+                                                                   .SetResultsDirectory(TestResultsDirectory)
+                                                            )
+                                                           .GetProcessArguments()
+                                                    ).RenderForExecution()}",
+                                                 RootDirectory
                                              )
                                          );
 
