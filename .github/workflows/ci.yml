@@ -148,25 +148,6 @@ jobs:
         id: pack
         run: |
           dotnet .build/bin/Debug/.build.dll --target DotnetCorePack Pack --skip Build --ThisIsAOtherVariable "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAnotherVariable "${{ vars.THIS_IS_ANOTHER_VARIABLE }}" --THIS_IS_A_VARIABLE "${{ vars.THIS_IS_A_VARIABLE }}" --ThisIsAEnv "${{ env.THIS_IS_A_ENV || 'test' }}" --ThisIsASecret "${{ secrets.THIS_IS_A_SECRET }}" --GitHubToken "${{ secrets.GITHUB_TOKEN }}"
-      - name: 🏺 Publish coverage data
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: 'coverage'
-          path: 'coverage/'
-      - name: Coverage Comment
-        if: github.event_name == 'pull_request'
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          header: 'Coverage'
-          path: 'coverage/summary/SummaryGithub.md'
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-      - name: 📫 Publish Coverage
-        if: (github.event_name != 'pull_request' && github.event_name != 'pull_request_target') || ((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]')
-        uses: codecov/codecov-action@v5
-        with:
-          name: 'actions-${{ matrix.os }}'
-          token: '${{ secrets.CODECOV_TOKEN }}'
       - name: 🏺 Publish logs
         if: always()
         uses: actions/upload-artifact@v4
@@ -184,6 +165,25 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v2
         with:
           files: 'artifacts/test/**/*.trx'
+      - name: 🏺 Publish coverage data
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: 'coverage'
+          path: 'coverage/'
+      - name: 📫 Publish Coverage Comment
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: 'Coverage'
+          path: 'coverage/summary/SummaryGithub.md'
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+      - name: 📫 Publish Codecov Coverage
+        if: (github.event_name != 'pull_request' && github.event_name != 'pull_request_target') || ((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]')
+        uses: codecov/codecov-action@v5
+        with:
+          name: 'actions'
+          token: '${{ secrets.CODECOV_TOKEN }}'
       - name: 🏺 Publish NuGet Packages
         if: always()
         uses: actions/upload-artifact@v4

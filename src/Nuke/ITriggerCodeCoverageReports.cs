@@ -35,20 +35,18 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                              .Executes(
                                                   () =>
                                                   {
-                                                      var coverageFiles = TestResultsDirectory.GlobFiles("**/*.cobertura*.xml");
-                                                      var coverageTool = DotNetTool.GetTool("dotnet-coverage");
-                                                      var args = new Arguments();
-                                                      args
-                                                         .Add("merge")
-                                                         .Add("{value}", coverageFiles, ' ');
+                                                      _ = ReportGeneratorTasks.ReportGenerator(
+                                                          settings => settings
+                                                                     .SetReports(TestResultsDirectory.GlobFiles("**/*.xml", "**/*.json", "**/*.coverage"))
+                                                                     .SetSourceDirectories(NukeBuild.RootDirectory)
+                                                                     .SetProcessWorkingDirectory(RootDirectory)
+                                                                     .SetTargetDirectory(CoverageDirectory)
+                                                                     .AddReportTypes(ReportTypes.Cobertura, ReportTypes.Xml, ReportTypes.lcov, ReportTypes.Latex, ReportTypes.OpenCover)
+                                                      );
 
-                                                      coverageTool(
-                                                          new Arguments()
-                                                             .Concatenate(args)
-                                                             .Add("--format {value}", "cobertura")
-                                                             .Add("--output {value}", CoverageDirectory.CreateOrCleanDirectory() / "solution.cobertura.xml")
-                                                             .RenderForExecution(),
-                                                          RootDirectory
+                                                      _ = ( CoverageDirectory / "Cobertura.xml" ).Move(
+                                                          CoverageDirectory / "solution.cobertura.xml",
+                                                          ExistsPolicy.FileOverwriteIfNewer
                                                       );
                                                   }
                                               );
@@ -68,7 +66,7 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                                   () =>
                                                                   {
                                                                       // var toolPath = ToolPathResolver.GetPackageExecutable("ReportGenerator", "ReportGenerator.dll", framework: "netcoreapp3.0");
-                                                                      ReportGeneratorTasks.ReportGenerator(
+                                                                      _ = ReportGeneratorTasks.ReportGenerator(
                                                                           s => Defaults(s)
                                                                               .SetTargetDirectory(CoverageDirectory)
                                                                               .SetReportTypes(ReportTypes.Cobertura)
@@ -81,18 +79,15 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
     /// </summary>
     /// <param name="settings"></param>
     /// <returns></returns>
-    protected ReportGeneratorSettings Defaults(ReportGeneratorSettings settings)
+    protected ReportGeneratorSettings Defaults(ReportGeneratorSettings settings) => ( this switch
     {
-        return ( this switch
-                 {
-                     IHaveGitVersion gitVersion                              => settings.SetTag(gitVersion.GitVersion.InformationalVersion),
-                     IHaveGitRepository { GitRepository: { } } gitRepository => settings.SetTag(gitRepository.GitRepository.Head),
-                     _                                                       => settings,
-                 }
+        IHaveGitVersion gitVersion => settings.SetTag(gitVersion.GitVersion.InformationalVersion),
+        IHaveGitRepository { GitRepository: { } } gitRepository => settings.SetTag(gitRepository.GitRepository.Head),
+        _ => settings,
+    }
                )
               .SetReports(InputReports)
               .SetSourceDirectories(NukeBuild.RootDirectory)
               .SetFramework(Constants.ReportGeneratorFramework)
             ;
-    }
 }

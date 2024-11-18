@@ -10,7 +10,6 @@ namespace Rocket.Surgery.Nuke.DotNetCore;
 public interface ICanTestWithDotNetCore : IHaveBuildTarget,
     ITriggerCodeCoverageReports,
     IComprehendTests,
-    IHaveTestArtifacts,
     IHaveGitVersion,
     IHaveSolution,
     IHaveConfiguration,
@@ -45,18 +44,25 @@ public interface ICanTestWithDotNetCore : IHaveBuildTarget,
                                         .Net9MsBuildFix()
                                         .Executes(
                                              () => DotNetTasks.DotNetTest(
-                                                 s => s
-                                                     .SetProcessWorkingDirectory(RootDirectory)
-                                                     .SetProjectFile(Solution)
-                                                     .SetDefaultLoggers(LogsDirectory / "test.log")
-                                                     .SetGitVersionEnvironment(GitVersion)
-                                                     .SetConfiguration(TestBuildConfiguration)
-                                                     .EnableNoRestore()
-                                                     .EnableNoBuild()
-                                                     .SetLoggers("trx")
-                                                     .SetResultsDirectory(TestResultsDirectory)
-                                                     .SetSettingsFile(RunSettings)
-                                                     .SetDataCollector(DataCollector)
+                                                 s => CustomizeDotNetTestSettings(
+                                                     s
+                                                        .SetProcessWorkingDirectory(RootDirectory)
+                                                        .SetProjectFile(Solution)
+                                                        .SetDefaultLoggers(LogsDirectory / "test.log")
+                                                        .SetGitVersionEnvironment(GitVersion)
+                                                        .SetConfiguration(TestBuildConfiguration)
+                                                        .EnableNoRestore()
+                                                        .EnableNoBuild()
+                                                        .SetLoggers("trx")
+                                                        .SetResultsDirectory(TestResultsDirectory)
+                                                        .SetSettingsFile(RunSettings)
+                                                        .SetDataCollector(DataCollector)
+                                                 )
                                              )
                                          );
+
+    public DotNetTestSettings CustomizeDotNetTestSettings(DotNetTestSettings settings)
+    {
+        return settings;
+    }
 }

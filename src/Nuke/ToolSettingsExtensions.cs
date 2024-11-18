@@ -53,12 +53,6 @@ public static class ToolSettingsExtensions
     public static T SetDefaultLoggers<T>(this T settings, AbsolutePath path, MSBuildVerbosity? verbosity = null)
         where T : ToolSettings
     {
-        if (NukeBuild.IsLocalBuild)
-        {
-            var existingArgs = settings.ProcessArgumentConfigurator;
-            settings = settings.SetProcessArgumentConfigurator(args => existingArgs(args).Add("/tl"));
-        }
-
         return settings
               .SetBinaryLogger((AbsolutePath)Path.ChangeExtension(path, "binlog"))
               .SetFileLogger((AbsolutePath)Path.ChangeExtension(path, "log"), verbosity);
