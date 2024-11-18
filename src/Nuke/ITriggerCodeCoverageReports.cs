@@ -1,5 +1,6 @@
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
+using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.ReportGenerator;
 
 // ReSharper disable SuspiciousTypeConversion.Global
@@ -35,20 +36,19 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                              .Executes(
                                                   () =>
                                                   {
-                                                      var coverageFiles = TestResultsDirectory.GlobFiles("**/*.cobertura*.xml");
-                                                      var coverageTool = DotNetTool.GetTool("dotnet-coverage");
-                                                      var args = new Arguments();
-                                                      args
-                                                         .Add("merge")
-                                                         .Add("{value}", coverageFiles, ' ');
+                                                      ReportGeneratorTasks.ReportGenerator(
+                                                          settings => settings
+                                                                     .SetReports(TestResultsDirectory.GlobFiles("**/*.xml", "**/*.json", "**/*.coverage"))
+                                                                     .SetSourceDirectories(NukeBuild.RootDirectory)
+                                                                     .SetProcessWorkingDirectory(RootDirectory)
+                                                                     .SetTargetDirectory(TemporaryDirectory)
+                                                                     .SetReportTypes(ReportTypes.Cobertura)
+                                                                     .AddFileFilters("-/_/*")
+                                                      );
 
-                                                      coverageTool(
-                                                          new Arguments()
-                                                             .Concatenate(args)
-                                                             .Add("--format {value}", "cobertura")
-                                                             .Add("--output {value}", CoverageDirectory.CreateOrCleanDirectory() / "solution.cobertura.xml")
-                                                             .RenderForExecution(),
-                                                          RootDirectory
+                                                      ( TemporaryDirectory / "Cobertura.xml" ).Move(
+                                                          CoverageDirectory / "solution.cobertura.xml",
+                                                          ExistsPolicy.FileOverwriteIfNewer
                                                       );
                                                   }
                                               );

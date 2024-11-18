@@ -70,8 +70,6 @@ internal partial class Pipeline : NukeBuild,
 
     public Target Test => _ => _;
 
-    AbsolutePath IComprehendTests.RunSettings => RootDirectory / "src" / "Nuke" / "default.runsettings";
-
     [OptionalGitRepository]
     public GitRepository? GitRepository { get; }
 
@@ -79,4 +77,6 @@ internal partial class Pipeline : NukeBuild,
 
     [Parameter("Configuration to build")]
     public Configuration Configuration { get; } = IsLocalBuild ? Configuration.Debug : Configuration.Release;
+
+    AbsolutePath IComprehendTests.RunSettings => RootDirectory / "src" / "Nuke" / "default.runsettings";
 }

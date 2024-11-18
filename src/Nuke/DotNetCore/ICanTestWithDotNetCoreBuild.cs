@@ -50,10 +50,9 @@ public interface ICanTestWithDotNetCoreBuild : IHaveBuildTarget,
                                                       s => s
                                                           .SetProcessWorkingDirectory(RootDirectory)
                                                           .SetProjectFile(Solution)
-                                                          .SetDefaultLoggers(LogsDirectory / "test.log")
+//                                                          .SetDefaultLoggers(LogsDirectory / "test.log")
                                                           .SetGitVersionEnvironment(GitVersion)
                                                           .SetConfiguration(TestBuildConfiguration)
-                                                          .SetLoggers("trx")
                                                           .EnableNoRestore()
                                                           .EnableNoBuild()
                                                           .SetResultsDirectory(TestResultsDirectory)

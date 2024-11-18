@@ -1,5 +1,7 @@
 using Nuke.Common.Tooling;
+using Nuke.Common.Tools.DotCover;
 using Nuke.Common.Tools.DotNet;
+using Nuke.Common.Tools.ReSharper;
 
 namespace Rocket.Surgery.Nuke.DotNetCore;
 
@@ -44,19 +46,52 @@ public interface ICanTestWithDotNetCore : IHaveBuildTarget,
                                         .EnsureRunSettingsExists(RunSettings)
                                         .Net9MsBuildFix()
                                         .Executes(
-                                             () => DotNetTasks.DotNetTest(
-                                                 s => s
-                                                     .SetProcessWorkingDirectory(RootDirectory)
-                                                     .SetProjectFile(Solution)
-                                                     .SetDefaultLoggers(LogsDirectory / "test.log")
-                                                     .SetGitVersionEnvironment(GitVersion)
-                                                     .SetConfiguration(TestBuildConfiguration)
-                                                     .EnableNoRestore()
-                                                     .EnableNoBuild()
-                                                     .SetLoggers("trx")
-                                                     .SetResultsDirectory(TestResultsDirectory)
-                                                     .SetSettingsFile(RunSettings)
-                                                     .SetDataCollector(DataCollector)
-                                             )
+                                             () =>
+                                             {
+                                                 var targetSettings = new DotNetTestSettings()
+                                                                     .SetProcessWorkingDirectory(RootDirectory)
+                                                                     .SetProjectFile(Solution)
+                                                                     .SetDefaultLoggers(LogsDirectory / "test.log")
+                                                                     .SetGitVersionEnvironment(GitVersion)
+                                                                     .SetConfiguration(TestBuildConfiguration)
+                                                                     .EnableNoRestore()
+                                                                     .EnableNoBuild()
+                                                                     .SetResultsDirectory(TestResultsDirectory);
+
+                                                 DotCoverTasks.DotCoverCoverDotNet(
+                                                     settings => settings
+                                                                .SetFilters(
+                                                                     "-:Bogus*",
+                                                                     "-:FakeItEasy*",
+                                                                     "-:Moq*",
+                                                                     "-:NSubstitute*",
+                                                                     "-:Verify*",
+                                                                     "-:XUnit*",
+                                                                     "-:TUnit*",
+                                                                     "-:Microsoft*",
+                                                                     "-:System*",
+                                                                     "-:JetBrains*",
+                                                                     "-:DryIoc*",
+                                                                     "-:Nuke*",
+                                                                     "-:testhost*",
+                                                                     "-:FluentAssertions*",
+                                                                     "-:Serilog*",
+                                                                     "-:module=JetBrains*",
+                                                                     "-:class=JetBrains*"
+                                                                 )
+                                                                .AddAttributeFilters(
+                                                                     "System.Diagnostics.DebuggerHiddenAttribute",
+                                                                     "System.Diagnostics.DebuggerNonUserCodeAttribute",
+                                                                     "System.CodeDom.Compiler.GeneratedCodeAttribute",
+                                                                     "System.Runtime.CompilerServices.CompilerGeneratedAttribute",
+                                                                     "System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute"
+                                                                 )
+                                                                .SetProcessWorkingDirectory(RootDirectory)
+                                                                .SetTargetWorkingDirectory(RootDirectory)
+                                                                .SetReportType(DotCoverReportType.DetailedXml)
+                                                                .SetOutputFile(TestResultsDirectory / "test.dotcover.xml")
+                                                                .SetTargetArguments(targetSettings.GetProcessArguments().RenderForExecution())
+                                                 );
+                                             }
                                          );
 }
