@@ -30,7 +30,7 @@ public interface IHaveCodeCoverage : IHaveArtifacts
         "System.Diagnostics.DebuggerNonUserCodeAttribute",
         "System.CodeDom.Compiler.GeneratedCodeAttribute",
         "System.Runtime.CompilerServices.CompilerGeneratedAttribute",
-        "System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute"
+        "System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute",
     ];
 
     public IEnumerable<string> IncludeNamespaces => [];
@@ -50,6 +50,6 @@ public interface IHaveCodeCoverage : IHaveArtifacts
         "DryIoc.",
         "Nuke.",
         "FluentAssertions.",
-        "Serilog."
+        "Serilog.",
     ];
 }

@@ -35,19 +35,29 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                              .Executes(
                                                   () =>
                                                   {
-                                                      _ = ReportGeneratorTasks.ReportGenerator(
-                                                          settings => settings
-                                                                     .SetReports(TestResultsDirectory.GlobFiles("**/*.xml", "**/*.json", "**/*.coverage"))
-                                                                     .SetSourceDirectories(NukeBuild.RootDirectory)
-                                                                     .SetProcessWorkingDirectory(RootDirectory)
-                                                                     .SetTargetDirectory(CoverageDirectory)
-                                                                     .AddReportTypes(ReportTypes.Cobertura, ReportTypes.Xml, ReportTypes.lcov, ReportTypes.Latex, ReportTypes.OpenCover)
-                                                      );
+                                                      var files = TestResultsDirectory.GlobFiles("**/*.xml", "**/*.json", "**/*.coverage");
+                                                      if (files.Any())
+                                                      {
+                                                          _ = ReportGeneratorTasks.ReportGenerator(
+                                                              settings => settings
+                                                                         .SetReports(files)
+                                                                         .SetSourceDirectories(NukeBuild.RootDirectory)
+                                                                         .SetProcessWorkingDirectory(RootDirectory)
+                                                                         .SetTargetDirectory(CoverageDirectory)
+                                                                         .AddReportTypes(
+                                                                              ReportTypes.Cobertura,
+                                                                              ReportTypes.Xml,
+                                                                              ReportTypes.lcov,
+                                                                              ReportTypes.Latex,
+                                                                              ReportTypes.OpenCover
+                                                                          )
+                                                          );
 
-                                                      _ = ( CoverageDirectory / "Cobertura.xml" ).Move(
-                                                          TestResultsDirectory / "test.cobertura.xml",
-                                                          ExistsPolicy.FileOverwriteIfNewer
-                                                      );
+                                                          _ = ( CoverageDirectory / "Cobertura.xml" ).Move(
+                                                              CoverageDirectory / "test.cobertura.xml",
+                                                              ExistsPolicy.FileOverwriteIfNewer
+                                                          );
+                                                      }
                                                   }
                                               );
 
@@ -80,14 +90,16 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
     /// <param name="settings"></param>
     /// <returns></returns>
     protected ReportGeneratorSettings Defaults(ReportGeneratorSettings settings) => ( this switch
-    {
-        IHaveGitVersion gitVersion => settings.SetTag(gitVersion.GitVersion.InformationalVersion),
-        IHaveGitRepository { GitRepository: { } } gitRepository => settings.SetTag(gitRepository.GitRepository.Head),
-        _ => settings,
-    }
-               )
-              .SetReports(InputReports)
-              .SetSourceDirectories(NukeBuild.RootDirectory)
-              .SetFramework(Constants.ReportGeneratorFramework)
-            ;
+                                                                                      {
+                                                                                          IHaveGitVersion gitVersion => settings.SetTag(
+                                                                                              gitVersion.GitVersion.InformationalVersion
+                                                                                          ),
+                                                                                          IHaveGitRepository { GitRepository: { } } gitRepository => settings
+                                                                                             .SetTag(gitRepository.GitRepository.Head),
+                                                                                          _ => settings,
+                                                                                      }
+                                                                                    )
+                                                                                   .SetReports(InputReports)
+                                                                                   .SetSourceDirectories(NukeBuild.RootDirectory)
+                                                                                   .SetFramework(Constants.ReportGeneratorFramework);
 }

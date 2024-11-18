@@ -51,12 +51,10 @@ public static class ToolSettingsExtensions
     /// <param name="path"></param>
     /// <param name="verbosity"></param>
     public static T SetDefaultLoggers<T>(this T settings, AbsolutePath path, MSBuildVerbosity? verbosity = null)
-        where T : ToolSettings
-    {
-        return settings
-              .SetBinaryLogger((AbsolutePath)Path.ChangeExtension(path, "binlog"))
-              .SetFileLogger((AbsolutePath)Path.ChangeExtension(path, "log"), verbosity);
-    }
+        where T : ToolSettings =>
+        settings
+           .SetBinaryLogger((AbsolutePath)Path.ChangeExtension(path, "binlog"))
+           .SetFileLogger((AbsolutePath)Path.ChangeExtension(path, "log"), verbosity);
 
     /// <summary>
     ///     Configures binary logging for MSBuild
@@ -87,7 +85,9 @@ public static class ToolSettingsExtensions
         where T : ToolSettings
     {
         verbosity ??= NukeBuild.Verbosity.MapVerbosity(MSBuildVerbosity.Normal);
-        return settings.SetProcessArgumentConfigurator(args => args.Add($"/fileLogger /fileloggerparameters:ShowTimestamp;Verbosity={verbosity};LogFile=\"{path}\""));
+        return settings.SetProcessArgumentConfigurator(
+            args => args.Add($"/fileLogger /fileloggerparameters:ShowTimestamp;Verbosity={verbosity};LogFile=\"{path}\"")
+        );
     }
 
     /// <summary>

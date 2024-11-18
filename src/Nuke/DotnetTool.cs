@@ -125,6 +125,7 @@ internal record ResolvedToolsManifest(ImmutableDictionary<string, FullToolComman
                        );
                    };
         }
+
         throw new InvalidOperationException($"Tool {nugetPackageName} is not installed");
     }
 

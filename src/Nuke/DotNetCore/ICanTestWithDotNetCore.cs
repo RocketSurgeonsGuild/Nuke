@@ -43,35 +43,32 @@ public interface ICanTestWithDotNetCore : IHaveBuildTarget,
                                         .EnsureRunSettingsExists(this)
                                         .Net9MsBuildFix()
                                         .Executes(
-                                             () => DotNetTool.GetTool("dotnet-coverage")(
-                                                 $"{new Arguments()
-                                                   .Add("collect")
-                                                   .Add("--settings {value}", RunSettings)
-                                                   .Add("--output {value}", CoverageDirectory / "coverage.cobertura.xml")
-                                                   .Add("--output-format {value}", "cobertura")
-                                                   .Add("--")
-                                                   .Add("dotnet")
-                                                   .Concatenate(
-                                                        (Arguments)CustomizeDotNetTestSettings(
-                                                                new DotNetTestSettings()
-                                                                   .SetProcessWorkingDirectory(RootDirectory)
-                                                                   .SetProjectFile(Solution)
-                                                                   .SetDefaultLoggers(LogsDirectory / "test.log")
-                                                                   .SetGitVersionEnvironment(GitVersion)
-                                                                   .SetConfiguration(TestBuildConfiguration)
-                                                                   .EnableNoRestore()
-                                                                   .EnableNoBuild()
-                                                                   .SetLoggers("trx")
-                                                                   .SetResultsDirectory(TestResultsDirectory)
-                                                            )
-                                                           .GetProcessArguments()
-                                                    ).RenderForExecution()}",
-                                                 RootDirectory
+                                                  () => DotNetTool.GetTool("dotnet-coverage")(
+                                                      $"{new Arguments()
+                                                        .Add("collect")
+                                                        .Add("--settings {value}", RunSettings)
+                                                        .Add("--output {value}", TestResultsDirectory / "test.cobertura.xml")
+                                                        .Add("--output-format {value}", "cobertura")
+                                                        .Add("--")
+                                                        .Add("dotnet")
+                                                        .Concatenate(
+                                                             (Arguments)CustomizeDotNetTestSettings(
+                                                                     new DotNetTestSettings()
+                                                                        .SetProcessWorkingDirectory(RootDirectory)
+                                                                        .SetProjectFile(Solution)
+                                                                        .SetDefaultLoggers(LogsDirectory / "test.log")
+                                                                        .SetGitVersionEnvironment(GitVersion)
+                                                                        .SetConfiguration(TestBuildConfiguration)
+                                                                        .EnableNoRestore()
+                                                                        .EnableNoBuild()
+                                                                        .SetLoggers("trx")
+                                                                        .SetResultsDirectory(TestResultsDirectory)
+                                                                 )
+                                                                .GetProcessArguments()
+                                                         ).RenderForExecution()}",
+                                                      RootDirectory
                                              )
                                          );
 
-    public DotNetTestSettings CustomizeDotNetTestSettings(DotNetTestSettings settings)
-    {
-        return settings;
-    }
+    public DotNetTestSettings CustomizeDotNetTestSettings(DotNetTestSettings settings) => settings;
 }

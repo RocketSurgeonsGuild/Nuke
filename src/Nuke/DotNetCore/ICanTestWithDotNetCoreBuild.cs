@@ -49,7 +49,7 @@ public interface ICanTestWithDotNetCoreBuild : IHaveBuildTarget,
                                                       $"{new Arguments()
                                                         .Add("collect")
                                                         .Add("--settings {value}", RunSettings)
-                                                        .Add("--output {value}", CoverageDirectory / "coverage.cobertura.xml")
+                                                        .Add("--output {value}", TestResultsDirectory / "test.cobertura.xml")
                                                         .Add("--output-format {value}", "cobertura")
                                                         .Add("--")
                                                         .Add("dotnet")
@@ -72,8 +72,5 @@ public interface ICanTestWithDotNetCoreBuild : IHaveBuildTarget,
                                                   )
                                               );
 
-    public DotNetTestSettings CustomizeDotNetTestSettings(DotNetTestSettings settings)
-    {
-        return settings;
-    }
+    public DotNetTestSettings CustomizeDotNetTestSettings(DotNetTestSettings settings) => settings;
 }

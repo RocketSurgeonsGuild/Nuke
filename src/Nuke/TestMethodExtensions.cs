@@ -61,7 +61,7 @@ public static class TestMethodExtensions
         IEnumerable<string> excludeNamespaces
     )
     {
-        XDocument doc = XDocument.Load(runsettingsPath);
+        var doc = XDocument.Load(runsettingsPath);
 
         var dataCollector = EnsureElement(doc.Root, "DataCollectionRunSettings")
                            .Element("DataCollectors")
@@ -77,7 +77,7 @@ public static class TestMethodExtensions
 
         if (codeCoverage == null)
         {
-            codeCoverage = new XElement("CodeCoverage");
+            codeCoverage = new("CodeCoverage");
             dataCollector.Element("Configuration")?.Add(codeCoverage);
         }
 
@@ -94,8 +94,15 @@ public static class TestMethodExtensions
 
         doc.Save(runsettingsPath);
 
-        static string TransformAttribute(string ns) => $"^{ns.Replace(".", "\\.")}$";
-        static string TransformNamespace(string ns) => $"^{ns.Replace(".", "\\.")}.*";
+        static string TransformAttribute(string ns)
+        {
+            return $"^{ns.Replace(".", "\\.")}$";
+        }
+
+        static string TransformNamespace(string ns)
+        {
+            return $"^{ns.Replace(".", "\\.")}.*";
+        }
     }
 
     private static XElement EnsureElement(XElement parent, string name)
@@ -103,7 +110,7 @@ public static class TestMethodExtensions
         var element = parent.Element(name);
         if (element == null)
         {
-            element = new XElement(name);
+            element = new(name);
             parent.Add(element);
         }
 
