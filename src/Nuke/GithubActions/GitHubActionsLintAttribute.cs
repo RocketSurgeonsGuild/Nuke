@@ -28,7 +28,7 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
         params GitHubActionsImage[] images
     ) : base(name, image, images)
     {
-        InvokedTargets = new[] { nameof(ICanLint.Lint), };
+        InvokedTargets = new[] { nameof(ICanLint.Lint) };
     }
 
     /// <summary>
@@ -99,10 +99,10 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
                 }
             )
            .InsertAfterCheckOut(
-                new RunStep("npm ci --ignore-scripts") { Run = "npm ci --ignore-scripts", }
+                new RunStep("npm ci --ignore-scripts") { Run = "npm ci --ignore-scripts" }
             )
            .InsertAfterCheckOut(
-                new RunStep("Get Head Commit Message") { Id = "commit-message", Run = "echo \"message=$(git show -s --format=%s)\" >> \"$GITHUB_OUTPUT\"", }
+                new RunStep("Get Head Commit Message") { Id = "commit-message", Run = "echo \"message=$(git show -s --format=%s)\" >> \"$GITHUB_OUTPUT\"" }
             )
            .AddStep(
                 new UsingStep("Add & Commit")
@@ -115,7 +115,7 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
                         ["repo"] = "${{ github.repository }}",
                         ["branch"] = "${{ github.event.pull_request.head.ref }}",
                     },
-                    Environment = { ["GITHUB_TOKEN"] = $$$"""${{ {{{secretPath}}} }}""", },
+                    Environment = { ["GITHUB_TOKEN"] = $$$"""${{ {{{secretPath}}} }}""" },
                 }
             );
 

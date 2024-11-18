@@ -21,7 +21,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
         {
             var result = item switch
                          {
-                             { Status: ChangeKind.Added or ChangeKind.Modified or ChangeKind.Renamed or ChangeKind.Copied, } => item.Path, _ => null,
+                             { Status: ChangeKind.Added or ChangeKind.Modified or ChangeKind.Renamed or ChangeKind.Copied } => item.Path, _ => null,
                          };
             if (string.IsNullOrWhiteSpace(result))
             {
@@ -44,7 +44,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
 
         foreach (var parts in stagedFiles
                              .GetRelativePaths()
-                             .Select(z => z.ToString().Split(['/', '\\',], StringSplitOptions.RemoveEmptyEntries))
+                             .Select(z => z.ToString().Split(['/', '\\'], StringSplitOptions.RemoveEmptyEntries))
                              .OrderByDescending(z => z.Length > 1)
                              .ThenBy(z => string.Join("/", z)))
         {
@@ -88,20 +88,18 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
 
     private static LintPaths? lintPaths;
 
-    private static Matcher ResolveLintMatcher()
-    {
-        return new Matcher(StringComparison.OrdinalIgnoreCase)
-              .AddInclude("**/*")
-              .AddExclude("**/node_modules/**/*")
-              .AddExclude(".idea/**/*")
-              .AddExclude(".vscode/**/*")
-              .AddExclude(".nuke/**/*")
-              .AddExclude("**/bin/**/*")
-              .AddExclude("**/obj/**/*")
-              .AddExclude("**/*.g.*")
-              .AddExclude("**/*.verified.*")
-              .AddExclude("**/*.received.*");
-    }
+    private static Matcher ResolveLintMatcher() =>
+        new Matcher(StringComparison.OrdinalIgnoreCase)
+           .AddInclude("**/*")
+           .AddExclude("**/node_modules/**/*")
+           .AddExclude(".idea/**/*")
+           .AddExclude(".vscode/**/*")
+           .AddExclude(".nuke/**/*")
+           .AddExclude("**/bin/**/*")
+           .AddExclude("**/obj/**/*")
+           .AddExclude("**/*.g.*")
+           .AddExclude("**/*.verified.*")
+           .AddExclude("**/*.received.*");
 
     /// <summary>
     ///     The lint target
@@ -165,7 +163,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
             .Executes(
                  () =>
                  {
-                     List<string> patterns = [".nuke/build.schema.json", ".github/workflows", "Readme.md",];
+                     List<string> patterns = [".nuke/build.schema.json", ".github/workflows", "Readme.md"];
                      if (this is IHavePublicApis)
                      {
                          patterns.Add("**/PublicAPI.Shipped.txt");
@@ -224,14 +222,14 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
             );
             files.AddRange(FilterFiles(diff));
         }
-        else if (IsLocalBuild && FilterFiles(repo.Diff.Compare<TreeChanges>(repo.Head.Tip?.Tree, DiffTargets.Index)).ToArray() is { Length: > 0, } stagedFiles)
+        else if (IsLocalBuild && FilterFiles(repo.Diff.Compare<TreeChanges>(repo.Head.Tip?.Tree, DiffTargets.Index)).ToArray() is { Length: > 0 } stagedFiles)
         {
             trigger = LintTrigger.Staged;
             message = "Linting only the staged files";
             files.AddRange(stagedFiles);
         }
 
-        return files is { Count: > 0, }
+        return files is { Count: > 0 }
             ? new(LintMatcher, trigger, message, files)
             : new(LintMatcher, trigger, message, [] /*GitTasks.Git("ls-files", logOutput: false, logInvocation: false).Select(z => z.Text)*/);
     }

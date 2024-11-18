@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Nuke.Common;
 using Nuke.Common.CI.GitHubActions;
 using Rocket.Surgery.Nuke.ContinuousIntegration;
@@ -9,11 +10,11 @@ using Rocket.Surgery.Nuke.GithubActions;
     "ci-ignore",
     GitHubActionsImage.UbuntuLatest,
     AutoGenerate = false,
-    On = [RocketSurgeonGitHubActionsTrigger.Push,],
-    OnPushTags = ["v*",],
-    OnPushBranches = ["master", "main", "next",],
-    OnPullRequestBranches = ["master", "main", "next",],
-    Enhancements = [nameof(CiIgnoreMiddleware),]
+    On = [RocketSurgeonGitHubActionsTrigger.Push],
+    OnPushTags = ["v*"],
+    OnPushBranches = ["master", "main", "next"],
+    OnPullRequestBranches = ["master", "main", "next"],
+    Enhancements = [nameof(CiIgnoreMiddleware)]
 )]
 [GitHubActionsSteps(
     "ci",
@@ -24,26 +25,26 @@ using Rocket.Surgery.Nuke.GithubActions;
         RocketSurgeonGitHubActionsTrigger.WorkflowCall,
         RocketSurgeonGitHubActionsTrigger.WorkflowDispatch,
     ],
-    OnPushTags = ["v*",],
-    OnPushBranches = ["master", "main", "next",],
-    OnPullRequestBranches = ["master", "main", "next",],
-    InvokedTargets = [nameof(Default),],
-    NonEntryTargets = [nameof(Default),],
-    Enhancements = [nameof(CiMiddleware),]
+    OnPushTags = ["v*"],
+    OnPushBranches = ["master", "main", "next"],
+    OnPullRequestBranches = ["master", "main", "next"],
+    InvokedTargets = [nameof(Default)],
+    NonEntryTargets = [nameof(Default)],
+    Enhancements = [nameof(CiMiddleware)]
 )]
 [GitHubActionsLint(
     "lint",
     GitHubActionsImage.UbuntuLatest,
     AutoGenerate = false,
-    OnPullRequestTargetBranches = ["master", "main", "next",],
-    Enhancements = [nameof(LintStagedMiddleware),]
+    OnPullRequestTargetBranches = ["master", "main", "next"],
+    Enhancements = [nameof(LintStagedMiddleware)]
 )]
 [GitHubActionsSteps(
     "inputs",
     GitHubActionsImage.UbuntuLatest,
     AutoGenerate = false,
-    On = [RocketSurgeonGitHubActionsTrigger.WorkflowCall,],
-    InvokedTargets = [nameof(WithOutputs),]
+    On = [RocketSurgeonGitHubActionsTrigger.WorkflowCall],
+    InvokedTargets = [nameof(WithOutputs)]
 )]
 [GitHubActionsVariable("THIS_IS_A_VARIABLE", Alias = "ThisIsAOtherVariable")]
 [GitHubActionsVariable("THIS_IS_ANOTHER_VARIABLE")]
@@ -63,7 +64,7 @@ using Rocket.Surgery.Nuke.GithubActions;
 [UploadLogs]
 [TitleEvents]
 [ContinuousIntegrationConventions]
-[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 internal partial class Pipeline
 {
     public static RocketSurgeonGitHubActionsConfiguration CiIgnoreMiddleware(RocketSurgeonGitHubActionsConfiguration configuration)
@@ -72,7 +73,7 @@ internal partial class Pipeline
         [
             new RunStep("N/A")
             {
-                Run = "echo \"No build required\""
+                Run = "echo \"No build required\"",
             },
         ];
 
@@ -83,7 +84,7 @@ internal partial class Pipeline
                                       .ProducesGithubActionsOutput("iSetAThing", "Some output value")
                                       .Requires(() => ThisIsAInput)
                                       .Executes(() => GitHubActions.Instance?.SetOutput("iSetAThing", "myValue"));
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     [Parameter]
     public string ThisIsAInput { get; set; }
 
@@ -114,14 +115,8 @@ internal partial class Pipeline
     [Parameter]
     public string MyOtherOnepasswordText { get; set; }
 
-    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay
-    {
-        get
-        {
-            return ToString();
-        }
-    }
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString();
 
     public static RocketSurgeonGitHubActionsConfiguration CiMiddleware(RocketSurgeonGitHubActionsConfiguration configuration)
     {
@@ -131,7 +126,7 @@ internal partial class Pipeline
            .Jobs.OfType<RocketSurgeonsGithubActionsJob>()
            .First(z => z.Name.Equals("Build", StringComparison.OrdinalIgnoreCase))
            .UseDotNetSdks("8.0", "9.0")
-           // .ConfigureForGitVersion()
+            // .ConfigureForGitVersion()
            .ConfigureStep<CheckoutStep>(step => step.FetchDepth = 0)
            .PublishLogs<Pipeline>();
 

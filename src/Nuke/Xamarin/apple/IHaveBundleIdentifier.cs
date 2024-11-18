@@ -12,8 +12,8 @@ public interface IHaveBundleIdentifier : IHave
     /// </summary>
     [Parameter("The application bundle identifier.", Name = "BundleIdentifier")]
     public string BundleIdentifier => EnvironmentInfo.GetVariable<string>("BundleIdentifier")
-                                   ?? TryGetValue(() => BundleIdentifier)
-                                   ?? "com.surgery.rocket.nuke";
+     ?? TryGetValue(() => BundleIdentifier)
+     ?? "com.surgery.rocket.nuke";
 
     /// <summary>
     ///     Gets the suffix for the bundle identifier.

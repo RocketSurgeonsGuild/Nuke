@@ -12,18 +12,12 @@ public record GitHubActionsStepOutput(string StepName, string OutputName, string
     ///     Convert to the github actions template for this output variable
     /// </summary>
     /// <returns></returns>
-    public override string ToString()
-    {
-        return $$$"""${{ steps.{{{StepName}}}.outputs.{{{OutputName}}} }}""";
-    }
+    public override string ToString() => $$$"""${{ steps.{{{StepName}}}.outputs.{{{OutputName}}} }}""";
 
     /// <summary>
     ///     Convert to a workflow output variable
     /// </summary>
     /// <param name="jobName"></param>
     /// <returns></returns>
-    public GitHubActionsWorkflowOutput ToWorkflow(string jobName)
-    {
-        return new(jobName, $"{StepName}{OutputName.Pascalize()}".Camelize(), Description);
-    }
+    public GitHubActionsWorkflowOutput ToWorkflow(string jobName) => new(jobName, $"{StepName}{OutputName.Pascalize()}".Camelize(), Description);
 }

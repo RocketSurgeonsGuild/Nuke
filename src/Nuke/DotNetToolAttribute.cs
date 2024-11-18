@@ -24,14 +24,8 @@ public sealed class DotNetToolAttribute : ToolInjectionAttributeBase
     #pragma warning restore CA1019
 
     /// <inheritdoc />
-    public override ToolRequirement GetRequirement(MemberInfo member)
-    {
-        return new();
-    }
+    public override ToolRequirement GetRequirement(MemberInfo member) => new();
 
     /// <inheritdoc />
-    public override object GetValue(MemberInfo member, object instance)
-    {
-        return DotNetTool.GetTool(_command);
-    }
+    public override object GetValue(MemberInfo member, object instance) => DotNetTool.GetTool(_command);
 }

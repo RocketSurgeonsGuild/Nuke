@@ -3,24 +3,27 @@ using Nuke.Common.Tooling;
 namespace Rocket.Surgery.Nuke.GithubActions;
 
 /// <summary>
-/// Github actions permissions
+///     Github actions permissions
 /// </summary>
 #pragma warning disable CA1711
 public enum GitHubActionsPermission
-#pragma warning restore CA1711
+    #pragma warning restore CA1711
 {
     /// <summary>
-    /// None
+    ///     None
     /// </summary>
-    [EnumValue("none")] None = 0,
+    [EnumValue("none")]
+    None = 0,
 
     /// <summary>
-    /// Read
+    ///     Read
     /// </summary>
-    [EnumValue("read")] Read = 1,
+    [EnumValue("read")]
+    Read = 1,
 
     /// <summary>
-    /// Write
+    ///     Write
     /// </summary>
-    [EnumValue("write")] Write = 2,
+    [EnumValue("write")]
+    Write = 2,
 }

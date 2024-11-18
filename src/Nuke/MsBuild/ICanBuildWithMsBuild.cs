@@ -6,12 +6,12 @@ namespace Rocket.Surgery.Nuke.MsBuild;
 ///     Defines a build task using msbuild
 /// </summary>
 public interface ICanBuildWithMsBuild : IHaveBuildTarget,
-                                        IHaveRestoreTarget,
-                                        IHaveSolution,
-                                        IHaveConfiguration,
-                                        IHaveOutputLogs,
-                                        IHaveGitVersion,
-                                        ICan
+    IHaveRestoreTarget,
+    IHaveSolution,
+    IHaveConfiguration,
+    IHaveOutputLogs,
+    IHaveGitVersion,
+    ICan
 {
     /// <summary>
     ///     msbuild

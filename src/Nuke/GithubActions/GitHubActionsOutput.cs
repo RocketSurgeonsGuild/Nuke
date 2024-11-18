@@ -12,8 +12,5 @@ public record GitHubActionsOutput(string OutputName, string? Description = null)
     /// </summary>
     /// <param name="stepName"></param>
     /// <returns></returns>
-    public GitHubActionsStepOutput ToStep(string stepName)
-    {
-        return new(stepName, OutputName, Description);
-    }
+    public GitHubActionsStepOutput ToStep(string stepName) => new(stepName, OutputName, Description);
 }

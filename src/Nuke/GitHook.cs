@@ -117,5 +117,5 @@ public enum GitHook
     /// <summary>
     ///     update
     /// </summary>
-    Update
+    Update,
 }

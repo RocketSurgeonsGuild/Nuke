@@ -19,10 +19,7 @@ public class EnsurePackageSourceHasCredentialsAttribute : BuildExtensionAttribut
     ///     Ensures that the package source name has credentials set
     ///     This is useful to ensure that credentials are defined on a users local environment
     /// </summary>
-    public EnsurePackageSourceHasCredentialsAttribute(string sourceName)
-    {
-        SourceName = sourceName;
-    }
+    public EnsurePackageSourceHasCredentialsAttribute(string sourceName) => SourceName = sourceName;
 
     /// <summary>
     ///     The nuget source name

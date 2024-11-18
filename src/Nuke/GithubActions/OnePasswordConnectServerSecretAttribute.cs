@@ -11,10 +11,7 @@ public sealed class OnePasswordConnectServerSecretAttribute : TriggerValueAttrib
     /// </summary>
     /// <param name="name">The name of the variable to be output</param>
     /// <param name="path">The reference path to the item</param>
-    public OnePasswordConnectServerSecretAttribute(string name, string path) : base(name)
-    {
-        Path = path;
-    }
+    public OnePasswordConnectServerSecretAttribute(string name, string path) : base(name) => Path = path;
 
     /// <summary>
     ///     The constructor for the <see cref="OnePasswordConnectServerSecretAttribute" />
@@ -23,10 +20,7 @@ public sealed class OnePasswordConnectServerSecretAttribute : TriggerValueAttrib
     /// <param name="variable">The GitHub variable to item path part for the op reference (eg. op://vault/item)</param>
     /// <param name="path">The second half the op reference path</param>
     /// param>
-    public OnePasswordConnectServerSecretAttribute(string name, string variable, string path) : this(name, path)
-    {
-        Variable = variable;
-    }
+    public OnePasswordConnectServerSecretAttribute(string name, string variable, string path) : this(name, path) => Variable = variable;
 
     /// <summary>
     ///     The github variable that defines the item in the vault
@@ -62,9 +56,8 @@ public sealed class OnePasswordConnectServerSecretAttribute : TriggerValueAttrib
     ///     Convert to a secret
     /// </summary>
     /// <returns></returns>
-    public OnePasswordConnectServerSecret ToSecret()
-    {
-        return new(
+    public OnePasswordConnectServerSecret ToSecret() =>
+        new(
             Path,
             Name,
             Description,
@@ -73,11 +66,7 @@ public sealed class OnePasswordConnectServerSecretAttribute : TriggerValueAttrib
             ConnectHost ?? "OP_CONNECT_HOST",
             ConnectToken ?? "OP_CONNECT_TOKEN"
         );
-    }
 
     /// <inheritdoc />
-    public override ITriggerValue ToTriggerValue()
-    {
-        return ToSecret();
-    }
+    public override ITriggerValue ToTriggerValue() => ToSecret();
 }

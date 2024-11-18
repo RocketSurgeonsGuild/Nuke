@@ -21,14 +21,8 @@ public sealed class GitHubActionsSecretAttribute : TriggerValueAttribute
     ///     Convert to a secret
     /// </summary>
     /// <returns></returns>
-    public GitHubActionsSecret ToSecret()
-    {
-        return new(Name, Description, Required, Alias);
-    }
+    public GitHubActionsSecret ToSecret() => new(Name, Description, Required, Alias);
 
     /// <inheritdoc />
-    public override ITriggerValue ToTriggerValue()
-    {
-        return ToSecret();
-    }
+    public override ITriggerValue ToTriggerValue() => ToSecret();
 }

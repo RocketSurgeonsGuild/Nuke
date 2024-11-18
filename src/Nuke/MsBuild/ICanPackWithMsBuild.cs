@@ -7,12 +7,12 @@ namespace Rocket.Surgery.Nuke.MsBuild;
 ///     Pack using msbuild
 /// </summary>
 public interface ICanPackWithMsBuild : IHavePackTarget,
-                                       IHaveBuildTarget,
-                                       IHaveTestTarget,
-                                       IHaveNuGetPackages,
-                                       IHaveGitVersion,
-                                       IHaveConfiguration,
-                                       ICan
+    IHaveBuildTarget,
+    IHaveTestTarget,
+    IHaveNuGetPackages,
+    IHaveGitVersion,
+    IHaveConfiguration,
+    ICan
 {
     /// <summary>
     ///     The directory where templates will be placed

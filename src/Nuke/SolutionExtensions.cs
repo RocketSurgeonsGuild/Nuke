@@ -17,7 +17,7 @@ public static class SolutionExtensions
     {
         return solution
               .AnalyzeAllProjects()
-              .Where(project => project is { IsPackable: true, IsTestProject: false, });
+              .Where(project => project is { IsPackable: true, IsTestProject: false });
     }
 
     /// <summary>

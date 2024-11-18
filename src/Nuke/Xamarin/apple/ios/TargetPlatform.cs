@@ -35,14 +35,8 @@ public class TargetPlatform : Enumeration
     /// <returns>
     ///     The result of the conversion.
     /// </returns>
-    public static implicit operator string(TargetPlatform platform)
-    {
-        return platform.Value;
-    }
+    public static implicit operator string(TargetPlatform platform) => platform.Value;
 
     /// <inheritdoc />
-    public override string ToString()
-    {
-        return this;
-    }
+    public override string ToString() => this;
 }

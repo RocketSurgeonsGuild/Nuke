@@ -1,10 +1,8 @@
-using System.Reflection;
 using Newtonsoft.Json.Linq;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Tools.MSBuild;
-using Nuke.Common.Utilities.Collections;
 
 namespace Rocket.Surgery.Nuke;
 
@@ -27,10 +25,8 @@ public static class ToolSettingsExtensions
         this ITargetDefinition target,
         Func<ITargetDefinition, T, ITargetDefinition> func,
         T value
-    )
-    {
-        return func(target, value);
-    }
+    ) =>
+        func(target, value);
 
     /// <summary>
     ///     <para>Call a target definition in context of a build script</para>
@@ -45,10 +41,8 @@ public static class ToolSettingsExtensions
         this ITargetDefinition target,
         T value,
         Func<ITargetDefinition, T, ITargetDefinition> func
-    )
-    {
-        return func(target, value);
-    }
+    ) =>
+        func(target, value);
 
     /// <summary>
     ///     Configures binary and file logging for MSBuild
@@ -59,6 +53,12 @@ public static class ToolSettingsExtensions
     public static T SetDefaultLoggers<T>(this T settings, AbsolutePath path, MSBuildVerbosity? verbosity = null)
         where T : ToolSettings
     {
+        if (NukeBuild.IsLocalBuild)
+        {
+            var existingArgs = settings.ProcessArgumentConfigurator;
+            settings = settings.SetProcessArgumentConfigurator(args => existingArgs(args).Add("/tl"));
+        }
+
         return settings
               .SetBinaryLogger((AbsolutePath)Path.ChangeExtension(path, "binlog"))
               .SetFileLogger((AbsolutePath)Path.ChangeExtension(path, "log"), verbosity);
@@ -122,7 +122,7 @@ public static class ToolSettingsExtensions
         foreach (var item in JObject.FromObject(gitVersion))
         {
             var key = $"gitversion_{item.Key}".ToUpperInvariant();
-            if (settings.ProcessEnvironmentVariables.TryGetValue(key, out var _)) continue;
+            if (settings.ProcessEnvironmentVariables.TryGetValue(key, out _)) continue;
 
             settings = settings.AddProcessEnvironmentVariable(key, item.Value?.ToString());
         }

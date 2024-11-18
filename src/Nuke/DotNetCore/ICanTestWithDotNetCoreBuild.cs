@@ -43,7 +43,6 @@ public interface ICanTestWithDotNetCoreBuild : IHaveBuildTarget,
                                                   )
                                               )
                                              .CreateOrCleanDirectory(TestResultsDirectory)
-                                             .CleanCoverageDirectory(CoverageDirectory)
                                              .EnsureRunSettingsExists(RunSettings)
                                              .Net9MsBuildFix()
                                              .Executes(
@@ -53,14 +52,13 @@ public interface ICanTestWithDotNetCoreBuild : IHaveBuildTarget,
                                                           .SetProjectFile(Solution)
                                                           .SetDefaultLoggers(LogsDirectory / "test.log")
                                                           .SetGitVersionEnvironment(GitVersion)
-                                                          .EnableNoRestore()
-                                                          .SetLoggers("trx")
                                                           .SetConfiguration(TestBuildConfiguration)
+                                                          .SetLoggers("trx")
+                                                          .EnableNoRestore()
                                                           .EnableNoBuild()
                                                           .SetResultsDirectory(TestResultsDirectory)
                                                           .SetSettingsFile(RunSettings)
                                                           .SetDataCollector(DataCollector)
                                                   )
-                                              )
-                                             .CollectCoverage(TestResultsDirectory, CoverageDirectory);
+                                              );
 }

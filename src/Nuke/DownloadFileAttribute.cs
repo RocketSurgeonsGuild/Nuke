@@ -47,13 +47,15 @@ public class DownloadFileAttribute : BuildExtensionAttributeBase, IOnBuildInitia
             Log.Verbose(
                 "Downloading {Type} {Url} to {Path}",
                 Type,
-                _url, NukeBuild.RootDirectory.GetRelativePathTo(_filePath)
+                _url,
+                NukeBuild.RootDirectory.GetRelativePathTo(_filePath)
             );
             HttpDownloadFile(_url, _filePath);
             Log.Information(
                 "Downloaded {Type} {Url} to {Path}",
                 Type,
-                _url, NukeBuild.RootDirectory.GetRelativePathTo(_filePath)
+                _url,
+                NukeBuild.RootDirectory.GetRelativePathTo(_filePath)
             );
         }
     }

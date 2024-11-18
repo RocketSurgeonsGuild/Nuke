@@ -1,7 +1,6 @@
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
-using Serilog;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
 namespace Rocket.Surgery.Nuke.DotNetCore;

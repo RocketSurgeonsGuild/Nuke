@@ -2,6 +2,7 @@ using Nuke.Common;
 using Nuke.Common.CI;
 using Nuke.Common.Execution;
 using Nuke.Common.Git;
+using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
@@ -68,6 +69,8 @@ internal partial class Pipeline : NukeBuild,
     public GitVersion GitVersion { get; } = null!;
 
     public Target Test => _ => _;
+
+    AbsolutePath IComprehendTests.RunSettings => RootDirectory / "src" / "Nuke" / "default.runsettings";
 
     [OptionalGitRepository]
     public GitRepository? GitRepository { get; }

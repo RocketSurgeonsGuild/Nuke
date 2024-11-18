@@ -27,6 +27,6 @@ internal class GitHubActionsHistory : IHistorySection
             "GitHub Actions History"
         );
 
-        return ($"[!{badge}]{url}", $"[!{historyBadge}]{url}");
+        return ( $"[!{badge}]{url}", $"[!{historyBadge}]{url}" );
     }
 }

@@ -11,25 +11,30 @@ public enum RocketSurgeonGitHubActionsTrigger
     /// <summary>
     ///     Push
     /// </summary>
-    [EnumValue("push")] Push,
+    [EnumValue("push")]
+    Push,
 
     /// <summary>
     ///     Pull request
     /// </summary>
-    [EnumValue("pull_request")] PullRequest,
+    [EnumValue("pull_request")]
+    PullRequest,
 
     /// <summary>
     ///     Workflow dispatch
     /// </summary>
-    [EnumValue("workflow_dispatch")] WorkflowDispatch,
+    [EnumValue("workflow_dispatch")]
+    WorkflowDispatch,
 
     /// <summary>
     ///     Workflow call
     /// </summary>
-    [EnumValue("workflow_call")] WorkflowCall,
+    [EnumValue("workflow_call")]
+    WorkflowCall,
 
     /// <summary>
     ///     Pull request target
     /// </summary>
-    [EnumValue("pull_request_target")] PullRequestTarget,
+    [EnumValue("pull_request_target")]
+    PullRequestTarget,
 }

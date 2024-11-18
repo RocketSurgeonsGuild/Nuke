@@ -11,8 +11,5 @@ namespace Rocket.Surgery.Nuke.Readme;
 internal sealed class ReadmeAttribute : ValueInjectionAttributeBase
 {
     /// <inheritdoc />
-    public override object GetValue(MemberInfo member, object instance)
-    {
-        return new ReadmeUpdater();
-    }
+    public override object GetValue(MemberInfo member, object instance) => new ReadmeUpdater();
 }

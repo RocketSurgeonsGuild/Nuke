@@ -41,7 +41,6 @@ public interface ICanTestWithDotNetCore : IHaveBuildTarget,
                                              )
                                          )
                                         .CreateOrCleanDirectory(TestResultsDirectory)
-                                        .CleanCoverageDirectory(CoverageDirectory)
                                         .EnsureRunSettingsExists(RunSettings)
                                         .Net9MsBuildFix()
                                         .Executes(
@@ -59,6 +58,5 @@ public interface ICanTestWithDotNetCore : IHaveBuildTarget,
                                                      .SetSettingsFile(RunSettings)
                                                      .SetDataCollector(DataCollector)
                                              )
-                                         )
-                                        .CollectCoverage(TestResultsDirectory, CoverageDirectory);
+                                         );
 }

@@ -10,10 +10,7 @@ public class UploadArtifactStep : UsingStep
     ///     The default constructor
     /// </summary>
     /// <param name="name"></param>
-    public UploadArtifactStep(string name) : base(name)
-    {
-        Uses = "actions/upload-artifact@v4";
-    }
+    public UploadArtifactStep(string name) : base(name) => Uses = "actions/upload-artifact@v4";
 
     /// <summary>
     ///     Gets or sets the name of the artifact to upload. Optional. Default is 'artifact'.
@@ -55,8 +52,5 @@ public class UploadArtifactStep : UsingStep
     }
 
     /// <inheritdoc />
-    protected override string ComputeStepName(string name)
-    {
-        return $"🏺 {name}";
-    }
+    protected override string ComputeStepName(string name) => $"🏺 {name}";
 }

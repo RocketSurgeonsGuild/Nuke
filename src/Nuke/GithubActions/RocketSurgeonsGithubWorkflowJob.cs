@@ -12,9 +12,7 @@ public class RocketSurgeonsGithubWorkflowJob : RocketSurgeonsGithubActionsJobBas
     /// </summary>
     /// <param name="name"></param>
     /// <exception cref="ArgumentNullException"></exception>
-    public RocketSurgeonsGithubWorkflowJob(string name) : base(name)
-    {
-    }
+    public RocketSurgeonsGithubWorkflowJob(string name) : base(name) { }
 
     /// <summary>
     ///     The action to use.

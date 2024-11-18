@@ -6,13 +6,13 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 [PublicAPI]
 public class RunStep : BaseGitHubActionsStep
 {
+    private static readonly string[] separator = { "\r\n", "\n" };
+
     /// <summary>
     ///     The default constructor
     /// </summary>
     /// <param name="name"></param>
-    public RunStep(string name) : base(name)
-    {
-    }
+    public RunStep(string name) : base(name) { }
 
     // ReSharper disable once NullableWarningSuppressionIsUsed
     /// <summary>
@@ -29,8 +29,6 @@ public class RunStep : BaseGitHubActionsStep
     ///     The working directory where the script is run
     /// </summary>
     public string? WorkingDirectory { get; set; }
-
-    private static readonly string[] separator = { "\r\n", "\n" };
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)

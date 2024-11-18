@@ -53,14 +53,8 @@ public class XamarinConfiguration : Enumeration
     /// <returns>
     ///     The result of the conversion.
     /// </returns>
-    public static implicit operator string(XamarinConfiguration configuration)
-    {
-        return configuration.Value;
-    }
+    public static implicit operator string(XamarinConfiguration configuration) => configuration.Value;
 
     /// <inheritdoc />
-    public override string ToString()
-    {
-        return this;
-    }
+    public override string ToString() => this;
 }

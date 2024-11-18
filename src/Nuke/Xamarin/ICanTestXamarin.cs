@@ -7,15 +7,15 @@ namespace Rocket.Surgery.Nuke.Xamarin;
 ///     Xamarin test run
 /// </summary>
 public interface ICanTestXamarin : IHaveTestTarget,
-                                   IHaveBuildTarget,
-                                   IHaveTestArtifacts,
-                                   IComprehendTests,
-                                   IHaveCodeCoverage,
-                                   IHaveOutputLogs,
-                                   IHaveConfiguration,
-                                   IHaveGitVersion,
-                                   IHaveSolution,
-                                   ICan
+    IHaveBuildTarget,
+    IHaveTestArtifacts,
+    IComprehendTests,
+    IHaveCodeCoverage,
+    IHaveOutputLogs,
+    IHaveConfiguration,
+    IHaveGitVersion,
+    IHaveSolution,
+    ICan
 {
     /// <summary>
     ///     test
@@ -24,25 +24,24 @@ public interface ICanTestXamarin : IHaveTestTarget,
                                   .DependsOn(Build)
                                   .OnlyWhenStatic(() => TestsDirectory.DirectoryExists())
                                   .CreateOrCleanDirectory(TestResultsDirectory)
-                                  .CleanCoverageDirectory(CoverageDirectory)
                                   .Net9MsBuildFix()
                                   .Executes(
                                        () => DotNetTasks.DotNetTest(
                                            settings =>
-                                               settings.SetProjectFile(Solution)
-                                                       .SetDefaultLoggers(LogsDirectory / "test.log")
-                                                       .SetGitVersionEnvironment(GitVersion)
-                                                       .SetConfiguration(Configuration)
-                                                       .EnableNoRestore()
-                                                       .SetLoggers("trx")
-                                                       .SetProperty("CollectCoverage", "true")
-                                                       .SetProperty(
-                                                            "DeterministicSourcePaths",
-                                                            "false"
-                                                        ) // DeterministicSourcePaths being true breaks coverlet!
-                                                       .SetProperty("CoverageDirectory", CoverageDirectory)
-                                                       .SetResultsDirectory(TestResultsDirectory)
+                                               settings
+                                                  .SetProjectFile(Solution)
+                                                  .SetDefaultLoggers(LogsDirectory / "test.log")
+                                                  .SetGitVersionEnvironment(GitVersion)
+                                                  .SetConfiguration(Configuration)
+                                                  .EnableNoRestore()
+                                                  .SetLoggers("trx")
+                                                  .SetProperty("CollectCoverage", "true")
+                                                  .SetProperty(
+                                                       "DeterministicSourcePaths",
+                                                       "false"
+                                                   ) // DeterministicSourcePaths being true breaks coverlet!
+                                                  .SetProperty("CoverageDirectory", CoverageDirectory)
+                                                  .SetResultsDirectory(TestResultsDirectory)
                                        )
-                                   )
-                                  .CollectCoverage(TestResultsDirectory, CoverageDirectory);
+                                   );
 }

@@ -102,7 +102,7 @@ public class LintPaths
     /// <returns></returns>
     public ImmutableList<RelativePath> Glob(Matcher matcher)
     {
-        return _relativeCache.GetValue(matcher, m => [.. _paths.Value.Match(m).GetRelativePaths(),]);
+        return _relativeCache.GetValue(matcher, m => [.. _paths.Value.Match(m).GetRelativePaths()]);
     }
 
     /// <summary>
@@ -110,10 +110,7 @@ public class LintPaths
     /// </summary>
     /// <param name="pattern"></param>
     /// <returns></returns>
-    public ImmutableList<RelativePath> Glob(string pattern)
-    {
-        return Glob(new Matcher(StringComparison.OrdinalIgnoreCase).AddInclude(pattern));
-    }
+    public ImmutableList<RelativePath> Glob(string pattern) => Glob(new Matcher(StringComparison.OrdinalIgnoreCase).AddInclude(pattern));
 
     /// <summary>
     ///     Glob against a given matcher to included / exclude files
@@ -122,7 +119,7 @@ public class LintPaths
     /// <returns></returns>
     public ImmutableList<AbsolutePath> GlobAbsolute(Matcher matcher)
     {
-        return _pathsCache.GetValue(matcher, m => [.. _paths.Value.Match(m),]);
+        return _pathsCache.GetValue(matcher, m => [.. _paths.Value.Match(m)]);
     }
 
     /// <summary>
@@ -130,8 +127,5 @@ public class LintPaths
     /// </summary>
     /// <param name="pattern"></param>
     /// <returns></returns>
-    public ImmutableList<AbsolutePath> GlobAbsolute(string pattern)
-    {
-        return GlobAbsolute(new Matcher(StringComparison.OrdinalIgnoreCase).AddInclude(pattern));
-    }
+    public ImmutableList<AbsolutePath> GlobAbsolute(string pattern) => GlobAbsolute(new Matcher(StringComparison.OrdinalIgnoreCase).AddInclude(pattern));
 }
