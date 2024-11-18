@@ -85,7 +85,7 @@ public static class GithubActionsExtensions
         static int getCheckStepIndex(RocketSurgeonsGithubActionsJob job)
         {
             var checkoutStep = job.Steps.OfType<CheckoutStep>().SingleOrDefault();
-            return checkoutStep is null ? 1 : job.Steps.IndexOf(checkoutStep);
+            return ( checkoutStep is null ) ? 1 : job.Steps.IndexOf(checkoutStep);
         }
     }
 
@@ -220,47 +220,6 @@ public static class GithubActionsExtensions
     /// <returns></returns>
     public static RocketSurgeonsGithubActionsJob PublishLogs<T>(this RocketSurgeonsGithubActionsJob job) where T : INukeBuild
     {
-        if (typeof(IHaveCodeCoverage).IsAssignableFrom(typeof(T)))
-        {
-            _ = AddStep(
-                job,
-                new UploadArtifactStep("Publish coverage data")
-                {
-                    Name = "coverage",
-                    Path = "coverage/",
-                    If = "always()",
-                }
-            );
-
-            _ = AddStep(
-                job,
-                new StickyPullRequestStep("Coverage Comment")
-                {
-                    If = "github.event_name == 'pull_request'",
-                    Header = "Coverage",
-                    Path = "coverage/summary/SummaryGithub.md",
-                }
-            );
-
-            if (DotNetTool.IsInstalled("codecov.tool"))
-            {
-                _ = AddStep(
-                    job,
-                    new UsingStep("Publish Coverage")
-                    {
-                        Uses = "codecov/codecov-action@v4",
-                        If =
-                            "(github.event_name != 'pull_request' && github.event_name != 'pull_request_target') || ((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]')",
-                        With = new()
-                        {
-                            ["name"] = "actions-${{ matrix.os }}",
-                            ["token"] = "${{ secrets.CODECOV_TOKEN }}",
-                        },
-                    }
-                );
-            }
-        }
-
         if (typeof(IHaveOutputLogs).IsAssignableFrom(typeof(T)))
         {
             _ = AddStep(
@@ -289,8 +248,8 @@ public static class GithubActionsExtensions
             job.Permissions ??= new();
             job.Permissions.Checks = GitHubActionsPermission.Write;
             job.Permissions.PullRequests = GitHubActionsPermission.Write;
-            job.Permissions.Contents = job.Permissions.Contents == GitHubActionsPermission.None ? GitHubActionsPermission.Read : job.Permissions.Contents;
-            job.Permissions.Issues = job.Permissions.Issues == GitHubActionsPermission.None ? GitHubActionsPermission.Read : job.Permissions.Issues;
+            job.Permissions.Contents = ( job.Permissions.Contents == GitHubActionsPermission.None ) ? GitHubActionsPermission.Read : job.Permissions.Contents;
+            job.Permissions.Issues = ( job.Permissions.Issues == GitHubActionsPermission.None ) ? GitHubActionsPermission.Read : job.Permissions.Issues;
 
             _ = AddStep(
                 job,
@@ -306,6 +265,49 @@ public static class GithubActionsExtensions
                     },
                 }
             );
+        }
+
+        if (typeof(IHaveCodeCoverage).IsAssignableFrom(typeof(T)))
+        {
+            _ = AddStep(
+                job,
+                new UploadArtifactStep("Publish coverage data")
+                {
+                    Name = "coverage",
+                    Path = "coverage/",
+                    If = "always()",
+                }
+            );
+
+            _ = AddStep(
+                job,
+                new StickyPullRequestStep("Publish Coverage Comment")
+                {
+                    If = "github.event_name == 'pull_request'",
+                    Header = "Coverage",
+                    Path = "coverage/summary/SummaryGithub.md",
+                }
+            );
+
+            if (DotNetTool.IsInstalled("codecov.tool"))
+            {
+                _ = AddStep(
+                    job,
+                    new UsingStep("Publish Codecov Coverage")
+                    {
+                        Uses = "codecov/codecov-action@v4",
+                        If =
+                            "(github.event_name != 'pull_request' && github.event_name != 'pull_request_target') || ((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]')",
+                        With = new()
+                        {
+                            ["name"] = "actions",
+                            // TODO: Matrix support?
+                            // [""] = "Test Results"
+                            ["token"] = "${{ secrets.CODECOV_TOKEN }}",
+                        },
+                    }
+                );
+            }
         }
 
         _ = PublishArtifacts<T>(job);

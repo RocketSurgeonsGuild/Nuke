@@ -9,11 +9,12 @@
           <CodeCoverage>
             <EnableStaticManagedInstrumentation>True</EnableStaticManagedInstrumentation>
             <EnableDynamicManagedInstrumentation>True</EnableDynamicManagedInstrumentation>
-            <Sources>
+            <ModulePaths>
               <Exclude>
-                <ModulePath>^/_\d?/.*\.cs$</ModulePath>
+                <ModulePath>.*DryIoc.dll</ModulePath>
+                <ModulePath>.*FluentAssertions.dll</ModulePath>
               </Exclude>
-            </Sources>
+            </ModulePaths>
             <Attributes>
               <Exclude>
                 <Attribute>^System\.Diagnostics\.DebuggerHiddenAttribute$</Attribute>
@@ -23,24 +24,24 @@
                 <Attribute>^System\.Diagnostics\.CodeAnalysis\.ExcludeFromCodeCoverageAttribute$</Attribute>
               </Exclude>
             </Attributes>
-              <Functions>
-                <Exclude>
-                  <Function>^Bogus\..*</Function>
-                  <Function>^FakeItEasy\..*</Function>
-                  <Function>^Moq\..*</Function>
-                  <Function>^NSubstitute\..*</Function>
-                  <Function>^Verify\..*</Function>
-                  <Function>^XUnit\..*</Function>
-                  <Function>^TUnit\..*</Function>
-                  <Function>^Microsoft\..*</Function>
-                  <Function>^System\..*</Function>
-                  <Function>^JetBrains\..*</Function>
-                  <Function>^DryIoc\..*</Function>
-                  <Function>^Nuke\..*</Function>
-                  <Function>^FluentAssertions\..*</Function>
-                  <Function>^Serilog\..*</Function>
-                </Exclude>
-              </Functions>
+            <Functions>
+              <Exclude>
+                <Function>^Bogus\..*</Function>
+                <Function>^FakeItEasy\..*</Function>
+                <Function>^Moq\..*</Function>
+                <Function>^NSubstitute\..*</Function>
+                <Function>^Verify\..*</Function>
+                <Function>^XUnit\..*</Function>
+                <Function>^TUnit\..*</Function>
+                <Function>^Microsoft\..*</Function>
+                <Function>^System\..*</Function>
+                <Function>^JetBrains\..*</Function>
+                <Function>^DryIoc\..*</Function>
+                <Function>^Nuke\..*</Function>
+                <Function>^FluentAssertions\..*</Function>
+                <Function>^Serilog\..*</Function>
+              </Exclude>
+            </Functions>
           </CodeCoverage>
         </Configuration>
       </DataCollector>

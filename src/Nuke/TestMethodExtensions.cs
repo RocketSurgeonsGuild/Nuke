@@ -1,5 +1,4 @@
 using Nuke.Common.IO;
-using Nuke.Common.Utilities.Collections;
 using Rocket.Surgery.Nuke.DotNetCore;
 
 namespace Rocket.Surgery.Nuke;

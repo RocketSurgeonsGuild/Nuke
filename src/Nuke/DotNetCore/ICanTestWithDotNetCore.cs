@@ -1,7 +1,5 @@
 using Nuke.Common.Tooling;
-using Nuke.Common.Tools.DotCover;
 using Nuke.Common.Tools.DotNet;
-using Nuke.Common.Tools.ReSharper;
 
 namespace Rocket.Surgery.Nuke.DotNetCore;
 
@@ -45,31 +43,20 @@ public interface ICanTestWithDotNetCore : IHaveBuildTarget,
                                         .EnsureRunSettingsExists(RunSettings)
                                         .Net9MsBuildFix()
                                         .Executes(
-                                             () => DotCoverTasks.DotCoverCoverDotNet(
-                                                 settings => CustomizeDotCoverSettings(
-                                                     settings
-                                                        .AddFilters(DefaultDotCoverFilters)
-                                                        .AddAttributeFilters(DefaultDotCoverFilters)
+                                             () => DotNetTasks.DotNetTest(
+                                                 s => CustomizeDotNetTestSettings(
+                                                     s
                                                         .SetProcessWorkingDirectory(RootDirectory)
-                                                        .SetTargetWorkingDirectory(RootDirectory)
-                                                        .SetReportType(DotCoverReportType.DetailedXml)
-                                                        .SetOutputFile(TestResultsDirectory / "test.dotcover.xml")
-                                                        .SetTargetArguments(
-                                                             CustomizeDotNetTestSettings(
-                                                                     new DotNetTestSettings()
-                                                                        .SetProcessWorkingDirectory(RootDirectory)
-                                                                        .SetProjectFile(Solution)
-                                                                        .SetDefaultLoggers(LogsDirectory / "test.log")
-                                                                        .SetLoggers("trx")
-                                                                        .SetGitVersionEnvironment(GitVersion)
-                                                                        .SetConfiguration(TestBuildConfiguration)
-                                                                        .EnableNoRestore()
-                                                                        .EnableNoBuild()
-                                                                        .SetResultsDirectory(TestResultsDirectory)
-                                                                 )
-                                                                .GetProcessArguments()
-                                                                .RenderForExecution()
-                                                         )
+                                                        .SetProjectFile(Solution)
+                                                        .SetDefaultLoggers(LogsDirectory / "test.log")
+                                                        .SetGitVersionEnvironment(GitVersion)
+                                                        .SetConfiguration(TestBuildConfiguration)
+                                                        .EnableNoRestore()
+                                                        .EnableNoBuild()
+                                                        .SetLoggers("trx")
+                                                        .SetResultsDirectory(TestResultsDirectory)
+                                                        .SetSettingsFile(RunSettings)
+                                                        .SetDataCollector(DataCollector)
                                                  )
                                              )
                                          );
