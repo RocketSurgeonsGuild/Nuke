@@ -43,7 +43,6 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                                      .SetProcessWorkingDirectory(RootDirectory)
                                                                      .SetTargetDirectory(TemporaryDirectory)
                                                                      .SetReportTypes(ReportTypes.Cobertura)
-                                                                     .AddFileFilters("-/_/*")
                                                       );
 
                                                       ( TemporaryDirectory / "Cobertura.xml" ).Move(
