@@ -41,7 +41,6 @@ public interface ICanTestWithDotNetCore : IHaveBuildTarget,
                                              )
                                          )
                                         .CreateOrCleanDirectory(TestResultsDirectory)
-                                        .CleanCoverageDirectory(CoverageDirectory)
                                         .EnsureRunSettingsExists(RunSettings)
                                         .Net9MsBuildFix()
                                         .Executes(

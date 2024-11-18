@@ -2,6 +2,7 @@ using Nuke.Common;
 using Nuke.Common.CI;
 using Nuke.Common.Execution;
 using Nuke.Common.Git;
+using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
@@ -76,4 +77,6 @@ internal partial class Pipeline : NukeBuild,
 
     [Parameter("Configuration to build")]
     public Configuration Configuration { get; } = IsLocalBuild ? Configuration.Debug : Configuration.Release;
+
+    AbsolutePath IComprehendTests.RunSettings => RootDirectory / "src" / "Nuke" / "default.runsettings";
 }

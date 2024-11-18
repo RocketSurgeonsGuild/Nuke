@@ -23,6 +23,7 @@ public interface IGenerateCodeCoverageSummary : ITriggerCodeCoverageReports, IGe
                                                      .TriggeredBy(CollectCodeCoverage)
                                                      .Unlisted()
                                                      .AssuredAfterFailure()
+                                                     .ProceedAfterFailure()
                                                      .OnlyWhenDynamic(() => InputReports.Any())
                                                      .Executes(
                                                           () => ReportGeneratorTasks.ReportGenerator(

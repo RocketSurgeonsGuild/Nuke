@@ -23,6 +23,7 @@ public interface IGenerateCodeCoverageBadges : ITriggerCodeCoverageReports, IGen
                                                     .TriggeredBy(CollectCodeCoverage)
                                                     .Unlisted()
                                                     .AssuredAfterFailure()
+                                                    .ProceedAfterFailure()
                                                     .OnlyWhenDynamic(() => InputReports.Any())
                                                     .Executes(
                                                          () => ReportGeneratorTasks.ReportGenerator(

@@ -15,7 +15,8 @@ public interface IHaveCodeCoverage : IHaveArtifacts
     ///     The directory where coverage artifacts are to be dropped
     /// </summary>
     [Parameter("The directory where coverage artifacts are to be dropped", Name = "Coverage")]
-    public AbsolutePath CoverageDirectory => EnvironmentInfo.GetVariable<AbsolutePath>("Coverage")
+    public AbsolutePath CoverageDirectory =>
+        EnvironmentInfo.GetVariable<AbsolutePath>("Coverage")
      ?? TryGetValue(() => CoverageDirectory)
      ?? NukeBuild.RootDirectory / "coverage";
 }

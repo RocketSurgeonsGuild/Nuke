@@ -1,4 +1,6 @@
 using Nuke.Common.IO;
+using Nuke.Common.Tooling;
+using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.ReportGenerator;
 
 // ReSharper disable SuspiciousTypeConversion.Global
@@ -34,14 +36,21 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                              .Executes(
                                                   () =>
                                                   {
-                                                      // Ensure anything that has been dropped in the test results from a collector is
-                                                      // into the coverage directory
-                                                      foreach (var file in TestResultsDirectory.GlobFiles("**/*.cobertura.xml"))
-//                                                                                      .Where(x => Guid.TryParse(Path.GetFileName(x.Parent), out _))
-                                                      {
-                                                          var relativePath = TestResultsDirectory.GetRelativePathTo(file);
-                                                          file.Copy(CoverageDirectory.CreateOrCleanDirectory() / relativePath, ExistsPolicy.FileOverwriteIfNewer);
-                                                      }
+                                                      var coverageFiles = TestResultsDirectory.GlobFiles("**/*.cobertura*.xml");
+                                                      var coverageTool = DotNetTool.GetTool("dotnet-coverage");
+                                                      var args = new Arguments();
+                                                      args
+                                                         .Add("merge")
+                                                         .Add("{value}", coverageFiles, ' ');
+
+                                                      coverageTool(
+                                                          new Arguments()
+                                                             .Concatenate(args)
+                                                             .Add("--format {value}", "cobertura")
+                                                             .Add("--output {value}", CoverageDirectory.CreateOrCleanDirectory() / "solution.cobertura.xml")
+                                                             .RenderForExecution(),
+                                                          RootDirectory
+                                                      );
                                                   }
                                               );
 
@@ -54,6 +63,7 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                              .TriggeredBy(CollectCodeCoverage)
                                                              .Unlisted()
                                                              .AssuredAfterFailure()
+                                                             .ProceedAfterFailure()
                                                              .OnlyWhenDynamic(() => InputReports.Any())
                                                              .Executes(
                                                                   () =>
@@ -63,15 +73,6 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                                           s => Defaults(s)
                                                                               .SetTargetDirectory(CoverageDirectory)
                                                                               .SetReportTypes(ReportTypes.Cobertura)
-                                                                      );
-
-                                                                      ( CoverageDirectory / "Cobertura.xml" ).Copy(
-                                                                          CoverageDirectory / "solution.cobertura",
-                                                                          ExistsPolicy.FileOverwriteIfNewer
-                                                                      );
-                                                                      ( CoverageDirectory / "Cobertura.xml" ).Copy(
-                                                                          CoverageDirectory / "solution.xml",
-                                                                          ExistsPolicy.FileOverwriteIfNewer
                                                                       );
                                                                   }
                                                               );

@@ -24,7 +24,6 @@ public interface ICanTestXamarin : IHaveTestTarget,
                                   .DependsOn(Build)
                                   .OnlyWhenStatic(() => TestsDirectory.DirectoryExists())
                                   .CreateOrCleanDirectory(TestResultsDirectory)
-                                  .CleanCoverageDirectory(CoverageDirectory)
                                   .Net9MsBuildFix()
                                   .Executes(
                                        () => DotNetTasks.DotNetTest(

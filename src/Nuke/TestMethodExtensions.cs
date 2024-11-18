@@ -9,25 +9,6 @@ namespace Rocket.Surgery.Nuke;
 /// </summary>
 public static class TestMethodExtensions
 {
-    /// <summary>
-    ///     Clean up any code coverage files from <see cref="IHaveCodeCoverage.CoverageDirectory" />.
-    /// </summary>
-    /// <param name="target"></param>
-    /// <param name="coverageDirectory"></param>
-    /// <returns></returns>
-    public static ITargetDefinition CleanCoverageDirectory(this ITargetDefinition target, AbsolutePath coverageDirectory)
-    {
-        return target.Executes(
-            () =>
-            {
-                coverageDirectory
-                   .GlobFiles("*.cobertura.xml", "*.opencover.xml", "*.json", "*.info")
-                   .Where(x => Guid.TryParse(Path.GetFileName(x).Split('.')[0], out _))
-                   .ForEach(AbsolutePathExtensions.DeleteFile);
-            }
-        );
-    }
-
     // ReSharper disable once CommentTypo
     /// <summary>
     ///     A method that ensures the given runsettings file exists or creates a default one

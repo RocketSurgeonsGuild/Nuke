@@ -2,41 +2,10 @@
   <DataCollectionRunSettings>
     <DataCollectors>
       <DataCollector friendlyName="Code Coverage"
-        uri="datacollector://Microsoft/CodeCoverage/2.0"
-        assemblyQualifiedName="Microsoft.VisualStudio.Coverage.DynamicCoverageDataCollector, Microsoft.VisualStudio.TraceCollector, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+                     uri="datacollector://Microsoft/CodeCoverage/2.0"
+                     assemblyQualifiedName="Microsoft.VisualStudio.Coverage.DynamicCoverageDataCollector, Microsoft.VisualStudio.TraceCollector, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
         <Configuration>
-          <CodeCoverage>
-            <Format>Cobertura</Format>
-            <Attributes>
-              <Exclude>
-                <!-- Don't forget "Attribute" at the end of the name -->
-                <Attribute>^System\.Diagnostics\.DebuggerHiddenAttribute$</Attribute>
-                <Attribute>^System\.Diagnostics\.DebuggerNonUserCodeAttribute$</Attribute>
-                <Attribute>^System\.CodeDom\.Compiler\.GeneratedCodeAttribute$</Attribute>
-                <Attribute>^System\.Runtime\.CompilerServices\.CompilerGeneratedAttribute$</Attribute>
-                <Attribute>^System\.Diagnostics\.CodeAnalysis\.ExcludeFromCodeCoverageAttribute$</Attribute>
-              </Exclude>
-            </Attributes>
-            <Functions>
-              <Exclude>
-                <Function>^Bogus\..*</Function>
-                <Function>^Autofac\..*</Function>
-                <Function>^FakeItEasy\..*</Function>
-                <Function>^Moq\..*</Function>
-                <Function>^NSubstitute\..*</Function>
-                <Function>^Verify\..*</Function>
-                <Function>^XUnit\..*</Function>
-                <Function>^TUnit\..*</Function>
-                <Function>^Microsoft\..*</Function>
-                <Function>^System\..*</Function>
-                <Function>^JetBrains\..*</Function>
-                <Function>^DryIoc\..*</Function>
-                <Function>^Nuke\..*</Function>
-                <Function>^FluentAssertions\..*</Function>
-                <Function>^Serilog\..*</Function>
-              </Exclude>
-            </Functions>
-          </CodeCoverage>
+          <Format>Cobertura</Format>
         </Configuration>
       </DataCollector>
     </DataCollectors>
