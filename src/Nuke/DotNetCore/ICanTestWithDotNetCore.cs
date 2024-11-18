@@ -12,7 +12,6 @@ namespace Rocket.Surgery.Nuke.DotNetCore;
 public interface ICanTestWithDotNetCore : IHaveBuildTarget,
     ITriggerCodeCoverageReports,
     IComprehendTests,
-    IHaveTestArtifacts,
     IHaveGitVersion,
     IHaveSolution,
     IHaveConfiguration,
@@ -46,52 +45,37 @@ public interface ICanTestWithDotNetCore : IHaveBuildTarget,
                                         .EnsureRunSettingsExists(RunSettings)
                                         .Net9MsBuildFix()
                                         .Executes(
-                                             () =>
-                                             {
-                                                 var targetSettings = new DotNetTestSettings()
-                                                                     .SetProcessWorkingDirectory(RootDirectory)
-                                                                     .SetProjectFile(Solution)
-                                                                     .SetDefaultLoggers(LogsDirectory / "test.log")
-                                                                     .SetGitVersionEnvironment(GitVersion)
-                                                                     .SetConfiguration(TestBuildConfiguration)
-                                                                     .EnableNoRestore()
-                                                                     .EnableNoBuild()
-                                                                     .SetResultsDirectory(TestResultsDirectory);
-
-                                                 DotCoverTasks.DotCoverCoverDotNet(
-                                                     settings => settings
-                                                                .SetFilters(
-                                                                     "-:Bogus*",
-                                                                     "-:FakeItEasy*",
-                                                                     "-:Moq*",
-                                                                     "-:NSubstitute*",
-                                                                     "-:Verify*",
-                                                                     "-:XUnit*",
-                                                                     "-:TUnit*",
-                                                                     "-:Microsoft*",
-                                                                     "-:System*",
-                                                                     "-:JetBrains*",
-                                                                     "-:DryIoc*",
-                                                                     "-:Nuke*",
-                                                                     "-:testhost*",
-                                                                     "-:FluentAssertions*",
-                                                                     "-:Serilog*",
-                                                                     "-:module=JetBrains*",
-                                                                     "-:class=JetBrains*"
+                                             () => DotCoverTasks.DotCoverCoverDotNet(
+                                                 settings => CustomizeDotCoverSettings(
+                                                     settings
+                                                        .AddFilters(DefaultDotCoverFilters)
+                                                        .AddAttributeFilters(DefaultDotCoverFilters)
+                                                        .SetProcessWorkingDirectory(RootDirectory)
+                                                        .SetTargetWorkingDirectory(RootDirectory)
+                                                        .SetReportType(DotCoverReportType.DetailedXml)
+                                                        .SetOutputFile(TestResultsDirectory / "test.dotcover.xml")
+                                                        .SetTargetArguments(
+                                                             CustomizeDotNetTestSettings(
+                                                                     new DotNetTestSettings()
+                                                                        .SetProcessWorkingDirectory(RootDirectory)
+                                                                        .SetProjectFile(Solution)
+                                                                        .SetDefaultLoggers(LogsDirectory / "test.log")
+                                                                        .SetLoggers("trx")
+                                                                        .SetGitVersionEnvironment(GitVersion)
+                                                                        .SetConfiguration(TestBuildConfiguration)
+                                                                        .EnableNoRestore()
+                                                                        .EnableNoBuild()
+                                                                        .SetResultsDirectory(TestResultsDirectory)
                                                                  )
-                                                                .AddAttributeFilters(
-                                                                     "System.Diagnostics.DebuggerHiddenAttribute",
-                                                                     "System.Diagnostics.DebuggerNonUserCodeAttribute",
-                                                                     "System.CodeDom.Compiler.GeneratedCodeAttribute",
-                                                                     "System.Runtime.CompilerServices.CompilerGeneratedAttribute",
-                                                                     "System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute"
-                                                                 )
-                                                                .SetProcessWorkingDirectory(RootDirectory)
-                                                                .SetTargetWorkingDirectory(RootDirectory)
-                                                                .SetReportType(DotCoverReportType.DetailedXml)
-                                                                .SetOutputFile(TestResultsDirectory / "test.dotcover.xml")
-                                                                .SetTargetArguments(targetSettings.GetProcessArguments().RenderForExecution())
-                                                 );
-                                             }
+                                                                .GetProcessArguments()
+                                                                .RenderForExecution()
+                                                         )
+                                                 )
+                                             )
                                          );
+
+    public DotNetTestSettings CustomizeDotNetTestSettings(DotNetTestSettings settings)
+    {
+        return settings;
+    }
 }

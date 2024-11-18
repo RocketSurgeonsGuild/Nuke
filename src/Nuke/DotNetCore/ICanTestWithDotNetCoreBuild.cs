@@ -1,4 +1,5 @@
 using Nuke.Common.Tooling;
+using Nuke.Common.Tools.DotCover;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
 
@@ -11,7 +12,6 @@ namespace Rocket.Surgery.Nuke.DotNetCore;
 public interface ICanTestWithDotNetCoreBuild : IHaveBuildTarget,
     ITriggerCodeCoverageReports,
     IComprehendTests,
-    IHaveTestArtifacts,
     IHaveGitVersion,
     IHaveSolution,
     IHaveConfiguration,
@@ -46,18 +46,37 @@ public interface ICanTestWithDotNetCoreBuild : IHaveBuildTarget,
                                              .EnsureRunSettingsExists(RunSettings)
                                              .Net9MsBuildFix()
                                              .Executes(
-                                                  () => DotNetTasks.DotNetTest(
-                                                      s => s
-                                                          .SetProcessWorkingDirectory(RootDirectory)
-                                                          .SetProjectFile(Solution)
-//                                                          .SetDefaultLoggers(LogsDirectory / "test.log")
-                                                          .SetGitVersionEnvironment(GitVersion)
-                                                          .SetConfiguration(TestBuildConfiguration)
-                                                          .EnableNoRestore()
-                                                          .EnableNoBuild()
-                                                          .SetResultsDirectory(TestResultsDirectory)
-                                                          .SetSettingsFile(RunSettings)
-                                                          .SetDataCollector(DataCollector)
+                                                  () => DotCoverTasks.DotCoverCoverDotNet(
+                                                      settings => CustomizeDotCoverSettings(
+                                                          settings
+                                                             .AddFilters(DefaultDotCoverFilters)
+                                                             .AddAttributeFilters(DefaultDotCoverFilters)
+                                                             .SetProcessWorkingDirectory(RootDirectory)
+                                                             .SetTargetWorkingDirectory(RootDirectory)
+                                                             .SetReportType(DotCoverReportType.DetailedXml)
+                                                             .SetOutputFile(TestResultsDirectory / "test.dotcover.xml")
+                                                             .SetTargetArguments(
+                                                                  CustomizeDotNetTestSettings(
+                                                                          new DotNetTestSettings()
+                                                                             .SetProcessWorkingDirectory(RootDirectory)
+                                                                             .SetProjectFile(Solution)
+                                                                             .SetDefaultLoggers(LogsDirectory / "test.log")
+                                                                             .SetLoggers("trx")
+                                                                             .SetGitVersionEnvironment(GitVersion)
+                                                                             .SetConfiguration(TestBuildConfiguration)
+                                                                             .EnableNoRestore()
+                                                                             .EnableNoBuild()
+                                                                             .SetResultsDirectory(TestResultsDirectory)
+                                                                      )
+                                                                     .GetProcessArguments()
+                                                                     .RenderForExecution()
+                                                              )
+                                                      )
                                                   )
                                               );
+
+    public DotNetTestSettings CustomizeDotNetTestSettings(DotNetTestSettings settings)
+    {
+        return settings;
+    }
 }

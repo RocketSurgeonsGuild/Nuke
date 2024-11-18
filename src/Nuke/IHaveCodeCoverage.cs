@@ -1,4 +1,6 @@
 using Nuke.Common.IO;
+using Nuke.Common.Tools.DotCover;
+using Nuke.Common.Tools.DotNet;
 
 namespace Rocket.Surgery.Nuke;
 
@@ -19,4 +21,39 @@ public interface IHaveCodeCoverage : IHaveArtifacts
         EnvironmentInfo.GetVariable<AbsolutePath>("Coverage")
      ?? TryGetValue(() => CoverageDirectory)
      ?? NukeBuild.RootDirectory / "coverage";
+
+    public static IEnumerable<string> DefaultDotCoverAttributeFilters { get; } =
+    [
+        "System.Diagnostics.DebuggerHiddenAttribute",
+        "System.Diagnostics.DebuggerNonUserCodeAttribute",
+        "System.CodeDom.Compiler.GeneratedCodeAttribute",
+        "System.Runtime.CompilerServices.CompilerGeneratedAttribute",
+        "System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute"
+    ];
+
+    public static IEnumerable<string> DefaultDotCoverFilters { get; } =
+    [
+        "-:Bogus*",
+        "-:FakeItEasy*",
+        "-:Moq*",
+        "-:NSubstitute*",
+        "-:Verify*",
+        "-:XUnit*",
+        "-:TUnit*",
+        "-:Microsoft*",
+        "-:System*",
+        "-:JetBrains*",
+        "-:DryIoc*",
+        "-:Nuke*",
+        "-:testhost*",
+        "-:FluentAssertions*",
+        "-:Serilog*",
+        "-:module=JetBrains*",
+        "-:class=JetBrains*"
+    ];
+
+    public DotCoverCoverDotNetSettings CustomizeDotCoverSettings(DotCoverCoverDotNetSettings settings)
+    {
+        return settings;
+    }
 }
