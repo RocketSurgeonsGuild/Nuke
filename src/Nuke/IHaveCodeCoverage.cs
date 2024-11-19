@@ -12,15 +12,6 @@ namespace Rocket.Surgery.Nuke;
 /// </remarks>
 public interface IHaveCodeCoverage : IHaveArtifacts
 {
-    /// <summary>
-    ///     The directory where coverage artifacts are to be dropped
-    /// </summary>
-    [Parameter("The directory where coverage artifacts are to be dropped", Name = "Coverage")]
-    public AbsolutePath CoverageDirectory =>
-        EnvironmentInfo.GetVariable<AbsolutePath>("Coverage")
-     ?? TryGetValue(() => CoverageDirectory)
-     ?? NukeBuild.RootDirectory / "coverage";
-
     public static IEnumerable<string> DefaultIncludeModulePaths => [];
     public static IEnumerable<string> DefaultExcludeModulePaths => [];
     public static IEnumerable<string> DefaultIncludeSources => [];
@@ -56,6 +47,15 @@ public interface IHaveCodeCoverage : IHaveArtifacts
         "Serilog",
     ];
 
+    /// <summary>
+    ///     The directory where coverage artifacts are to be dropped
+    /// </summary>
+    [Parameter("The directory where coverage artifacts are to be dropped", Name = "Coverage")]
+    public AbsolutePath CoverageDirectory =>
+        EnvironmentInfo.GetVariable<AbsolutePath>("Coverage")
+     ?? TryGetValue(() => CoverageDirectory)
+     ?? NukeBuild.RootDirectory / "coverage";
+
     public IEnumerable<string> IncludeNamespaces => DefaultIncludeNamespaces;
     public IEnumerable<string> ExcludeNamespaces => DefaultExcludeNamespaces;
     public IEnumerable<string> IncludeAttributes => DefaultIncludeAttributes;
@@ -65,8 +65,5 @@ public interface IHaveCodeCoverage : IHaveArtifacts
     public IEnumerable<string> IncludeModulePaths => DefaultIncludeModulePaths;
     public IEnumerable<string> ExcludeModulePaths => DefaultExcludeModulePaths;
 
-    public XDocument CustomizeCoverageRunSettings(XDocument document)
-    {
-        return document;
-    }
+    public XDocument CustomizeCoverageRunSettings(XDocument document) => document;
 }

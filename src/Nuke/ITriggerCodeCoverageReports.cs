@@ -122,6 +122,5 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                   .Where(z => !string.IsNullOrWhiteSpace(z))
                   .Distinct()
                   .Select(z => "-" + z)
-           )
-           ;
+           );
 }

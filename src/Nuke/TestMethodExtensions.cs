@@ -1,7 +1,6 @@
 using System.Collections.Immutable;
 using System.Xml.Linq;
 using Nuke.Common.IO;
-using Nuke.Common.ProjectModel;
 using Rocket.Surgery.Nuke.DotNetCore;
 using Rocket.Surgery.Nuke.ProjectModel;
 
@@ -62,7 +61,7 @@ public static class TestMethodExtensions
                     runsettings,
                     (
                         build.IncludeModulePaths.Union(includeNames),
-                        build.ExcludeModulePaths .Union(excludePackages)
+                        build.ExcludeModulePaths.Union(excludePackages)
                     ),
                     ( build.IncludeAttributes, build.ExcludeAttributes ),
                     ( build.IncludeNamespaces, build.ExcludeNamespaces ),
@@ -119,12 +118,26 @@ public static class TestMethodExtensions
         static (IEnumerable<string> include, IEnumerable<string> exclude) transform(
             (IEnumerable<string> include, IEnumerable<string> exclude) attributes,
             Func<string, IEnumerable<string>> transformer
-        ) => ( attributes.include.SelectMany(transformer), attributes.exclude.SelectMany(transformer) );
+        )
+        {
+            return ( attributes.include.SelectMany(transformer), attributes.exclude.SelectMany(transformer) );
+        }
 
 
-        static IEnumerable<string> transformAttribute(string attr) => [$"^{attr.Replace(".", "\\.")}$"];
-        static IEnumerable<string> transformModulePath(string ns) => [$".*{ns}"];
-        static IEnumerable<string> transformNamespace(string ns) => [$"^{ns.Replace(".", "\\.")}.*"];
+        static IEnumerable<string> transformAttribute(string attr)
+        {
+            return [$"^{attr.Replace(".", "\\.")}$"];
+        }
+
+        static IEnumerable<string> transformModulePath(string ns)
+        {
+            return [$".*{ns}"];
+        }
+
+        static IEnumerable<string> transformNamespace(string ns)
+        {
+            return [$"^{ns.Replace(".", "\\.")}.*"];
+        }
     }
 
     private static XElement EnsureElement(XElement parent, string name)
