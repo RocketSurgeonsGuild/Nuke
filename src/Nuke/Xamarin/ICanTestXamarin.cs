@@ -37,7 +37,7 @@ public interface ICanTestXamarin : IHaveTestTarget,
                                                   .SetLoggers("trx")
                                                   .SetProperty("CollectCoverage", "true")
                                                   .SetProperty(
-                                                       "DeterministicSourcePaths",
+                                                        "DeterministicSourcePaths",
                                                        "false"
                                                    ) // DeterministicSourcePaths being true breaks coverlet!
                                                   .SetProperty("CoverageDirectory", CoverageDirectory)

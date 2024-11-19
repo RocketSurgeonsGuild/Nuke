@@ -1,3 +1,4 @@
+using System.Xml.Linq;
 using Nuke.Common.IO;
 
 namespace Rocket.Surgery.Nuke;
@@ -20,11 +21,13 @@ public interface IHaveCodeCoverage : IHaveArtifacts
      ?? TryGetValue(() => CoverageDirectory)
      ?? NukeBuild.RootDirectory / "coverage";
 
-    public IEnumerable<string> IncludeModulePaths => [];
-    public IEnumerable<string> ExcludeModulePaths => [];
-    public IEnumerable<string> IncludeAttributes => [];
+    public static IEnumerable<string> DefaultIncludeModulePaths => [];
+    public static IEnumerable<string> DefaultExcludeModulePaths => [];
+    public static IEnumerable<string> DefaultIncludeSources => [];
+    public static IEnumerable<string> DefaultExcludeSources => [];
+    public static IEnumerable<string> DefaultIncludeAttributes => [];
 
-    public IEnumerable<string> ExcludeAttributes =>
+    public static IEnumerable<string> DefaultExcludeAttributes =>
     [
         "System.Diagnostics.DebuggerHiddenAttribute",
         "System.Diagnostics.DebuggerNonUserCodeAttribute",
@@ -33,23 +36,37 @@ public interface IHaveCodeCoverage : IHaveArtifacts
         "System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute",
     ];
 
-    public IEnumerable<string> IncludeNamespaces => [];
+    public static IEnumerable<string> DefaultIncludeNamespaces => [];
 
-    public IEnumerable<string> ExcludeNamespaces =>
+    public static IEnumerable<string> DefaultExcludeNamespaces =>
     [
-        "Bogus.",
-        "FakeItEasy.",
-        "Moq.",
-        "NSubstitute.",
-        "Verify.",
-        "XUnit.",
-        "TUnit.",
+        "Bogus",
+        "FakeItEasy",
+        "Moq",
+        "NSubstitute",
+        "Verify",
+        "XUnit",
+        "TUnit",
         "Microsoft.",
         "System.",
         "JetBrains.",
-        "DryIoc.",
-        "Nuke.",
-        "FluentAssertions.",
-        "Serilog.",
+        "DryIoc",
+        "Nuke",
+        "FluentAssertions",
+        "Serilog",
     ];
+
+    public IEnumerable<string> IncludeNamespaces => DefaultIncludeNamespaces;
+    public IEnumerable<string> ExcludeNamespaces => DefaultExcludeNamespaces;
+    public IEnumerable<string> IncludeAttributes => DefaultIncludeAttributes;
+    public IEnumerable<string> ExcludeAttributes => DefaultExcludeAttributes;
+    public IEnumerable<string> IncludeSources => DefaultIncludeSources;
+    public IEnumerable<string> ExcludeSources => DefaultExcludeSources;
+    public IEnumerable<string> IncludeModulePaths => DefaultIncludeModulePaths;
+    public IEnumerable<string> ExcludeModulePaths => DefaultExcludeModulePaths;
+
+    public XDocument CustomizeCoverageRunSettings(XDocument document)
+    {
+        return document;
+    }
 }

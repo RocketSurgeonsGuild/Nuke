@@ -2,13 +2,12 @@
 <RunSettings>
   <DataCollectionRunSettings>
     <DataCollectors>
-      <DataCollector friendlyName="Code Coverage" uri="datacollector://Microsoft/CodeCoverage/2.0" assemblyQualifiedName="Microsoft.VisualStudio.Coverage.DynamicCoverageDataCollector, Microsoft.VisualStudio.TraceCollector, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <DataCollector friendlyName="Code Coverage">
         <Configuration>
           <Format>Cobertura</Format>
           <CodeCoverage>
             <EnableStaticManagedInstrumentation>True</EnableStaticManagedInstrumentation>
             <EnableDynamicManagedInstrumentation>True</EnableDynamicManagedInstrumentation>
-            <ModulePaths />
             <Attributes>
               <Exclude>
                 <Attribute>^System\.CodeDom\.Compiler\.GeneratedCodeAttribute$</Attribute>
@@ -20,22 +19,75 @@
             </Attributes>
             <Functions>
               <Exclude>
-                <Function>^Bogus\..*</Function>
-                <Function>^DryIoc\..*</Function>
-                <Function>^FakeItEasy\..*</Function>
-                <Function>^FluentAssertions\..*</Function>
+                <Function>^Bogus.*</Function>
+                <Function>^DryIoc.*</Function>
+                <Function>^FakeItEasy.*</Function>
+                <Function>^FluentAssertions.*</Function>
                 <Function>^JetBrains\..*</Function>
                 <Function>^Microsoft\..*</Function>
-                <Function>^Moq\..*</Function>
-                <Function>^NSubstitute\..*</Function>
-                <Function>^Nuke\..*</Function>
-                <Function>^Serilog\..*</Function>
+                <Function>^Moq.*</Function>
+                <Function>^NSubstitute.*</Function>
+                <Function>^Nuke.*</Function>
+                <Function>^Serilog.*</Function>
                 <Function>^System\..*</Function>
-                <Function>^TUnit\..*</Function>
-                <Function>^Verify\..*</Function>
-                <Function>^XUnit\..*</Function>
+                <Function>^TUnit.*</Function>
+                <Function>^Verify.*</Function>
+                <Function>^XUnit.*</Function>
               </Exclude>
             </Functions>
+            <ModulePaths>
+              <Include>
+                <ModulePath>.*\.build\.dll</ModulePath>
+                <ModulePath>.*Rocket\.Surgery\.Nuke\.dll</ModulePath>
+                <ModulePath>.*Rocket\.Surgery\.Nuke\.Tests\.dll</ModulePath>
+              </Include>
+              <Exclude>
+                <ModulePath>.*Bogus\.dll</ModulePath>
+                <ModulePath>.*Buildalyzer\.dll</ModulePath>
+                <ModulePath>.*FakeItEasy\.Analyzer\.CSharp\.dll</ModulePath>
+                <ModulePath>.*FakeItEasy\.dll</ModulePath>
+                <ModulePath>.*FluentAssertions\.Analyzers\.dll</ModulePath>
+                <ModulePath>.*FluentAssertions\.dll</ModulePath>
+                <ModulePath>.*GitVersion\.Tool\.dll</ModulePath>
+                <ModulePath>.*Humanizer\.Core\.dll</ModulePath>
+                <ModulePath>.*JetBrains\.Annotations\.dll</ModulePath>
+                <ModulePath>.*JetBrains\.dotCover\.CommandLineTools\.dll</ModulePath>
+                <ModulePath>.*JetBrains\.ExternalAnnotations\.dll</ModulePath>
+                <ModulePath>.*JetBrains\.ReSharper\.GlobalTools\.dll</ModulePath>
+                <ModulePath>.*LibGit2Sharp\.dll</ModulePath>
+                <ModulePath>.*Microsoft\.Build\.dll</ModulePath>
+                <ModulePath>.*Microsoft\.Build\.Framework\.dll</ModulePath>
+                <ModulePath>.*Microsoft\.Build\.Locator\.dll</ModulePath>
+                <ModulePath>.*Microsoft\.Build\.Tasks\.Core\.dll</ModulePath>
+                <ModulePath>.*Microsoft\.Build\.Utilities\.Core\.dll</ModulePath>
+                <ModulePath>.*Microsoft\.CodeAnalysis\.Analyzers\.dll</ModulePath>
+                <ModulePath>.*Microsoft\.CodeAnalysis\.BannedApiAnalyzers\.dll</ModulePath>
+                <ModulePath>.*Microsoft\.CodeAnalysis\.PublicApiAnalyzers\.dll</ModulePath>
+                <ModulePath>.*Microsoft\.CodeCoverage\.dll</ModulePath>
+                <ModulePath>.*Microsoft\.Extensions\.FileSystemGlobbing\.dll</ModulePath>
+                <ModulePath>.*Microsoft\.NET\.Test\.Sdk\.dll</ModulePath>
+                <ModulePath>.*Microsoft\.SourceLink\.GitHub\.dll</ModulePath>
+                <ModulePath>.*Nuke\.Common\.dll</ModulePath>
+                <ModulePath>.*ReportGenerator\.dll</ModulePath>
+                <ModulePath>.*Rocket\.Surgery\.Extensions\.Testing\.FakeItEasy\.dll</ModulePath>
+                <ModulePath>.*Rocket\.Surgery\.Extensions\.Testing\.XUnit\.dll</ModulePath>
+                <ModulePath>.*Rocket\.Surgery\.MSBuild\.CI\.dll</ModulePath>
+                <ModulePath>.*Rocket\.Surgery\.MSBuild\.GitVersion\.dll</ModulePath>
+                <ModulePath>.*Rocket\.Surgery\.MSBuild\.SourceLink\.dll</ModulePath>
+                <ModulePath>.*Roslynator\.Analyzers\.dll</ModulePath>
+                <ModulePath>.*Roslynator\.CodeAnalysis\.Analyzers\.dll</ModulePath>
+                <ModulePath>.*Roslynator\.CodeFixes\.dll</ModulePath>
+                <ModulePath>.*Roslynator\.Formatting\.Analyzers\.dll</ModulePath>
+                <ModulePath>.*Roslynator\.Refactorings\.dll</ModulePath>
+                <ModulePath>.*Serilog\.Extensions\.Logging\.dll</ModulePath>
+                <ModulePath>.*System\.Collections\.Immutable\.dll</ModulePath>
+                <ModulePath>.*System\.Interactive\.Async\.dll</ModulePath>
+                <ModulePath>.*xunit\.analyzers\.dll</ModulePath>
+                <ModulePath>.*xunit\.dll</ModulePath>
+                <ModulePath>.*xunit\.runner\.visualstudio\.dll</ModulePath>
+                <ModulePath>.*YamlDotNet\.dll</ModulePath>
+              </Exclude>
+            </ModulePaths>
           </CodeCoverage>
         </Configuration>
       </DataCollector>
