@@ -51,12 +51,10 @@ public static class ToolSettingsExtensions
     /// <param name="path"></param>
     /// <param name="verbosity"></param>
     public static T SetDefaultLoggers<T>(this T settings, AbsolutePath path, MSBuildVerbosity? verbosity = null)
-        where T : ToolSettings
-    {
-        return settings
-              .SetBinaryLogger((AbsolutePath)Path.ChangeExtension(path, "binlog"))
-              .SetFileLogger((AbsolutePath)Path.ChangeExtension(path, "log"), verbosity);
-    }
+        where T : ToolSettings =>
+        settings
+           .SetBinaryLogger((AbsolutePath)Path.ChangeExtension(path, "binlog"))
+           .SetFileLogger((AbsolutePath)Path.ChangeExtension(path, "log"), verbosity);
 
     /// <summary>
     ///     Configures binary logging for MSBuild
@@ -64,7 +62,8 @@ public static class ToolSettingsExtensions
     /// <param name="settings"></param>
     /// <param name="path"></param>
     public static T SetBinaryLogger<T>(this T settings, AbsolutePath path)
-        where T : ToolSettings => SetBinaryLogger(settings, path, NukeBuild.IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed);
+        where T : ToolSettings =>
+        SetBinaryLogger(settings, path, NukeBuild.IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed);
 
     /// <summary>
     ///     Configures binary logging for MSBuild
@@ -73,14 +72,8 @@ public static class ToolSettingsExtensions
     /// <param name="path"></param>
     /// <param name="imports"></param>
     public static T SetBinaryLogger<T>(this T settings, AbsolutePath path, MSBuildBinaryLogImports imports)
-        where T : ToolSettings
-    {
-        var existingArgs = settings.ProcessArgumentConfigurator;
-        return settings.SetProcessArgumentConfigurator(
-            args =>
-                existingArgs(args).Add($"/bl:\"{path}\";ProjectImports={imports}")
-        );
-    }
+        where T : ToolSettings =>
+        settings.SetProcessArgumentConfigurator(args => args.Add($"/bl:\"{path}\";ProjectImports={imports}"));
 
     /// <summary>
     ///     Configures a file logger for MSBuild
@@ -91,15 +84,9 @@ public static class ToolSettingsExtensions
     public static T SetFileLogger<T>(this T settings, AbsolutePath path, MSBuildVerbosity? verbosity = null)
         where T : ToolSettings
     {
-        var existingArgs = settings.ProcessArgumentConfigurator;
         verbosity ??= NukeBuild.Verbosity.MapVerbosity(MSBuildVerbosity.Normal);
-
         return settings.SetProcessArgumentConfigurator(
-            args =>
-                existingArgs(args)
-                   .Add(
-                        $"/fileLogger /fileloggerparameters:ShowTimestamp;Verbosity={verbosity};LogFile=\"{path}\""
-                    )
+            args => args.Add($"/fileLogger /fileloggerparameters:ShowTimestamp;Verbosity={verbosity};LogFile=\"{path}\"")
         );
     }
 
