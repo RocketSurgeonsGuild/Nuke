@@ -32,7 +32,7 @@ public static class GithubActionsExtensions
         configuration.Jobs.Add(
             new RocketSurgeonsGithubWorkflowJob("Publish")
             {
-                Needs = { "Build", },
+                Needs = { "Build" },
                 Uses = "RocketSurgeonsGuild/actions/.github/workflows/publish-nuget.yml@v0.3.0",
                 Secrets = new()
                 {
@@ -85,7 +85,7 @@ public static class GithubActionsExtensions
         static int getCheckStepIndex(RocketSurgeonsGithubActionsJob job)
         {
             var checkoutStep = job.Steps.OfType<CheckoutStep>().SingleOrDefault();
-            return ( checkoutStep is null ) ? 1 : job.Steps.IndexOf(checkoutStep);
+            return checkoutStep is null ? 1 : job.Steps.IndexOf(checkoutStep);
         }
     }
 
@@ -115,7 +115,7 @@ public static class GithubActionsExtensions
     {
         foreach (var item in configuration.DetailedTriggers.OfType<RocketSurgeonGitHubActionsVcsTrigger>())
         {
-            item.IncludePaths = [.. Enumerable.Concat(item.IncludePaths, paths).Distinct(),];
+            item.IncludePaths = [.. Enumerable.Concat(item.IncludePaths, paths).Distinct()];
         }
 
         return configuration;
@@ -131,7 +131,7 @@ public static class GithubActionsExtensions
     {
         foreach (var item in configuration.DetailedTriggers.OfType<RocketSurgeonGitHubActionsVcsTrigger>())
         {
-            item.ExcludePaths = [.. Enumerable.Concat(item.IncludePaths, paths).Distinct(),];
+            item.ExcludePaths = [.. Enumerable.Concat(item.IncludePaths, paths).Distinct()];
         }
 
         return configuration;
@@ -169,7 +169,7 @@ public static class GithubActionsExtensions
     /// <returns></returns>
     public static RocketSurgeonsGithubActionsJob ConfigureForGitVersion(this RocketSurgeonsGithubActionsJob job)
     {
-        _ = job.InsertAfterCheckOut(new RunStep("Fetch all history for all tags and branches") { Run = "git fetch --prune", });
+        _ = job.InsertAfterCheckOut(new RunStep("Fetch all history for all tags and branches") { Run = "git fetch --prune" });
         return job;
     }
 
@@ -248,8 +248,8 @@ public static class GithubActionsExtensions
             job.Permissions ??= new();
             job.Permissions.Checks = GitHubActionsPermission.Write;
             job.Permissions.PullRequests = GitHubActionsPermission.Write;
-            job.Permissions.Contents = ( job.Permissions.Contents == GitHubActionsPermission.None ) ? GitHubActionsPermission.Read : job.Permissions.Contents;
-            job.Permissions.Issues = ( job.Permissions.Issues == GitHubActionsPermission.None ) ? GitHubActionsPermission.Read : job.Permissions.Issues;
+            job.Permissions.Contents = job.Permissions.Contents == GitHubActionsPermission.None ? GitHubActionsPermission.Read : job.Permissions.Contents;
+            job.Permissions.Issues = job.Permissions.Issues == GitHubActionsPermission.None ? GitHubActionsPermission.Read : job.Permissions.Issues;
 
             _ = AddStep(
                 job,
@@ -296,7 +296,8 @@ public static class GithubActionsExtensions
                     new UsingStep("Publish Codecov Coverage")
                     {
                         Uses = "codecov/codecov-action@v4",
-                        If = "always() && (github.event_name != 'pull_request' && github.event_name != 'pull_request_target') || ((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]')",
+                        If =
+                            "always() && (github.event_name != 'pull_request' && github.event_name != 'pull_request_target') || ((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]')",
                         With = new()
                         {
                             ["name"] = "actions",
@@ -358,7 +359,7 @@ public static class GithubActionsExtensions
     public static RocketSurgeonsGithubActionsJob UseDotNetSdk(this RocketSurgeonsGithubActionsJob job, string version, string? exactVersion = null)
     {
         exactVersion ??= version + ".x";
-        _ = job.InsertAfterCheckOut(new SetupDotNetStep($"Use .NET Core {version} SDK") { DotNetVersion = exactVersion, });
+        _ = job.InsertAfterCheckOut(new SetupDotNetStep($"Use .NET Core {version} SDK") { DotNetVersion = exactVersion });
         return job;
     }
 
