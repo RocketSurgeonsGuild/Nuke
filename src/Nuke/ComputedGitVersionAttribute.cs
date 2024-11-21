@@ -99,8 +99,43 @@ public class ComputedGitVersionAttribute : ValueInjectionAttributeBase
         var rootDirectory = NukeBuild.RootDirectory.FindParentOrSelf(x => x.GetDirectories(".git").Any());
         if (rootDirectory == null)
         {
-            Log.Warning("N git repository found, GitVersion will not be accurate");
-            return new GitVersion();
+            Log.Warning("No git repository found, GitVersion will not be accurate");
+
+            return new GitVersion(
+                -1,
+                -1,
+                -1,
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                -1,
+                ""
+            );
         }
 
         var gitVersion = GetGitVersion(_frameworkVersion, UpdateAssemblyInfo);
