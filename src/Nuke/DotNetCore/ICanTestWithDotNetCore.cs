@@ -52,7 +52,7 @@ public interface ICanTestWithDotNetCore : IHaveBuildTarget,
                                                    .Add("--")
                                                    .Add("dotnet")
                                                    .Concatenate(
-                                                        (Arguments)CustomizeDotNetTestSettings(
+                                                        CustomizeDotNetTestSettings(
                                                                 new DotNetTestSettings()
                                                                    .SetProcessWorkingDirectory(RootDirectory)
                                                                    .SetProjectFile(Solution)
@@ -64,6 +64,7 @@ public interface ICanTestWithDotNetCore : IHaveBuildTarget,
                                                                    .SetLoggers("trx")
                                                                    .SetResultsDirectory(TestResultsDirectory)
                                                             )
+                                                           .RemoveLoggers()
                                                            .GetProcessArguments()
                                                     ).RenderForExecution()}",
                                                  RootDirectory

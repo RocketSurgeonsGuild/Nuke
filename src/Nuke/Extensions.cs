@@ -271,6 +271,28 @@ public static class Extensions
     }
 
     /// <summary>
+    ///     Add a value to the dictionary if it's missing
+    /// </summary>
+    /// <param name="dictionary"></param>
+    /// <param name="key"></param>
+    /// <param name="value"></param>
+    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TValue"></typeparam>
+    /// <returns></returns>
+    public static ReadOnlyDictionary<TKey, TValue> AddIfMissing<TKey, TValue>(this ReadOnlyDictionary<TKey, TValue> dictionary, TKey key, TValue value)
+        where TKey : notnull
+    {
+        if (dictionary.TryGetValue(key, out _))
+        {
+            return dictionary;
+        }
+
+        var newDictionary = dictionary.ToDictionary(z => z.Key, z => z.Value);
+        newDictionary[key] = value;
+        return new(newDictionary);
+    }
+
+    /// <summary>
     ///     Add a value to the dictionary if it's missing and replace it if it's set
     /// </summary>
     /// <param name="dictionary"></param>

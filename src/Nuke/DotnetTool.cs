@@ -121,7 +121,11 @@ internal record ResolvedToolsManifest(ImmutableDictionary<string, FullToolComman
                            invocation,
                            // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
                            logger ?? DefaultLogger,
-                           handler
+                           process =>
+                           {
+                               handler?.Invoke(process);
+                               return null;
+                           }
                        );
                    };
         }
@@ -145,7 +149,7 @@ internal record ResolvedToolsManifest(ImmutableDictionary<string, FullToolComman
                       // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
                       logger ?? DefaultLogger
                   );
-                  ( handler ?? ( p => ProcessTasks.DefaultExitHandler(null, p) ) ).Invoke(process.AssertWaitForExit());
+                  ( handler ?? ( p => process.AssertZeroExitCode() ) ).Invoke(process.AssertWaitForExit());
                   return process.Output;
               }
             : throw new InvalidOperationException($"Tool {nugetPackageName} is not installed");

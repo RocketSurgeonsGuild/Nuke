@@ -85,7 +85,7 @@ public static class GithubActionsExtensions
         static int getCheckStepIndex(RocketSurgeonsGithubActionsJob job)
         {
             var checkoutStep = job.Steps.OfType<CheckoutStep>().SingleOrDefault();
-            return checkoutStep is null ? 1 : job.Steps.IndexOf(checkoutStep);
+            return ( checkoutStep is null ) ? 1 : job.Steps.IndexOf(checkoutStep);
         }
     }
 
@@ -248,8 +248,8 @@ public static class GithubActionsExtensions
             job.Permissions ??= new();
             job.Permissions.Checks = GitHubActionsPermission.Write;
             job.Permissions.PullRequests = GitHubActionsPermission.Write;
-            job.Permissions.Contents = job.Permissions.Contents == GitHubActionsPermission.None ? GitHubActionsPermission.Read : job.Permissions.Contents;
-            job.Permissions.Issues = job.Permissions.Issues == GitHubActionsPermission.None ? GitHubActionsPermission.Read : job.Permissions.Issues;
+            job.Permissions.Contents = ( job.Permissions.Contents == GitHubActionsPermission.None ) ? GitHubActionsPermission.Read : job.Permissions.Contents;
+            job.Permissions.Issues = ( job.Permissions.Issues == GitHubActionsPermission.None ) ? GitHubActionsPermission.Read : job.Permissions.Issues;
 
             _ = AddStep(
                 job,
@@ -284,6 +284,7 @@ public static class GithubActionsExtensions
                 new StickyPullRequestStep("Publish Coverage Comment")
                 {
                     If = "always() && github.event_name == 'pull_request'",
+                    ContinueOnError = true,
                     Header = "Coverage",
                     Path = "coverage/summary/SummaryGithub.md",
                 }
@@ -298,6 +299,7 @@ public static class GithubActionsExtensions
                         Uses = "codecov/codecov-action@v4",
                         If =
                             "always() && (github.event_name != 'pull_request' && github.event_name != 'pull_request_target') || ((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]')",
+                        ContinueOnError = true,
                         With = new()
                         {
                             ["name"] = "actions",

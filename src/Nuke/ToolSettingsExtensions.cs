@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Newtonsoft.Json.Linq;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
@@ -51,7 +52,7 @@ public static class ToolSettingsExtensions
     /// <param name="path"></param>
     /// <param name="verbosity"></param>
     public static T SetDefaultLoggers<T>(this T settings, AbsolutePath path, MSBuildVerbosity? verbosity = null)
-        where T : ToolSettings =>
+        where T : ToolOptions =>
         settings
            .SetBinaryLogger((AbsolutePath)Path.ChangeExtension(path, "binlog"))
            .SetFileLogger((AbsolutePath)Path.ChangeExtension(path, "log"), verbosity);
@@ -62,7 +63,7 @@ public static class ToolSettingsExtensions
     /// <param name="settings"></param>
     /// <param name="path"></param>
     public static T SetBinaryLogger<T>(this T settings, AbsolutePath path)
-        where T : ToolSettings =>
+        where T : ToolOptions =>
         SetBinaryLogger(settings, path, NukeBuild.IsLocalBuild ? MSBuildBinaryLogImports.None : MSBuildBinaryLogImports.Embed);
 
     /// <summary>
@@ -72,8 +73,8 @@ public static class ToolSettingsExtensions
     /// <param name="path"></param>
     /// <param name="imports"></param>
     public static T SetBinaryLogger<T>(this T settings, AbsolutePath path, MSBuildBinaryLogImports imports)
-        where T : ToolSettings =>
-        settings.SetProcessArgumentConfigurator(args => args.Add($"/bl:\"{path}\";ProjectImports={imports}"));
+        where T : ToolOptions =>
+        settings.AddProcessAdditionalArguments($"/bl:\"{path}\";ProjectImports={imports}");
 
     /// <summary>
     ///     Configures a file logger for MSBuild
@@ -82,12 +83,10 @@ public static class ToolSettingsExtensions
     /// <param name="path"></param>
     /// <param name="verbosity"></param>
     public static T SetFileLogger<T>(this T settings, AbsolutePath path, MSBuildVerbosity? verbosity = null)
-        where T : ToolSettings
+        where T : ToolOptions
     {
         verbosity ??= NukeBuild.Verbosity.MapVerbosity(MSBuildVerbosity.Normal);
-        return settings.SetProcessArgumentConfigurator(
-            args => args.Add($"/fileLogger /fileloggerparameters:ShowTimestamp;Verbosity={verbosity};LogFile=\"{path}\"")
-        );
+        return settings.AddProcessAdditionalArguments($"/fileLogger /fileloggerparameters:ShowTimestamp;Verbosity={verbosity};LogFile=\"{path}\"");
     }
 
     /// <summary>
@@ -96,7 +95,7 @@ public static class ToolSettingsExtensions
     /// <param name="settings"></param>
     /// <param name="gitVersion"></param>
     public static T SetGitVersionEnvironment<T>(this T settings, GitVersion? gitVersion)
-        where T : ToolSettings
+        where T : ToolOptions
     {
         if (gitVersion == null) return settings;
 
@@ -110,4 +109,25 @@ public static class ToolSettingsExtensions
 
         return settings;
     }
+
+    /// <summary>
+    /// Get the process arguments to pass to another tool
+    /// </summary>
+    /// <param name="options"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static Arguments GetProcessArguments<T>(this T options) where T : ToolOptions
+    {
+        var arguments = new Arguments();
+        foreach (var arg in GetArguments(options))
+        {
+            arguments.Add(arg);
+        }
+
+        return arguments;
+    }
+
+    // The first argument is the instance of the class containing the private method.
+    [UnsafeAccessor(UnsafeAccessorKind.Method, Name = "GetArguments")]
+    static extern IEnumerable<string> GetArguments(ToolOptions @this);
 }
