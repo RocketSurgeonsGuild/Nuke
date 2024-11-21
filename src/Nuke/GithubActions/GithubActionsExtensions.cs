@@ -283,7 +283,7 @@ public static class GithubActionsExtensions
                 job,
                 new StickyPullRequestStep("Publish Coverage Comment")
                 {
-                    If = "github.event_name == 'pull_request'",
+                    If = "always() && github.event_name == 'pull_request'",
                     Header = "Coverage",
                     Path = "coverage/summary/SummaryGithub.md",
                 }
@@ -296,8 +296,7 @@ public static class GithubActionsExtensions
                     new UsingStep("Publish Codecov Coverage")
                     {
                         Uses = "codecov/codecov-action@v4",
-                        If =
-                            "(github.event_name != 'pull_request' && github.event_name != 'pull_request_target') || ((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]')",
+                        If = "always() && (github.event_name != 'pull_request' && github.event_name != 'pull_request_target') || ((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]')",
                         With = new()
                         {
                             ["name"] = "actions",
