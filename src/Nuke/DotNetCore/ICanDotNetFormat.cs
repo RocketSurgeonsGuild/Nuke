@@ -3,7 +3,6 @@ using Microsoft.Extensions.FileSystemGlobbing;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
-using Nuke.Common.Tools.ReSharper;
 using Serilog;
 using Serilog.Events;
 
@@ -73,23 +72,23 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                   )
                                                                  .Add("--no-restore");
 
-                                                  if (DotNetFormatIncludedDiagnostics is { Length: > 0, })
+                                                  if (DotNetFormatIncludedDiagnostics is { Length: > 0 })
                                                   {
                                                       _ = arguments.Add("--diagnostics {value}", DotNetFormatIncludedDiagnostics.Value, ' ');
                                                   }
 
-                                                  if (DotNetFormatExcludedDiagnostics is { Length: > 0, })
+                                                  if (DotNetFormatExcludedDiagnostics is { Length: > 0 })
                                                   {
                                                       _ = arguments.Add("--exclude-diagnostics {value}", DotNetFormatExcludedDiagnostics, ' ');
                                                   }
 
                                                   _ = arguments.Add("--binarylog {value}", LogsDirectory / "dotnet-format.binlog");
 
-                                                  if (LintPaths.Glob(DotnetFormatMatcher) is { Count: > 0, } values)
+                                                  if (LintPaths.Glob(DotnetFormatMatcher) is { Count: > 0 } values)
                                                   {
                                                       _ = arguments.Add("--include {value}", string.Join(",", values.Select(z => z.ToString())));
                                                   }
-                                                  else if (LintPaths.AllPaths.Glob(DotnetFormatMatcher) is { Count: > 0, } allFiles)
+                                                  else if (LintPaths.AllPaths.Glob(DotnetFormatMatcher) is { Count: > 0 } allFiles)
                                                   {
                                                       _ = arguments.Add("--include {value}", string.Join(",", allFiles.Select(z => z.ToString())));
                                                   }
@@ -118,28 +117,45 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                  .Before(PostLint)
                                                  .OnlyWhenStatic(() => DotNetTool.IsInstalled("jb"))
                                                   // disable for local stagged runs, as it takes a long time.
-                                                 .OnlyWhenStatic(() => ( IsLocalBuild && LintPaths.Trigger != LintTrigger.Staged ) || !IsLocalBuild)
+                                                 .OnlyWhenStatic(
+                                                      () => ( IsLocalBuild && LintPaths.Trigger != LintTrigger.Staged )
+                                                       || !IsLocalBuild
+                                                       || ExecutionPlan.Contains(JetBrainsCleanupCode)
+                                                  )
                                                  .OnlyWhenDynamic(() => LintPaths.IsLocalLintOrMatches(JetBrainsCleanupCodeMatcher))
                                                  .Net9MsBuildFix()
                                                  .Executes(
-                                                      () => ReSharperTasks.ReSharperCleanupCode(
-                                                          s =>
+                                                      () =>
+                                                      {
+                                                          var arguments = new Arguments()
+                                                                         .Add("cleanupcode")
+                                                                         .Add(Solution.Path)
+                                                                         .Add("--profile={value}", JetBrainsCleanupCodeProfile)
+                                                                         .Add(
+                                                                              "--disable-settings-layers={value}",
+                                                                              "GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal"
+                                                                          );
+                                                          if (LintPaths.Glob(JetBrainsCleanupCodeMatcher) is { Count: > 0 } files)
                                                           {
-                                                              s = s
-                                                                 .SetTargetPath(Solution.Path)
-                                                                 .SetProcessWorkingDirectory(RootDirectory)
-                                                                 .SetProfile(JetBrainsCleanupCodeProfile)
-                                                                 .SetDisableSettingsLayers("GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal");
-
-                                                              if (LintPaths.Glob(JetBrainsCleanupCodeMatcher) is { Count: > 0, } files)
-                                                                  return s.SetInclude(files.Select(z => z.ToString()));
-
-                                                              if (LintPaths.AllPaths.Glob(JetBrainsCleanupCodeMatcher) is { Count: > 0, } allFiles)
-                                                                  return s.SetInclude(allFiles.Select(z => z.ToString()));
-
-                                                              return s;
+                                                              _ = arguments.Add("--include={value}", files, ';');
                                                           }
-                                                      )
+                                                          else if (LintPaths.AllPaths.Glob(JetBrainsCleanupCodeMatcher) is { Count: > 0 } allFiles)
+                                                          {
+                                                              _ = arguments.Add("--include={value}", allFiles, ';');
+                                                          }
+
+                                                          _ = DotNetTool.GetProperTool("jb")(
+                                                              arguments,
+                                                              RootDirectory,
+                                                              logOutput: true,
+                                                              logInvocation: Verbosity == Verbosity.Verbose,
+                                                              // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
+                                                              logger: static (t, s) => Log.Write(
+                                                                          t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information,
+                                                                          s
+                                                                      )
+                                                          );
+                                                      }
                                                   );
 
     /// <summary>
