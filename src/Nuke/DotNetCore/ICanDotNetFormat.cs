@@ -118,28 +118,45 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                  .Before(PostLint)
                                                  .OnlyWhenStatic(() => DotNetTool.IsInstalled("jb"))
                                                   // disable for local stagged runs, as it takes a long time.
-                                                 .OnlyWhenStatic(() => ( IsLocalBuild && LintPaths.Trigger != LintTrigger.Staged ) || !IsLocalBuild)
+                                                 .OnlyWhenStatic(
+                                                      () => ( IsLocalBuild && LintPaths.Trigger != LintTrigger.Staged )
+                                                       || !IsLocalBuild
+                                                       || ExecutionPlan.Contains(JetBrainsCleanupCode)
+                                                  )
                                                  .OnlyWhenDynamic(() => LintPaths.IsLocalLintOrMatches(JetBrainsCleanupCodeMatcher))
                                                  .Net9MsBuildFix()
                                                  .Executes(
-                                                      () => ReSharperTasks.ReSharperCleanupCode(
-                                                          s =>
+                                                      () =>
+                                                      {
+                                                          var arguments = new Arguments()
+                                                                         .Add("cleanupcode")
+                                                                         .Add(Solution.Path)
+                                                                         .Add("--profile={value}", JetBrainsCleanupCodeProfile)
+                                                                         .Add(
+                                                                              "--disable-settings-layers={value}",
+                                                                              "GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal"
+                                                                          );
+                                                          if (LintPaths.Glob(JetBrainsCleanupCodeMatcher) is { Count: > 0, } files)
                                                           {
-                                                              s = s
-                                                                 .SetTargetPath(Solution.Path)
-                                                                 .SetProcessWorkingDirectory(RootDirectory)
-                                                                 .SetProfile(JetBrainsCleanupCodeProfile)
-                                                                 .SetDisableSettingsLayers("GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal");
-
-                                                              if (LintPaths.Glob(JetBrainsCleanupCodeMatcher) is { Count: > 0, } files)
-                                                                  return s.SetInclude(files.Select(z => z.ToString()));
-
-                                                              if (LintPaths.AllPaths.Glob(JetBrainsCleanupCodeMatcher) is { Count: > 0, } allFiles)
-                                                                  return s.SetInclude(allFiles.Select(z => z.ToString()));
-
-                                                              return s;
+                                                              arguments.Add("--include={value}", files, ';');
                                                           }
-                                                      )
+                                                          else if (LintPaths.AllPaths.Glob(JetBrainsCleanupCodeMatcher) is { Count: > 0, } allFiles)
+                                                          {
+                                                              arguments.Add("--include={value}", allFiles, ';');
+                                                          }
+
+                                                          DotNetTool.GetProperTool("jb")(
+                                                              arguments,
+                                                              RootDirectory,
+                                                              logOutput: true,
+                                                              logInvocation: Verbosity == Verbosity.Verbose,
+                                                              // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
+                                                              logger: static (t, s) => Log.Write(
+                                                                          t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information,
+                                                                          s
+                                                                      )
+                                                          );
+                                                      }
                                                   );
 
     /// <summary>
