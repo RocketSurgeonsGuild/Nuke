@@ -3,7 +3,6 @@ using Microsoft.Extensions.FileSystemGlobbing;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
-using Nuke.Common.Tools.ReSharper;
 using Serilog;
 using Serilog.Events;
 
@@ -73,23 +72,23 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                   )
                                                                  .Add("--no-restore");
 
-                                                  if (DotNetFormatIncludedDiagnostics is { Length: > 0, })
+                                                  if (DotNetFormatIncludedDiagnostics is { Length: > 0 })
                                                   {
                                                       _ = arguments.Add("--diagnostics {value}", DotNetFormatIncludedDiagnostics.Value, ' ');
                                                   }
 
-                                                  if (DotNetFormatExcludedDiagnostics is { Length: > 0, })
+                                                  if (DotNetFormatExcludedDiagnostics is { Length: > 0 })
                                                   {
                                                       _ = arguments.Add("--exclude-diagnostics {value}", DotNetFormatExcludedDiagnostics, ' ');
                                                   }
 
                                                   _ = arguments.Add("--binarylog {value}", LogsDirectory / "dotnet-format.binlog");
 
-                                                  if (LintPaths.Glob(DotnetFormatMatcher) is { Count: > 0, } values)
+                                                  if (LintPaths.Glob(DotnetFormatMatcher) is { Count: > 0 } values)
                                                   {
                                                       _ = arguments.Add("--include {value}", string.Join(",", values.Select(z => z.ToString())));
                                                   }
-                                                  else if (LintPaths.AllPaths.Glob(DotnetFormatMatcher) is { Count: > 0, } allFiles)
+                                                  else if (LintPaths.AllPaths.Glob(DotnetFormatMatcher) is { Count: > 0 } allFiles)
                                                   {
                                                       _ = arguments.Add("--include {value}", string.Join(",", allFiles.Select(z => z.ToString())));
                                                   }
@@ -136,16 +135,16 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                               "--disable-settings-layers={value}",
                                                                               "GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal"
                                                                           );
-                                                          if (LintPaths.Glob(JetBrainsCleanupCodeMatcher) is { Count: > 0, } files)
+                                                          if (LintPaths.Glob(JetBrainsCleanupCodeMatcher) is { Count: > 0 } files)
                                                           {
-                                                              arguments.Add("--include={value}", files, ';');
+                                                              _ = arguments.Add("--include={value}", files, ';');
                                                           }
-                                                          else if (LintPaths.AllPaths.Glob(JetBrainsCleanupCodeMatcher) is { Count: > 0, } allFiles)
+                                                          else if (LintPaths.AllPaths.Glob(JetBrainsCleanupCodeMatcher) is { Count: > 0 } allFiles)
                                                           {
-                                                              arguments.Add("--include={value}", allFiles, ';');
+                                                              _ = arguments.Add("--include={value}", allFiles, ';');
                                                           }
 
-                                                          DotNetTool.GetProperTool("jb")(
+                                                          _ = DotNetTool.GetProperTool("jb")(
                                                               arguments,
                                                               RootDirectory,
                                                               logOutput: true,
