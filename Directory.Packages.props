@@ -37,7 +37,7 @@
         <PackageVersion Include="Buildalyzer" Version="7.1.0" />
         <PackageVersion Include="GitVersion.Tool" Version="6.0.5" />
         <PackageVersion Include="Humanizer.Core" Version="2.14.1" />
-        <PackageVersion Include="Nuke.Common" Version="9.0.0" />
+        <PackageVersion Include="Nuke.Common" Version="9.0.1" />
         <PackageVersion Include="ReportGenerator" Version="5.4.1" />
         <PackageVersion Include="Serilog.Extensions.Logging" Version="8.0.0" />
         <PackageVersion Include="YamlDotNet" Version="16.2.0" />
