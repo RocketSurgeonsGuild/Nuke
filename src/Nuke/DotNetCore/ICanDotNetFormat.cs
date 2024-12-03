@@ -3,6 +3,7 @@ using Microsoft.Extensions.FileSystemGlobbing;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
+using Nuke.Common.Tools.ReSharper;
 using Serilog;
 using Serilog.Events;
 
@@ -63,47 +64,35 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                          .Executes(
                                               () =>
                                               {
-                                                  var arguments = new Arguments()
-                                                                 .Add("format")
-                                                                 .Add("--severity {value}", DotNetFormatSeverity.ToString())
-                                                                 .Add(
-                                                                      "--verbosity {value}",
-                                                                      Verbosity.MapVerbosity(MSBuildVerbosity.Normal).ToString().ToLowerInvariant()
-                                                                  )
-                                                                 .Add("--no-restore");
+
+                                                  var formatSettings = new DotNetFormatSettings()
+                                                                      .SetSeverity(DotNetFormatSeverity)
+                                                                      .SetVerbosity(Verbosity.MapVerbosity(DotNetVerbosity.normal))
+                                                                      .EnableNoRestore()
+                                                                      .SetBinaryLog(LogsDirectory / "dotnet-format.binlog")
+
+                                                                       ;
 
                                                   if (DotNetFormatIncludedDiagnostics is { Length: > 0 })
                                                   {
-                                                      _ = arguments.Add("--diagnostics {value}", DotNetFormatIncludedDiagnostics.Value, ' ');
+                                                      formatSettings = formatSettings.SetProcessAdditionalArguments(["--diagnostics", .. DotNetFormatIncludedDiagnostics.Value]);
                                                   }
 
                                                   if (DotNetFormatExcludedDiagnostics is { Length: > 0 })
                                                   {
-                                                      _ = arguments.Add("--exclude-diagnostics {value}", DotNetFormatExcludedDiagnostics, ' ');
+                                                      formatSettings = formatSettings.SetProcessAdditionalArguments(["--exclude-diagnostics", .. DotNetFormatExcludedDiagnostics]);
                                                   }
-
-                                                  _ = arguments.Add("--binarylog {value}", LogsDirectory / "dotnet-format.binlog");
 
                                                   if (LintPaths.Glob(DotnetFormatMatcher) is { Count: > 0 } values)
                                                   {
-                                                      _ = arguments.Add("--include {value}", string.Join(",", values.Select(z => z.ToString())));
+                                                      formatSettings = formatSettings.AddInclude(values.Select(z => z.ToString()));
                                                   }
                                                   else if (LintPaths.AllPaths.Glob(DotnetFormatMatcher) is { Count: > 0 } allFiles)
                                                   {
-                                                      _ = arguments.Add("--include {value}", string.Join(",", allFiles.Select(z => z.ToString())));
+                                                      formatSettings = formatSettings.AddInclude(allFiles.Select(z => z.ToString()));
                                                   }
 
-                                                  _ = DotNetTasks.DotNet(
-                                                      arguments.RenderForExecution(),
-                                                      RootDirectory,
-                                                      logOutput: true,
-                                                      logInvocation: Verbosity == Verbosity.Verbose,
-                                                      // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-                                                      logger: static (t, s) => Log.Write(
-                                                                  t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information,
-                                                                  s
-                                                              )
-                                                  );
+                                                  _ = DotNetTasks.DotNetFormat(formatSettings);
                                               }
                                           );
 
@@ -116,7 +105,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                  .After(DotnetFormat)
                                                  .Before(PostLint)
                                                  .OnlyWhenStatic(() => DotNetTool.IsInstalled("jb"))
-                                                  // disable for local stagged runs, as it takes a long time.
+                                                 // disable for local stagged runs, as it takes a long time.
                                                  .OnlyWhenStatic(
                                                       () => ( IsLocalBuild && LintPaths.Trigger != LintTrigger.Staged )
                                                        || !IsLocalBuild
@@ -144,14 +133,14 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                               _ = arguments.Add("--include={value}", allFiles, ';');
                                                           }
 
-                                                          _ = DotNetTool.GetProperTool("jb")(
-                                                              arguments,
+                                                          _ = DotNetTool.GetTool("jb")(
+                                                              arguments.RenderForExecution(),
                                                               RootDirectory,
                                                               logOutput: true,
                                                               logInvocation: Verbosity == Verbosity.Verbose,
                                                               // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
                                                               logger: static (t, s) => Log.Write(
-                                                                          t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information,
+                                                                          ( t == OutputType.Err ) ? LogEventLevel.Error : LogEventLevel.Information,
                                                                           s
                                                                       )
                                                           );

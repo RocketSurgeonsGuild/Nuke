@@ -75,13 +75,13 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                     arguments.RenderForExecution(),
                                                                     RootDirectory,
                                                                     logOutput: true,
+                                                                    logInvocation: Verbosity == Verbosity.Verbose
+,
                                                                     // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
                                                                     logger: static (t, s) => Log.Write(
-                                                                                t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information,
+                                                                                ( t == OutputType.Err ) ? LogEventLevel.Error : LogEventLevel.Information,
                                                                                 s
-                                                                            ),
-                                                                    logInvocation: Verbosity == Verbosity.Verbose
-                                                                );
+                                                                            ));
                                                             }
                                                         }
                                                     );
@@ -121,24 +121,18 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                 await File.WriteAllTextAsync(unshippedFilePath, "#nullable enable");
                                                             }
 
-                                                            static async Task<List<string>> GetLines(AbsolutePath path)
-                                                            {
-                                                                return path.FileExists()
+                                                            static async Task<List<string>> GetLines(AbsolutePath path) => ( path.FileExists() )
                                                                     ? ( await File.ReadAllLinesAsync(path) )
                                                                      .Where(z => z != "#nullable enable")
                                                                      .ToList()
                                                                     : [];
-                                                            }
                                                         }
                                                     );
 
     /// <summary>
     ///     All the projects that depend on the Microsoft.CodeAnalysis.PublicApiAnalyzers package
     /// </summary>
-    private IEnumerable<MsbProject> GetPublicApiAnalyzerProjects(Solution solution)
-    {
-        return solution
+    private IEnumerable<MsbProject> GetPublicApiAnalyzerProjects(Solution solution) => solution
               .AnalyzeAllProjects()
               .Where(project => project.ContainsPackageReference("Microsoft.CodeAnalysis.PublicApiAnalyzers"));
-    }
 }
