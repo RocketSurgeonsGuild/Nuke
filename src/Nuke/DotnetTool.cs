@@ -37,10 +37,14 @@ public static class DotNetTool
 
     private static ResolvedToolsManifest ResolveToolsManifest()
     {
-        if (toolsManifest is { }) return toolsManifest;
+        if (toolsManifest is { })
+        {
+            return toolsManifest;
+        }
+
         if (ToolsManifestLocation.Value.FileExists())
         {
-            #pragma warning disable CA1869
+#pragma warning disable CA1869
             toolsManifest = ResolvedToolsManifest.Create(
                 // ReSharper disable once NullableWarningSuppressionIsUsed
                 JsonSerializer.Deserialize<ToolsManifset>(
@@ -48,7 +52,7 @@ public static class DotNetTool
                     new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }
                 )!
             );
-            #pragma warning restore CA1869
+#pragma warning restore CA1869
         }
         else
         {

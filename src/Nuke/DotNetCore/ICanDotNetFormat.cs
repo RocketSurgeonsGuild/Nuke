@@ -75,12 +75,12 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
 
                                                   if (DotNetFormatIncludedDiagnostics is { Length: > 0 })
                                                   {
-                                                      formatSettings = formatSettings.SetProcessAdditionalArguments(["--diagnostics", ..DotNetFormatIncludedDiagnostics.Value]);
+                                                      formatSettings = formatSettings.SetProcessAdditionalArguments(["--diagnostics", .. DotNetFormatIncludedDiagnostics.Value]);
                                                   }
 
                                                   if (DotNetFormatExcludedDiagnostics is { Length: > 0 })
                                                   {
-                                                      formatSettings = formatSettings.SetProcessAdditionalArguments(["--exclude-diagnostics", ..DotNetFormatExcludedDiagnostics]);
+                                                      formatSettings = formatSettings.SetProcessAdditionalArguments(["--exclude-diagnostics", .. DotNetFormatExcludedDiagnostics]);
                                                   }
 
                                                   if (LintPaths.Glob(DotnetFormatMatcher) is { Count: > 0 } values)
@@ -92,7 +92,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                       formatSettings = formatSettings.AddInclude(allFiles.Select(z => z.ToString()));
                                                   }
 
-                                                  DotNetTasks.DotNetFormat(formatSettings);
+                                                  _ = DotNetTasks.DotNetFormat(formatSettings);
                                               }
                                           );
 
@@ -105,7 +105,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                  .After(DotnetFormat)
                                                  .Before(PostLint)
                                                  .OnlyWhenStatic(() => DotNetTool.IsInstalled("jb"))
-                                                  // disable for local stagged runs, as it takes a long time.
+                                                 // disable for local stagged runs, as it takes a long time.
                                                  .OnlyWhenStatic(
                                                       () => ( IsLocalBuild && LintPaths.Trigger != LintTrigger.Staged )
                                                        || !IsLocalBuild
@@ -140,7 +140,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                               logInvocation: Verbosity == Verbosity.Verbose,
                                                               // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
                                                               logger: static (t, s) => Log.Write(
-                                                                          t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information,
+                                                                          ( t == OutputType.Err ) ? LogEventLevel.Error : LogEventLevel.Information,
                                                                           s
                                                                       )
                                                           );
