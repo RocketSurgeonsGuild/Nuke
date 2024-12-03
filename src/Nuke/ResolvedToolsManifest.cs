@@ -66,61 +66,61 @@ internal record ResolvedToolsManifest(ImmutableDictionary<string, FullToolComman
             : throw new InvalidOperationException($"Tool {nugetPackageName} is not installed");
 
 
-/* Unmerged change from project 'Rocket.Surgery.Nuke(net9.0)'
-Before:
-    public Tool GetProperTool(string nugetPackageName)
-    {
-        return CommandDefinitions.TryGetValue(nugetPackageName, out var tool)
-            ? (arguments, directory, variables, timeout, output, invocation, logger, handler) =>
-              {
-                  var newArgs = new ArgumentStringHandler();
-                  newArgs.AppendLiteral(tool.Command);
-                  newArgs.AppendLiteral(" ");
-                  newArgs.AppendLiteral(arguments.ToStringAndClear().TrimMatchingDoubleQuotes());
-                  arguments.AppendLiteral(newArgs.ToStringAndClear());
+    /* Unmerged change from project 'Rocket.Surgery.Nuke(net9.0)'
+    Before:
+        public Tool GetProperTool(string nugetPackageName)
+        {
+            return CommandDefinitions.TryGetValue(nugetPackageName, out var tool)
+                ? (arguments, directory, variables, timeout, output, invocation, logger, handler) =>
+                  {
+                      var newArgs = new ArgumentStringHandler();
+                      newArgs.AppendLiteral(tool.Command);
+                      newArgs.AppendLiteral(" ");
+                      newArgs.AppendLiteral(arguments.ToStringAndClear().TrimMatchingDoubleQuotes());
+                      arguments.AppendLiteral(newArgs.ToStringAndClear());
 
-                  var process = ProcessTasks.StartProcess(
-                      DotNetTasks.DotNetPath,
-                      newArgs,
-                      directory,
-                      variables,
-                      timeout,
-                      output,
-                      invocation,
-                      // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-                      logger ?? DefaultLogger
-                  );
-                  ( handler ?? ( p => process.AssertZeroExitCode() ) ).Invoke(process.AssertWaitForExit());
-                  return process.Output;
-              }
-            : throw new InvalidOperationException($"Tool {nugetPackageName} is not installed");
-    }
-After:
-    public Tool GetProperTool(string nugetPackageName) => ( CommandDefinitions.TryGetValue(nugetPackageName, out var tool) )
-            ? (arguments, directory, variables, timeout, output, invocation, logger, handler) =>
-              {
-                  var newArgs = new ArgumentStringHandler();
-                  newArgs.AppendLiteral(tool.Command);
-                  newArgs.AppendLiteral(" ");
-                  newArgs.AppendLiteral(arguments.ToStringAndClear().TrimMatchingDoubleQuotes());
-                  arguments.AppendLiteral(newArgs.ToStringAndClear());
+                      var process = ProcessTasks.StartProcess(
+                          DotNetTasks.DotNetPath,
+                          newArgs,
+                          directory,
+                          variables,
+                          timeout,
+                          output,
+                          invocation,
+                          // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
+                          logger ?? DefaultLogger
+                      );
+                      ( handler ?? ( p => process.AssertZeroExitCode() ) ).Invoke(process.AssertWaitForExit());
+                      return process.Output;
+                  }
+                : throw new InvalidOperationException($"Tool {nugetPackageName} is not installed");
+        }
+    After:
+        public Tool GetProperTool(string nugetPackageName) => ( CommandDefinitions.TryGetValue(nugetPackageName, out var tool) )
+                ? (arguments, directory, variables, timeout, output, invocation, logger, handler) =>
+                  {
+                      var newArgs = new ArgumentStringHandler();
+                      newArgs.AppendLiteral(tool.Command);
+                      newArgs.AppendLiteral(" ");
+                      newArgs.AppendLiteral(arguments.ToStringAndClear().TrimMatchingDoubleQuotes());
+                      arguments.AppendLiteral(newArgs.ToStringAndClear());
 
-                  var process = ProcessTasks.StartProcess(
-                      DotNetTasks.DotNetPath,
-                      newArgs,
-                      directory,
-                      variables,
-                      timeout,
-                      output,
-                      invocation,
-                      // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-                      logger ?? DefaultLogger
-                  );
-                  ( handler ?? ( p => process.AssertZeroExitCode() ) ).Invoke(process.AssertWaitForExit());
-                  return process.Output;
-              }
-    : throw new InvalidOperationException($"Tool {nugetPackageName} is not installed");
-*/
+                      var process = ProcessTasks.StartProcess(
+                          DotNetTasks.DotNetPath,
+                          newArgs,
+                          directory,
+                          variables,
+                          timeout,
+                          output,
+                          invocation,
+                          // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
+                          logger ?? DefaultLogger
+                      );
+                      ( handler ?? ( p => process.AssertZeroExitCode() ) ).Invoke(process.AssertWaitForExit());
+                      return process.Output;
+                  }
+        : throw new InvalidOperationException($"Tool {nugetPackageName} is not installed");
+    */
     public Tool GetProperTool(string nugetPackageName) => ( CommandDefinitions.TryGetValue(nugetPackageName, out var tool) )
             ? (arguments, directory, variables, timeout, output, invocation, logger, handler) =>
               {
