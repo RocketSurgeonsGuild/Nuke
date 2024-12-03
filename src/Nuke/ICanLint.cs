@@ -180,7 +180,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
                          patterns.AddRange(LintPaths.RelativePaths.Select(z => z.ToString()));
                      }
 
-                     patterns.ForEach(static pattern => GitTasks.Git(new Arguments().Add("add").Add(pattern).RenderForExecution(), exitHandler: _ => null));
+                     patterns.ForEach(static pattern => GitTasks.Git($"add {pattern}", exitHandler: _ => null));
                  }
              );
 

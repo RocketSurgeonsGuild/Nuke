@@ -71,7 +71,7 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                                 )
                                                                                .Add("--diagnostics {value}", "RS0016");
 
-                                                                _ = DotNetTasks.DotNet(
+                                                                DotNetTasks.DotNet(
                                                                     arguments.RenderForExecution(),
                                                                     RootDirectory,
                                                                     logOutput: true,
