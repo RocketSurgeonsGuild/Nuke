@@ -1,17 +1,18 @@
 using System.Diagnostics;
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
+using Nuke.Common.CI.GitHubActions.Configuration;
 using Nuke.Common.Execution;
 
 namespace Rocket.Surgery.Nuke.GithubActions;
 
 /// <summary>
-/// Adds update milestone support to the build
+/// Adds draft release support to the build
 /// </summary>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Class)]
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public sealed class UpdateMilestoneJobAttribute() : GitHubActionsStepsAttribute("update-milestone", GitHubActionsImage.UbuntuLatest)
+public sealed class DraftReleaseJobAttribute() : GitHubActionsStepsAttribute("draft-release", GitHubActionsImage.UbuntuLatest)
 {
     private string DebuggerDisplay => ToString();
 
@@ -20,18 +21,26 @@ public sealed class UpdateMilestoneJobAttribute() : GitHubActionsStepsAttribute(
     {
         var build = new RocketSurgeonGitHubActionsConfiguration
         {
-            Name = "Update Milestone"
+            Name = "Draft Release and Create Milestone"
         };
-        build.DetailedTriggers.Add(new RocketSurgeonGitHubActionsWorkflowTrigger());
+        build.DetailedTriggers.Add(
+            new RocketSurgeonGitHubActionsWorkflowTrigger
+            {
+                Kind = RocketSurgeonGitHubActionsTrigger.WorkflowCall,
+                Secrets = [new GitHubActionsSecret("RSG_BOT_TOKEN", Required: true)],
+            }
+        );
         build.DetailedTriggers.Add(
             new RocketSurgeonGitHubActionsVcsTrigger
             {
-                Kind = RocketSurgeonGitHubActionsTrigger.PullRequestTarget,
-                Types = ["closed", "opened", "reopened", "synchronize"],
+                Kind = RocketSurgeonGitHubActionsTrigger.Push,
+                Branches = ["master"],
+                ExcludePaths = ["**/*.md"],
             }
         );
+        build.DetailedTriggers.Add(new GitHubActionsScheduledTrigger { Cron = "0 0 * * 4" });
         build.Jobs.Add(
-            new RocketSurgeonsGithubActionsJob("update_milestone")
+            new RocketSurgeonsGithubActionsJob("draft_release")
             {
                 RunsOn = ( !IsGithubHosted ) ? Images : [],
                 Matrix = IsGithubHosted ? Images : [],
@@ -39,7 +48,6 @@ public sealed class UpdateMilestoneJobAttribute() : GitHubActionsStepsAttribute(
                 [
                     new CheckoutStep("Checkout")
                     {
-                        Ref = "${{ github.sha }}",
                         FetchDepth = 0,
                     },
                     new RunStep("Fetch all history for all tags and branches")
@@ -65,12 +73,6 @@ public sealed class UpdateMilestoneJobAttribute() : GitHubActionsStepsAttribute(
                             ["versionSpec"] = DotNetTool.GetToolDefinition("GitReleaseManager.Tool").Version
                         },
                     },
-                    new UsingStep("Use GitVersion")
-                    {
-                        If = "${{ github.event.action == 'opened' }}",
-                        Id = "gitversion",
-                        Uses = "gittools/actions/gitversion/execute@v3.1.1",
-                    },
                     new UsingStep("Create Milestone")
                     {
                         If = "${{ github.event.action == 'opened' }}",
@@ -83,7 +85,6 @@ public sealed class UpdateMilestoneJobAttribute() : GitHubActionsStepsAttribute(
                         {
                             ["GITHUB_TOKEN"] = "${{ secrets.GITHUB_TOKEN }}"
                         },
-                        ContinueOnError = true,
                     },
                     new UsingStep("sync milestones")
                     {
@@ -91,7 +92,22 @@ public sealed class UpdateMilestoneJobAttribute() : GitHubActionsStepsAttribute(
                         With =
                         {
                             ["default-label"] = ":sparkles: mysterious",
-                            ["github-token"] = "${{ secrets.GITHUB_TOKEN }}"
+                            ["github-token"] = "${{ secrets.GITHUB_TOKEN }"
+                        }
+                    },
+
+                    new UsingStep("Create Release")
+                    {
+                        Uses = "ncipollo/release-action@v1",
+                        With =
+                        {
+                            ["allowUpdates"] = "true", ["generateReleaseNotes"] = "true",
+                            ["draft"] = "true",
+                            ["omitNameDuringUpdate"] = "true",
+                            ["name"] = "v${{ steps.gitversion.outputs.majorMinorPatch }}",
+                            ["tag"] = "v${{ steps.gitversion.outputs.majorMinorPatch }}",
+                            ["token"] = "${{ secrets.RSG_BOT_TOKEN }}",
+                            ["commit"] = "${{ github.base_ref }}"
                         },
                     },
                 ]
