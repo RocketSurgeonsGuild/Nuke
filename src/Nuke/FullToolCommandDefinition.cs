@@ -9,6 +9,9 @@ public record FullToolCommandDefinition
 )
 {
     [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+
+/* Unmerged change from project 'Rocket.Surgery.Nuke(net9.0)'
+Before:
     private string DebuggerDisplay
     {
         get
@@ -16,4 +19,8 @@ public record FullToolCommandDefinition
             return ToString();
         }
     }
+After:
+    private string DebuggerDisplay => ToString();
+*/
+    private string DebuggerDisplay => ToString();
 }

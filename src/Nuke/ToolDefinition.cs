@@ -16,12 +16,6 @@ public class ToolDefinition
     public string[] Commands { get; set; } = [];
 
     [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay
-    {
-        get
-        {
-            return ToString();
-        }
-    }
+    private string DebuggerDisplay => ToString();
     // ReSharper disable once NullableWarningSuppressionIsUsed
 }

@@ -44,13 +44,7 @@ public class RocketSurgeonsGithubActionsJob(string name) : RocketSurgeonsGithubA
     internal IDictionary<object, object> InternalData { get; } = new Dictionary<object, object>();
 
     [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay
-    {
-        get
-        {
-            return ToString();
-        }
-    }
+    private string DebuggerDisplay => ToString();
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)

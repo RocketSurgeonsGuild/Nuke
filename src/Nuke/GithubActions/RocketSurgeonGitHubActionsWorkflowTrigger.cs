@@ -31,13 +31,7 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
     public List<GitHubActionsWorkflowOutput> Outputs { get; set; } = [];
 
     [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay
-    {
-        get
-        {
-            return ToString();
-        }
-    }
+    private string DebuggerDisplay => ToString();
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
