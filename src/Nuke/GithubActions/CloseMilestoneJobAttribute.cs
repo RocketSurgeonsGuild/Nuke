@@ -85,6 +85,15 @@ public sealed class CloseMilestoneJobAttribute : GitHubActionsStepsAttribute
                             ["versionSpec"] = DotNetTool.GetToolDefinition("GitReleaseManager.Tool").Version
                         },
                     },
+                    new UsingStep("Use GitVersion")
+                    {
+                        Id = "gitversion",
+                        Uses = "gittools/actions/gitversion/execute@v3.1.1",
+                        With =
+                        {
+                            ["versionSpec"] = DotNetTool.GetToolDefinition("GitVersion.Tool").Version
+                        },
+                    },
                     new UsingStep("Create Milestone")
                     {
                         If = "${{ github.event.action == 'opened' }}",
