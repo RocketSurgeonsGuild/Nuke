@@ -70,8 +70,6 @@ jobs:
       - name: 🔨 Use GitVersion
         id: gitversion
         uses: gittools/actions/gitversion/execute@v3.1.1
-        with:
-          versionSpec: '6.1.0'
       - name: Create Milestone
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'

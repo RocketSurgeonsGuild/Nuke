@@ -39,6 +39,12 @@ public enum RocketSurgeonGitHubActionsTrigger
     WorkflowCall,
 
     /// <summary>
+    ///     Workflow run
+    /// </summary>
+    [EnumValue("workflow_run ")]
+    WorkflowRun,
+
+    /// <summary>
     ///     Pull request target
     /// </summary>
     [EnumValue("pull_request_target")]

@@ -23,7 +23,8 @@ public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribu
     /// <summary>
     /// Adds draft release support to the build
     /// </summary>
-    public PublishNugetPackagesJobAttribute(string secretKey, string image, params string[] images) : base("publish-nuget", image, images) => _secretKey = secretKey;
+    public PublishNugetPackagesJobAttribute(string secretKey, string image, params string[] images) : base("publish-nuget", image, images) =>
+        _secretKey = secretKey;
 
     /// <summary>
     /// Adds draft release support to the build
@@ -60,7 +61,12 @@ public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribu
                 Matrix = IsGithubHosted ? Images : [],
                 Steps =
                 [
-                    new DownloadArtifactStep("nuget"),
+                    new DownloadArtifactStep("nuget")
+                    {
+                        GithubToken = "${{ secrets.GITHUB_TOKEN }}",
+                        Name = "Artifacts",
+                        RunId = "${{ github.event.workflow_run.id }}",
+                    },
                     new RunStep("nuget.org")
                     {
                         If = "startsWith(github.ref, 'refs/tags/')",
