@@ -37,28 +37,30 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                   () =>
                                                   {
                                                       var files = TestResultsDirectory.GlobFiles("**/*.xml", "**/*.json", "**/*.coverage");
-                                                      if (files.Any())
+                                                      if (!files.Any())
                                                       {
-                                                          _ = ReportGeneratorTasks.ReportGenerator(
-                                                              settings => settings
-                                                                         .SetReports(files)
-                                                                         .SetSourceDirectories(NukeBuild.RootDirectory)
-                                                                         .SetProcessWorkingDirectory(RootDirectory)
-                                                                         .SetTargetDirectory(CoverageDirectory)
-                                                                         .AddReportTypes(
-                                                                              ReportTypes.Cobertura,
-                                                                              ReportTypes.Xml,
-                                                                              ReportTypes.lcov,
-                                                                              ReportTypes.Latex,
-                                                                              ReportTypes.OpenCover
-                                                                          )
-                                                          );
-
-                                                          _ = ( CoverageDirectory / "Cobertura.xml" ).Move(
-                                                              CoverageDirectory / "test.cobertura.xml",
-                                                              ExistsPolicy.FileOverwriteIfNewer
-                                                          );
+                                                          return;
                                                       }
+
+                                                      _ = ReportGeneratorTasks.ReportGenerator(
+                                                          settings => settings
+                                                                     .SetReports(files)
+                                                                     .SetSourceDirectories(NukeBuild.RootDirectory)
+                                                                     .SetProcessWorkingDirectory(RootDirectory)
+                                                                     .SetTargetDirectory(CoverageDirectory)
+                                                                     .AddReportTypes(
+                                                                          ReportTypes.Cobertura,
+                                                                          ReportTypes.Xml,
+                                                                          ReportTypes.lcov,
+                                                                          ReportTypes.Latex,
+                                                                          ReportTypes.OpenCover
+                                                                      )
+                                                      );
+
+                                                      _ = ( CoverageDirectory / "Cobertura.xml" ).Move(
+                                                          CoverageDirectory / "test.cobertura.xml",
+                                                          ExistsPolicy.FileOverwriteIfNewer
+                                                      );
                                                   }
                                               );
 
@@ -92,20 +94,17 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
     /// <returns></returns>
     protected ReportGeneratorSettings Defaults(ReportGeneratorSettings settings)
         => ( this switch
-             {
-                 IHaveGitVersion gitVersion => settings.SetTag(
-                     gitVersion.GitVersion.InformationalVersion
-                 ),
-                 IHaveGitRepository { GitRepository: { } } gitRepository => settings
-                    .SetTag(gitRepository.GitRepository.Head),
-                 _ => settings,
-             }
+        {
+            IHaveGitVersion gitVersion => settings.SetTag(gitVersion.GitVersion.InformationalVersion),
+            IHaveGitRepository { GitRepository: { } } gitRepository => settings.SetTag(gitRepository.GitRepository.Head),
+            _ => settings,
+        }
            )
           .SetReports(InputReports)
           .SetSourceDirectories(NukeBuild.RootDirectory)
           .SetFramework(Constants.ReportGeneratorFramework)
-           // this is more or less a hack / compromise because
-           // I was unable to coverage to exclude everything in a given assembly by default.
+          // this is more or less a hack / compromise because
+          // I was unable to coverage to exclude everything in a given assembly by default.
           .AddAssemblyFilters(
                Solution
                   .AnalyzeAllProjects()

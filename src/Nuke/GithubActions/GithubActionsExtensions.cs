@@ -16,33 +16,11 @@ public static class GithubActionsExtensions
     /// <summary>
     ///     Adds the default publish nuget step to the given configuration
     /// </summary>
-    /// <param name="configuration"></param>
+    /// <param name="build"></param>
+    /// <param name="secret"></param>
     /// <returns></returns>
-    public static RocketSurgeonGitHubActionsConfiguration AddNugetPublish(this RocketSurgeonGitHubActionsConfiguration configuration)
-    {
-        configuration
-           .DetailedTriggers.OfType<RocketSurgeonGitHubActionsWorkflowTrigger>()
-           .ForEach(
-                trigger =>
-                {
-                    trigger.Secrets.Add(new("RSG_NUGET_API_KEY"));
-                    trigger.Secrets.Add(new("RSG_AZURE_DEVOPS"));
-                }
-            );
-        configuration.Jobs.Add(
-            new RocketSurgeonsGithubWorkflowJob("Publish")
-            {
-                Needs = { "Build" },
-                Uses = "RocketSurgeonsGuild/actions/.github/workflows/publish-nuget.yml@v0.3.0",
-                Secrets = new()
-                {
-                    ["RSG_NUGET_API_KEY"] = "${{ secrets.RSG_NUGET_API_KEY }}",
-                    ["RSG_AZURE_DEVOPS"] = "${{ secrets.RSG_AZURE_DEVOPS }}",
-                },
-            }
-        );
-        return configuration;
-    }
+    [Obsolete("Method no longer does anything, use PublishNugetJob attribute instead")]
+    public static RocketSurgeonGitHubActionsConfiguration AddNugetPublish(this RocketSurgeonGitHubActionsConfiguration build, string secret) => build;
 
     /// <summary>
     ///     Adds a new step to the current configuration

@@ -5,7 +5,11 @@ using Serilog;
 
 namespace Rocket.Surgery.Nuke;
 
-internal record ResolvedToolsManifest(ImmutableDictionary<string, FullToolCommandDefinition> CommandDefinitions)
+internal class ResolvedToolsManifest
+(
+    ImmutableDictionary<string, ToolDefinition> toolDefinitions,
+    ImmutableDictionary<string, FullToolCommandDefinition> commandDefinitions
+)
 {
     public static ResolvedToolsManifest Create(ToolsManifset source)
     {
@@ -19,7 +23,7 @@ internal record ResolvedToolsManifest(ImmutableDictionary<string, FullToolComman
             }
         }
 
-        return new(commandBuilder.ToImmutable());
+        return new(source.Tools.ToImmutableDictionary(z => z.Key, z => z.Value, StringComparer.OrdinalIgnoreCase), commandBuilder.ToImmutable());
     }
 
     private static void DefaultLogger(OutputType kind, string message)
@@ -36,113 +40,41 @@ internal record ResolvedToolsManifest(ImmutableDictionary<string, FullToolComman
         // ReSharper restore TemplateIsNotCompileTimeConstantProblem
     }
 
-    public bool IsInstalled(string commandName) => CommandDefinitions.ContainsKey(commandName)
-         || CommandDefinitions.Values.Any(z => z.PackageId.Equals(commandName, StringComparison.OrdinalIgnoreCase));
+    public bool IsInstalled(string commandName) => commandDefinitions.ContainsKey(commandName) || toolDefinitions.ContainsKey(commandName);
 
-    public Tool GetTool(string nugetPackageName) => ( CommandDefinitions.TryGetValue(nugetPackageName, out var tool) )
-            ? ( (arguments, directory, variables, timeout, output, invocation, logger, handler) =>
-                   {
-                       var newArgs = new ArgumentStringHandler();
-                       newArgs.AppendLiteral(tool.Command);
-                       newArgs.AppendLiteral(" ");
-                       newArgs.AppendLiteral(arguments.ToStringAndClear().TrimMatchingDoubleQuotes());
-                       arguments.AppendLiteral(newArgs.ToStringAndClear());
-                       return DotNetTasks.DotNet(
-                           arguments,
-                           directory,
-                           variables,
-                           timeout,
-                           output,
-                           invocation,
-                           // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-                           logger ?? DefaultLogger,
-                           process =>
-                           {
-                               handler?.Invoke(process);
-                               return null;
-                           }
-                       );
-                   } )
+    public ToolDefinition GetToolDefinition(string nugetPackageName) => ( toolDefinitions.TryGetValue(nugetPackageName, out var tool) )
+        ? tool
+        : throw new InvalidOperationException($"Tool {nugetPackageName} is not installed");
+
+    public Tool GetTool(string nugetPackageName) => ( toolDefinitions.TryGetValue(nugetPackageName, out var tool) )
+        ? CreateHandler(tool.Commands.First())
+        : ( commandDefinitions.TryGetValue(nugetPackageName, out var command) )
+            ? CreateHandler(command.Command)
             : throw new InvalidOperationException($"Tool {nugetPackageName} is not installed");
 
+    public Tool GetProperTool(string nugetPackageName) => GetTool(nugetPackageName);
 
-    /* Unmerged change from project 'Rocket.Surgery.Nuke(net9.0)'
-    Before:
-        public Tool GetProperTool(string nugetPackageName)
-        {
-            return CommandDefinitions.TryGetValue(nugetPackageName, out var tool)
-                ? (arguments, directory, variables, timeout, output, invocation, logger, handler) =>
-                  {
-                      var newArgs = new ArgumentStringHandler();
-                      newArgs.AppendLiteral(tool.Command);
-                      newArgs.AppendLiteral(" ");
-                      newArgs.AppendLiteral(arguments.ToStringAndClear().TrimMatchingDoubleQuotes());
-                      arguments.AppendLiteral(newArgs.ToStringAndClear());
-
-                      var process = ProcessTasks.StartProcess(
-                          DotNetTasks.DotNetPath,
-                          newArgs,
-                          directory,
-                          variables,
-                          timeout,
-                          output,
-                          invocation,
-                          // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-                          logger ?? DefaultLogger
-                      );
-                      ( handler ?? ( p => process.AssertZeroExitCode() ) ).Invoke(process.AssertWaitForExit());
-                      return process.Output;
-                  }
-                : throw new InvalidOperationException($"Tool {nugetPackageName} is not installed");
-        }
-    After:
-        public Tool GetProperTool(string nugetPackageName) => ( CommandDefinitions.TryGetValue(nugetPackageName, out var tool) )
-                ? (arguments, directory, variables, timeout, output, invocation, logger, handler) =>
-                  {
-                      var newArgs = new ArgumentStringHandler();
-                      newArgs.AppendLiteral(tool.Command);
-                      newArgs.AppendLiteral(" ");
-                      newArgs.AppendLiteral(arguments.ToStringAndClear().TrimMatchingDoubleQuotes());
-                      arguments.AppendLiteral(newArgs.ToStringAndClear());
-
-                      var process = ProcessTasks.StartProcess(
-                          DotNetTasks.DotNetPath,
-                          newArgs,
-                          directory,
-                          variables,
-                          timeout,
-                          output,
-                          invocation,
-                          // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-                          logger ?? DefaultLogger
-                      );
-                      ( handler ?? ( p => process.AssertZeroExitCode() ) ).Invoke(process.AssertWaitForExit());
-                      return process.Output;
-                  }
-        : throw new InvalidOperationException($"Tool {nugetPackageName} is not installed");
-    */
-    public Tool GetProperTool(string nugetPackageName) => ( CommandDefinitions.TryGetValue(nugetPackageName, out var tool) )
-            ? (arguments, directory, variables, timeout, output, invocation, logger, handler) =>
-              {
-                  var newArgs = new ArgumentStringHandler();
-                  newArgs.AppendLiteral(tool.Command);
-                  newArgs.AppendLiteral(" ");
-                  newArgs.AppendLiteral(arguments.ToStringAndClear().TrimMatchingDoubleQuotes());
-                  arguments.AppendLiteral(newArgs.ToStringAndClear());
-
-                  var process = ProcessTasks.StartProcess(
-                      DotNetTasks.DotNetPath,
-                      newArgs,
-                      directory,
-                      variables,
-                      timeout,
-                      output,
-                      invocation,
-                      // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-                      logger ?? DefaultLogger
-                  );
-                  ( handler ?? ( p => process.AssertZeroExitCode() ) ).Invoke(process.AssertWaitForExit());
-                  return process.Output;
-              }
-    : throw new InvalidOperationException($"Tool {nugetPackageName} is not installed");
+    private static Tool CreateHandler(string command) => (arguments, directory, variables, timeout, output, invocation, logger, handler) =>
+                                                                     {
+                                                                         var newArgs = new ArgumentStringHandler();
+                                                                         newArgs.AppendLiteral(command);
+                                                                         newArgs.AppendLiteral(" ");
+                                                                         newArgs.AppendLiteral(arguments.ToStringAndClear().TrimMatchingDoubleQuotes());
+                                                                         arguments.AppendLiteral(newArgs.ToStringAndClear());
+                                                                         return DotNetTasks.DotNet(
+                                                                             arguments,
+                                                                             directory,
+                                                                             variables,
+                                                                             timeout,
+                                                                             output,
+                                                                             invocation,
+                                                                             // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
+                                                                             logger ?? DefaultLogger,
+                                                                             process =>
+                                                                             {
+                                                                                 handler?.Invoke(process);
+                                                                                 return null;
+                                                                             }
+                                                                         );
+                                                                     };
 }

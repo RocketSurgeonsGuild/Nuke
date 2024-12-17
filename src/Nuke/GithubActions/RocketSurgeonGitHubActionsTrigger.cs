@@ -21,6 +21,12 @@ public enum RocketSurgeonGitHubActionsTrigger
     PullRequest,
 
     /// <summary>
+    ///     Release
+    /// </summary>
+    [EnumValue("release")]
+    Release,
+
+    /// <summary>
     ///     Workflow dispatch
     /// </summary>
     [EnumValue("workflow_dispatch")]

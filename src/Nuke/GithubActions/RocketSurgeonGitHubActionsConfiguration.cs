@@ -2,15 +2,14 @@ using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions.Configuration;
 using Nuke.Common.Tooling;
 
-#pragma warning disable CA1002
-#pragma warning disable CA1308
-#pragma warning disable CA2227
+#pragma warning disable CA1002, CA1308, CA2227
 // ReSharper disable CollectionNeverUpdated.Global
 namespace Rocket.Surgery.Nuke.GithubActions;
 
 /// <summary>
 ///     The Github actions configuration entity
 /// </summary>
+[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class RocketSurgeonGitHubActionsConfiguration : ConfigurationEntity
 {
     // ReSharper disable once NullableWarningSuppressionIsUsed
@@ -22,17 +21,17 @@ public class RocketSurgeonGitHubActionsConfiguration : ConfigurationEntity
     /// <summary>
     ///     The short triggers
     /// </summary>
-    public List<RocketSurgeonGitHubActionsTrigger> ShortTriggers { get; set; } = new();
+    public List<RocketSurgeonGitHubActionsTrigger> ShortTriggers { get; set; } = [];
 
     /// <summary>
     ///     The detailed triggers
     /// </summary>
-    public List<GitHubActionsDetailedTrigger> DetailedTriggers { get; set; } = new();
+    public List<GitHubActionsDetailedTrigger> DetailedTriggers { get; set; } = [];
 
     /// <summary>
     ///     The jobs
     /// </summary>
-    public List<RocketSurgeonsGithubActionsJobBase> Jobs { get; set; } = new();
+    public List<RocketSurgeonsGithubActionsJobBase> Jobs { get; set; } = [];
 
     /// <summary>
     ///     The dependencies of this workflow
@@ -54,6 +53,20 @@ public class RocketSurgeonGitHubActionsConfiguration : ConfigurationEntity
     /// </summary>
     public GitHubActionsPermissions Permissions { get; set; } = new();
 
+    /// <summary>
+    ///   The if condition for the workflow
+    /// </summary>
+    public GithubActionCondition? If { get; set; }
+
+    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay
+    {
+        get
+        {
+            return ToString();
+        }
+    }
+
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
@@ -74,6 +87,11 @@ public class RocketSurgeonGitHubActionsConfiguration : ConfigurationEntity
         }
 
         Permissions.Write(writer);
+
+        if (!string.IsNullOrWhiteSpace(If?.ToString()))
+        {
+            writer.WriteLine($"if: {If}");
+        }
 
         writer.WriteKeyValues("env", Environment);
         if (Concurrency is { } concurrency)

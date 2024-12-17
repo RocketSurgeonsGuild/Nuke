@@ -32,8 +32,15 @@ public static class DotNetTool
     /// <returns></returns>
     public static Tool GetProperTool(string nugetPackageName) => ResolveToolsManifest().GetProperTool(nugetPackageName);
 
+    /// <summary>
+    ///     Gets the tool definition for a given local dotnet tool
+    /// </summary>
+    /// <param name="nugetPackageName"></param>
+    /// <returns></returns>
+    public static ToolDefinition GetToolDefinition(string nugetPackageName) => ResolveToolsManifest().GetToolDefinition(nugetPackageName);
+
     private static ResolvedToolsManifest? toolsManifest;
-    private static Lazy<AbsolutePath> ToolsManifestLocation { get; } = new(() => NukeBuild.RootDirectory / ".config/dotnet-tools.json");
+    private static Lazy<AbsolutePath> ToolsManifestLocation { get; } = new(() => NukeBuild.RootDirectory / ".config" / "dotnet-tools.json");
 
     private static ResolvedToolsManifest ResolveToolsManifest()
     {
@@ -45,18 +52,18 @@ public static class DotNetTool
         if (ToolsManifestLocation.Value.FileExists())
         {
 #pragma warning disable CA1869
-            toolsManifest = ResolvedToolsManifest.Create(
+            var manifest =
                 // ReSharper disable once NullableWarningSuppressionIsUsed
                 JsonSerializer.Deserialize<ToolsManifset>(
                     File.ReadAllText(ToolsManifestLocation.Value),
                     new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }
-                )!
-            );
+                )!;
 #pragma warning restore CA1869
+            toolsManifest = ResolvedToolsManifest.Create(manifest);
         }
         else
         {
-            toolsManifest = new(ImmutableDictionary<string, FullToolCommandDefinition>.Empty);
+            toolsManifest = new(ImmutableDictionary<string, ToolDefinition>.Empty, ImmutableDictionary<string, FullToolCommandDefinition>.Empty);
         }
 
         return toolsManifest;

@@ -1,31 +1,30 @@
 using Nuke.Common.CI.GitHubActions.Configuration;
 
-#pragma warning disable CA1002
-#pragma warning disable CA2227
+#pragma warning disable CA1002, CA2227
 namespace Rocket.Surgery.Nuke.GithubActions;
 
 /// <summary>
 ///     Define a job with github actions
 /// </summary>
+/// <remarks>
+///     The default constructor
+/// </remarks>
+/// <param name="name"></param>
+/// <exception cref="ArgumentNullException"></exception>
 [PublicAPI]
-public class RocketSurgeonsGithubActionsJob : RocketSurgeonsGithubActionsJobBase
+[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
+public class RocketSurgeonsGithubActionsJob(string name) : RocketSurgeonsGithubActionsJobBase(name)
 {
-    /// <summary>
-    ///     The default constructor
-    /// </summary>
-    /// <param name="name"></param>
-    /// <exception cref="ArgumentNullException"></exception>
-    public RocketSurgeonsGithubActionsJob(string name) : base(name) { }
 
     /// <summary>
     ///     The images to run on in a matrix
     /// </summary>
-    public IEnumerable<string> Matrix { get; set; } = Enumerable.Empty<string>();
+    public IEnumerable<string> Matrix { get; set; } = [];
 
     /// <summary>
     ///     The images to run on
     /// </summary>
-    public IEnumerable<string> RunsOn { get; set; } = Enumerable.Empty<string>();
+    public IEnumerable<string> RunsOn { get; set; } = [];
 
     /// <summary>
     ///     The permissions of this workflow
@@ -35,7 +34,7 @@ public class RocketSurgeonsGithubActionsJob : RocketSurgeonsGithubActionsJobBase
     /// <summary>
     ///     The steps to run
     /// </summary>
-    public List<GitHubActionsStep> Steps { get; set; } = new();
+    public List<GitHubActionsStep> Steps { get; set; } = [];
 
     /// <summary>
     ///     Should the job matrix fail fast, or wait for all to fail
@@ -43,6 +42,15 @@ public class RocketSurgeonsGithubActionsJob : RocketSurgeonsGithubActionsJobBase
     public bool FailFast { get; set; } = true;
 
     internal IDictionary<object, object> InternalData { get; } = new Dictionary<object, object>();
+
+    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay
+    {
+        get
+        {
+            return ToString();
+        }
+    }
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
@@ -53,11 +61,17 @@ public class RocketSurgeonsGithubActionsJob : RocketSurgeonsGithubActionsJobBase
         {
             Permissions?.Write(writer);
 
-            if (Matrix.Count() > 1 || !FailFast) writer.WriteLine("strategy:");
+            if (Matrix.Count() > 1 || !FailFast)
+            {
+                writer.WriteLine("strategy:");
+            }
 
             using (writer.Indent())
             {
-                if (!FailFast) writer.WriteLine("fail-fast: false");
+                if (!FailFast)
+                {
+                    writer.WriteLine("fail-fast: false");
+                }
 
                 if (Matrix.Count() > 1)
                 {
@@ -71,10 +85,17 @@ public class RocketSurgeonsGithubActionsJob : RocketSurgeonsGithubActionsJobBase
             }
 
             if (!Matrix.Any() && RunsOn.Any())
+            {
                 writer.WriteLine($"runs-on: [{string.Join(", ", RunsOn)}]");
+            }
             else if (Matrix.Count() == 1)
+            {
                 writer.WriteLine($"runs-on: {Matrix.First()}");
-            else if (Matrix.Count() > 1) writer.WriteLine("runs-on: ${{ matrix.os }}");
+            }
+            else if (Matrix.Count() > 1)
+            {
+                writer.WriteLine("runs-on: ${{ matrix.os }}");
+            }
 
             writer.WriteLine("steps:");
             using (writer.Indent())

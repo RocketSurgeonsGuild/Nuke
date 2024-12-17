@@ -61,12 +61,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		ci-ignore.yml = .github\workflows\ci-ignore.yml
 		ci.yml = .github\workflows\ci.yml
 		close-milestone.yml = .github\workflows\close-milestone.yml
-		dependabot-merge.yml = .github\workflows\dependabot-merge.yml
 		draft-release.yml = .github\workflows\draft-release.yml
 		inputs.yml = .github\workflows\inputs.yml
 		lint.yml = .github\workflows\lint.yml
 		sync-labels.yml = .github\workflows\sync-labels.yml
 		update-milestone.yml = .github\workflows\update-milestone.yml
+		publish-nuget.yml = .github\workflows\publish-nuget.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".husky", ".husky", "{39F6D15D-2627-4749-9B1D-EB7C9C656465}"

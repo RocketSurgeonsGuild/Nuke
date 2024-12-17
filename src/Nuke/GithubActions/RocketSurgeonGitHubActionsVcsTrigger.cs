@@ -9,6 +9,7 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// <summary>
 ///     A detailed trigger for version control
 /// </summary>
+[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class RocketSurgeonGitHubActionsVcsTrigger : GitHubActionsDetailedTrigger
 {
     /// <summary>
@@ -36,12 +37,44 @@ public class RocketSurgeonGitHubActionsVcsTrigger : GitHubActionsDetailedTrigger
     /// </summary>
     public ImmutableArray<string> ExcludePaths { get; set; } = [];
 
+    /// <summary>
+    /// The types
+    /// </summary>
+    public ImmutableArray<string> Types { get; set; } = [];
+
+    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay
+    {
+        get
+        {
+            return ToString();
+        }
+    }
+
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
         writer.WriteLine(Kind.GetValue() + ":");
 
-        if (Kind is RocketSurgeonGitHubActionsTrigger.WorkflowDispatch or RocketSurgeonGitHubActionsTrigger.WorkflowCall) return;
+        if (Kind is RocketSurgeonGitHubActionsTrigger.WorkflowDispatch or RocketSurgeonGitHubActionsTrigger.WorkflowCall)
+        {
+            return;
+        }
+
+        if (Kind is RocketSurgeonGitHubActionsTrigger.PullRequest or RocketSurgeonGitHubActionsTrigger.PullRequestTarget)
+        {
+            using (writer.Indent())
+            {
+                if (Types.Length > 0)
+                {
+                    writer.WriteLine("types:");
+                    using (writer.Indent())
+                    {
+                        Types.ForEach(x => writer.WriteLine($"- '{x}'"));
+                    }
+                }
+            }
+        }
         using (writer.Indent())
         {
             if (Branches.Length > 0)
