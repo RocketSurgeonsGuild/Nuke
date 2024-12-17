@@ -11,7 +11,7 @@ public class DownloadArtifactStep : UsingStep
     ///     The default constructor
     /// </summary>
     /// <param name="name"></param>
-    public DownloadArtifactStep(string name) : base(name) => Uses = "actions/download-artifact@v3";
+    public DownloadArtifactStep(string name) : base(name) => Uses = "actions/download-artifact@v4";
 
     /// <summary>
     ///     Gets or sets the name of the artifact to download. If unspecified, all artifacts for the run are downloaded.

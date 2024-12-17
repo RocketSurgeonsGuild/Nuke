@@ -5,6 +5,7 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 ///     A wrapper around the SetupDotNet Step
 /// </summary>
 [PublicAPI]
+[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class SetupDotNetStep : UsingStep
 {
     /// <summary>
@@ -13,7 +14,7 @@ public class SetupDotNetStep : UsingStep
     /// <param name="name"></param>
     public SetupDotNetStep(string name) : base(name) =>
         // temporary to deal with sxs issue roll back once https://github.com/actions/setup-dotnet/pull/71 is merged
-        Uses = "actions/setup-dotnet@v3";
+        Uses = "actions/setup-dotnet@v4";
 
     /// <summary>SDK version to use. Example: 2.2.104</summary>
     public string? DotNetVersion { get; set; }
@@ -43,19 +44,43 @@ public class SetupDotNetStep : UsingStep
     /// </remarks>
     public string? NuGetAuthToken { get; set; }
 
+    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay
+    {
+        get
+        {
+            return ToString();
+        }
+    }
+
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
         // WithProperties(x => x.Underscore().Dasherize().ToLowerInvariant());
-        if (!string.IsNullOrWhiteSpace(DotNetVersion)) With.Add("dotnet-version", DotNetVersion);
+        if (!string.IsNullOrWhiteSpace(DotNetVersion))
+        {
+            With.Add("dotnet-version", DotNetVersion);
+        }
 
-        if (!string.IsNullOrWhiteSpace(SourceUrl)) With.Add("source-url", SourceUrl);
+        if (!string.IsNullOrWhiteSpace(SourceUrl))
+        {
+            With.Add("source-url", SourceUrl);
+        }
 
-        if (!string.IsNullOrWhiteSpace(Owner)) With.Add("owner", Owner);
+        if (!string.IsNullOrWhiteSpace(Owner))
+        {
+            With.Add("owner", Owner);
+        }
 
-        if (!string.IsNullOrWhiteSpace(SourceUrl)) NuGetAuthToken = string.IsNullOrWhiteSpace(NuGetAuthToken) ? "${{ secrets.GITHUB_TOKEN }}" : NuGetAuthToken;
+        if (!string.IsNullOrWhiteSpace(SourceUrl))
+        {
+            NuGetAuthToken = ( string.IsNullOrWhiteSpace(NuGetAuthToken) ) ? "${{ secrets.GITHUB_TOKEN }}" : NuGetAuthToken;
+        }
 
-        if (!string.IsNullOrWhiteSpace(NuGetAuthToken)) Environment.Add("NUGET_AUTH_TOKEN", NuGetAuthToken);
+        if (!string.IsNullOrWhiteSpace(NuGetAuthToken))
+        {
+            Environment.Add("NUGET_AUTH_TOKEN", NuGetAuthToken);
+        }
 
         base.Write(writer);
     }
