@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 🚀 nuget
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
       - name: nuget.org
         env:
           ApiKey: '${{ secrets.RSG_NUGET_API_KEY }}'
