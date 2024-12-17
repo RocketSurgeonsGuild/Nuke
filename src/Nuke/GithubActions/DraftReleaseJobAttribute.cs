@@ -92,7 +92,7 @@ public sealed class DraftReleaseJobAttribute() : GitHubActionsStepsAttribute("dr
                         With =
                         {
                             ["default-label"] = ":sparkles: mysterious",
-                            ["github-token"] = "${{ secrets.GITHUB_TOKEN }"
+                            ["github-token"] = "${{ secrets.GITHUB_TOKEN }}"
                         }
                     },
 
