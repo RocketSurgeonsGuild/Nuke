@@ -7,6 +7,7 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// <summary>
 ///     A detailed trigger for version control
 /// </summary>
+[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTrigger
 {
     /// <summary>
@@ -17,24 +18,31 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
     /// <summary>
     ///     The input variables for the workflow
     /// </summary>
-    public List<GitHubActionsInput> Inputs { get; set; } = new();
+    public List<GitHubActionsInput> Inputs { get; set; } = [];
 
     /// <summary>
     ///     The secret variables for the workflow
     /// </summary>
-    public List<GitHubActionsSecret> Secrets { get; set; } = new();
+    public List<GitHubActionsSecret> Secrets { get; set; } = [];
 
     /// <summary>
     ///     The output variables for the workflow
     /// </summary>
-    public List<GitHubActionsWorkflowOutput> Outputs { get; set; } = new();
+    public List<GitHubActionsWorkflowOutput> Outputs { get; set; } = [];
+
+    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString();
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
         writer.WriteLine(Kind.GetValue() + ":");
 
-        if (Kind is not RocketSurgeonGitHubActionsTrigger.WorkflowDispatch and not RocketSurgeonGitHubActionsTrigger.WorkflowCall) return;
+        if (Kind is not RocketSurgeonGitHubActionsTrigger.WorkflowDispatch and not RocketSurgeonGitHubActionsTrigger.WorkflowCall)
+        {
+            return;
+        }
+
         using (writer.Indent())
         {
             if (Inputs.Count > 0)
@@ -48,11 +56,17 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
                         using (writer.Indent())
                         {
                             writer.WriteLine($"type: {input.Type.GetValue()}");
-                            if (!string.IsNullOrWhiteSpace(input.Description)) writer.WriteLine($"description: '{input.Description}'");
+                            if (!string.IsNullOrWhiteSpace(input.Description))
+                            {
+                                writer.WriteLine($"description: '{input.Description}'");
+                            }
 
-                            writer.WriteLine($"required: {input.Required ?? false}");
+                            writer.WriteLine($"required: {( input.Required ?? false ).ToString().ToLowerInvariant()}");
 
-                            if (input.Default != null) writer.WriteLine($"default: {input.Default}");
+                            if (input.Default is not null)
+                            {
+                                writer.WriteLine($"default: {input.Default}");
+                            }
                         }
                     }
                 }
@@ -68,9 +82,12 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
                         writer.WriteLine($"{input.Name}:");
                         using (writer.Indent())
                         {
-                            if (!string.IsNullOrWhiteSpace(input.Description)) writer.WriteLine($"description: '{input.Description}'");
+                            if (!string.IsNullOrWhiteSpace(input.Description))
+                            {
+                                writer.WriteLine($"description: '{input.Description}'");
+                            }
 
-                            writer.WriteLine($"required: {input.Required ?? false}");
+                            writer.WriteLine($"required: {( input.Required ?? false ).ToString().ToLowerInvariant()}");
                         }
                     }
                 }
@@ -86,7 +103,10 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
                         writer.WriteLine($"{input.OutputName}:");
                         using (writer.Indent())
                         {
-                            if (!string.IsNullOrWhiteSpace(input.Description)) writer.WriteLine($"description: '{input.Description}'");
+                            if (!string.IsNullOrWhiteSpace(input.Description))
+                            {
+                                writer.WriteLine($"description: '{input.Description}'");
+                            }
 
                             writer.WriteLine($"value: {input}");
                         }

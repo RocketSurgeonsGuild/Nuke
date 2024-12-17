@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Reflection;
 using Nuke.Common.CI;
@@ -20,8 +21,15 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
 {
-    private readonly string[] _images;
-    private readonly bool _isGithubHosted;
+    /// <summary>
+    /// The images
+    /// </summary>
+    public ImmutableArray<string> Images { get; }
+
+    /// <summary>
+    ///  If it's github hosted or not
+    /// </summary>
+    public bool IsGithubHosted { get; }
 
     /// <summary>
     ///     The default constructor
@@ -35,11 +43,9 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         params GitHubActionsImage[] images
     ) : base(name)
     {
-        _images = Enumerable
-                 .Concat(new[] { image }, images)
-                 .Select(z => z.GetValue().Replace(".", "_", StringComparison.Ordinal))
-                 .ToArray();
-        _isGithubHosted = true;
+        ImmutableArray<GitHubActionsImage> actionsImage = [image, .. images];
+        Images = [.. actionsImage.Select(z => z.GetValue().Replace(".", "_", StringComparison.Ordinal))];
+        IsGithubHosted = true;
     }
 
     /// <summary>
@@ -54,7 +60,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         params string[] images
     ) : base(name)
     {
-        _images = Enumerable.Concat(new[] { image }, images).ToArray();
+        Images = [image, .. images];
     }
 
     /// <summary>
@@ -71,7 +77,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
     public override string IdPostfix => Name;
 
     /// <inheritdoc />
-    public override IEnumerable<AbsolutePath> GeneratedFiles => new[] { ConfigurationFile };
+    public override IEnumerable<AbsolutePath> GeneratedFiles => [ConfigurationFile];
 
     /// <summary>
     ///     Determine if you always want to build the nuke project during the ci run
@@ -167,7 +173,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                                                  .Select(
                                                       z => new KeyValuePair<string, string>(
                                                           z.Name,
-                                                          string.IsNullOrWhiteSpace(z.Variable)
+                                                            ( string.IsNullOrWhiteSpace(z.Variable) )
                                                               ? $"{z.Path}"
                                                               : $$$"""${{ vars.{{{z.Variable}}} }}/{{{z.Path.TrimStart('/')}}}"""
                                                       )
@@ -228,7 +234,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                                                  .Select(
                                                       z => new KeyValuePair<string, string>(
                                                           z.Name,
-                                                          string.IsNullOrWhiteSpace(z.Variable)
+                                                            ( string.IsNullOrWhiteSpace(z.Variable) )
                                                               ? $"{z.Path}"
                                                               : $$$"""${{ vars.{{{z.Variable}}} }}/{{{z.Path.TrimStart('/')}}}"""
                                                       )
@@ -285,13 +291,13 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             Enumerable
                .Concat(
                     GetAllSecrets(secrets)
-                        // ReSharper disable CoVariantArrayConversion
+                       // ReSharper disable CoVariantArrayConversion
                        .Concat<ITriggerValue>(variables)
                        .Concat(onePasswordConnectServerSecrets)
                        .Concat(onePasswordServiceAccountSecrets),
                     environmentAttributes
                 )
-                // ReSharper enable CoVariantArrayConversion
+               // ReSharper enable CoVariantArrayConversion
                .SelectMany(
                     z =>
                     {
@@ -320,18 +326,18 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                 continue;
             }
 
-            var name = string.IsNullOrWhiteSpace(value.Prefix) ? value.Name : $"{value.Prefix}.{value.Name}";
-            stepParameters.Add(new(key, $"{name}{( string.IsNullOrWhiteSpace(value.Default) ? "" : $" || {value.Default}" )}"));
+            var name = ( string.IsNullOrWhiteSpace(value.Prefix) ) ? value.Name : $"{value.Prefix}.{value.Name}";
+            stepParameters.Add(new(key, $"{name}{( ( string.IsNullOrWhiteSpace(value.Default) ) ? "" : $" || {value.Default}" )}"));
         }
 
         var jobOutputs = new List<GitHubActionsStepOutput>();
         var requiredInputs = new List<GitHubActionsInput>();
         var lookupTable = new LookupTable<ExecutableTarget, ExecutableTarget[]>();
         var initialArguments = localTool ? new Arguments().Add("dotnet").Add("nuke") : new Arguments().Add("nuke");
-        foreach (( var execute, var targets ) in relevantTargets
+        foreach ((var execute, var targets) in relevantTargets
                                                 .Select(
-                                                     x => ( ExecutableTarget: x,
-                                                            Targets: GetInvokedTargets(x, relevantTargets).ToArray() )
+                                                     x => (ExecutableTarget: x,
+                                                            Targets: GetInvokedTargets(x, relevantTargets).ToArray())
                                                  )
                                                 .ForEachLazy(x => lookupTable.Add(x.ExecutableTarget, [.. x.Targets]))
                 )
@@ -356,7 +362,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                             0,
                             new(
                                 key,
-                                $"{value.Prefix}.{value.Name}{( string.IsNullOrWhiteSpace(value.Default) ? "" : $" || {value.Default}" )}"
+                                $"{value.Prefix}.{value.Name}{( ( string.IsNullOrWhiteSpace(value.Default) ) ? "" : $" || {value.Default}" )}"
                             )
                         );
                     }
@@ -406,8 +412,8 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         {
             Steps = steps,
             Outputs = jobOutputs,
-            RunsOn = !_isGithubHosted ? _images : [],
-            Matrix = _isGithubHosted ? _images : [],
+            RunsOn = ( !IsGithubHosted ) ? Images : [],
+            Matrix = IsGithubHosted ? Images : [],
             // TODO: Figure out what this looks like here
             //                    Environment = inputs
             //                                 .Concat<ITriggerValue>(GetAllSecrets(secrets))
@@ -456,16 +462,16 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             }
         }
 
-        if (_isGithubHosted && _images is { Length: > 1 })
+        if (IsGithubHosted && Images is { Length: > 1 })
         {
-            var mainOs = _images.First();
+            var mainOs = Images.First();
             foreach (var step in steps.OfType<UploadArtifactStep>().ToList())
             {
                 steps.Insert(
                     steps.IndexOf(step),
                     new UploadArtifactStep($$$"""{{{step.StepName}}} (${{ matrix.os }})""")
                     {
-                        If = step.If is { } ? $"{step.If} && matrix.os != '{mainOs}'" : $"matrix.os != '{mainOs}'",
+                        If = ( step.If is { } ) ? $"{step.If} && matrix.os != '{mainOs}'" : $"matrix.os != '{mainOs}'",
                         Name = $$$"""${{ matrix.os }}-{{{step.Name}}}""",
                         Path = step.Path,
                         Environment = step.Environment.ToDictionary(z => z.Key, z => z.Value),
@@ -479,7 +485,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                         IfNoFilesFound = step.IfNoFilesFound,
                     }
                 );
-                step.If = step.If is { } ? $"{step.If} && matrix.os == '{mainOs}'" : $"matrix.os == '{mainOs}'";
+                step.If = ( step.If is { } ) ? $"{step.If} && matrix.os == '{mainOs}'" : $"matrix.os == '{mainOs}'";
             }
         }
 
@@ -515,8 +521,8 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                        )
                       .Select(
                            // ReSharper disable once NullableWarningSuppressionIsUsed
-                           z => ( name: ( (YamlScalarNode)z.Children[key] ).Value!.Split("@")[0],
-                                  value: ( (YamlScalarNode)z.Children[key] ).Value )
+                           z => (name: ( (YamlScalarNode)z.Children[key] ).Value!.Split("@")[0],
+                                  value: ( (YamlScalarNode)z.Children[key] ).Value)
                        )
                       .DistinctBy(z => z.name)
                       .ToDictionary(
@@ -532,7 +538,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             }
 
             var nodeKey = uses.Split('@')[0];
-            return nodeList.TryGetValue(nodeKey, out var value) ? value : uses;
+            return ( nodeList.TryGetValue(nodeKey, out var value) ) ? value : uses;
         }
 
         foreach (var job in config.Jobs)

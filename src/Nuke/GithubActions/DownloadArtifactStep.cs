@@ -4,13 +4,14 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 ///     Download a given artifact
 /// </summary>
 [PublicAPI]
-public class DownloadArtifactSet : UsingStep
+[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
+public class DownloadArtifactStep : UsingStep
 {
     /// <summary>
     ///     The default constructor
     /// </summary>
     /// <param name="name"></param>
-    public DownloadArtifactSet(string name) : base(name) => Uses = "actions/download-artifact@v3";
+    public DownloadArtifactStep(string name) : base(name) => Uses = "actions/download-artifact@v3";
 
     /// <summary>
     ///     Gets or sets the name of the artifact to download. If unspecified, all artifacts for the run are downloaded.
@@ -51,12 +52,15 @@ public class DownloadArtifactSet : UsingStep
     /// </summary>
     public string? RunId { get; set; }
 
+    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString();
+
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
-        #pragma warning disable CA1308
+#pragma warning disable CA1308
         WithProperties(x => x.Underscore().Camelize().ToLowerInvariant());
-        #pragma warning restore CA1308
+#pragma warning restore CA1308
         base.Write(writer);
     }
 
