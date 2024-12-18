@@ -50,7 +50,7 @@ public class RocketSurgeonGitHubActionsVcsTrigger : GitHubActionsDetailedTrigger
     {
         writer.WriteLine(Kind.GetValue() + ":");
 
-        if (Kind is RocketSurgeonGitHubActionsTrigger.WorkflowDispatch or RocketSurgeonGitHubActionsTrigger.WorkflowCall)
+        if (Kind is RocketSurgeonGitHubActionsTrigger.WorkflowDispatch or RocketSurgeonGitHubActionsTrigger.WorkflowCall or RocketSurgeonGitHubActionsTrigger.WorkflowRun)
         {
             return;
         }

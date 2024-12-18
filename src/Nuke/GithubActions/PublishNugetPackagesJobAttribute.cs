@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.Diagnostics;
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
@@ -14,22 +15,38 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribute
 {
     private readonly string _secretKey;
+    private readonly string _triggeringWorkflow;
+    private readonly ImmutableArray<string> _includeBranches;
 
     /// <summary>
     /// Adds draft release support to the build
     /// </summary>
-    public PublishNugetPackagesJobAttribute(string secretKey) : base("publish-nuget", GitHubActionsImage.UbuntuLatest) => _secretKey = secretKey;
-
-    /// <summary>
-    /// Adds draft release support to the build
-    /// </summary>
-    public PublishNugetPackagesJobAttribute(string secretKey, string image, params string[] images) : base("publish-nuget", image, images) =>
+    public PublishNugetPackagesJobAttribute(string secretKey, string triggeringWorkflow, string[]? includeBranches = null) : base("publish-nuget", GitHubActionsImage.UbuntuLatest)
+    {
         _secretKey = secretKey;
+        _triggeringWorkflow = triggeringWorkflow;
+        _includeBranches = [.. includeBranches ?? ["master", "main"]];
+    }
 
     /// <summary>
     /// Adds draft release support to the build
     /// </summary>
-    public PublishNugetPackagesJobAttribute(string secretKey, GitHubActionsImage image) : base("publish-nuget", image) => _secretKey = secretKey;
+    public PublishNugetPackagesJobAttribute(string secretKey, string triggeringWorkflow, string[] includeBranches, string image, params string[] images) : base("publish-nuget", image, images)
+    {
+        _secretKey = secretKey;
+        _triggeringWorkflow = triggeringWorkflow;
+        _includeBranches = [.. includeBranches];
+    }
+
+    /// <summary>
+    /// Adds draft release support to the build
+    /// </summary>
+    public PublishNugetPackagesJobAttribute(string secretKey, string triggeringWorkflow, GitHubActionsImage image, string[]? includeBranches = null) : base("publish-nuget", image)
+    {
+        _secretKey = secretKey;
+        _triggeringWorkflow = triggeringWorkflow;
+        _includeBranches = [.. includeBranches ?? ["master", "main"]];
+    }
 
     private string DebuggerDisplay => ToString();
 
@@ -43,15 +60,10 @@ public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribu
         build.DetailedTriggers.Add(
             new RocketSurgeonGitHubActionsWorkflowTrigger
             {
-                Kind = RocketSurgeonGitHubActionsTrigger.WorkflowCall,
-                Secrets = [new GitHubActionsSecret(_secretKey, Required: true)],
-            }
-        );
-        build.DetailedTriggers.Add(
-            new RocketSurgeonGitHubActionsVcsTrigger
-            {
-                Kind = RocketSurgeonGitHubActionsTrigger.Release,
-                Types = ["released"],
+                Kind = RocketSurgeonGitHubActionsTrigger.WorkflowRun,
+                Types = ["completed"],
+                Workflows = [_triggeringWorkflow],
+                Branches = [.. _includeBranches]
             }
         );
         build.Jobs.Add(
@@ -59,8 +71,15 @@ public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribu
             {
                 RunsOn = ( !IsGithubHosted ) ? Images : [],
                 Matrix = IsGithubHosted ? Images : [],
+                If = "${{ github.event.workflow_run.conclusion == 'success' }}",
                 Steps =
                 [
+                    new RunStep("Dump GitHub context")
+                    {
+                        Shell = "pwsh",
+                        Environment = { ["GITHUB_CONTEXT"] = "${{ toJson(github) }}" },
+                        Run = "echo \"$GITHUB_CONTEXT\"",
+                    },
                     new DownloadArtifactStep("nuget")
                     {
                         GithubToken = "${{ secrets.GITHUB_TOKEN }}",

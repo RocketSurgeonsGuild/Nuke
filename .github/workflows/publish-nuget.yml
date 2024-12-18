@@ -17,11 +17,13 @@
 name: Publish Nuget Packages
 
 on:
-  workflow_call:
-    secrets:
-      RSG_NUGET_API_KEY:
-        required: true
-  release:
+  workflow_run:
+    workflows:
+      - 'ci'
+    types:
+      - 'completed'
+    branches:
+      - 'master'
 permissions:
   actions: read
   checks: read
@@ -39,8 +41,15 @@ permissions:
 
 jobs:
   publish_nuget:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: '${{ toJson(github) }}'
+        shell: pwsh
+        run: |
+          echo "$GITHUB_CONTEXT"
       - name: 🚀 nuget
         uses: actions/download-artifact@v4
         with:

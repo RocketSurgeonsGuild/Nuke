@@ -30,6 +30,21 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
     /// </summary>
     public List<GitHubActionsWorkflowOutput> Outputs { get; set; } = [];
 
+    /// <summary>
+    /// The types
+    /// </summary>
+    public List<string> Types { get; set; } = [];
+
+    /// <summary>
+    /// The workflows
+    /// </summary>
+    public List<string> Workflows { get; set; } = [];
+
+    /// <summary>
+    /// The branches
+    /// </summary>
+    public List<string> Branches { get; set; } = [];
+
     [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
     private string DebuggerDisplay => ToString();
 
@@ -38,77 +53,124 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
     {
         writer.WriteLine(Kind.GetValue() + ":");
 
-        if (Kind is not RocketSurgeonGitHubActionsTrigger.WorkflowDispatch and not RocketSurgeonGitHubActionsTrigger.WorkflowCall)
+        if (Kind is not RocketSurgeonGitHubActionsTrigger.WorkflowDispatch
+                and not RocketSurgeonGitHubActionsTrigger.WorkflowCall
+                and not RocketSurgeonGitHubActionsTrigger.WorkflowRun)
         {
             return;
         }
 
         using (writer.Indent())
         {
-            if (Inputs.Count > 0)
+            if (Kind is not RocketSurgeonGitHubActionsTrigger.WorkflowRun)
             {
-                writer.WriteLine("inputs:");
-                using (writer.Indent())
+                if (Inputs.Count > 0)
                 {
-                    foreach (var input in Inputs)
+                    writer.WriteLine("inputs:");
+                    using (writer.Indent())
                     {
-                        writer.WriteLine($"{input.Name}:");
-                        using (writer.Indent())
+                        foreach (var input in Inputs)
                         {
-                            writer.WriteLine($"type: {input.Type.GetValue()}");
-                            if (!string.IsNullOrWhiteSpace(input.Description))
+                            writer.WriteLine($"{input.Name}:");
+                            using (writer.Indent())
                             {
-                                writer.WriteLine($"description: '{input.Description}'");
-                            }
+                                writer.WriteLine($"type: {input.Type.GetValue()}");
+                                if (!string.IsNullOrWhiteSpace(input.Description))
+                                {
+                                    writer.WriteLine($"description: '{input.Description}'");
+                                }
 
-                            writer.WriteLine($"required: {( input.Required ?? false ).ToString().ToLowerInvariant()}");
+                                writer.WriteLine($"required: {( input.Required ?? false ).ToString().ToLowerInvariant()}");
 
-                            if (input.Default is not null)
-                            {
-                                writer.WriteLine($"default: {input.Default}");
+                                if (input.Default is not null)
+                                {
+                                    writer.WriteLine($"default: {input.Default}");
+                                }
                             }
                         }
                     }
                 }
             }
 
-            if (Kind is RocketSurgeonGitHubActionsTrigger.WorkflowCall && Secrets.Count > 0)
+            if (Kind is RocketSurgeonGitHubActionsTrigger.WorkflowRun)
             {
-                writer.WriteLine("secrets:");
-                using (writer.Indent())
+                if (Workflows.Count > 0)
                 {
-                    foreach (var input in Secrets)
+                    writer.WriteLine("workflows:");
+                    using (writer.Indent())
                     {
-                        writer.WriteLine($"{input.Name}:");
-                        using (writer.Indent())
+                        foreach (var input in Workflows)
                         {
-                            if (!string.IsNullOrWhiteSpace(input.Description))
-                            {
-                                writer.WriteLine($"description: '{input.Description}'");
-                            }
+                            writer.WriteLine($"- '{input}'");
+                        }
+                    }
+                }
 
-                            writer.WriteLine($"required: {( input.Required ?? false ).ToString().ToLowerInvariant()}");
+                if (Types.Count > 0)
+                {
+                    writer.WriteLine("types:");
+                    using (writer.Indent())
+                    {
+                        foreach (var input in Types)
+                        {
+                            writer.WriteLine($"- '{input}'");
+                        }
+                    }
+                }
+
+                if (Branches.Count > 0)
+                {
+                    writer.WriteLine("branches:");
+                    using (writer.Indent())
+                    {
+                        foreach (var input in Branches)
+                        {
+                            writer.WriteLine($"- '{input}'");
                         }
                     }
                 }
             }
 
-            if (Kind is RocketSurgeonGitHubActionsTrigger.WorkflowCall && Outputs.Count > 0)
+            if (Kind is RocketSurgeonGitHubActionsTrigger.WorkflowCall)
             {
-                writer.WriteLine("outputs:");
-                using (writer.Indent())
+                if (Secrets.Count > 0)
                 {
-                    foreach (var input in Outputs)
+                    writer.WriteLine("secrets:");
+                    using (writer.Indent())
                     {
-                        writer.WriteLine($"{input.OutputName}:");
-                        using (writer.Indent())
+                        foreach (var input in Secrets)
                         {
-                            if (!string.IsNullOrWhiteSpace(input.Description))
+                            writer.WriteLine($"{input.Name}:");
+                            using (writer.Indent())
                             {
-                                writer.WriteLine($"description: '{input.Description}'");
-                            }
+                                if (!string.IsNullOrWhiteSpace(input.Description))
+                                {
+                                    writer.WriteLine($"description: '{input.Description}'");
+                                }
 
-                            writer.WriteLine($"value: {input}");
+                                writer.WriteLine($"required: {( input.Required ?? false ).ToString().ToLowerInvariant()}");
+                            }
+                        }
+                    }
+                }
+
+                if (Outputs.Count > 0)
+                {
+                    writer.WriteLine("outputs:");
+                    using (writer.Indent())
+                    {
+                        foreach (var input in Outputs)
+                        {
+                            writer.WriteLine($"{input.OutputName}:");
+                            using (writer.Indent())
+                            {
+                                if (!string.IsNullOrWhiteSpace(input.Description))
+                                {
+                                    writer.WriteLine($"description: '{input.Description}'");
+                                }
+
+                                writer.WriteLine($"value: {input}");
+                            }
                         }
                     }
                 }

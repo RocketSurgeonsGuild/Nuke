@@ -14,6 +14,7 @@ namespace Rocket.Surgery.Nuke;
 ///     Define a set of azure pipelines steps
 /// </summary>
 [PublicAPI]
+[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
 {
     private readonly Dictionary<string, string> _defaultSymbols = new()
@@ -33,7 +34,7 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
     public override Type HostType => typeof(AzurePipelines);
 
     /// <inheritdoc />
-    public override IEnumerable<AbsolutePath> GeneratedFiles => new[] { ConfigurationFile };
+    public override IEnumerable<AbsolutePath> GeneratedFiles => [ConfigurationFile];
 
     /// <inheritdoc />
     public override IEnumerable<string> RelevantTargetNames => InvokeTargets;
@@ -47,6 +48,15 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
     ///     The parameters to be used
     /// </summary>
     public string[] Parameters { get; set; } = [];
+
+    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay
+    {
+        get
+        {
+            return ToString();
+        }
+    }
 
     /// <inheritdoc />
     public override CustomFileWriter CreateWriter(StreamWriter streamWriter) => new(streamWriter, 2, "#");
@@ -69,7 +79,7 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
                             BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy
                         )
                 )
-               .Where(x => x.GetCustomAttribute<ParameterAttribute>() != null);
+               .Where(x => x.GetCustomAttribute<ParameterAttribute>() is not null);
         foreach (var parameter in parameters)
         {
             if (Parameters.Any(
@@ -81,7 +91,10 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
                 ))
             {
                 var value = parameter.GetValue(Build);
-                if (value is AbsolutePath) value = null;
+                if (value is AbsolutePath)
+                {
+                    value = null;
+                }
 
                 paramList.Add(
                     new()
@@ -95,14 +108,14 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
 
         var lookupTable = new LookupTable<ExecutableTarget, AzurePipelinesStep>();
         var steps = relevantTargets
-                   .Select(x => ( ExecutableTarget: x, Job: GetStep(x, relevantTargets, lookupTable) ))
+                   .Select(x => (ExecutableTarget: x, Job: GetStep(x, relevantTargets, lookupTable)))
                    .ForEachLazy(x => lookupTable.Add(x.ExecutableTarget, x.Job))
                    .Select(x => x.Job)
                    .ToArray();
 
         return new AzurePipelinesSteps
         {
-            Parameters = paramList.ToArray(),
+            Parameters = [.. paramList],
             Steps = steps,
         };
     }
@@ -121,7 +134,7 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
     )
     {
         var chainLinkNames = GetInvokedTargets(executableTarget, relevantTargets).Select(z => z.Name).ToArray();
-        var tool = DotNetTool.IsInstalled("codecov.tool") ? "dotnet nuke" : "nuke";
+        var tool = ( DotNetTool.IsInstalled("nuke.globaltool") ) ? "dotnet nuke" : "nuke";
 
         return new()
         {
@@ -141,8 +154,15 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
     {
         var symbol = _defaultSymbols.FirstOrDefault(z => z.Key.EndsWith(name, StringComparison.OrdinalIgnoreCase))
                                     .Value;
+
+/* Unmerged change from project 'Rocket.Surgery.Nuke(net9.0)'
+Before:
         if (string.IsNullOrWhiteSpace(symbol)) return name;
 
         return $"{symbol} {name}";
+After:
+        return ( string.IsNullOrWhiteSpace(symbol) ) ? name : $"{symbol} {name}";
+*/
+        return ( string.IsNullOrWhiteSpace(symbol) ) ?  name  :  $"{symbol} {name}";
     }
 }
