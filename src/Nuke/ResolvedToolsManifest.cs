@@ -72,8 +72,14 @@ internal class ResolvedToolsManifest
                                                                              logger ?? DefaultLogger,
                                                                              process =>
                                                                              {
-                                                                                 handler?.Invoke(process);
-                                                                                 return null;
+                                                                                 if (handler is null)
+                                                                                 {
+                                                                                     return process.AssertZeroExitCode();
+                                                                                 }
+
+                                                                                 handler.Invoke(process);
+                                                                                 return process;
+
                                                                              }
                                                                          );
                                                                      };
