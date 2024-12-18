@@ -58,17 +58,13 @@ jobs:
           dotnet tool restore
       - name: 🔨 Use GitVersion
         id: gitversion
-        shell: bash
+        shell: pwsh
         run: |
-          function Camelize($key) {
-          return -join ($key -split '_') | ForEach-Object { $_.Substring(0,1).ToUpper() + $_.Substring(1) }
-          }
           $data = dotnet gitversion | ConvertFrom-Json
           foreach ($item in $data.PSObject.Properties) {
           $key = $item.Name
           $value = $item.Value
-          $camelizedKey = Camelize $key
-          echo "$camelizedKey=$value" >> $env:GITHUB_OUTPUT
+          echo "$($key.Substring(0,1).ToLower() + $key.Substring(1))=$value" >> $env:GITHUB_OUTPUT
           }
       - name: Create Milestone
         env:

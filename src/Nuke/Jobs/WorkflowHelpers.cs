@@ -23,10 +23,10 @@ public static class WorkflowHelpers
     )
     {
         return new(name)
-            {
-                RunsOn = ( !attribute.IsGithubHosted ) ? attribute.Images : [],
-                Matrix = ( attribute.IsGithubHosted ) ? attribute.Images : [],
-                Steps =
+        {
+            RunsOn = ( !attribute.IsGithubHosted ) ? attribute.Images : [],
+            Matrix = ( attribute.IsGithubHosted ) ? attribute.Images : [],
+            Steps =
                             [
                                 new CheckoutStep("Checkout")
                                 {
@@ -48,7 +48,7 @@ public static class WorkflowHelpers
                                 },
                                 ..steps
                             ]
-            };
+        };
     }
 
     /// <summary>
@@ -151,18 +151,13 @@ public static class WorkflowHelpers
                 new("versionSourceSha"),
                 new("weightedPreReleaseNumber"),
             ],
-            Shell = "bash",
+            Shell = "pwsh",
             Run = """
-                function Camelize($key) {
-                    return -join ($key -split '_') | ForEach-Object { $_.Substring(0,1).ToUpper() + $_.Substring(1) }
-                }
-
                 $data = dotnet gitversion | ConvertFrom-Json
                 foreach ($item in $data.PSObject.Properties) {
                     $key = $item.Name
                     $value = $item.Value
-                    $camelizedKey = Camelize $key
-                    echo "$camelizedKey=$value" >> $env:GITHUB_OUTPUT
+                    echo "$($key.Substring(0,1).ToLower() + $key.Substring(1))=$value" >> $env:GITHUB_OUTPUT
                 }
 """
         };
