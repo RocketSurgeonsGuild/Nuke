@@ -67,6 +67,10 @@ public sealed class CloseMilestoneJobAttribute : GitHubActionsStepsAttribute
                         Run = "git fetch --prune",
                     },
                     new SetupDotNetStep("Install DotNet"),
+                    new RunStep("dotnet tool restore")
+                    {
+                        Run = "dotnet tool restore",
+                    },
                     new UsingStep("Install GitVersion")
                     {
                         If = "${{ github.event.action == 'opened' }}",
@@ -89,6 +93,10 @@ public sealed class CloseMilestoneJobAttribute : GitHubActionsStepsAttribute
                     {
                         Id = "gitversion",
                         Uses = "gittools/actions/gitversion/execute@v3.1.1",
+                        With =
+                        {
+                            ["useConfigFile"] = "true",
+                        }
                     },
                     new UsingStep("Create Milestone")
                     {

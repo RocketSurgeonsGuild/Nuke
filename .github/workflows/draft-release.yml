@@ -57,6 +57,9 @@ jobs:
           git fetch --prune
       - name: 📲 Install DotNet
         uses: actions/setup-dotnet@v4
+      - name: ⚒️ dotnet tool restore
+        run: |
+          dotnet tool restore
       - name: 📲 Install GitVersion
         if: ${{ github.event.action == 'opened' }}
         uses: gittools/actions/gitversion/setup@v3.1.1
@@ -70,6 +73,8 @@ jobs:
       - name: 🔨 Use GitVersion
         id: gitversion
         uses: gittools/actions/gitversion/execute@v3.1.1
+        with:
+          useConfigFile: 'true'
       - name: Create Milestone
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'

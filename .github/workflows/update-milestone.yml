@@ -46,7 +46,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: '${{ github.sha }}'
           clean: 'false'
           fetch-depth: '0'
       - name: Fetch all history for all tags and branches
@@ -54,6 +53,9 @@ jobs:
           git fetch --prune
       - name: 📲 Install DotNet
         uses: actions/setup-dotnet@v4
+      - name: ⚒️ dotnet tool restore
+        run: |
+          dotnet tool restore
       - name: 📲 Install GitVersion
         if: ${{ github.event.action == 'opened' }}
         uses: gittools/actions/gitversion/setup@v3.1.1
@@ -68,6 +70,8 @@ jobs:
         id: gitversion
         if: ${{ github.event.action == 'opened' }}
         uses: gittools/actions/gitversion/execute@v3.1.1
+        with:
+          useConfigFile: 'true'
       - name: Create Milestone
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
