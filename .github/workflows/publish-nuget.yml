@@ -22,8 +22,6 @@ on:
       - 'ci'
     types:
       - 'completed'
-    branches:
-      - 'v*'
 permissions:
   actions: read
   checks: read
