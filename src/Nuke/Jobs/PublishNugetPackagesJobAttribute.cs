@@ -19,7 +19,9 @@ public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribu
 {
     private readonly string _secretKey;
     private readonly string _triggeringWorkflow;
-    private readonly GithubActionCondition _nugetOrgCondition;
+
+    private readonly GithubActionCondition _nugetOrgCondition =
+        "startsWith(github.event.workflow_run.head_branch, 'v') && contains(github.event.workflow_run.head_branch, '.') && !contains(github.event.workflow_run.head_branch, '/')";
     private readonly ImmutableArray<string> _includeBranches;
 
     /// <summary>
@@ -29,8 +31,8 @@ public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribu
     {
         _secretKey = secretKey;
         _triggeringWorkflow = triggeringWorkflow;
-        _nugetOrgCondition = nugetOrgCondition ?? "startsWith(github.ref, 'refs/tags/')";
-        _includeBranches = [.. includeBranches ?? ["master", "main", "v*"]];
+        _nugetOrgCondition = nugetOrgCondition ?? _nugetOrgCondition;
+        _includeBranches = [.. includeBranches ?? Array.Empty<string>()];
     }
 
     /// <summary>
@@ -40,7 +42,7 @@ public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribu
     {
         _secretKey = secretKey;
         _triggeringWorkflow = triggeringWorkflow;
-        _nugetOrgCondition = nugetOrgCondition ?? "startsWith(github.ref, 'refs/tags/')";
+        _nugetOrgCondition = nugetOrgCondition ?? _nugetOrgCondition;
         _includeBranches = [.. includeBranches];
     }
 
@@ -51,8 +53,8 @@ public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribu
     {
         _secretKey = secretKey;
         _triggeringWorkflow = triggeringWorkflow;
-        _nugetOrgCondition = nugetOrgCondition ?? "startsWith(github.ref, 'refs/tags/')";
-        _includeBranches = [.. includeBranches ?? ["master", "main", "v*"]];
+        _nugetOrgCondition = nugetOrgCondition ?? _nugetOrgCondition;
+        _includeBranches = [.. includeBranches ?? Array.Empty<string>()];
     }
 
     private string DebuggerDisplay => ToString();

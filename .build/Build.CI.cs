@@ -50,7 +50,7 @@ using Rocket.Surgery.Nuke.Jobs;
 [CloseMilestoneJob]
 [DraftReleaseJob]
 [UpdateMilestoneJob]
-[PublishNugetPackagesJob("RSG_NUGET_API_KEY", "ci", [])]
+[PublishNugetPackagesJob("RSG_NUGET_API_KEY", "ci")]
 [GitHubActionsVariable("THIS_IS_A_VARIABLE", Alias = "ThisIsAOtherVariable")]
 [GitHubActionsVariable("THIS_IS_ANOTHER_VARIABLE")]
 [GitHubActionsInput("THIS_IS_A_INPUT" /*, Alias = "ThisIsAInput"*/)]
