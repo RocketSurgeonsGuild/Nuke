@@ -50,10 +50,10 @@ jobs:
         shell: pwsh
         run: |
           echo "$GITHUB_CONTEXT"
-      - name: 🚀 nuget
+      - name: 🚀 NuGet
         uses: actions/download-artifact@v4
         with:
-          name: 'Artifacts'
+          name: 'nuget'
           githubtoken: '${{ secrets.GITHUB_TOKEN }}'
           runid: '${{ github.event.workflow_run.id }}'
       - name: nuget.org

@@ -80,10 +80,10 @@ public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribu
                         Environment = { ["GITHUB_CONTEXT"] = "${{ toJson(github) }}" },
                         Run = "echo \"$GITHUB_CONTEXT\"",
                     },
-                    new DownloadArtifactStep("nuget")
+                    new DownloadArtifactStep("NuGet")
                     {
                         GithubToken = "${{ secrets.GITHUB_TOKEN }}",
-                        Name = "Artifacts",
+                        Name = "nuget",
                         RunId = "${{ github.event.workflow_run.id }}",
                     },
                     new RunStep("nuget.org")
