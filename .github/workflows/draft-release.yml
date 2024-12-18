@@ -60,15 +60,20 @@ jobs:
       - name: ⚒️ dotnet tool restore
         run: |
           dotnet tool restore
-      - name: 📲 Install GitVersion
-        uses: gittools/actions/gitversion/setup@main
-        with:
-          versionSpec: '6.1.0'
       - name: 🔨 Use GitVersion
         id: gitversion
-        uses: gittools/actions/gitversion/execute@main
-        with:
-          useConfigFile: 'true'
+        shell: bash
+        run: |
+          function camelize() {
+          echo "$1" | sed -r 's/(^|_)([a-z])/\U\2/g'
+          }
+          echo "$json" | jq -r 'to_entries | .[] | "\(.key)=\(.value)"' | while IFS= read -r line; do
+          key=$(echo "$line" | cut -d= -f1)
+          value=$(echo "$line" | cut -d= -f2-)
+          camelized_key=$(camelize "$key")
+          echo "$camelized_key=$value" >> $GITHUB_OUTPUT
+          done
+
       - name: Create Milestone
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'

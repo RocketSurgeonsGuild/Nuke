@@ -27,27 +27,27 @@ public static class WorkflowHelpers
             RunsOn = ( !attribute.IsGithubHosted ) ? attribute.Images : [],
             Matrix = ( attribute.IsGithubHosted ) ? attribute.Images : [],
             Steps =
+                    [
+                        new CheckoutStep("Checkout")
+                        {
+                            FetchDepth = fetchHistory ? 0 : null,
+                        },
+                        ..fetchHistory
+                            ?
                             [
-                                new CheckoutStep("Checkout")
+                                new RunStep("Fetch all history for all tags and branches")
                                 {
-                                    FetchDepth = fetchHistory ? 0 : null,
-                                },
-                                ..fetchHistory
-                                    ?
-                                    [
-                                        new RunStep("Fetch all history for all tags and branches")
-                                        {
-                                            Run = "git fetch --prune",
-                                        }
-                                    ]
-                                    : Array.Empty<BaseGitHubActionsStep>(),
-                                new SetupDotNetStep("Install DotNet"),
-                                new RunStep("dotnet tool restore")
-                                {
-                                    Run = "dotnet tool restore",
-                                },
-                                ..steps
+                                    Run = "git fetch --prune",
+                                }
                             ]
+                            : Array.Empty<BaseGitHubActionsStep>(),
+                        new SetupDotNetStep("Install DotNet"),
+                        new RunStep("dotnet tool restore")
+                        {
+                            Run = "dotnet tool restore",
+                        },
+                        ..steps
+                    ]
         };
     }
 
@@ -117,24 +117,54 @@ public static class WorkflowHelpers
     /// <returns></returns>
     public static IEnumerable<BaseGitHubActionsStep> RunGitVersion(GithubActionCondition? condition = null)
     {
-        yield return new UsingStep("Install GitVersion")
-        {
-            If = condition,
-            Uses = "gittools/actions/gitversion/setup@main",
-            With =
-            {
-                ["versionSpec"] = DotNetTool.GetToolDefinition("GitVersion.Tool").Version
-            },
-        };
-        yield return new UsingStep("Use GitVersion")
+        /*
+         */
+        yield return new RunStep("Use GitVersion")
         {
             If = condition,
             Id = "gitversion",
-            Uses = "gittools/actions/gitversion/execute@main",
-            With =
-            {
-                ["useConfigFile"] = "true",
-            }
+            Outputs =
+            [
+                new("assemblySemFileVer"),
+                new("assemblySemVer"),
+                new("branchName"),
+                new("buildMetaData"),
+                new("commitDate"),
+                new("commitsSinceVersionSource"),
+                new("escapedBranchName"),
+                new("fullBuildMetaData"),
+                new("fullSemVer"),
+                new("informationalVersion"),
+                new("major"),
+                new("majorMinorPatch"),
+                new("minor"),
+                new("patch"),
+                new("preReleaseLabel"),
+                new("preReleaseLabelWithDash"),
+                new("preReleaseNumber"),
+                new("preReleaseTag"),
+                new("preReleaseTagWithDash"),
+                new("semVer"),
+                new("sha"),
+                new("shortSha"),
+                new("uncommittedChanges"),
+                new("versionSourceSha"),
+                new("weightedPreReleaseNumber"),
+            ],
+            Shell = "bash",
+            Run = """
+
+                function camelize() {
+                    echo "$1" | sed -r 's/(^|_)([a-z])/\U\2/g'
+                }
+                echo "$json" | jq -r 'to_entries | .[] | "\(.key)=\(.value)"' | while IFS= read -r line; do
+                    key=$(echo "$line" | cut -d= -f1)
+                    value=$(echo "$line" | cut -d= -f2-)
+                    camelized_key=$(camelize "$key")
+                    echo "$camelized_key=$value" >> $GITHUB_OUTPUT
+                done
+                
+"""
         };
     }
 }
