@@ -52,7 +52,6 @@ public sealed class UpdateMilestoneJobAttribute() : GitHubActionsStepsAttribute(
                     },
                     new UsingStep("Install GitVersion")
                     {
-                        If = "${{ github.event.action == 'opened' }}",
                         Uses = "gittools/actions/gitversion/setup@v3.1.1",
                         With =
                         {
@@ -61,7 +60,6 @@ public sealed class UpdateMilestoneJobAttribute() : GitHubActionsStepsAttribute(
                     },
                     new UsingStep("Install GitReleaseManager")
                     {
-                        If = "${{ github.event.action == 'opened' }}",
                         Uses = "gittools/actions/gitreleasemanager/setup@v3.1.1",
                         With =
                         {
@@ -70,7 +68,6 @@ public sealed class UpdateMilestoneJobAttribute() : GitHubActionsStepsAttribute(
                     },
                     new UsingStep("Use GitVersion")
                     {
-                        If = "${{ github.event.action == 'opened' }}",
                         Id = "gitversion",
                         Uses = "gittools/actions/gitversion/execute@v3.1.1",
                         With =
@@ -80,7 +77,6 @@ public sealed class UpdateMilestoneJobAttribute() : GitHubActionsStepsAttribute(
                     },
                     new UsingStep("Create Milestone")
                     {
-                        If = "${{ github.event.action == 'opened' }}",
                         Uses = "WyriHaximus/github-action-create-milestone@v1",
                         With =
                         {
