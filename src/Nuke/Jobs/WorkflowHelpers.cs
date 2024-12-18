@@ -27,27 +27,27 @@ public static class WorkflowHelpers
             RunsOn = ( !attribute.IsGithubHosted ) ? attribute.Images : [],
             Matrix = ( attribute.IsGithubHosted ) ? attribute.Images : [],
             Steps =
-                    [
-                        new CheckoutStep("Checkout")
-                        {
-                            FetchDepth = fetchHistory ? 0 : null,
-                        },
-                        ..fetchHistory
-                            ?
                             [
-                                new RunStep("Fetch all history for all tags and branches")
+                                new CheckoutStep("Checkout")
                                 {
-                                    Run = "git fetch --prune",
-                                }
+                                    FetchDepth = fetchHistory ? 0 : null,
+                                },
+                                ..fetchHistory
+                                    ?
+                                    [
+                                        new RunStep("Fetch all history for all tags and branches")
+                                        {
+                                            Run = "git fetch --prune",
+                                        }
+                                    ]
+                                    : Array.Empty<BaseGitHubActionsStep>(),
+                                new SetupDotNetStep("Install DotNet"),
+                                new RunStep("dotnet tool restore")
+                                {
+                                    Run = "dotnet tool restore",
+                                },
+                                ..steps
                             ]
-                            : Array.Empty<BaseGitHubActionsStep>(),
-                        new SetupDotNetStep("Install DotNet"),
-                        new RunStep("dotnet tool restore")
-                        {
-                            Run = "dotnet tool restore",
-                        },
-                        ..steps
-                    ]
         };
     }
 
@@ -120,7 +120,7 @@ public static class WorkflowHelpers
         yield return new UsingStep("Install GitVersion")
         {
             If = condition,
-            Uses = "gittools/actions/gitversion/setup@v3.1.1",
+            Uses = "gittools/actions/gitversion/setup@main",
             With =
             {
                 ["versionSpec"] = DotNetTool.GetToolDefinition("GitVersion.Tool").Version
@@ -130,7 +130,7 @@ public static class WorkflowHelpers
         {
             If = condition,
             Id = "gitversion",
-            Uses = "gittools/actions/gitversion/execute@v3.1.1",
+            Uses = "gittools/actions/gitversion/execute@main",
             With =
             {
                 ["useConfigFile"] = "true",

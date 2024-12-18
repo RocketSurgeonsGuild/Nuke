@@ -55,12 +55,12 @@ jobs:
         run: |
           dotnet tool restore
       - name: 📲 Install GitVersion
-        uses: gittools/actions/gitversion/setup@v3.1.1
+        uses: gittools/actions/gitversion/setup@main
         with:
           versionSpec: '6.1.0'
       - name: 🔨 Use GitVersion
         id: gitversion
-        uses: gittools/actions/gitversion/execute@v3.1.1
+        uses: gittools/actions/gitversion/execute@main
         with:
           useConfigFile: 'true'
       - name: Create Milestone
