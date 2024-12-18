@@ -27,27 +27,27 @@ public static class WorkflowHelpers
             RunsOn = ( !attribute.IsGithubHosted ) ? attribute.Images : [],
             Matrix = ( attribute.IsGithubHosted ) ? attribute.Images : [],
             Steps =
-                            [
-                                new CheckoutStep("Checkout")
-                                {
-                                    FetchDepth = fetchHistory ? 0 : null,
-                                },
-                                ..fetchHistory
-                                    ?
                                     [
-                                        new RunStep("Fetch all history for all tags and branches")
+                                        new CheckoutStep("Checkout")
                                         {
-                                            Run = "git fetch --prune",
-                                        }
+                                            FetchDepth = fetchHistory ? 0 : null,
+                                        },
+                                        ..fetchHistory
+                                            ?
+                                            [
+                                                new RunStep("Fetch all history for all tags and branches")
+                                                {
+                                                    Run = "git fetch --prune",
+                                                }
+                                            ]
+                                            : Array.Empty<BaseGitHubActionsStep>(),
+                                        new SetupDotNetStep("Install DotNet"),
+                                        new RunStep("dotnet tool restore")
+                                        {
+                                            Run = "dotnet tool restore",
+                                        },
+                                        ..steps
                                     ]
-                                    : Array.Empty<BaseGitHubActionsStep>(),
-                                new SetupDotNetStep("Install DotNet"),
-                                new RunStep("dotnet tool restore")
-                                {
-                                    Run = "dotnet tool restore",
-                                },
-                                ..steps
-                            ]
         };
     }
 
@@ -117,8 +117,6 @@ public static class WorkflowHelpers
     /// <returns></returns>
     public static IEnumerable<BaseGitHubActionsStep> RunGitVersion(GithubActionCondition? condition = null)
     {
-        /*
-         */
         yield return new RunStep("Use GitVersion")
         {
             If = condition,

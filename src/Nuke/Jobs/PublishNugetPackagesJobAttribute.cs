@@ -30,7 +30,7 @@ public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribu
         _secretKey = secretKey;
         _triggeringWorkflow = triggeringWorkflow;
         _nugetOrgCondition = nugetOrgCondition ?? "startsWith(github.ref, 'refs/tags/')";
-        _includeBranches = [.. includeBranches ?? ["master", "main"]];
+        _includeBranches = [.. includeBranches ?? ["master", "main", "v*"]];
     }
 
     /// <summary>
@@ -52,7 +52,7 @@ public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribu
         _secretKey = secretKey;
         _triggeringWorkflow = triggeringWorkflow;
         _nugetOrgCondition = nugetOrgCondition ?? "startsWith(github.ref, 'refs/tags/')";
-        _includeBranches = [.. includeBranches ?? ["master", "main"]];
+        _includeBranches = [.. includeBranches ?? ["master", "main", "v*"]];
     }
 
     private string DebuggerDisplay => ToString();
