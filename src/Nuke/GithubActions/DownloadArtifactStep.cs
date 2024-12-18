@@ -59,7 +59,7 @@ public class DownloadArtifactStep : UsingStep
     public override void Write(CustomFileWriter writer)
     {
 #pragma warning disable CA1308
-        WithProperties(x => x.Underscore().Camelize().ToLowerInvariant());
+        WithProperties(x => x.Kebaberize());
 #pragma warning restore CA1308
         base.Write(writer);
     }

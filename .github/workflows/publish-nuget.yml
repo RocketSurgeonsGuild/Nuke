@@ -54,8 +54,8 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: 'nuget'
-          githubtoken: '${{ secrets.GITHUB_TOKEN }}'
-          runid: '${{ github.event.workflow_run.id }}'
+          github-token: '${{ secrets.GITHUB_TOKEN }}'
+          run-id: '${{ github.event.workflow_run.id }}'
       - name: nuget.org
         env:
           ApiKey: '${{ secrets.RSG_NUGET_API_KEY }}'
@@ -64,4 +64,3 @@ jobs:
         run: |
           dotnet nuget push **/*.nupkg  --skip-duplicate -s nuget.org --api-key $ENV:ApiKey
           dotnet nuget push **/*.snupkg --skip-duplicate -s nuget.org --api-key $ENV:ApiKey
-          

@@ -4,6 +4,7 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 ///     The upload artifact step
 /// </summary>
 [PublicAPI]
+[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class UploadArtifactStep : UsingStep
 {
     /// <summary>
@@ -42,12 +43,21 @@ public class UploadArtifactStep : UsingStep
     /// </summary>
     public bool? Overwrite { get; set; }
 
+    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay
+    {
+        get
+        {
+            return ToString();
+        }
+    }
+
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
-        #pragma warning disable CA1308
-        WithProperties(x => x.Underscore().Camelize().ToLowerInvariant());
-        #pragma warning restore CA1308
+#pragma warning disable CA1308
+        WithProperties(x => x.Kebaberize());
+#pragma warning restore CA1308
         base.Write(writer);
     }
 

@@ -3,6 +3,7 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// <summary>
 ///     The checkout action
 /// </summary>
+[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class CheckoutStep : UsingStep
 {
     /// <summary>
@@ -115,12 +116,21 @@ public class CheckoutStep : UsingStep
     /// <remarks>Default: false</remarks>
     public string? Submodules { get; set; }
 
+    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay
+    {
+        get
+        {
+            return ToString();
+        }
+    }
+
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
-        #pragma warning disable CA1308
-        WithProperties(x => x.Underscore().Hyphenate().ToLowerInvariant());
-        #pragma warning restore CA1308
+#pragma warning disable CA1308
+        WithProperties(x => x.Kebaberize());
+#pragma warning restore CA1308
         base.Write(writer);
     }
 }
