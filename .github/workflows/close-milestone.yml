@@ -58,16 +58,16 @@ jobs:
         id: gitversion
         shell: bash
         run: |
-          function camelize() {
-          echo "$1" | sed -r 's/(^|_)([a-z])/\U\2/g'
+          function Camelize($key) {
+          return -join ($key -split '_') | ForEach-Object { $_.Substring(0,1).ToUpper() + $_.Substring(1) }
           }
-          echo "$json" | jq -r 'to_entries | .[] | "\(.key)=\(.value)"' | while IFS= read -r line; do
-          key=$(echo "$line" | cut -d= -f1)
-          value=$(echo "$line" | cut -d= -f2-)
-          camelized_key=$(camelize "$key")
-          echo "$camelized_key=$value" >> $GITHUB_OUTPUT
-          done
-
+          $data = dotnet gitversion | ConvertFrom-Json
+          foreach ($item in $data.PSObject.Properties) {
+          $key = $item.Name
+          $value = $item.Value
+          $camelizedKey = Camelize $key
+          echo "$camelizedKey=$value" >> $env:GITHUB_OUTPUT
+          }
       - name: Create Milestone
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'

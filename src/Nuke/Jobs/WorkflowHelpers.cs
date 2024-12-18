@@ -23,32 +23,32 @@ public static class WorkflowHelpers
     )
     {
         return new(name)
-        {
-            RunsOn = ( !attribute.IsGithubHosted ) ? attribute.Images : [],
-            Matrix = ( attribute.IsGithubHosted ) ? attribute.Images : [],
-            Steps =
-                    [
-                        new CheckoutStep("Checkout")
-                        {
-                            FetchDepth = fetchHistory ? 0 : null,
-                        },
-                        ..fetchHistory
-                            ?
+            {
+                RunsOn = ( !attribute.IsGithubHosted ) ? attribute.Images : [],
+                Matrix = ( attribute.IsGithubHosted ) ? attribute.Images : [],
+                Steps =
                             [
-                                new RunStep("Fetch all history for all tags and branches")
+                                new CheckoutStep("Checkout")
                                 {
-                                    Run = "git fetch --prune",
-                                }
+                                    FetchDepth = fetchHistory ? 0 : null,
+                                },
+                                ..fetchHistory
+                                    ?
+                                    [
+                                        new RunStep("Fetch all history for all tags and branches")
+                                        {
+                                            Run = "git fetch --prune",
+                                        }
+                                    ]
+                                    : Array.Empty<BaseGitHubActionsStep>(),
+                                new SetupDotNetStep("Install DotNet"),
+                                new RunStep("dotnet tool restore")
+                                {
+                                    Run = "dotnet tool restore",
+                                },
+                                ..steps
                             ]
-                            : Array.Empty<BaseGitHubActionsStep>(),
-                        new SetupDotNetStep("Install DotNet"),
-                        new RunStep("dotnet tool restore")
-                        {
-                            Run = "dotnet tool restore",
-                        },
-                        ..steps
-                    ]
-        };
+            };
     }
 
     /// <summary>
@@ -153,17 +153,17 @@ public static class WorkflowHelpers
             ],
             Shell = "bash",
             Run = """
-
-                function camelize() {
-                    echo "$1" | sed -r 's/(^|_)([a-z])/\U\2/g'
+                function Camelize($key) {
+                    return -join ($key -split '_') | ForEach-Object { $_.Substring(0,1).ToUpper() + $_.Substring(1) }
                 }
-                echo "$json" | jq -r 'to_entries | .[] | "\(.key)=\(.value)"' | while IFS= read -r line; do
-                    key=$(echo "$line" | cut -d= -f1)
-                    value=$(echo "$line" | cut -d= -f2-)
-                    camelized_key=$(camelize "$key")
-                    echo "$camelized_key=$value" >> $GITHUB_OUTPUT
-                done
-                
+
+                $data = dotnet gitversion | ConvertFrom-Json
+                foreach ($item in $data.PSObject.Properties) {
+                    $key = $item.Name
+                    $value = $item.Value
+                    $camelizedKey = Camelize $key
+                    echo "$camelizedKey=$value" >> $env:GITHUB_OUTPUT
+                }
 """
         };
     }
