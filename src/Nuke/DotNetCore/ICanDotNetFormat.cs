@@ -139,7 +139,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                           }
 
                                                           _ = DotNetTool.GetTool("jb")(
-                                                              arguments.RenderForExecution(),
+                                                              $"{arguments.RenderForExecution()}",
                                                               RootDirectory,
                                                               logOutput: true,
                                                               logInvocation: Verbosity == Verbosity.Verbose,
