@@ -3,8 +3,11 @@ using System.Diagnostics;
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
+using Rocket.Surgery.Nuke.GithubActions;
 
-namespace Rocket.Surgery.Nuke.GithubActions;
+#pragma warning disable RS0026, RS0027
+
+namespace Rocket.Surgery.Nuke.Jobs;
 
 /// <summary>
 /// Adds close milestone support to the build
@@ -16,35 +19,39 @@ public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribu
 {
     private readonly string _secretKey;
     private readonly string _triggeringWorkflow;
+    private readonly GithubActionCondition _nugetOrgCondition;
     private readonly ImmutableArray<string> _includeBranches;
 
     /// <summary>
     /// Adds draft release support to the build
     /// </summary>
-    public PublishNugetPackagesJobAttribute(string secretKey, string triggeringWorkflow, string[]? includeBranches = null) : base("publish-nuget", GitHubActionsImage.UbuntuLatest)
+    public PublishNugetPackagesJobAttribute(string secretKey, string triggeringWorkflow, string[]? includeBranches = null, string? nugetOrgCondition = null) : base("publish-nuget", GitHubActionsImage.UbuntuLatest)
     {
         _secretKey = secretKey;
         _triggeringWorkflow = triggeringWorkflow;
+        _nugetOrgCondition = nugetOrgCondition ?? "startsWith(github.ref, 'refs/tags/')";
         _includeBranches = [.. includeBranches ?? ["master", "main"]];
     }
 
     /// <summary>
     /// Adds draft release support to the build
     /// </summary>
-    public PublishNugetPackagesJobAttribute(string secretKey, string triggeringWorkflow, string[] includeBranches, string image, params string[] images) : base("publish-nuget", image, images)
+    public PublishNugetPackagesJobAttribute(string secretKey, string triggeringWorkflow, string[] includeBranches, string? nugetOrgCondition, string image, params string[] images) : base("publish-nuget", image, images)
     {
         _secretKey = secretKey;
         _triggeringWorkflow = triggeringWorkflow;
+        _nugetOrgCondition = nugetOrgCondition ?? "startsWith(github.ref, 'refs/tags/')";
         _includeBranches = [.. includeBranches];
     }
 
     /// <summary>
     /// Adds draft release support to the build
     /// </summary>
-    public PublishNugetPackagesJobAttribute(string secretKey, string triggeringWorkflow, GitHubActionsImage image, string[]? includeBranches = null) : base("publish-nuget", image)
+    public PublishNugetPackagesJobAttribute(string secretKey, string triggeringWorkflow, GitHubActionsImage image, string[]? includeBranches = null, string? nugetOrgCondition = null) : base("publish-nuget", image)
     {
         _secretKey = secretKey;
         _triggeringWorkflow = triggeringWorkflow;
+        _nugetOrgCondition = nugetOrgCondition ?? "startsWith(github.ref, 'refs/tags/')";
         _includeBranches = [.. includeBranches ?? ["master", "main"]];
     }
 
@@ -88,7 +95,7 @@ public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribu
                     },
                     new RunStep("nuget.org")
                     {
-                        If = "startsWith(github.ref, 'refs/tags/')",
+                        If = _nugetOrgCondition,
                         Shell = "pwsh",
                         Environment =
                         {

@@ -17,6 +17,23 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
 {
     private static Matcher? jbMatcher;
     private static Matcher? dnfMatcher;
+    private static readonly HashSet<string> _dotNetFormatIncludedDiagnostics = new(StringComparer.OrdinalIgnoreCase);
+
+    private static readonly HashSet<string> _dotNetFormatExcludedDiagnostics = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "RCS1060",
+        "RCS1110",
+        "RCS1250",
+        "RCS1163",
+        "CS1591",
+        "CS0108",
+        "CS0246",
+        "IDE1006",
+        "RCS1175",
+        "IDE0052",
+        "RCS1246",
+        "RCS1112"
+    };
 
     /// <summary>
     ///     The default severity to use for DotNetFormat
@@ -31,26 +48,12 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
     /// <summary>
     ///     A list of diagnostic ids to exclude from the dotnet format
     /// </summary>
-    public ImmutableArray<string> DotNetFormatExcludedDiagnostics =>
-    [
-        "RCS1060",
-        "RCS1110",
-        "RCS1250",
-        "RCS1163",
-        "CS1591",
-        "CS0108",
-        "CS0246",
-        "IDE1006",
-        "RCS1175",
-        "IDE0052",
-        "RCS1246",
-        "RCS1112",
-    ];
+    public HashSet<string> DotNetFormatExcludedDiagnostics => _dotNetFormatExcludedDiagnostics;
 
     /// <summary>
     ///     A list of diagnostic ids to include in the dotnet format
     /// </summary>
-    public ImmutableArray<string>? DotNetFormatIncludedDiagnostics => null;
+    public HashSet<string>? DotNetFormatIncludedDiagnostics => _dotNetFormatIncludedDiagnostics;
 
     /// <summary>
     ///     The dotnet format target
@@ -64,23 +67,25 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                          .Executes(
                                               () =>
                                               {
-
                                                   var formatSettings = new DotNetFormatSettings()
                                                                       .SetSeverity(DotNetFormatSeverity)
                                                                       .SetVerbosity(Verbosity.MapVerbosity(DotNetVerbosity.normal))
                                                                       .EnableNoRestore()
                                                                       .SetBinaryLog(LogsDirectory / "dotnet-format.binlog")
+                                                      ;
 
-                                                                       ;
-
-                                                  if (DotNetFormatIncludedDiagnostics is { Length: > 0 })
+                                                  if (DotNetFormatIncludedDiagnostics is { Count: > 0 })
                                                   {
-                                                      formatSettings = formatSettings.SetProcessAdditionalArguments(["--diagnostics", .. DotNetFormatIncludedDiagnostics.Value]);
+                                                      formatSettings = formatSettings.SetProcessAdditionalArguments(
+                                                          ["--diagnostics", .. DotNetFormatIncludedDiagnostics]
+                                                      );
                                                   }
 
-                                                  if (DotNetFormatExcludedDiagnostics is { Length: > 0 })
+                                                  if (DotNetFormatExcludedDiagnostics is { Count: > 0 })
                                                   {
-                                                      formatSettings = formatSettings.SetProcessAdditionalArguments(["--exclude-diagnostics", .. DotNetFormatExcludedDiagnostics]);
+                                                      formatSettings = formatSettings.SetProcessAdditionalArguments(
+                                                          ["--exclude-diagnostics", .. DotNetFormatExcludedDiagnostics]
+                                                      );
                                                   }
 
                                                   if (LintPaths.Glob(DotnetFormatMatcher) is { Count: > 0 } values)

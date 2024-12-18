@@ -64,10 +64,6 @@ jobs:
         uses: gittools/actions/gitversion/setup@v3.1.1
         with:
           versionSpec: '6.1.0'
-      - name: 📲 Install GitReleaseManager
-        uses: gittools/actions/gitreleasemanager/setup@v3.1.1
-        with:
-          versionSpec: '0.18.0'
       - name: 🔨 Use GitVersion
         id: gitversion
         uses: gittools/actions/gitversion/execute@v3.1.1
@@ -89,8 +85,11 @@ jobs:
         with:
           allowUpdates: 'true'
           generateReleaseNotes: 'true'
+          updateOnlyUnreleased: 'true'
           draft: 'true'
+          omitBodyDuringUpdate: 'true'
           omitNameDuringUpdate: 'true'
+          omitDraftDuringUpdate: 'true'
           name: 'v${{ steps.gitversion.outputs.majorMinorPatch }}'
           tag: 'v${{ steps.gitversion.outputs.majorMinorPatch }}'
           token: '${{ secrets.RSG_BOT_TOKEN }}'
