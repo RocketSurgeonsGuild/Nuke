@@ -11,7 +11,6 @@ public interface ICanTestWithDotNetCore : IHaveBuildTarget,
     ITriggerCodeCoverageReports,
     IComprehendTests,
     IHaveGitVersion,
-    IHaveSolution,
     IHaveConfiguration,
     IHaveOutputLogs,
     ICan
@@ -66,7 +65,8 @@ public interface ICanTestWithDotNetCore : IHaveBuildTarget,
                                                             )
                                                            .RemoveLoggers()
                                                            .GetProcessArguments()
-                                                    ).RenderForExecution()}",
+                                                    )
+                                                   .RenderForExecution()}",
                                                  RootDirectory
                                              )
                                          );
