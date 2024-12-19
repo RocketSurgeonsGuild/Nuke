@@ -40,47 +40,48 @@ internal class ResolvedToolsManifest
         // ReSharper restore TemplateIsNotCompileTimeConstantProblem
     }
 
+    private static Tool CreateHandler(string command) => (arguments, directory, variables, timeout, output, invocation, logger, handler) =>
+                                                         {
+                                                             var newArgs = new ArgumentStringHandler();
+                                                             newArgs.AppendLiteral(command);
+                                                             newArgs.AppendLiteral(" ");
+                                                             newArgs.AppendLiteral(arguments.ToStringAndClear().TrimMatchingDoubleQuotes());
+                                                             arguments.AppendLiteral(
+                                                                 newArgs.ToStringAndClear().TrimMatchingDoubleQuotes().Replace("\\\"", "\"")
+                                                             );
+                                                             return DotNetTasks.DotNet(
+                                                                 arguments,
+                                                                 directory,
+                                                                 variables,
+                                                                 timeout,
+                                                                 output,
+                                                                 invocation,
+                                                                 // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
+                                                                 logger ?? DefaultLogger,
+                                                                 process =>
+                                                                 {
+                                                                     if (handler is null)
+                                                                     {
+                                                                         return process.AssertZeroExitCode();
+                                                                     }
+
+                                                                     handler.Invoke(process);
+                                                                     return process;
+                                                                 }
+                                                             );
+                                                         };
+
     public bool IsInstalled(string commandName) => commandDefinitions.ContainsKey(commandName) || toolDefinitions.ContainsKey(commandName);
 
-    public ToolDefinition GetToolDefinition(string nugetPackageName) => ( toolDefinitions.TryGetValue(nugetPackageName, out var tool) )
+    public ToolDefinition GetToolDefinition(string nugetPackageName) => toolDefinitions.TryGetValue(nugetPackageName, out var tool)
         ? tool
         : throw new InvalidOperationException($"Tool {nugetPackageName} is not installed");
 
-    public Tool GetTool(string nugetPackageName) => ( toolDefinitions.TryGetValue(nugetPackageName, out var tool) )
+    public Tool GetTool(string nugetPackageName) => toolDefinitions.TryGetValue(nugetPackageName, out var tool)
         ? CreateHandler(tool.Commands.First())
-        : ( commandDefinitions.TryGetValue(nugetPackageName, out var command) )
+        : commandDefinitions.TryGetValue(nugetPackageName, out var command)
             ? CreateHandler(command.Command)
             : throw new InvalidOperationException($"Tool {nugetPackageName} is not installed");
 
     public Tool GetProperTool(string nugetPackageName) => GetTool(nugetPackageName);
-
-    private static Tool CreateHandler(string command) => (arguments, directory, variables, timeout, output, invocation, logger, handler) =>
-                                                                     {
-                                                                         var newArgs = new ArgumentStringHandler();
-                                                                         newArgs.AppendLiteral(command);
-                                                                         newArgs.AppendLiteral(" ");
-                                                                         newArgs.AppendLiteral(arguments.ToStringAndClear().TrimMatchingDoubleQuotes());
-                                                                         arguments.AppendLiteral(newArgs.ToStringAndClear());
-                                                                         return DotNetTasks.DotNet(
-                                                                             arguments,
-                                                                             directory,
-                                                                             variables,
-                                                                             timeout,
-                                                                             output,
-                                                                             invocation,
-                                                                             // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-                                                                             logger ?? DefaultLogger,
-                                                                             process =>
-                                                                             {
-                                                                                 if (handler is null)
-                                                                                 {
-                                                                                     return process.AssertZeroExitCode();
-                                                                                 }
-
-                                                                                 handler.Invoke(process);
-                                                                                 return process;
-
-                                                                             }
-                                                                         );
-                                                                     };
 }
