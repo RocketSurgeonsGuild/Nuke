@@ -1,7 +1,6 @@
 using System.Reflection;
 using Nuke.Common.CI;
 using Nuke.Common.IO;
-using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Serilog;
 
@@ -19,6 +18,7 @@ public interface ICanRegenerateBuildConfiguration : ICanLint
     public Target RegenerateBuildConfigurations =>
         t => t
             .TriggeredBy<ICanLint>(static z => z.Lint)
+            .TryAfter<ICanLint>(static z => z.PostLint)
             .Executes(
                  () =>
                  {
@@ -40,7 +40,7 @@ public interface ICanRegenerateBuildConfiguration : ICanLint
 
                          Log.Logger.Information("Regenerating {HostName} configuration id {Name}", host.HostName, host.Id);
 
-                         DotNetTasks.DotNet(
+                         _ = DotNetTasks.DotNet(
                              args.RenderForExecution(),
                              RootDirectory,
                              EnvironmentInfo.Variables.AddIfMissing("NUKE_INTERNAL_INTERCEPTOR", "1"),
