@@ -32,6 +32,7 @@ public interface IGenerateCodeCoverageSummary : ITriggerCodeCoverageReports, IGe
                                                                   .SetReportTypes(
                                                                        ReportTypes.HtmlSummary,
                                                                        ReportTypes.TextSummary,
+                                                                       ReportTypes.LatexSummary,
                                                                        ReportTypes.MarkdownSummary,
                                                                        ReportTypes.MarkdownSummaryGithub
                                                                    )

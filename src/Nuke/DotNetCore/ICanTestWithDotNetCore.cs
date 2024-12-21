@@ -46,8 +46,8 @@ public interface ICanTestWithDotNetCore : IHaveBuildTarget,
                                                  $"{new Arguments()
                                                    .Add("collect")
                                                    .Add("--settings {value}", RunSettings)
-                                                   .Add("--output {value}", TestResultsDirectory / "test.cobertura.xml")
-                                                   .Add("--output-format {value}", "cobertura")
+                                                   .Add("--output {value}", TestResultsDirectory / "test.coverage")
+                                                   .Add("--output-format {value}", "coverage")
                                                    .Add("--")
                                                    .Add("dotnet")
                                                    .Concatenate(
