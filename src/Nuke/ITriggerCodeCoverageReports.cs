@@ -1,6 +1,5 @@
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
-using Nuke.Common.Tools.DotCover;
 using Nuke.Common.Tools.ReportGenerator;
 using Rocket.Surgery.Nuke.ProjectModel;
 
@@ -38,7 +37,7 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                              .Executes(
                                                   () =>
                                                   {
-                                                      ReportGeneratorTasks.ReportGenerator(
+                                                      _ = ReportGeneratorTasks.ReportGenerator(
                                                           settings => Defaults(settings)
                                                                      .SetTargetDirectory(CoverageDirectory.CreateOrCleanDirectory())
                                                                      .AddReportTypes(

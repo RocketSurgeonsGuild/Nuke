@@ -28,7 +28,7 @@ public interface IGenerateCodeCoverageBadges : ITriggerCodeCoverageReports, IGen
                                                     .Executes(
                                                          () => ReportGeneratorTasks.ReportGenerator(
                                                              s => Defaults(s)
-                                                                 .SetReportTypes(ReportTypes.Badges)
+                                                                .SetReportTypes(ReportTypes.Badges)
                                                          )
                                                      );
 }
