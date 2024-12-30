@@ -13,8 +13,30 @@ namespace Rocket.Surgery.Nuke.Jobs;
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Class)]
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public sealed class DraftReleaseJobAttribute() : GitHubActionsStepsAttribute("draft-release", GitHubActionsImage.UbuntuLatest)
+public sealed class DraftReleaseJobAttribute : GitHubActionsStepsAttribute
 {
+    /// <summary>
+    /// Adds draft release support to the build
+    /// </summary>
+    public DraftReleaseJobAttribute() : base("draft-release", GitHubActionsImage.UbuntuLatest)
+    {
+        AutoGenerate = false;
+    }
+    /// <summary>
+    /// Adds draft release support to the build
+    /// </summary>
+    public DraftReleaseJobAttribute(string image, params string[] images) : base("draft-release", image, images)
+    {
+        AutoGenerate = false;
+    }
+    /// <summary>
+    /// Adds draft release support to the build
+    /// </summary>
+    public DraftReleaseJobAttribute(GitHubActionsImage image) : base("draft-release", image)
+    {
+        AutoGenerate = false;
+    }
+
     private string DebuggerDisplay => ToString();
 
     /// <inheritdoc />
@@ -62,7 +84,7 @@ public sealed class DraftReleaseJobAttribute() : GitHubActionsStepsAttribute("dr
                         ["name"] = "v${{ steps.gitversion.outputs.majorMinorPatch }}",
                         ["tag"] = "v${{ steps.gitversion.outputs.majorMinorPatch }}",
                         ["token"] = "${{ secrets.RSG_BOT_TOKEN }}",
-                        ["commit"] = "${{ github.base_ref }}"
+                        ["commit"] = "${{ github.base_ref }}",
                     },
                 }
             ]

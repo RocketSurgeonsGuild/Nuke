@@ -17,17 +17,26 @@ public sealed class CloseMilestoneJobAttribute : GitHubActionsStepsAttribute
     /// <summary>
     /// Adds draft release support to the build
     /// </summary>
-    public CloseMilestoneJobAttribute() : base("close-milestone", GitHubActionsImage.UbuntuLatest) { }
+    public CloseMilestoneJobAttribute() : base("close-milestone", GitHubActionsImage.UbuntuLatest)
+    {
+        AutoGenerate = false;
+    }
 
     /// <summary>
     /// Adds draft release support to the build
     /// </summary>
-    public CloseMilestoneJobAttribute(string image, params string[] images) : base("close-milestone", image, images) { }
+    public CloseMilestoneJobAttribute(string image, params string[] images) : base("close-milestone", image, images)
+    {
+        AutoGenerate = false;
+    }
 
     /// <summary>
     /// Adds draft release support to the build
     /// </summary>
-    public CloseMilestoneJobAttribute(GitHubActionsImage image) : base("close-milestone", image) { }
+    public CloseMilestoneJobAttribute(GitHubActionsImage image) : base("close-milestone", image)
+    {
+        AutoGenerate = false;
+    }
 
     private string DebuggerDisplay => ToString();
 
@@ -69,7 +78,7 @@ public sealed class CloseMilestoneJobAttribute : GitHubActionsStepsAttribute
                         $parts = $ENV:GITHUB_REPOSITORY.Split('/')
                         echo "::set-output name=owner::$($parts[0])"
                         echo "::set-output name=repository::$($parts[1])"
-                        """
+                        """,
                 },
                 new RunStep("Close Milestone")
                 {
@@ -81,7 +90,7 @@ public sealed class CloseMilestoneJobAttribute : GitHubActionsStepsAttribute
                             -r "${{ steps.repository.outputs.repository }}" `
                             --token "${{ secrets.GITHUB_TOKEN }}" `
                             -m "v${{ steps.gitversion.outputs.majorMinorPatch }}"
-                        """
+                        """,
                 }
             ]
         );

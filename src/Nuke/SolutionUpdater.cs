@@ -71,7 +71,7 @@ internal static class SolutionUpdater
                 continue;
             }
 
-            _ = solution.AddProject(
+            solution.AddProject(
                 project.NameWithoutExtension,
                 ProjectType.CSharpProject.FirstGuid,
                 project,
@@ -91,7 +91,7 @@ internal static class SolutionUpdater
         foreach (( var project, var key ) in projects)
         {
             Log.Logger.Information("Removing {Key} from {Project} configuration", key, project.Name);
-            _ = project.Configurations.Remove(key);
+            project.Configurations.Remove(key);
         }
     }
 
@@ -109,7 +109,7 @@ internal static class SolutionUpdater
         {
             done = true;
             Log.Logger.Information("Removing {ItemPath} from {Folder}", GetItemRelativePath(folder, itemPath), GetSolutionFolderPath(folder));
-            _ = folder.Items.Remove(itemPath);
+            folder.Items.Remove(itemPath);
         }
 
         var itemKeysToRemove = solution
@@ -126,7 +126,7 @@ internal static class SolutionUpdater
         {
             done = true;
             Log.Logger.Information("Removing {ItemPath} from {Folder}", GetItemRelativePath(folder, itemPath), GetSolutionFolderPath(folder));
-            _ = folder.Items.Remove(itemPath);
+            folder.Items.Remove(itemPath);
         }
 
         var emptyFoldersToRemove = solution
@@ -137,7 +137,7 @@ internal static class SolutionUpdater
         {
             done = true;
             Log.Logger.Information("Removing {Folder}", GetSolutionFolderPath(folder));
-            _ = solution.RemoveSolutionFolder(folder);
+            solution.RemoveSolutionFolder(folder);
         }
 
         return done;
@@ -177,7 +177,7 @@ internal static class SolutionUpdater
         {
             foreach (var item in folder.Items.ToArray())
             {
-                _ = folder.Items.Remove(item.Key);
+                folder.Items.Remove(item.Key);
                 folder.Items.Add(toSolutionPath(item.Key), toSolutionPath(item.Value));
             }
         }

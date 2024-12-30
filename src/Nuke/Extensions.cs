@@ -110,6 +110,11 @@ public static class Extensions
     public static bool DisableNet9MsBuildFix { get; set; }
 
     /// <summary>
+    ///     allow disabling the temporary fix for net9 msbuild issues
+    /// </summary>
+    public static bool EnableNet9MsBuildFix { get; set; }
+
+    /// <summary>
     ///     temporary fix for net9 msbuild issues
     /// </summary>
     /// <param name="target"></param>

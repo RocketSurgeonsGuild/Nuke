@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Runtime.InteropServices;
 using Microsoft.Extensions.FileSystemGlobbing;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
@@ -43,29 +44,35 @@ public interface ICanPrettier : ICanLint
                             .AssertZeroExitCode();
                      }
 
-                     return ProcessTasks
-                           .StartProcess(
-                                ToolPathResolver.GetPathExecutable("npm"),
-                                args.RenderForExecution(),
-                                RootDirectory,
-                                logOutput: true,
-                                // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-                                logger: static (t, s) => Log.Write(t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information, s),
-                                logInvocation: Verbosity == Verbosity.Verbose
-                            )
-                           .AssertWaitForExit()
-                           .AssertZeroExitCode();
+                     foreach (var group in args)
+                     {
+                         ProcessTasks.StartProcess(
+                                          ToolPathResolver.GetPathExecutable("npm"),
+                                          group.RenderForExecution(),
+                                          RootDirectory,
+                                          logOutput: true,
+                                          // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
+                                          logger: static (t, s) => Log.Write(t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information, s),
+                                          logInvocation: Verbosity == Verbosity.Verbose
+                                      )
+                                     .AssertWaitForExit()
+                                     .AssertZeroExitCode();
+                     }
 
-                     static Arguments makeArgsForStagedFiles(ImmutableList<RelativePath> values)
+                     static IEnumerable<Arguments> makeArgsForStagedFiles(ImmutableList<RelativePath> values)
                      {
                          var args = new Arguments().Concatenate(_prettierBaseArgs);
-                         return values.Count == 0
-                             ? args
-                              .Add("--write")
-                              .Add(".")
-                             : args
-                              .Add("--write")
-                              .Add("{value}", values, ' ');
+                         if (values.Count == 0)
+                         {
+                             yield return args.Add("--write").Add(".");
+                             yield break;
+                         }
+
+                         foreach (var paths in PathGrouper.GroupPaths(values))
+                         {
+                             yield return args.Add("--write").Add("{value}", paths, ' ');
+                             args = new Arguments().Concatenate(_prettierBaseArgs);
+                         }
                      }
                  }
              );
@@ -89,3 +96,4 @@ public interface ICanPrettier : ICanLint
                                                  .AddInclude("**/*.css")
                                                  .AddInclude("**/*.scss");
 }
+

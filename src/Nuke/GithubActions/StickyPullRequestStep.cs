@@ -83,7 +83,7 @@ public class StickyPullRequestStep : UsingStep
     public override void Write(CustomFileWriter writer)
     {
         WithProperties(x => x.Kebaberize());
-        _ = ( (IDictionary<string, string>)With ).AddIfMissing("GITHUB_TOKEN", GithubToken ?? "${{ secrets.GITHUB_TOKEN }}");
+        ( (IDictionary<string, string>)With ).AddIfMissing("GITHUB_TOKEN", GithubToken ?? "${{ secrets.GITHUB_TOKEN }}");
         base.Write(writer);
     }
 }

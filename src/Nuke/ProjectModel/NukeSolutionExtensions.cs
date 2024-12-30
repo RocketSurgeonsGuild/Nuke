@@ -50,7 +50,7 @@ public static class NukeSolutionExtensions
 
         static void triggerAssemblyResolution()
         {
-            _ = new ProjectCollection();
+            new ProjectCollection();
         }
     }
 

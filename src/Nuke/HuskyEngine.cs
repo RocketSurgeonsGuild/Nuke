@@ -35,6 +35,6 @@ internal class HuskyEngine : IGitHooksEngine
             return;
         }
 
-        _ = DotNetTool.GetTool("husky")("install");
+        DotNetTool.GetTool("husky")("install");
     }
 }

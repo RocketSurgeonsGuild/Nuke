@@ -88,7 +88,7 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
             Group = "lint-${{ github.event.pull_request.number }}",
         };
 
-        _ = buildJob
+        buildJob
            .ConfigureStep<CheckoutStep>(
                 step =>
                 {

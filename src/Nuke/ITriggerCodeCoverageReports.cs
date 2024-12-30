@@ -42,7 +42,7 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                           return;
                                                       }
 
-                                                      _ = ReportGeneratorTasks.ReportGenerator(
+                                                      ReportGeneratorTasks.ReportGenerator(
                                                           settings => settings
                                                                      .SetReports(files)
                                                                      .SetSourceDirectories(NukeBuild.RootDirectory)
@@ -57,7 +57,7 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                                       )
                                                       );
 
-                                                      _ = ( CoverageDirectory / "Cobertura.xml" ).Move(
+                                                      ( CoverageDirectory / "Cobertura.xml" ).Move(
                                                           CoverageDirectory / "test.cobertura.xml",
                                                           ExistsPolicy.FileOverwriteIfNewer
                                                       );
@@ -79,7 +79,7 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                                   () =>
                                                                   {
                                                                       // var toolPath = ToolPathResolver.GetPackageExecutable("ReportGenerator", "ReportGenerator.dll", framework: "netcoreapp3.0");
-                                                                      _ = ReportGeneratorTasks.ReportGenerator(
+                                                                      ReportGeneratorTasks.ReportGenerator(
                                                                           s => Defaults(s)
                                                                               .SetTargetDirectory(CoverageDirectory)
                                                                               .SetReportTypes(ReportTypes.Cobertura)

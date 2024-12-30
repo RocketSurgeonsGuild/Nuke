@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using LibGit2Sharp;
 using Microsoft.Extensions.FileSystemGlobbing;
 using Nuke.Common.CI.GitHubActions;
@@ -19,11 +20,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
     {
         foreach (var item in patch)
         {
-            var result = item switch
-            {
-                { Status: ChangeKind.Added or ChangeKind.Modified or ChangeKind.Renamed or ChangeKind.Copied } => item.Path,
-                _ => null,
-            };
+            var result = item switch { { Status: ChangeKind.Added or ChangeKind.Modified or ChangeKind.Renamed or ChangeKind.Copied } => item.Path, _ => null };
             if (string.IsNullOrWhiteSpace(result))
             {
                 continue;
@@ -62,7 +59,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
             // Remove the non-common parts from the stack
             while (currentFolder.Count > commonPrefixLength)
             {
-                _ = currentFolder.Pop();
+                currentFolder.Pop();
             }
 
             // Add the new parts to the stack
@@ -83,7 +80,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
             }
 
             // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-            Log.Information($"{' '.Repeat(( currentFolder.Count > 0 ) ? 4 : 0)}📄 " + parts[^1]);
+            Log.Information($"{' '.Repeat(currentFolder.Count > 0 ? 4 : 0)}📄 " + parts[^1]);
         }
     }
 
@@ -143,12 +140,12 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
                      }
 
                      var tool = DotNetTool.GetTool("husky");
-                     _ = tool(
+                     tool(
                          "run --group lint",
                          logOutput: true,
                          logInvocation: Verbosity == Verbosity.Verbose,
                          // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-                         logger: static (t, s) => Log.Write(( t == OutputType.Err ) ? LogEventLevel.Error : LogEventLevel.Information, s)
+                         logger: static (t, s) => Log.Write(t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information, s)
                      );
                  }
              );
@@ -199,7 +196,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
     ///     The files to lint, if not given lints all files
     /// </summary>
     [Parameter("The files to lint, if not given lints all files", Separator = " ", Name = "lint-files")]
-    private string[] PrivateLintFiles => TryGetValue(() => PrivateLintFiles) ?? Array.Empty<string>();
+    private string[] PrivateLintFiles => TryGetValue(() => PrivateLintFiles) ?? [];
 
     private LintPaths ResolveLintPathsImpl()
     {
@@ -230,8 +227,6 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
             files.AddRange(stagedFiles);
         }
 
-        return ( files is { Count: > 0 } )
-            ? new(LintMatcher, trigger, message, files)
-            : new(LintMatcher, trigger, message, [] /*GitTasks.Git("ls-files", logOutput: false, logInvocation: false).Select(z => z.Text)*/);
+        return LintPaths.Create(LintMatcher, trigger, message, files is { Count: > 0 } ? files : ImmutableList<string>.Empty);
     }
 }

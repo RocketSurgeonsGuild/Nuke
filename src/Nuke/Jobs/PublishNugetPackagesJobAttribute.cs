@@ -1,8 +1,10 @@
 using System.Collections.Immutable;
 using System.Diagnostics;
+
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
+
 using Rocket.Surgery.Nuke.GithubActions;
 
 #pragma warning disable RS0026, RS0027
@@ -32,7 +34,8 @@ public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribu
         _secretKey = secretKey;
         _triggeringWorkflow = triggeringWorkflow;
         _nugetOrgCondition = nugetOrgCondition ?? _nugetOrgCondition;
-        _includeBranches = [.. includeBranches ?? Array.Empty<string>()];
+        _includeBranches = [.. includeBranches ?? []];
+        AutoGenerate = false;
     }
 
     /// <summary>
@@ -44,6 +47,7 @@ public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribu
         _triggeringWorkflow = triggeringWorkflow;
         _nugetOrgCondition = nugetOrgCondition ?? _nugetOrgCondition;
         _includeBranches = [.. includeBranches];
+        AutoGenerate = false;
     }
 
     /// <summary>
@@ -54,7 +58,8 @@ public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribu
         _secretKey = secretKey;
         _triggeringWorkflow = triggeringWorkflow;
         _nugetOrgCondition = nugetOrgCondition ?? _nugetOrgCondition;
-        _includeBranches = [.. includeBranches ?? Array.Empty<string>()];
+        _includeBranches = [.. includeBranches ?? []];
+        AutoGenerate = false;
     }
 
     private string DebuggerDisplay => ToString();
@@ -72,7 +77,7 @@ public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribu
                 Kind = RocketSurgeonGitHubActionsTrigger.WorkflowRun,
                 Types = ["completed"],
                 Workflows = [_triggeringWorkflow],
-                Branches = [.. _includeBranches]
+                Branches = [.. _includeBranches],
             }
         );
         build.Jobs.Add(
@@ -106,9 +111,9 @@ public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribu
                         Run = @"
                             dotnet nuget push **/*.nupkg  --skip-duplicate -s nuget.org --api-key $ENV:ApiKey
                             dotnet nuget push **/*.snupkg --skip-duplicate -s nuget.org --api-key $ENV:ApiKey
-                        "
+                        ",
                     },
-                ]
+                ],
             }
         );
 

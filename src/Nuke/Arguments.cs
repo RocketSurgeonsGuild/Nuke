@@ -1,4 +1,5 @@
 using System.Text;
+using Nuke.Common.Tooling;
 
 namespace Rocket.Surgery.Nuke;
 
@@ -188,7 +189,7 @@ public sealed class Arguments : IArguments
         {
             foreach (var argument in argumentPair.Value)
             {
-                _ = builder.AppendFormat(argumentPair.Key, Format(argument)).Append(Space);
+                builder.AppendFormat(argumentPair.Key, Format(argument)).Append(Space);
             }
         }
 
@@ -198,6 +199,14 @@ public sealed class Arguments : IArguments
     public string RenderForExecution() => Render(forOutput: false);
 
     public string RenderForOutput() => Render(forOutput: true);
+
+    public ArgumentStringHandler RenderForStringHandler()
+    {
+        var handler = new ArgumentStringHandler();
+        if (RenderForExecution() is { Length: > 0 } args)
+        handler.AppendLiteral(args);
+        return handler;
+    }
 
     public override string ToString() => RenderForOutput();
 }

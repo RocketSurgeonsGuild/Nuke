@@ -1,7 +1,9 @@
 using System.Diagnostics;
+
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
+
 using Rocket.Surgery.Nuke.GithubActions;
 
 namespace Rocket.Surgery.Nuke.Jobs;
@@ -12,8 +14,29 @@ namespace Rocket.Surgery.Nuke.Jobs;
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Class)]
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public sealed class UpdateMilestoneJobAttribute() : GitHubActionsStepsAttribute("update-milestone", GitHubActionsImage.UbuntuLatest)
+public sealed class UpdateMilestoneJobAttribute : GitHubActionsStepsAttribute
 {
+    /// <summary>
+    /// Adds update milestone support to the build
+    /// </summary>
+    public UpdateMilestoneJobAttribute() : base("update-milestone", GitHubActionsImage.UbuntuLatest) {
+        AutoGenerate = false;
+    }
+    /// <summary>
+    /// Adds update milestone support to the build
+    /// </summary>
+    public UpdateMilestoneJobAttribute(string image, params string[] images) : base("update-milestone", image, images)
+    {
+        AutoGenerate = false;
+    }
+    /// <summary>
+    /// Adds update milestone support to the build
+    /// </summary>
+    public UpdateMilestoneJobAttribute(GitHubActionsImage image) : base("update-milestone", image)
+    {
+        AutoGenerate = false;
+    }
+
     private string DebuggerDisplay => ToString();
 
     /// <inheritdoc />

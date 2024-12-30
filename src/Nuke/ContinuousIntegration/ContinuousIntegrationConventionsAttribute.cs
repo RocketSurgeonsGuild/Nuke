@@ -26,14 +26,14 @@ public partial class ContinuousIntegrationConventionsAttribute : BuildExtensionA
 //         && build is IGenerateCodeCoverageSummary codeCoverage
 //         && ( codeCoverage.CoverageSummaryDirectory / "Summary.md" ).FileExists())
 //        {
-//            _ = summary.TouchFile();
+//            summary.TouchFile();
 //            var coverageSummary = ( codeCoverage.CoverageSummaryDirectory / "Summary.md" ).ReadAllText();
 //            if (coverageSummary.IndexOf("|**Name**", StringComparison.Ordinal) is > -1 and var index)
 //            {
 //                coverageSummary = coverageSummary[..( index - 1 )];
 //            }
 //
-//            _ = summary.WriteAllText(coverageSummary + summary.ReadAllText().TrimStart());
+//            summary.WriteAllText(coverageSummary + summary.ReadAllText().TrimStart());
 //        }
     }
 

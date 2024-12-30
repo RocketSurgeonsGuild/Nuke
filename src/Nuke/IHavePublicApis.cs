@@ -71,8 +71,8 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                                 )
                                                                                .Add("--diagnostics {value}", "RS0016");
 
-                                                                _ = DotNetTasks.DotNet(
-                                                                    arguments.RenderForExecution(),
+                                                                DotNetTasks.DotNet(
+                                                                    arguments.RenderForStringHandler(),
                                                                     RootDirectory,
                                                                     logOutput: true,
                                                                     logInvocation: Verbosity == Verbosity.Verbose

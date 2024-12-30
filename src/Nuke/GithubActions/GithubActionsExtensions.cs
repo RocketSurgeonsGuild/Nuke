@@ -123,7 +123,7 @@ public static class GithubActionsExtensions
     public static RocketSurgeonsGithubActionsJob AddNuGetCache(this RocketSurgeonsGithubActionsJob job)
     {
         job.Environment["NUGET_PACKAGES"] = "${{ github.workspace }}/.nuget/packages";
-        _ = job.InsertAfterCheckOut(
+        job.InsertAfterCheckOut(
             new UsingStep("NuGet Cache")
             {
                 Uses = "actions/cache@v3",
@@ -147,7 +147,7 @@ public static class GithubActionsExtensions
     /// <returns></returns>
     public static RocketSurgeonsGithubActionsJob ConfigureForGitVersion(this RocketSurgeonsGithubActionsJob job)
     {
-        _ = job.InsertAfterCheckOut(new RunStep("Fetch all history for all tags and branches") { Run = "git fetch --prune" });
+        job.InsertAfterCheckOut(new RunStep("Fetch all history for all tags and branches") { Run = "git fetch --prune" });
         return job;
     }
 
@@ -162,7 +162,7 @@ public static class GithubActionsExtensions
         // fallback for projects not yet calling publish artifacts
         if (typeof(IHaveNuGetPackages).IsAssignableFrom(typeof(T)) && !job.InternalData.TryGetValue(typeof(IHaveNuGetPackages), out _))
         {
-            _ = AddStep(
+            AddStep(
                 job,
                 new UploadArtifactStep("Publish NuGet Packages")
                 {
@@ -176,7 +176,7 @@ public static class GithubActionsExtensions
 
         if (typeof(IGenerateDocFx).IsAssignableFrom(typeof(T)) && !job.InternalData.TryGetValue(typeof(IGenerateDocFx), out _))
         {
-            _ = AddStep(
+            AddStep(
                 job,
                 new UploadArtifactStep("Publish Documentation")
                 {
@@ -200,7 +200,7 @@ public static class GithubActionsExtensions
     {
         if (typeof(IHaveOutputLogs).IsAssignableFrom(typeof(T)))
         {
-            _ = AddStep(
+            AddStep(
                 job,
                 new UploadArtifactStep("Publish logs")
                 {
@@ -213,7 +213,7 @@ public static class GithubActionsExtensions
 
         if (typeof(IHaveTestArtifacts).IsAssignableFrom(typeof(T)))
         {
-            _ = AddStep(
+            AddStep(
                 job,
                 new UploadArtifactStep("Publish test data")
                 {
@@ -229,7 +229,7 @@ public static class GithubActionsExtensions
             job.Permissions.Contents = ( job.Permissions.Contents == GitHubActionsPermission.None ) ? GitHubActionsPermission.Read : job.Permissions.Contents;
             job.Permissions.Issues = ( job.Permissions.Issues == GitHubActionsPermission.None ) ? GitHubActionsPermission.Read : job.Permissions.Issues;
 
-            _ = AddStep(
+            AddStep(
                 job,
                 new UsingStep("Publish Test Results")
                 {
@@ -247,7 +247,7 @@ public static class GithubActionsExtensions
 
         if (typeof(IHaveCodeCoverage).IsAssignableFrom(typeof(T)))
         {
-            _ = AddStep(
+            AddStep(
                 job,
                 new UploadArtifactStep("Publish coverage data")
                 {
@@ -257,7 +257,7 @@ public static class GithubActionsExtensions
                 }
             );
 
-            _ = AddStep(
+            AddStep(
                 job,
                 new StickyPullRequestStep("Publish Coverage Comment")
                 {
@@ -270,7 +270,7 @@ public static class GithubActionsExtensions
 
             if (DotNetTool.IsInstalled("codecov.tool"))
             {
-                _ = AddStep(
+                AddStep(
                     job,
                     new UsingStep("Publish Codecov Coverage")
                     {
@@ -290,7 +290,7 @@ public static class GithubActionsExtensions
             }
         }
 
-        _ = PublishArtifacts<T>(job);
+        PublishArtifacts<T>(job);
 
         return job;
     }
@@ -323,7 +323,7 @@ public static class GithubActionsExtensions
     {
         foreach (var version in versions.Reverse())
         {
-            _ = job.UseDotNetSdk(version);
+            job.UseDotNetSdk(version);
         }
 
         return job;
@@ -339,7 +339,7 @@ public static class GithubActionsExtensions
     public static RocketSurgeonsGithubActionsJob UseDotNetSdk(this RocketSurgeonsGithubActionsJob job, string version, string? exactVersion = null)
     {
         exactVersion ??= version + ".x";
-        _ = job.InsertAfterCheckOut(new SetupDotNetStep($"Use .NET Core {version} SDK") { DotNetVersion = exactVersion });
+        job.InsertAfterCheckOut(new SetupDotNetStep($"Use .NET Core {version} SDK") { DotNetVersion = exactVersion });
         return job;
     }
 

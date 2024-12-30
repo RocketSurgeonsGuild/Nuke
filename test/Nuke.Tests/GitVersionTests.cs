@@ -17,6 +17,6 @@ public class GitVersionTests(ITestOutputHelper outputHelper) : AutoFakeTest<XUni
     {
         SetVariable("GITVERSION_SomeOtherValue", "someValue");
 
-        _ = ComputedGitVersionAttribute.HasGitVer().Should().BeTrue();
+        ComputedGitVersionAttribute.HasGitVer().Should().BeTrue();
     }
 }

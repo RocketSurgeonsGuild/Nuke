@@ -11,48 +11,66 @@ namespace Rocket.Surgery.Nuke;
 /// </summary>
 public class LintPaths
 {
-    private readonly Matcher _matcher;
-    private readonly ConditionalWeakTable<Matcher, ImmutableList<AbsolutePath>> _pathsCache = new();
-    private readonly ConditionalWeakTable<Matcher, ImmutableList<RelativePath>> _relativeCache = new();
     private readonly Lazy<LintPaths> _allPaths;
-    private readonly Lazy<ImmutableArray<AbsolutePath>> _paths;
+    private readonly Lazy<ImmutableList<AbsolutePath>> _paths;
+
+    /// <summary>
+    ///   Create a new lint paths container
+    /// </summary>
+    /// <param name="matcher"></param>
+    /// <param name="trigger"></param>
+    /// <param name="message"></param>
+    /// <param name="paths"></param>
+    /// <returns></returns>
+    public static LintPaths Create(Matcher matcher, LintTrigger trigger, string message, IEnumerable<string> paths) => new(
+        trigger,
+        message,
+        new(() => paths.Select(z => Path.IsPathRooted(z) ? (AbsolutePath)z : NukeBuild.RootDirectory / z).Match(matcher).ToImmutableList()),
+        CreateAllPaths(matcher, message)
+    );
+
+    /// <summary>
+    ///   Lint paths container
+    /// </summary>
+    /// <param name="matcher"></param>
+    /// <param name="trigger"></param>
+    /// <param name="message"></param>
+    /// <param name="paths"></param>
+    /// <returns></returns>
+    public static LintPaths Create(Matcher matcher, LintTrigger trigger, string message, IEnumerable<AbsolutePath> paths) =>
+        new(trigger, message, new(paths.ToImmutableList), CreateAllPaths(matcher, message));
+
+    private static Lazy<LintPaths> CreateAllPaths(Matcher matcher, string message) => new(
+        () =>
+        {
+            return new(
+                LintTrigger.None,
+                message,
+                new(
+                    () => GitTasks
+                         .Git("ls-files", NukeBuild.RootDirectory, logOutput: false, logInvocation: false)
+                         .Select(z => z.Text.Trim())
+                         .Select(z => Path.IsPathRooted(z) ? (AbsolutePath)z : NukeBuild.RootDirectory / z)
+                         .ToImmutableList()
+                ),
+                null
+            );
+        }
+    );
 
     /// <summary>
     ///     Lint paths container
     /// </summary>
-    /// <param name="matcher">The matcher to include / exclude files on a global level even ones that might be checked in</param>
     /// <param name="trigger"></param>
     /// <param name="message"></param>
     /// <param name="paths"></param>
-    public LintPaths(Matcher matcher, LintTrigger trigger, string message, IEnumerable<string> paths)
+    /// <param name="allPaths"></param>
+    private LintPaths(LintTrigger trigger, string message, Lazy<ImmutableList<AbsolutePath>> paths, Lazy<LintPaths>? allPaths)
     {
-        _matcher = matcher;
         Trigger = trigger;
         Message = message;
-
-        _paths = new(
-            () =>
-            [
-                ..paths
-                 .Select(z => z.Trim())
-                 .Select(z => Path.IsPathRooted(z) ? (AbsolutePath)z : NukeBuild.RootDirectory / z),
-            ]
-        );
-
-        _allPaths = new(
-            () =>
-            {
-                return new(
-                    _matcher,
-                    LintTrigger.None,
-                    Message,
-                    GitTasks
-                       .Git("ls-files", NukeBuild.RootDirectory, logOutput: false, logInvocation: false)
-                       .Select(z => z.Text.Trim())
-                       .Select(z => Path.IsPathRooted(z) ? z : (string)( NukeBuild.RootDirectory / z ))
-                );
-            }
-        );
+        _paths = paths;
+        _allPaths = allPaths ?? new Lazy<LintPaths>(() => new(LintTrigger.None, message, new(() => ImmutableList<AbsolutePath>.Empty), null));
     }
 
     /// <summary>
@@ -73,7 +91,7 @@ public class LintPaths
     /// <summary>
     ///     The filtered paths
     /// </summary>
-    public IEnumerable<AbsolutePath> Paths => _paths.Value.Match(_matcher);
+    public IEnumerable<AbsolutePath> Paths => _paths.Value;
 
     /// <summary>
     ///     All the paths
@@ -83,7 +101,7 @@ public class LintPaths
     /// <summary>
     ///     The relative paths
     /// </summary>
-    public IEnumerable<RelativePath> RelativePaths => _paths.Value.Match(_matcher).GetRelativePaths();
+    public IEnumerable<RelativePath> RelativePaths => _paths.Value.GetRelativePaths();
 
     /// <summary>
     ///     Determine if the task should run in the current context
@@ -102,7 +120,7 @@ public class LintPaths
     /// <returns></returns>
     public ImmutableList<RelativePath> Glob(Matcher matcher)
     {
-        return _relativeCache.GetValue(matcher, m => [.. _paths.Value.Match(m).GetRelativePaths()]);
+        return [.._paths.Value.Match(matcher).GetRelativePaths()];
     }
 
     /// <summary>
@@ -119,7 +137,7 @@ public class LintPaths
     /// <returns></returns>
     public ImmutableList<AbsolutePath> GlobAbsolute(Matcher matcher)
     {
-        return _pathsCache.GetValue(matcher, m => [.. _paths.Value.Match(m)]);
+        return [.._paths.Value.Match(matcher)];
     }
 
     /// <summary>
