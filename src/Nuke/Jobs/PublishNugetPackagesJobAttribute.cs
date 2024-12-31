@@ -1,9 +1,7 @@
 using System.Collections.Immutable;
-
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
-
 using Rocket.Surgery.Nuke.GithubActions;
 
 #pragma warning disable RS0026, RS0027

@@ -1,9 +1,7 @@
 using System.Collections;
 using System.Globalization;
 using System.Xml.Linq;
-
 using Nuke.Common.IO;
-
 using Serilog;
 
 // ReSharper disable once CheckNamespace
@@ -34,7 +32,7 @@ internal static class Plist
     /// <param name="path">The path to the plist.</param>
     /// <param name="value">The object to serialize.</param>
     public static void Serialize(AbsolutePath path, object value) => SerializeDocument(value)
-        .Save(path, SaveOptions.OmitDuplicateNamespaces);
+       .Save(path, SaveOptions.OmitDuplicateNamespaces);
 
     /// <summary>
     ///     Serializes the .plist file provided.
@@ -91,13 +89,13 @@ internal static class Plist
                     return new("integer", Convert.ToString(item, CultureInfo.InvariantCulture));
                 }
 
-            case bool when ( item as bool? ) == true:
+            case bool when item as bool? == true:
                 {
                     Log.Verbose("boolean: {Boolean}", item);
                     return new("true");
                 }
 
-            case bool when ( item as bool? ) == false:
+            case bool when item as bool? == false:
                 {
                     Log.Verbose("boolean: {Boolean}", item);
                     return new("false");
@@ -203,9 +201,9 @@ internal static class Plist
                         var key = inner[idx];
                         if (key.Name.LocalName != "key")
                         {
-#pragma warning disable CA2201
+                            #pragma warning disable CA2201
                             throw new("Even items need to be keys");
-#pragma warning restore CA2201
+                            #pragma warning restore CA2201
                         }
 
                         idx++;

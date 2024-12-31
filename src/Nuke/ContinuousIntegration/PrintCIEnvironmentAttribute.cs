@@ -4,7 +4,6 @@ using Nuke.Common.CI.GitLab;
 using Nuke.Common.CI.TeamCity;
 using Nuke.Common.Execution;
 using Nuke.Common.Utilities.Collections;
-
 using Serilog;
 
 // ReSharper disable InconsistentNaming

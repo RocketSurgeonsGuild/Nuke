@@ -1,5 +1,4 @@
 using Nuke.Common.Execution;
-
 using Serilog;
 
 // ReSharper disable SuspiciousTypeConversion.Global
@@ -20,7 +19,7 @@ public sealed class PrintBuildVersionAttribute : BuildExtensionAttributeBase, IO
         IReadOnlyCollection<ExecutableTarget> executionPlan
     )
     {
-        if (!( Build is IHaveGitVersion gitVersion and IHaveSolution solution and IHaveConfiguration configuration ))
+        if (Build is not (IHaveGitVersion gitVersion and IHaveSolution solution and IHaveConfiguration configuration))
         {
             return;
         }

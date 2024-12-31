@@ -1,9 +1,7 @@
 using System.Reflection;
-
 using Nuke.Common.CI;
 using Nuke.Common.IO;
 using Nuke.Common.Tools.DotNet;
-
 using Serilog;
 
 namespace Rocket.Surgery.Nuke;

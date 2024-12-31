@@ -13,6 +13,7 @@ public static partial class StringExtensions
     /// <param name="input">The input string.</param>
     /// <returns>The string with no alpha characters.</returns>
     public static string RemoveAlphaCharacters(this string input) => MyRegex().Replace(input, "");
+
     [GeneratedRegex("[^0-9.]")]
     private static partial Regex MyRegex();
 }

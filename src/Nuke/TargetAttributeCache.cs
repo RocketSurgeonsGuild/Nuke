@@ -2,7 +2,6 @@ using System.Collections.Frozen;
 using System.Collections.Immutable;
 using System.Reflection;
 using System.Text.Json;
-
 using Nuke.Common.IO;
 
 namespace Rocket.Surgery.Nuke;
@@ -28,7 +27,7 @@ internal static class TargetAttributeCache
     private static readonly FrozenDictionary<string, FrozenSet<string>> _cache = EnsureAttributeCacheIsUptoDate();
 
     private static FrozenDictionary<string, FrozenSet<string>> PopulateCacheFromDisk() => JsonSerializer.Deserialize<Dictionary<string, HashSet<string>>>(AttributeCache.ReadAllText())!
-        .ToFrozenDictionary(z => z.Key, z => z.Value.ToFrozenSet());
+                                                                                                        .ToFrozenDictionary(z => z.Key, z => z.Value.ToFrozenSet());
 
     private static ImmutableSortedDictionary<string, ImmutableArray<string>> PopulateCache()
     {
@@ -58,7 +57,7 @@ internal static class TargetAttributeCache
 
         return items
               .GroupBy(z => z.Key)
-              .Select(z => (z.Key, Targets: z.SelectMany(x => x.GetTargets()).Distinct().Order().ToImmutableArray()))
+              .Select(z => ( z.Key, Targets: z.SelectMany(x => x.GetTargets()).Distinct().Order().ToImmutableArray() ))
               .OrderBy(z => z.Key)
               .ToImmutableSortedDictionary(z => z.Key, z => z.Targets);
     }

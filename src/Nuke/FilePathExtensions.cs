@@ -1,5 +1,4 @@
 using System.Collections.Concurrent;
-
 using Nuke.Common.IO;
 
 namespace Rocket.Surgery.Nuke;

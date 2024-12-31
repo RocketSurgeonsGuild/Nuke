@@ -1,7 +1,5 @@
 using FluentAssertions;
-
 using Rocket.Surgery.Extensions.Testing;
-
 using Xunit;
 using Xunit.Abstractions;
 using static Nuke.Common.EnvironmentInfo;

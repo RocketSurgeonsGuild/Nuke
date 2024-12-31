@@ -1,7 +1,6 @@
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.ReportGenerator;
-
 using Rocket.Surgery.Nuke.ProjectModel;
 
 // ReSharper disable SuspiciousTypeConversion.Global
@@ -94,32 +93,32 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
     /// <returns></returns>
     protected ReportGeneratorSettings Defaults(ReportGeneratorSettings settings) =>
         ( this switch
-        {
-            IHaveGitVersion gitVersion => settings.SetTag(gitVersion.GitVersion.InformationalVersion),
-            IHaveGitRepository { GitRepository: { } } gitRepository => settings.SetTag(gitRepository.GitRepository.Head),
-            _ => settings,
-        }
-           )
-          .SetReports(InputReports)
-          .SetSourceDirectories(NukeBuild.RootDirectory)
-          .SetFramework(Constants.ReportGeneratorFramework)
-          // this is more or less a hack / compromise because
-          // I was unable to coverage to exclude everything in a given assembly by default.
-          .AddAssemblyFilters(
-               Solution
-                  .AnalyzeAllProjects()
-                  .Select(z => z.GetProperty("AssemblyName") ?? "")
-                  .Where(z => !string.IsNullOrWhiteSpace(z))
-                  .Distinct()
-                  .Select(z => "+" + z)
-           )
-          .AddAssemblyFilters(
-               Solution
-                  .AnalyzeAllProjects()
-                  .SelectMany(z => z.PackageReferences)
-                  .Select(z => z.Name)
-                  .Where(z => !string.IsNullOrWhiteSpace(z))
-                  .Distinct()
-                  .Select(z => "-" + z)
-           );
+          {
+              IHaveGitVersion gitVersion                              => settings.SetTag(gitVersion.GitVersion.InformationalVersion),
+              IHaveGitRepository { GitRepository: { } } gitRepository => settings.SetTag(gitRepository.GitRepository.Head),
+              _                                                       => settings,
+          }
+        )
+       .SetReports(InputReports)
+       .SetSourceDirectories(NukeBuild.RootDirectory)
+       .SetFramework(Constants.ReportGeneratorFramework)
+        // this is more or less a hack / compromise because
+        // I was unable to coverage to exclude everything in a given assembly by default.
+       .AddAssemblyFilters(
+            Solution
+               .AnalyzeAllProjects()
+               .Select(z => z.GetProperty("AssemblyName") ?? "")
+               .Where(z => !string.IsNullOrWhiteSpace(z))
+               .Distinct()
+               .Select(z => "+" + z)
+        )
+       .AddAssemblyFilters(
+            Solution
+               .AnalyzeAllProjects()
+               .SelectMany(z => z.PackageReferences)
+               .Select(z => z.Name)
+               .Where(z => !string.IsNullOrWhiteSpace(z))
+               .Distinct()
+               .Select(z => "-" + z)
+        );
 }

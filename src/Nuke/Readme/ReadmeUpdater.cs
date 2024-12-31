@@ -1,6 +1,5 @@
 using System.Dynamic;
 using System.Text.RegularExpressions;
-
 using YamlDotNet.Serialization;
 
 namespace Rocket.Surgery.Nuke.Readme;
@@ -11,6 +10,12 @@ namespace Rocket.Surgery.Nuke.Readme;
 [PublicAPI]
 public partial class ReadmeUpdater
 {
+    [GeneratedRegex("<!-- nuke-data(.*?)-->", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline, "en-US")]
+    private static partial Regex MyRegex();
+
+    [GeneratedRegex("<!-- (.*?) -->", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled, "")]
+    private static partial Regex MyRegex1();
+
     /// <summary>
     ///     Default constructor
     /// </summary>
@@ -75,15 +80,12 @@ public partial class ReadmeUpdater
         var match = nukeDataRegex.Match(content);
         var yaml = string.Join(Environment.NewLine, match.Groups.Cast<Group>().Skip(1).Select(x => x.Value));
         var d = new DeserializerBuilder()
-           // .WithNamingConvention(new CamelCaseNamingConvention())
+            // .WithNamingConvention(new CamelCaseNamingConvention())
            .Build();
         using var reader = new StringReader(yaml.Trim('\n', '\r'));
         var config = d.Deserialize<ExpandoObject>(reader);
 
-        var sectionRegex = new Regex(
-            "<!-- (.*?) -->",
-            RegexOptions.Multiline | RegexOptions.Compiled | RegexOptions.IgnoreCase
-        );
+        var sectionRegex = MyRegex1();
 
         var sections = sectionRegex.Matches(content);
 
@@ -101,8 +103,8 @@ public partial class ReadmeUpdater
             var sectionEnd = sectionMatch.Last().Captures[0];
             var newSectionContent = await section.Process(config, References, build);
             ranges.Add(
-                (sectionStart.Index + sectionStart.Length,
-                  sectionEnd.Index - ( sectionStart.Index + sectionStart.Length ), newSectionContent)
+                ( sectionStart.Index + sectionStart.Length,
+                  sectionEnd.Index - ( sectionStart.Index + sectionStart.Length ), newSectionContent )
             );
         }
 
@@ -118,7 +120,4 @@ public partial class ReadmeUpdater
 
         return content;
     }
-
-    [GeneratedRegex("<!-- nuke-data(.*?)-->", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline, "en-US")]
-    private static partial Regex MyRegex();
 }

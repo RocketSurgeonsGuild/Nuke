@@ -3,9 +3,7 @@ using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
-
 using Rocket.Surgery.Nuke.ProjectModel;
-
 using Serilog;
 using Serilog.Events;
 
@@ -123,11 +121,14 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                 await File.WriteAllTextAsync(unshippedFilePath, "#nullable enable");
                                                             }
 
-                                                            static async Task<List<string>> GetLines(AbsolutePath path) => path.FileExists()
-                                                                ? ( await File.ReadAllLinesAsync(path) )
-                                                                 .Where(z => z != "#nullable enable")
-                                                                 .ToList()
-                                                                : [];
+                                                            static async Task<List<string>> GetLines(AbsolutePath path)
+                                                            {
+                                                                return path.FileExists()
+                                                                    ? ( await File.ReadAllLinesAsync(path) )
+                                                                     .Where(z => z != "#nullable enable")
+                                                                     .ToList()
+                                                                    : [];
+                                                            }
                                                         }
                                                     );
 

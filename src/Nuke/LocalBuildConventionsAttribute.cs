@@ -1,5 +1,4 @@
 using Nuke.Common.Execution;
-
 using Serilog;
 
 namespace Rocket.Surgery.Nuke;
@@ -13,10 +12,10 @@ public sealed class LocalBuildConventionsAttribute : BuildExtensionAttributeBase
 {
     /// <inheritdoc />
     public void OnBuildCreated(IReadOnlyCollection<ExecutableTarget> executableTargets) => Log.Logger = new LoggerConfiguration()
-        .ConfigureEnricher()
-        .ConfigureConsole(null)
-        .ConfigureLevel()
-        .CreateLogger();
+                                                                                                       .ConfigureEnricher()
+                                                                                                       .ConfigureConsole(null)
+                                                                                                       .ConfigureLevel()
+                                                                                                       .CreateLogger();
 
     /// <inheritdoc />
     public void OnBuildFinished()

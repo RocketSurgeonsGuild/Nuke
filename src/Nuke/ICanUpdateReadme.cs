@@ -1,5 +1,4 @@
 using Nuke.Common.IO;
-
 using Rocket.Surgery.Nuke.Readme;
 
 namespace Rocket.Surgery.Nuke;

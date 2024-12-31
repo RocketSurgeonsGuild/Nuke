@@ -1,14 +1,10 @@
 using System.Collections.Immutable;
-
 using LibGit2Sharp;
-
 using Microsoft.Extensions.FileSystemGlobbing;
-
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.Git;
-
 using Serilog;
 using Serilog.Events;
 

@@ -1,8 +1,6 @@
 using System.Collections.Immutable;
 using System.Xml.Linq;
-
 using Nuke.Common.IO;
-
 using Rocket.Surgery.Nuke.DotNetCore;
 using Rocket.Surgery.Nuke.ProjectModel;
 
@@ -36,7 +34,7 @@ public static class TestMethodExtensions
                 await using var tempFile = File.Open(runsettings, runsettings.FileExists() ? FileMode.Truncate : FileMode.CreateNew);
                 await typeof(ICanTestWithDotNetCore)
                      .Assembly
-                     // ReSharper disable once NullableWarningSuppressionIsUsed
+                      // ReSharper disable once NullableWarningSuppressionIsUsed
                      .GetManifestResourceStream("Rocket.Surgery.Nuke.default.runsettings")!.CopyToAsync(tempFile);
             }
 
@@ -62,12 +60,12 @@ public static class TestMethodExtensions
                     build.IncludeModulePaths.Union(includeNames),
                     build.ExcludeModulePaths.Union(excludePackages)
                 ),
-                (build.IncludeAttributes, build.ExcludeAttributes),
-                (build.IncludeNamespaces, build.ExcludeNamespaces),
-                (build.IncludeSources, build.ExcludeSources)
+                ( build.IncludeAttributes, build.ExcludeAttributes ),
+                ( build.IncludeNamespaces, build.ExcludeNamespaces ),
+                ( build.IncludeSources, build.ExcludeSources )
             );
         }
-        );
+    );
 
     private static void ManageRunSettings<T>(
         T build,
@@ -81,9 +79,10 @@ public static class TestMethodExtensions
     {
         var doc = XDocument.Load(runsettingsPath);
 
-        var dataCollector = ( EnsureElement(doc.Root, "DataCollectionRunSettings")
+        var dataCollector = EnsureElement(doc.Root, "DataCollectionRunSettings")
                            .Element("DataCollectors")
-                          ?.Element("DataCollector") ) ?? throw new InvalidOperationException("DataCollector element is missing in the runsettings file.");
+                          ?.Element("DataCollector")
+         ?? throw new InvalidOperationException("DataCollector element is missing in the runsettings file.");
         var codeCoverage = EnsureElement(dataCollector, "Configuration")
            .Element("CodeCoverage");
 
@@ -110,13 +109,25 @@ public static class TestMethodExtensions
         static (IEnumerable<string> include, IEnumerable<string> exclude) transform(
             (IEnumerable<string> include, IEnumerable<string> exclude) attributes,
             Func<string, IEnumerable<string>> transformer
-        ) => (attributes.include.SelectMany(transformer), attributes.exclude.SelectMany(transformer));
+        )
+        {
+            return ( attributes.include.SelectMany(transformer), attributes.exclude.SelectMany(transformer) );
+        }
 
-        static IEnumerable<string> transformAttribute(string attr) => [$"^{attr.Replace(".", "\\.")}$"];
+        static IEnumerable<string> transformAttribute(string attr)
+        {
+            return [$"^{attr.Replace(".", "\\.")}$"];
+        }
 
-        static IEnumerable<string> transformModulePath(string ns) => [$".*{ns}"];
+        static IEnumerable<string> transformModulePath(string ns)
+        {
+            return [$".*{ns}"];
+        }
 
-        static IEnumerable<string> transformNamespace(string ns) => [$"^{ns.Replace(".", "\\.")}.*"];
+        static IEnumerable<string> transformNamespace(string ns)
+        {
+            return [$"^{ns.Replace(".", "\\.")}.*"];
+        }
     }
 
     private static XElement EnsureElement(XElement parent, string name)

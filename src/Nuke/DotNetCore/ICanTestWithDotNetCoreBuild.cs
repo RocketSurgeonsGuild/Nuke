@@ -54,7 +54,7 @@ public interface ICanTestWithDotNetCoreBuild : IHaveBuildTarget,
                                                         .Add("--")
                                                         .Add("dotnet")
                                                         .Concatenate(
-                                                              CustomizeDotNetTestSettings(
+                                                             CustomizeDotNetTestSettings(
                                                                      new DotNetTestSettings()
                                                                         .SetProcessWorkingDirectory(RootDirectory)
                                                                         .SetProjectFile(Solution)

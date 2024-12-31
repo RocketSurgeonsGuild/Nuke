@@ -1,6 +1,5 @@
 using Nuke.Common.Execution;
 using Nuke.Common.IO;
-
 using Serilog;
 using static Nuke.Common.IO.HttpTasks;
 
@@ -21,9 +20,10 @@ namespace Rocket.Surgery.Nuke;
 public class DownloadFileAttribute(string url, string filePath) : BuildExtensionAttributeBase, IOnBuildInitialized
 {
     private readonly string _url = url ?? throw new ArgumentNullException(nameof(url));
+
     private readonly AbsolutePath _filePath = filePath is null
-            ? throw new ArgumentNullException(nameof(filePath))
-            : NukeBuild.TemporaryDirectory / filePath;
+        ? throw new ArgumentNullException(nameof(filePath))
+        : NukeBuild.TemporaryDirectory / filePath;
 
     /// <summary>
     ///     The type of a given file to make logging look more specific

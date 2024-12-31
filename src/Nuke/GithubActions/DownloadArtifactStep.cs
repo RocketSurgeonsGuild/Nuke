@@ -54,9 +54,9 @@ public class DownloadArtifactStep : UsingStep
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
-#pragma warning disable CA1308
+        #pragma warning disable CA1308
         WithProperties(x => x.Kebaberize());
-#pragma warning restore CA1308
+        #pragma warning restore CA1308
         base.Write(writer);
     }
 

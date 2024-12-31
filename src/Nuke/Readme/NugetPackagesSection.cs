@@ -14,13 +14,13 @@ internal class NugetPackagesSection : IReadmeSection
     /// <returns></returns>
     public static string GetResult(IDictionary<string, object?> config, IMarkdownReferences references, string packageName)
     {
-#pragma warning disable CA1307, CA1308, CA5351
+        #pragma warning disable CA1307, CA1308, CA5351
         var hash = Convert
                   .ToBase64String(MD5.HashData(Encoding.ASCII.GetBytes(packageName)))
                   .Replace("=", "")
                    [10..]
                   .ToLowerInvariant();
-#pragma warning restore CA5351, CA1308, CA1307
+        #pragma warning restore CA5351, CA1308, CA1307
         var nugetUrlReference = references.AddReference($"nuget-{hash}", NugetUrl(packageName));
         var nugetVersionBadge = references.AddReference(
             $"nuget-version-{hash}-badge",

@@ -1,5 +1,4 @@
 using System.Xml.Linq;
-
 using Nuke.Common.IO;
 
 namespace Rocket.Surgery.Nuke;

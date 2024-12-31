@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-
 using Nuke.Common.CI.GitHubActions.Configuration;
 using Nuke.Common.Tooling;
 using Nuke.Common.Utilities.Collections;

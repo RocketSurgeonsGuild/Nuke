@@ -11,8 +11,6 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 public sealed class OnePasswordSecretAttribute(string name, string path) : TriggerValueAttribute(name)
 {
-    private string? secret;
-
     /// <summary>
     ///     The constructor for the <see cref="GitHubActionsSecretAttribute" />
     /// </summary>
@@ -51,11 +49,11 @@ public sealed class OnePasswordSecretAttribute(string name, string path) : Trigg
     /// </summary>
     public string? Secret
     {
-        get => secret;
+        get;
         set
         {
             UseServiceAccount = true;
-            secret = value;
+            field = value;
         }
     }
 
@@ -100,12 +98,12 @@ public sealed class OnePasswordSecretAttribute(string name, string path) : Trigg
             ConnectToken ?? "OP_CONNECT_TOKEN"
         )
         : new OnePasswordServiceAccountSecret(
-        Path,
-        Name,
-        Description,
-        Alias,
-        Variable,
-        Secret ?? "OP_SERVICE_ACCOUNT_TOKEN"
+            Path,
+            Name,
+            Description,
+            Alias,
+            Variable,
+            Secret ?? "OP_SERVICE_ACCOUNT_TOKEN"
         );
 
     /// <inheritdoc />

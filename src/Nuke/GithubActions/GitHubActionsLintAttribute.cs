@@ -1,5 +1,4 @@
 using System.Reflection;
-
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;

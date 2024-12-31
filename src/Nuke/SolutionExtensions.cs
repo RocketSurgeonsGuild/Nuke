@@ -1,5 +1,4 @@
 using Nuke.Common.ProjectModel;
-
 using Rocket.Surgery.Nuke.ProjectModel;
 
 namespace Rocket.Surgery.Nuke;
@@ -15,8 +14,8 @@ public static class SolutionExtensions
     /// <param name="solution">The solution.</param>
     /// <returns>An enumerable of projects.</returns>
     public static IEnumerable<MsbProject> WherePackable(this Solution solution) => solution
-        .AnalyzeAllProjects()
-        .Where(project => project is { IsPackable: true, IsTestProject: false });
+                                                                                  .AnalyzeAllProjects()
+                                                                                  .Where(project => project is { IsPackable: true, IsTestProject: false });
 
     /// <summary>
     ///     Gets the test projects.
@@ -24,6 +23,6 @@ public static class SolutionExtensions
     /// <param name="solution">The solution.</param>
     /// <returns></returns>
     public static IEnumerable<MsbProject> GetTestProjects(this Solution solution) => solution
-        .AnalyzeAllProjects()
-        .Where(z => z.IsTestProject);
+                                                                                    .AnalyzeAllProjects()
+                                                                                    .Where(z => z.IsTestProject);
 }

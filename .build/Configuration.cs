@@ -1,5 +1,4 @@
 using System.ComponentModel;
-
 using Nuke.Common.Tooling;
 
 #pragma warning disable CA1050, CA1724, CA2225

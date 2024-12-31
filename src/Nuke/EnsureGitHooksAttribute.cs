@@ -1,7 +1,6 @@
 using Nuke.Common.Execution;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
-
 using Serilog;
 
 #pragma warning disable CA1019, CA1308
@@ -20,15 +19,15 @@ public sealed class EnsureGitHooksAttribute(params GitHook[] hookNames) : BuildE
     ///     The hooks that were asked for.
     /// </summary>
     public string[] HookNames { get; } = hookNames
-                   .Select(
-                        x => x
-                            .ToString()
-                            .Humanize()
-                            .Replace(" ", "_", StringComparison.Ordinal)
-                            .Dasherize()
-                            .ToLowerInvariant()
-                    )
-                   .ToArray();
+                                        .Select(
+                                             x => x
+                                                 .ToString()
+                                                 .Humanize()
+                                                 .Replace(" ", "_", StringComparison.Ordinal)
+                                                 .Dasherize()
+                                                 .ToLowerInvariant()
+                                         )
+                                        .ToArray();
 
     /// <inheritdoc />
     public void OnBuildCreated(IReadOnlyCollection<ExecutableTarget> executableTargets)

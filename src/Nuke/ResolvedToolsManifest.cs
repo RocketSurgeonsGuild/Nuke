@@ -1,8 +1,6 @@
 using System.Collections.Immutable;
-
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
-
 using Serilog;
 
 namespace Rocket.Surgery.Nuke;

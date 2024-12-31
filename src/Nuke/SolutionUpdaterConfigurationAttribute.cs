@@ -10,11 +10,12 @@ namespace Rocket.Surgery.Nuke;
 /// <param name="additionalConfigFolderFilePatterns"></param>
 /// <param name="additionalIgnoreFolderFilePatterns"></param>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-public sealed class SolutionUpdaterConfigurationAttribute(
+public sealed class SolutionUpdaterConfigurationAttribute
+(
     string[]? additionalRelativeFolderFilePatterns = null,
     string[]? additionalConfigFolderFilePatterns = null,
     string[]? additionalIgnoreFolderFilePatterns = null
-    ) : Attribute
+) : Attribute
 {
     /// <summary>
     ///     The files that will show up relative to the solution directory.

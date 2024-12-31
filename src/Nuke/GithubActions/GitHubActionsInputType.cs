@@ -10,10 +10,10 @@ public enum GitHubActionsInputType
     /// <summary>
     ///     String input
     /// </summary>
-#pragma warning disable CA1720
+    #pragma warning disable CA1720
     [EnumValue("string")]
     String,
-#pragma warning restore CA1720
+    #pragma warning restore CA1720
     /// <summary>
     ///     Boolean input
     /// </summary>

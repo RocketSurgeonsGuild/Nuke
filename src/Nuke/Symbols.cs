@@ -13,7 +13,7 @@ public static partial class Symbols
     public static readonly Dictionary<Regex, string> DefaultSymbols = new()
     {
         [MyRegex()] = "⚙️",
-        [new("^Pack", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "📦",
+        [MyRegex1()] = "📦",
         [new("^Publish", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "📫",
         [new("^Use", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🔨",
         [new("^Install", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "📲",
@@ -45,4 +45,7 @@ public static partial class Symbols
 
     [GeneratedRegex("(^Compile|^Build)", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-US")]
     private static partial Regex MyRegex();
+
+    [GeneratedRegex("^Pack", RegexOptions.IgnoreCase | RegexOptions.Compiled, "")]
+    private static partial Regex MyRegex1();
 }

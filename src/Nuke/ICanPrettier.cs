@@ -1,10 +1,7 @@
 using System.Collections.Immutable;
-
 using Microsoft.Extensions.FileSystemGlobbing;
-
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
-
 using Serilog;
 using Serilog.Events;
 
@@ -54,10 +51,10 @@ public interface ICanPrettier : ICanLint
                                  group.RenderForExecution(),
                                  RootDirectory,
                                  logOutput: true,
-                                 logInvocation: Verbosity == Verbosity.Verbose
-,
+                                 logInvocation: Verbosity == Verbosity.Verbose,
                                  // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-                                 logger: static (t, s) => Log.Write(t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information, s))
+                                 logger: static (t, s) => Log.Write(t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information, s)
+                             )
                             .AssertWaitForExit()
                             .AssertZeroExitCode();
                      }

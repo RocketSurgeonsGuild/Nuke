@@ -7,7 +7,7 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// </summary>
 #pragma warning disable CA1711
 public enum GitHubActionsPermission
-#pragma warning restore CA1711
+    #pragma warning restore CA1711
 {
     /// <summary>
     ///     None

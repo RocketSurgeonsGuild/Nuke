@@ -1,13 +1,10 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-
 using Microsoft.Build.Construction;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Locator;
-
 using Nuke.Common.ProjectModel;
-
 using Serilog;
 using Project = Nuke.Common.ProjectModel.Project;
 
@@ -48,7 +45,10 @@ public static class NukeSolutionExtensions
 
         return;
 
-        static void triggerAssemblyResolution() => new ProjectCollection();
+        static void triggerAssemblyResolution()
+        {
+            new ProjectCollection();
+        }
     }
 
     internal static Microsoft.Build.Evaluation.Project ParseProject(string projectFile, string? configuration = null, string? targetFramework = null)
@@ -100,9 +100,9 @@ public static class NukeSolutionExtensions
     private static Dictionary<string, string> GetProperties(string? configuration, string? targetFramework)
     {
         var properties = new Dictionary<string, string>();
-        if (configuration is not null)
+        if (configuration is { })
             properties.Add("Configuration", configuration);
-        if (targetFramework is not null)
+        if (targetFramework is { })
             properties.Add("TargetFramework", targetFramework);
         return properties;
     }

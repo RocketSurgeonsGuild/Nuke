@@ -1,9 +1,7 @@
 using System.Reflection;
-
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
-
 using Nuke.Common.CI.AppVeyor;
 using Nuke.Common.CI.AzurePipelines;
 using Nuke.Common.CI.TeamCity;
@@ -11,7 +9,6 @@ using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.ValueInjection;
-
 using Serilog;
 using static Nuke.Common.EnvironmentInfo;
 

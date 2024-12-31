@@ -1,6 +1,5 @@
 using System.Collections.Immutable;
 using System.Reflection;
-
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
@@ -8,7 +7,6 @@ using Nuke.Common.Execution;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Utilities.Collections;
-
 using YamlDotNet.RepresentationModel;
 
 #pragma warning disable CA1019, CA1308, CA1721, CA1813
@@ -285,13 +283,13 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             Enumerable
                .Concat(
                     GetAllSecrets(secrets)
-                       // ReSharper disable CoVariantArrayConversion
+                        // ReSharper disable CoVariantArrayConversion
                        .Concat<ITriggerValue>(variables)
                        .Concat(onePasswordConnectServerSecrets)
                        .Concat(onePasswordServiceAccountSecrets),
                     environmentAttributes
                 )
-               // ReSharper enable CoVariantArrayConversion
+                // ReSharper enable CoVariantArrayConversion
                .SelectMany(
                     z =>
                     {
@@ -328,10 +326,10 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         var requiredInputs = new List<GitHubActionsInput>();
         var lookupTable = new LookupTable<ExecutableTarget, ExecutableTarget[]>();
         var initialArguments = localTool ? new Arguments().Add("dotnet").Add("nuke") : new Arguments().Add("nuke");
-        foreach ((var execute, var targets) in relevantTargets
+        foreach (( var execute, var targets ) in relevantTargets
                                                 .Select(
-                                                     x => (ExecutableTarget: x,
-                                                            Targets: GetInvokedTargets(x, relevantTargets).ToArray())
+                                                     x => ( ExecutableTarget: x,
+                                                            Targets: GetInvokedTargets(x, relevantTargets).ToArray() )
                                                  )
                                                 .ForEachLazy(x => lookupTable.Add(x.ExecutableTarget, [.. x.Targets]))
                 )
@@ -515,8 +513,8 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                        )
                       .Select(
                            // ReSharper disable once NullableWarningSuppressionIsUsed
-                           z => (name: ( (YamlScalarNode)z.Children[key] ).Value!.Split("@")[0],
-                                  value: ( (YamlScalarNode)z.Children[key] ).Value)
+                           z => ( name: ( (YamlScalarNode)z.Children[key] ).Value!.Split("@")[0],
+                                  value: ( (YamlScalarNode)z.Children[key] ).Value )
                        )
                       .DistinctBy(z => z.name)
                       .ToDictionary(

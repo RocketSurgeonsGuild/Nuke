@@ -1,6 +1,5 @@
 using System.Collections.Immutable;
 using System.Runtime.InteropServices;
-
 using Nuke.Common.IO;
 
 namespace Rocket.Surgery.Nuke;

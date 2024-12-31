@@ -2,7 +2,6 @@ using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
 using Nuke.Common.IO;
-
 using YamlDotNet.RepresentationModel;
 
 #pragma warning disable CA1851
@@ -189,8 +188,8 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
                        )
                       .Select(
                            // ReSharper disable once NullableWarningSuppressionIsUsed
-                           z => (name: ( (YamlScalarNode)z.Children[key] ).Value!.Split("@")[0],
-                                  value: ( (YamlScalarNode)z.Children[key] ).Value)
+                           z => ( name: ( (YamlScalarNode)z.Children[key] ).Value!.Split("@")[0],
+                                  value: ( (YamlScalarNode)z.Children[key] ).Value )
                        )
                       .DistinctBy(z => z.name)
                       .ToDictionary(
