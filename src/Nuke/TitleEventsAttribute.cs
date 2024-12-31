@@ -59,6 +59,12 @@ public sealed class TitleEventsAttribute : BuildExtensionAttributeBase, IOnBuild
     }
 
     private static short ProgressPercent(IReadOnlyCollection<ExecutableTarget> plan, ref int step) =>
+/* Unmerged change from project 'Rocket.Surgery.Nuke(net9.0)'
+Before:
+        Convert.ToInt16(NukeBuild.IsServerBuild ? 0 : Math.Round(( (double)step++ / ( (short)plan.Count + 1 ) ) * 100));
+After:
+        Convert.ToInt16(NukeBuild.IsServerBuild ? 0 : Math.Round((double)step++ / ( (short)plan.Count + 1 ) * 100));
+*/
         Convert.ToInt16(NukeBuild.IsServerBuild ? 0 : Math.Round(( (double)step++ / ( (short)plan.Count + 1 ) ) * 100));
 
     private IReadOnlyCollection<ExecutableTarget> _plan = [];
