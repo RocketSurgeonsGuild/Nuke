@@ -23,21 +23,6 @@ namespace Rocket.Surgery.Nuke.ContinuousIntegration;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
 public sealed class PrintCIEnvironmentAttribute(params string[] additionalPrefixes) : BuildExtensionAttributeBase, IOnBuildInitialized, IOnBuildFinished
 {
-    /// <summary>
-    ///     Well know environment variables
-    /// </summary>
-    /// <remarks>
-    ///     Replace default implementation to add values not covered by default
-    /// </remarks>
-    private static string[] WellKnownEnvironmentVariablePrefixes =>
-    [
-        // Azure pipelines
-        "CIRCLE", "GITHUB", "APPVEYOR", "TRAVIS", "BITRISE", "BAMBOO", "GITLAB", "JENKINS", "TEAMCITY",
-        "AGENT_", "BUILD_", "RELEASE_", "PIPELINE_", "ENVIRONMENT_", "SYSTEM_",
-    ];
-
-    private readonly string[] _additionalPrefixes = additionalPrefixes;
-
     /// <inheritdoc />
     public void OnBuildFinished()
     {
@@ -83,4 +68,19 @@ public sealed class PrintCIEnvironmentAttribute(params string[] additionalPrefix
 
     /// <inheritdoc />
     public override float Priority { get; set; } = -1000;
+
+    private readonly string[] _additionalPrefixes = additionalPrefixes;
+
+    /// <summary>
+    ///     Well know environment variables
+    /// </summary>
+    /// <remarks>
+    ///     Replace default implementation to add values not covered by default
+    /// </remarks>
+    private static string[] WellKnownEnvironmentVariablePrefixes =>
+    [
+        // Azure pipelines
+        "CIRCLE", "GITHUB", "APPVEYOR", "TRAVIS", "BITRISE", "BAMBOO", "GITLAB", "JENKINS", "TEAMCITY",
+        "AGENT_", "BUILD_", "RELEASE_", "PIPELINE_", "ENVIRONMENT_", "SYSTEM_",
+    ];
 }

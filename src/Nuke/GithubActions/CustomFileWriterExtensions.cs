@@ -15,10 +15,7 @@ public static class CustomFileWriterExtensions
     /// <param name="dictionary"></param>
     public static void WriteKeyValues(this CustomFileWriter writer, string key, IDictionary<string, string> dictionary)
     {
-        if (!dictionary.Any())
-        {
-            return;
-        }
+        if (!dictionary.Any()) return;
 
         writer.WriteLine(key + ":");
         using (writer.Indent())

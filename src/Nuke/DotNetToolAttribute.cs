@@ -14,13 +14,13 @@ namespace Rocket.Surgery.Nuke;
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 public sealed class DotNetToolAttribute(string command) : ToolInjectionAttributeBase
 {
-    private readonly string _command = command;
-
     /// <inheritdoc />
     public override ToolRequirement GetRequirement(MemberInfo member) => new();
 
     /// <inheritdoc />
     public override object GetValue(MemberInfo member, object instance) => DotNetTool.GetTool(_command);
+
+    private readonly string _command = command;
 
     #pragma warning disable CA1019
     #pragma warning restore CA1019

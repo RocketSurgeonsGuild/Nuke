@@ -11,6 +11,9 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 [PublicAPI]
 public class GithubActionShell(string shell)
 {
+    /// <inheritdoc />
+    public override string ToString() => Shell;
+
     /// <summary>
     ///     Get a shell from a given string
     /// </summary>
@@ -31,6 +34,16 @@ public class GithubActionShell(string shell)
     public static GithubActionShell Bash { get; } = new("bash");
 
     /// <summary>
+    ///     Windows Command Line
+    /// </summary>
+    public static GithubActionShell Cmd { get; } = new("cmd");
+
+    /// <summary>
+    ///     Windows Powershell
+    /// </summary>
+    public static GithubActionShell Powershell { get; } = new("powershell");
+
+    /// <summary>
     ///     Powershell Core
     /// </summary>
     public static GithubActionShell Pwsh { get; } = new("pwsh");
@@ -46,20 +59,7 @@ public class GithubActionShell(string shell)
     public static GithubActionShell Sh { get; } = new("sh");
 
     /// <summary>
-    ///     Windows Command Line
-    /// </summary>
-    public static GithubActionShell Cmd { get; } = new("cmd");
-
-    /// <summary>
-    ///     Windows Powershell
-    /// </summary>
-    public static GithubActionShell Powershell { get; } = new("powershell");
-
-    /// <summary>
     ///     The shell
     /// </summary>
     public string Shell { get; } = shell;
-
-    /// <inheritdoc />
-    public override string ToString() => Shell;
 }

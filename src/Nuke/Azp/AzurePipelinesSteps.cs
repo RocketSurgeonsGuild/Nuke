@@ -9,16 +9,6 @@ namespace Rocket.Surgery.Nuke.Azp;
 public class AzurePipelinesSteps : ConfigurationEntity
 {
     /// <summary>
-    ///     The parameters for the pipeline step
-    /// </summary>
-    public IReadOnlyList<AzurePipelinesParameter> Parameters { get; set; } = Array.Empty<AzurePipelinesParameter>();
-
-    /// <summary>
-    ///     The steps to run with the given parameters
-    /// </summary>
-    public IReadOnlyList<AzurePipelinesStep> Steps { get; set; } = Array.Empty<AzurePipelinesStep>();
-
-    /// <summary>
     ///     Write the given pipeline steps
     /// </summary>
     /// <param name="writer"></param>
@@ -26,7 +16,6 @@ public class AzurePipelinesSteps : ConfigurationEntity
     {
         writer.WriteLine("#");
         if (Parameters.Count > 0)
-        {
             using (writer.WriteBlock("parameters:"))
             {
                 foreach (var item in Parameters)
@@ -34,7 +23,6 @@ public class AzurePipelinesSteps : ConfigurationEntity
                     item.Write(writer);
                 }
             }
-        }
 
         using (writer.WriteBlock("steps:"))
         {
@@ -51,4 +39,14 @@ public class AzurePipelinesSteps : ConfigurationEntity
             }
         }
     }
+
+    /// <summary>
+    ///     The parameters for the pipeline step
+    /// </summary>
+    public IReadOnlyList<AzurePipelinesParameter> Parameters { get; set; } = Array.Empty<AzurePipelinesParameter>();
+
+    /// <summary>
+    ///     The steps to run with the given parameters
+    /// </summary>
+    public IReadOnlyList<AzurePipelinesStep> Steps { get; set; } = Array.Empty<AzurePipelinesStep>();
 }

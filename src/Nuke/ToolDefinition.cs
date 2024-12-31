@@ -6,14 +6,14 @@ namespace Rocket.Surgery.Nuke;
 public class ToolDefinition
 {
     /// <summary>
-    ///     The version
-    /// </summary>
-    public string Version { get; set; } = null!;
-
-    /// <summary>
     ///     The commands
     /// </summary>
     public string[] Commands { get; set; } = [];
+
+    /// <summary>
+    ///     The version
+    /// </summary>
+    public string Version { get; set; } = null!;
 
     // ReSharper disable once NullableWarningSuppressionIsUsed
 }

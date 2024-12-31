@@ -67,6 +67,60 @@ public static class TestMethodExtensions
         }
     );
 
+    private static void AddItems(XElement parent, string parentName, string childName, (IEnumerable<string> include, IEnumerable<string> exclude) values)
+    {
+        var parentElement = EnsureElement(parent, parentName);
+        var include = EnsureElement(parentElement, "Include");
+        var exclude = EnsureElement(parentElement, "Exclude");
+
+        include.RemoveAll();
+        exclude.RemoveAll();
+
+        foreach (var value in values.include)
+        {
+            include.Add(new XElement(childName, value));
+        }
+
+        foreach (var value in values.exclude)
+        {
+            exclude.Add(new XElement(childName, value));
+        }
+    }
+
+    private static void DistinctAndOrganize(XElement parent, string parentName)
+    {
+        if (parent.Element(parentName) is not { } item) return;
+        if (item.Element("Include") is { } include)
+        {
+            var values = include.Elements().DistinctBy(z => z.Value).OrderBy(x => x.Value).ToArray();
+            include.RemoveAll();
+            include.Add([.. values]);
+            if (!include.Elements().Any()) include.Remove();
+        }
+
+        if (item.Element("Exclude") is { } exclude)
+        {
+            var values = exclude.Elements().DistinctBy(z => z.Value).OrderBy(x => x.Value).ToArray();
+            exclude.RemoveAll();
+            exclude.Add([.. values]);
+            if (!exclude.Elements().Any()) exclude.Remove();
+        }
+
+        if (!item.Elements().Any()) item.Remove();
+    }
+
+    private static XElement EnsureElement(XElement parent, string name)
+    {
+        var element = parent.Element(name);
+        if (element is null)
+        {
+            element = new(name);
+            parent.Add(element);
+        }
+
+        return element;
+    }
+
     private static void ManageRunSettings<T>(
         T build,
         AbsolutePath runsettingsPath,
@@ -128,59 +182,5 @@ public static class TestMethodExtensions
         {
             return [$"^{ns.Replace(".", "\\.")}.*"];
         }
-    }
-
-    private static XElement EnsureElement(XElement parent, string name)
-    {
-        var element = parent.Element(name);
-        if (element is null)
-        {
-            element = new(name);
-            parent.Add(element);
-        }
-
-        return element;
-    }
-
-    private static void AddItems(XElement parent, string parentName, string childName, (IEnumerable<string> include, IEnumerable<string> exclude) values)
-    {
-        var parentElement = EnsureElement(parent, parentName);
-        var include = EnsureElement(parentElement, "Include");
-        var exclude = EnsureElement(parentElement, "Exclude");
-
-        include.RemoveAll();
-        exclude.RemoveAll();
-
-        foreach (var value in values.include)
-        {
-            include.Add(new XElement(childName, value));
-        }
-
-        foreach (var value in values.exclude)
-        {
-            exclude.Add(new XElement(childName, value));
-        }
-    }
-
-    private static void DistinctAndOrganize(XElement parent, string parentName)
-    {
-        if (parent.Element(parentName) is not { } item) return;
-        if (item.Element("Include") is { } include)
-        {
-            var values = include.Elements().DistinctBy(z => z.Value).OrderBy(x => x.Value).ToArray();
-            include.RemoveAll();
-            include.Add([.. values]);
-            if (!include.Elements().Any()) include.Remove();
-        }
-
-        if (item.Element("Exclude") is { } exclude)
-        {
-            var values = exclude.Elements().DistinctBy(z => z.Value).OrderBy(x => x.Value).ToArray();
-            exclude.RemoveAll();
-            exclude.Add([.. values]);
-            if (!exclude.Elements().Any()) exclude.Remove();
-        }
-
-        if (!item.Elements().Any()) item.Remove();
     }
 }

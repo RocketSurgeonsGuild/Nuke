@@ -11,11 +11,6 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 public sealed class GitHubActionsSecretAttribute(string name) : TriggerValueAttribute(name)
 {
     /// <summary>
-    ///     Is the secret required
-    /// </summary>
-    public bool? Required { get; set; }
-
-    /// <summary>
     ///     Convert to a secret
     /// </summary>
     /// <returns></returns>
@@ -23,4 +18,9 @@ public sealed class GitHubActionsSecretAttribute(string name) : TriggerValueAttr
 
     /// <inheritdoc />
     public override ITriggerValue ToTriggerValue() => ToSecret();
+
+    /// <summary>
+    ///     Is the secret required
+    /// </summary>
+    public bool? Required { get; set; }
 }

@@ -34,6 +34,70 @@ internal static class Plist
     public static void Serialize(AbsolutePath path, object value) => SerializeDocument(value)
        .Save(path, SaveOptions.OmitDuplicateNamespaces);
 
+    private static dynamic DeserializeXml(XElement element)
+    {
+        switch (element.Name.LocalName)
+        {
+            case "plist":
+                return DeserializeXml(element.Elements().First());
+            case "string":
+                return element.Value;
+            case "real":
+                return double.Parse(element.Value, CultureInfo.InvariantCulture);
+            case "integer":
+                return int.Parse(element.Value, CultureInfo.InvariantCulture);
+            case "true":
+                return true;
+            case "false":
+                return false;
+            case "date":
+                return DateTime.Parse(element.Value, CultureInfo.InvariantCulture);
+            case "data":
+                return Convert.FromBase64String(element.Value);
+            case "array":
+                {
+                    if (!element.HasElements) return Array.Empty<object>();
+
+                    var rawArray = element.Elements().Select(DeserializeXml).ToArray();
+
+                    var type = rawArray[0].GetType();
+                    if (rawArray.Any(val => val.GetType() != type)) return rawArray;
+
+                    var typedArray = Array.CreateInstance(type, rawArray.Length);
+                    rawArray.CopyTo(typedArray, 0);
+
+                    return typedArray;
+                }
+
+            case "dict":
+                {
+                    var dictionary = new Dictionary<string, object>();
+
+                    var inner = element.Elements().ToArray();
+
+                    for (var idx = 0; idx < inner.Length; idx++)
+                    {
+                        var key = inner[idx];
+                        if (key.Name.LocalName != "key")
+                        {
+                            #pragma warning disable CA2201
+                            throw new("Even items need to be keys");
+                            #pragma warning restore CA2201
+                        }
+
+                        idx++;
+                        dictionary[key.Value] = DeserializeXml(inner[idx]);
+                    }
+
+                    return dictionary;
+                }
+
+            default:
+                // ReSharper disable once NullableWarningSuppressionIsUsed
+                return null!;
+        }
+    }
+
     /// <summary>
     ///     Serializes the .plist file provided.
     /// </summary>
@@ -152,70 +216,6 @@ internal static class Plist
 
             default:
                 return null;
-        }
-    }
-
-    private static dynamic DeserializeXml(XElement element)
-    {
-        switch (element.Name.LocalName)
-        {
-            case "plist":
-                return DeserializeXml(element.Elements().First());
-            case "string":
-                return element.Value;
-            case "real":
-                return double.Parse(element.Value, CultureInfo.InvariantCulture);
-            case "integer":
-                return int.Parse(element.Value, CultureInfo.InvariantCulture);
-            case "true":
-                return true;
-            case "false":
-                return false;
-            case "date":
-                return DateTime.Parse(element.Value, CultureInfo.InvariantCulture);
-            case "data":
-                return Convert.FromBase64String(element.Value);
-            case "array":
-                {
-                    if (!element.HasElements) return Array.Empty<object>();
-
-                    var rawArray = element.Elements().Select(DeserializeXml).ToArray();
-
-                    var type = rawArray[0].GetType();
-                    if (rawArray.Any(val => val.GetType() != type)) return rawArray;
-
-                    var typedArray = Array.CreateInstance(type, rawArray.Length);
-                    rawArray.CopyTo(typedArray, 0);
-
-                    return typedArray;
-                }
-
-            case "dict":
-                {
-                    var dictionary = new Dictionary<string, object>();
-
-                    var inner = element.Elements().ToArray();
-
-                    for (var idx = 0; idx < inner.Length; idx++)
-                    {
-                        var key = inner[idx];
-                        if (key.Name.LocalName != "key")
-                        {
-                            #pragma warning disable CA2201
-                            throw new("Even items need to be keys");
-                            #pragma warning restore CA2201
-                        }
-
-                        idx++;
-                        dictionary[key.Value] = DeserializeXml(inner[idx]);
-                    }
-
-                    return dictionary;
-                }
-
-            default:
-                // ReSharper disable once NullableWarningSuppressionIsUsed
-                return null!;
         }
     }
 }

@@ -2,10 +2,6 @@ namespace Rocket.Surgery.Nuke.Readme;
 
 internal class CodacySection : IBadgeSection
 {
-    public string Name => "Codacy";
-
-    public string ConfigKey => "";
-
     public string Process(
         IDictionary<object, object?> config,
         IMarkdownReferences references,
@@ -29,4 +25,7 @@ internal class CodacySection : IBadgeSection
         );
         return $"[!{badge}]{url}";
     }
+
+    public string ConfigKey => "";
+    public string Name => "Codacy";
 }

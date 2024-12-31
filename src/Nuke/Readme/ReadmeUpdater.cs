@@ -10,12 +10,6 @@ namespace Rocket.Surgery.Nuke.Readme;
 [PublicAPI]
 public partial class ReadmeUpdater
 {
-    [GeneratedRegex("<!-- nuke-data(.*?)-->", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline, "en-US")]
-    private static partial Regex MyRegex();
-
-    [GeneratedRegex("<!-- (.*?) -->", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled, "")]
-    private static partial Regex MyRegex1();
-
     /// <summary>
     ///     Default constructor
     /// </summary>
@@ -43,26 +37,6 @@ public partial class ReadmeUpdater
            .Add(new CodacySection())
             ;
     }
-
-    /// <summary>
-    ///     The sections container
-    /// </summary>
-    public Sections Sections { get; }
-
-    /// <summary>
-    ///     The badges container
-    /// </summary>
-    public Badges Badges { get; }
-
-    /// <summary>
-    ///     The history container
-    /// </summary>
-    public Histories History { get; set; }
-
-    /// <summary>
-    ///     The references container for markdown references
-    /// </summary>
-    public References References { get; }
 
     /// <summary>
     ///     <para>Updates the given markdown content with all the sections replaced.</para>
@@ -120,4 +94,30 @@ public partial class ReadmeUpdater
 
         return content;
     }
+
+    /// <summary>
+    ///     The badges container
+    /// </summary>
+    public Badges Badges { get; }
+
+    /// <summary>
+    ///     The history container
+    /// </summary>
+    public Histories History { get; set; }
+
+    /// <summary>
+    ///     The references container for markdown references
+    /// </summary>
+    public References References { get; }
+
+    /// <summary>
+    ///     The sections container
+    /// </summary>
+    public Sections Sections { get; }
+
+    [GeneratedRegex("<!-- nuke-data(.*?)-->", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline, "en-US")]
+    private static partial Regex MyRegex();
+
+    [GeneratedRegex("<!-- (.*?) -->", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled, "")]
+    private static partial Regex MyRegex1();
 }

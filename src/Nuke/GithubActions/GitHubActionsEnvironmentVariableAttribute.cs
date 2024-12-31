@@ -10,8 +10,11 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 public sealed class GitHubActionsEnvironmentVariableAttribute(string name) : Attribute
 {
-    /// <inheritdoc cref="ITriggerValue.Name" />
-    public string Name { get; } = name;
+    /// <summary>
+    ///     Convert it to an environment variable
+    /// </summary>
+    /// <returns></returns>
+    public GitHubActionsEnvironmentVariable ToEnvironmentVariable() => new(Name, Default, Alias);
 
     /// <inheritdoc cref="ITriggerValue.Alias" />
     public string? Alias { get; set; }
@@ -19,9 +22,6 @@ public sealed class GitHubActionsEnvironmentVariableAttribute(string name) : Att
     /// <inheritdoc cref="ITriggerValue.Default" />
     public string? Default { get; set; }
 
-    /// <summary>
-    ///     Convert it to an environment variable
-    /// </summary>
-    /// <returns></returns>
-    public GitHubActionsEnvironmentVariable ToEnvironmentVariable() => new(Name, Default, Alias);
+    /// <inheritdoc cref="ITriggerValue.Name" />
+    public string Name { get; } = name;
 }

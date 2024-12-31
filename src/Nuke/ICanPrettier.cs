@@ -13,10 +13,6 @@ namespace Rocket.Surgery.Nuke;
 [PublicAPI]
 public interface ICanPrettier : ICanLint
 {
-    private static Matcher? matcher;
-
-    private static readonly Arguments _prettierBaseArgs = new Arguments().Add("exec").Add("prettier").Add("--");
-
     /// <summary>
     ///     The prettier target
     /// </summary>
@@ -32,7 +28,6 @@ public interface ICanPrettier : ICanLint
                      var args = makeArgsForStagedFiles(LintPaths.Active ? LintPaths.Glob(PrettierMatcher) : LintPaths.AllPaths.Glob(PrettierMatcher));
 
                      if (( NukeBuild.RootDirectory / "package.json" ).FileExists() && !NukeBuild.RootDirectory.ContainsDirectory("node_modules"))
-                     {
                          ProcessTasks
                             .StartProcess(
                                  ToolPathResolver.GetPathExecutable("npm"),
@@ -41,7 +36,6 @@ public interface ICanPrettier : ICanLint
                              )
                             .AssertWaitForExit()
                             .AssertZeroExitCode();
-                     }
 
                      foreach (var group in args)
                      {
@@ -95,4 +89,7 @@ public interface ICanPrettier : ICanLint
                                                  .AddInclude("**/*.yaml")
                                                  .AddInclude("**/*.css")
                                                  .AddInclude("**/*.scss");
+
+    private static readonly Arguments _prettierBaseArgs = new Arguments().Add("exec").Add("prettier").Add("--");
+    private static Matcher? matcher;
 }

@@ -21,9 +21,21 @@ public sealed class OnePasswordServiceAccountSecretAttribute(string name, string
     public OnePasswordServiceAccountSecretAttribute(string name, string variable, string path) : this(name, path) => Variable = variable;
 
     /// <summary>
-    ///     The github variable that defines the item in the vault
+    ///     Convert to a secret
     /// </summary>
-    public string? Variable { get; }
+    /// <returns></returns>
+    public OnePasswordServiceAccountSecret ToSecret() =>
+        new(
+            Path,
+            Name,
+            Description,
+            Alias,
+            Variable,
+            Secret ?? "OP_SERVICE_ACCOUNT_TOKEN"
+        );
+
+    /// <inheritdoc />
+    public override ITriggerValue ToTriggerValue() => ToSecret();
 
     /// <summary>
     ///     The path to the item
@@ -41,19 +53,7 @@ public sealed class OnePasswordServiceAccountSecretAttribute(string name, string
     }
 
     /// <summary>
-    ///     Convert to a secret
+    ///     The github variable that defines the item in the vault
     /// </summary>
-    /// <returns></returns>
-    public OnePasswordServiceAccountSecret ToSecret() =>
-        new(
-            Path,
-            Name,
-            Description,
-            Alias,
-            Variable,
-            Secret ?? "OP_SERVICE_ACCOUNT_TOKEN"
-        );
-
-    /// <inheritdoc />
-    public override ITriggerValue ToTriggerValue() => ToSecret();
+    public string? Variable { get; }
 }

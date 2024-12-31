@@ -11,11 +11,43 @@ public class CheckoutStep : UsingStep
     /// <param name="name"></param>
     public CheckoutStep(string name) : base(name) => Uses = "actions/checkout@v4";
 
+    /// <inheritdoc />
+    public override void Write(CustomFileWriter writer)
+    {
+        #pragma warning disable CA1308
+        WithProperties(x => x.Kebaberize());
+        #pragma warning restore CA1308
+        base.Write(writer);
+    }
+
     /// <summary>
-    ///     Repository name with owner. For example, actions/checkout
+    ///     Whether to execute `git clean -ffdx &amp;&amp; git reset --hard HEAD` before fetching
+    ///     Default: true
     /// </summary>
-    /// <remarks>Default: ${{ github.repository }}</remarks>
-    public string? Repository { get; set; }
+    public bool Clean { get; set; }
+
+    /// <summary>
+    ///     Number of commits to fetch. 0 indicates all history.
+    /// </summary>
+    /// <remarks>Default: 1</remarks>
+    public int? FetchDepth { get; set; }
+
+    /// <summary>
+    ///     Whether to download Git-LFS files
+    /// </summary>
+    /// <remarks>Default: false</remarks>
+    public string? Lfs { get; set; }
+
+    /// <summary>
+    ///     Relative path under $GITHUB_WORKSPACE to place the repository
+    /// </summary>
+    public string? Path { get; set; }
+
+    /// <summary>
+    ///     Whether to configure the token or SSH key with the local git config
+    /// </summary>
+    /// <remarks>Default: true</remarks>
+    public bool? PersistCredentials { get; set; }
 
     /// <summary>
     ///     The branch, tag or SHA to checkout. When checking out the repository that
@@ -26,22 +58,10 @@ public class CheckoutStep : UsingStep
     public string? Ref { get; set; }
 
     /// <summary>
-    ///     <para>
-    ///         Personal access token (PAT) used to fetch the repository. The PAT is configured
-    ///         with the local git config, which enables your scripts to run authenticated git
-    ///         commands. The post-job step removes the PAT.
-    ///     </para>
-    ///     <para>
-    ///         We recommend using a service account with the least permissions necessary. Also
-    ///         when generating a new PAT, select the least scopes necessary.
-    ///     </para>
-    ///     <para>
-    ///         [Learn more about creating and using encrypted
-    ///         secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets)
-    ///     </para>
+    ///     Repository name with owner. For example, actions/checkout
     /// </summary>
-    /// <remarks>Default: ${{ github.token }}</remarks>
-    public string? Token { get; set; }
+    /// <remarks>Default: ${{ github.repository }}</remarks>
+    public string? Repository { get; set; }
 
     /// <summary>
     ///     <para>
@@ -74,35 +94,6 @@ public class CheckoutStep : UsingStep
     public bool? SshStrict { get; set; }
 
     /// <summary>
-    ///     Whether to configure the token or SSH key with the local git config
-    /// </summary>
-    /// <remarks>Default: true</remarks>
-    public bool? PersistCredentials { get; set; }
-
-    /// <summary>
-    ///     Relative path under $GITHUB_WORKSPACE to place the repository
-    /// </summary>
-    public string? Path { get; set; }
-
-    /// <summary>
-    ///     Whether to execute `git clean -ffdx &amp;&amp; git reset --hard HEAD` before fetching
-    ///     Default: true
-    /// </summary>
-    public bool Clean { get; set; }
-
-    /// <summary>
-    ///     Number of commits to fetch. 0 indicates all history.
-    /// </summary>
-    /// <remarks>Default: 1</remarks>
-    public int? FetchDepth { get; set; }
-
-    /// <summary>
-    ///     Whether to download Git-LFS files
-    /// </summary>
-    /// <remarks>Default: false</remarks>
-    public string? Lfs { get; set; }
-
-    /// <summary>
     ///     <para>
     ///         Whether to checkout submodules: `true` to checkout submodules or `recursive` to
     ///         recursively checkout submodules.
@@ -115,12 +106,21 @@ public class CheckoutStep : UsingStep
     /// <remarks>Default: false</remarks>
     public string? Submodules { get; set; }
 
-    /// <inheritdoc />
-    public override void Write(CustomFileWriter writer)
-    {
-        #pragma warning disable CA1308
-        WithProperties(x => x.Kebaberize());
-        #pragma warning restore CA1308
-        base.Write(writer);
-    }
+    /// <summary>
+    ///     <para>
+    ///         Personal access token (PAT) used to fetch the repository. The PAT is configured
+    ///         with the local git config, which enables your scripts to run authenticated git
+    ///         commands. The post-job step removes the PAT.
+    ///     </para>
+    ///     <para>
+    ///         We recommend using a service account with the least permissions necessary. Also
+    ///         when generating a new PAT, select the least scopes necessary.
+    ///     </para>
+    ///     <para>
+    ///         [Learn more about creating and using encrypted
+    ///         secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets)
+    ///     </para>
+    /// </summary>
+    /// <remarks>Default: ${{ github.token }}</remarks>
+    public string? Token { get; set; }
 }

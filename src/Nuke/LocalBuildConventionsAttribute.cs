@@ -25,12 +25,12 @@ public sealed class LocalBuildConventionsAttribute : BuildExtensionAttributeBase
     }
 
     /// <inheritdoc />
-    public override float Priority { get; set; } = -1000;
-
-    /// <inheritdoc />
     public void OnBuildInitialized(IReadOnlyCollection<ExecutableTarget> executableTargets, IReadOnlyCollection<ExecutableTarget> executionPlan)
     {
         //        if (Build is not (INukeBuild nukeBuild and IHaveSolution haveSolution)) return;
         //        if (nukeBuild.IsServerBuild) return;
     }
+
+    /// <inheritdoc />
+    public override float Priority { get; set; } = -1000;
 }

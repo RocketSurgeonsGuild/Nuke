@@ -18,11 +18,6 @@ public sealed class SolutionUpdaterConfigurationAttribute
 ) : Attribute
 {
     /// <summary>
-    ///     The files that will show up relative to the solution directory.
-    /// </summary>
-    public string[] AdditionalRelativeFolderFilePatterns { get; } = additionalRelativeFolderFilePatterns ?? [];
-
-    /// <summary>
     ///     The files that will show up relative to the solution configuration directory.
     /// </summary>
     public string[] AdditionalConfigFolderFilePatterns { get; } = additionalConfigFolderFilePatterns ?? [];
@@ -31,4 +26,9 @@ public sealed class SolutionUpdaterConfigurationAttribute
     ///     The files or paths that will be ignored when updating the solution
     /// </summary>
     public string[] AdditionalIgnoreFolderFilePatterns { get; } = additionalIgnoreFolderFilePatterns ?? [];
+
+    /// <summary>
+    ///     The files that will show up relative to the solution directory.
+    /// </summary>
+    public string[] AdditionalRelativeFolderFilePatterns { get; } = additionalRelativeFolderFilePatterns ?? [];
 }

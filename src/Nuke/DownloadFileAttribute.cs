@@ -19,27 +19,13 @@ namespace Rocket.Surgery.Nuke;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
 public class DownloadFileAttribute(string url, string filePath) : BuildExtensionAttributeBase, IOnBuildInitialized
 {
-    private readonly string _url = url ?? throw new ArgumentNullException(nameof(url));
-
-    private readonly AbsolutePath _filePath = filePath is null
-        ? throw new ArgumentNullException(nameof(filePath))
-        : NukeBuild.TemporaryDirectory / filePath;
-
-    /// <summary>
-    ///     The type of a given file to make logging look more specific
-    /// </summary>
-    public string Type { get; set; } = "File";
-
     /// <inheritdoc />
     public void OnBuildInitialized(
         IReadOnlyCollection<ExecutableTarget> executableTargets,
         IReadOnlyCollection<ExecutableTarget> executionPlan
     )
     {
-        if (_filePath.FileExists())
-        {
-            return;
-        }
+        if (_filePath.FileExists()) return;
 
         Log.Verbose(
             "Downloading {Type} {Url} to {Path}",
@@ -58,4 +44,15 @@ public class DownloadFileAttribute(string url, string filePath) : BuildExtension
 
     /// <inheritdoc />
     public override float Priority { get; set; } = -1000;
+
+    /// <summary>
+    ///     The type of a given file to make logging look more specific
+    /// </summary>
+    public string Type { get; set; } = "File";
+
+    private readonly AbsolutePath _filePath = filePath is null
+        ? throw new ArgumentNullException(nameof(filePath))
+        : NukeBuild.TemporaryDirectory / filePath;
+
+    private readonly string _url = url ?? throw new ArgumentNullException(nameof(url));
 }

@@ -15,14 +15,6 @@ namespace Rocket.Surgery.Nuke.Jobs;
 [AttributeUsage(AttributeTargets.Class)]
 public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribute
 {
-    private readonly string _secretKey;
-    private readonly string _triggeringWorkflow;
-
-    private readonly GithubActionCondition _nugetOrgCondition =
-        "startsWith(github.event.workflow_run.head_branch, 'v') && contains(github.event.workflow_run.head_branch, '.') && !contains(github.event.workflow_run.head_branch, '/')";
-
-    private readonly ImmutableArray<string> _includeBranches;
-
     /// <summary>
     ///     Adds draft release support to the build
     /// </summary>
@@ -124,4 +116,12 @@ public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribu
 
         return build;
     }
+
+    private readonly ImmutableArray<string> _includeBranches;
+
+    private readonly GithubActionCondition _nugetOrgCondition =
+        "startsWith(github.event.workflow_run.head_branch, 'v') && contains(github.event.workflow_run.head_branch, '.') && !contains(github.event.workflow_run.head_branch, '/')";
+
+    private readonly string _secretKey;
+    private readonly string _triggeringWorkflow;
 }

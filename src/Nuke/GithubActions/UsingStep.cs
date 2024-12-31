@@ -14,6 +14,18 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// <param name="name"></param>
 public class UsingStep(string name) : BaseGitHubActionsStep(name)
 {
+    /// <inheritdoc />
+    public override void Write(CustomFileWriter writer)
+    {
+        base.Write(writer);
+
+        using (writer.Indent())
+        {
+            writer.WriteLine($"uses: {Uses}");
+            writer.WriteKeyValues("with", With);
+        }
+    }
+
     /// <summary>
     ///     The action to use.
     /// </summary>
@@ -43,18 +55,6 @@ public class UsingStep(string name) : BaseGitHubActionsStep(name)
                 transformName(property.Name),
                 value switch { null => "", bool b => b.ToString().ToLowerInvariant(), string s => s, _ => value.ToString() ?? "" }
             );
-        }
-    }
-
-    /// <inheritdoc />
-    public override void Write(CustomFileWriter writer)
-    {
-        base.Write(writer);
-
-        using (writer.Indent())
-        {
-            writer.WriteLine($"uses: {Uses}");
-            writer.WriteKeyValues("with", With);
         }
     }
 }

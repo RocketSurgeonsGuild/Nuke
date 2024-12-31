@@ -8,24 +8,6 @@ namespace Rocket.Surgery.Nuke;
 public static partial class Symbols
 {
     /// <summary>
-    ///     The default symbols
-    /// </summary>
-    public static readonly Dictionary<Regex, string> DefaultSymbols = new()
-    {
-        [MyRegex()] = "⚙️",
-        [MyRegex1()] = "📦",
-        [MyRegex2()] = "📫",
-        [new("^Use", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🔨",
-        [new("^Install", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "📲",
-        [new("^Restore", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🎁",
-        [MyRegex2()] = "🚀",
-        [new(".*?Tool.*?", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "⚒️",
-        [new(".*?Workload.*?", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🚒",
-        [new(".*?Test.*?", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🚦",
-        [new(".*?Test.*?", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "💨",
-    };
-
-    /// <summary>
     ///     Add the symbol from the given step
     /// </summary>
     /// <param name="key"></param>
@@ -43,6 +25,24 @@ public static partial class Symbols
         return string.IsNullOrWhiteSpace(symbol) ? name : $"{symbol} {name}";
     }
 
+    /// <summary>
+    ///     The default symbols
+    /// </summary>
+    public static readonly Dictionary<Regex, string> DefaultSymbols = new()
+    {
+        [MyRegex()] = "⚙️",
+        [MyRegex1()] = "📦",
+        [MyRegex2()] = "📫",
+        [MyRegex3()] = "🔨",
+        [new("^Install", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "📲",
+        [new("^Restore", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🎁",
+        [MyRegex2()] = "🚀",
+        [new(".*?Tool.*?", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "⚒️",
+        [new(".*?Workload.*?", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🚒",
+        [new(".*?Test.*?", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🚦",
+        [new(".*?Test.*?", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "💨",
+    };
+
     [GeneratedRegex("(^Compile|^Build)", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-US")]
     private static partial Regex MyRegex();
 
@@ -51,4 +51,7 @@ public static partial class Symbols
 
     [GeneratedRegex("^Publish", RegexOptions.IgnoreCase | RegexOptions.Compiled, "")]
     private static partial Regex MyRegex2();
+
+    [GeneratedRegex("^Use", RegexOptions.IgnoreCase | RegexOptions.Compiled, "")]
+    private static partial Regex MyRegex3();
 }

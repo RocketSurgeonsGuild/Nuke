@@ -9,14 +9,8 @@ namespace Rocket.Surgery.Nuke.Azp;
 ///     Base pipeline build task
 /// </summary>
 // ReSharper disable once MissingBaseTypeHighlighting
-public class AzurePipelinesTasks
+public static class AzurePipelinesTasks
 {
-    /// <summary>
-    ///     Gets a value that determines if the build is running on Azure DevOps.
-    /// </summary>
-    public static Func<bool> IsRunningOnAzurePipelines => () =>
-                                                              NukeBuild.Host is AzurePipelines || Environment.GetEnvironmentVariable("LOGNAME") == "vsts";
-
     /// <summary>
     ///     Gets a value that determines if the build is not running on Azure DevOps.
     /// </summary>
@@ -25,9 +19,8 @@ public class AzurePipelinesTasks
                                                                   || Environment.GetEnvironmentVariable("LOGNAME") == "vsts" );
 
     /// <summary>
-    ///     Publish the code coverage
+    ///     Gets a value that determines if the build is running on Azure DevOps.
     /// </summary>
-    private Target PublishAzurePipelinesCodeCoverage => d => d
-                                                            .OnlyWhenStatic(IsRunningOnAzurePipelines)
-                                                            .Executes(() => { });
+    public static Func<bool> IsRunningOnAzurePipelines => () =>
+                                                              NukeBuild.Host is AzurePipelines || Environment.GetEnvironmentVariable("LOGNAME") == "vsts";
 }

@@ -18,11 +18,6 @@ namespace Rocket.Surgery.Nuke;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
 public class EnsurePackageSourceHasCredentialsAttribute(string sourceName) : BuildExtensionAttributeBase, IOnBuildCreated
 {
-    /// <summary>
-    ///     The nuget source name
-    /// </summary>
-    public string SourceName { get; } = sourceName;
-
     /// <inheritdoc />
     public void OnBuildCreated(IReadOnlyCollection<ExecutableTarget> executableTargets)
     {
@@ -41,10 +36,7 @@ public class EnsurePackageSourceHasCredentialsAttribute(string sourceName) : Bui
             throw new();
         }
 
-        if (source.Credentials?.IsValid() == true)
-        {
-            return;
-        }
+        if (source.Credentials?.IsValid() == true) return;
 
         Log.Error(
             "NuGet Package Source {SourceName} does not have any credentials defined.  Please configure the credentials for the source to build",
@@ -52,4 +44,9 @@ public class EnsurePackageSourceHasCredentialsAttribute(string sourceName) : Bui
         );
         throw new();
     }
+
+    /// <summary>
+    ///     The nuget source name
+    /// </summary>
+    public string SourceName { get; } = sourceName;
 }

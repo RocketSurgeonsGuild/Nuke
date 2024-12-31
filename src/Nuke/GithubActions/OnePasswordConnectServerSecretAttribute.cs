@@ -21,14 +21,22 @@ public sealed class OnePasswordConnectServerSecretAttribute(string name, string 
     public OnePasswordConnectServerSecretAttribute(string name, string variable, string path) : this(name, path) => Variable = variable;
 
     /// <summary>
-    ///     The github variable that defines the item in the vault
+    ///     Convert to a secret
     /// </summary>
-    public string? Variable { get; }
+    /// <returns></returns>
+    public OnePasswordConnectServerSecret ToSecret() =>
+        new(
+            Path,
+            Name,
+            Description,
+            Alias,
+            Variable,
+            ConnectHost ?? "OP_CONNECT_HOST",
+            ConnectToken ?? "OP_CONNECT_TOKEN"
+        );
 
-    /// <summary>
-    ///     The path to the item
-    /// </summary>
-    public string Path { get; } = path;
+    /// <inheritdoc />
+    public override ITriggerValue ToTriggerValue() => ToSecret();
 
     /// <summary>
     ///     The value for the connect host (defaults to ${{ vars.OP_CONNECT_HOST }})
@@ -51,20 +59,12 @@ public sealed class OnePasswordConnectServerSecretAttribute(string name, string 
     }
 
     /// <summary>
-    ///     Convert to a secret
+    ///     The path to the item
     /// </summary>
-    /// <returns></returns>
-    public OnePasswordConnectServerSecret ToSecret() =>
-        new(
-            Path,
-            Name,
-            Description,
-            Alias,
-            Variable,
-            ConnectHost ?? "OP_CONNECT_HOST",
-            ConnectToken ?? "OP_CONNECT_TOKEN"
-        );
+    public string Path { get; } = path;
 
-    /// <inheritdoc />
-    public override ITriggerValue ToTriggerValue() => ToSecret();
+    /// <summary>
+    ///     The github variable that defines the item in the vault
+    /// </summary>
+    public string? Variable { get; }
 }

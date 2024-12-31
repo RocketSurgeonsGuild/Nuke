@@ -10,10 +10,8 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 public sealed class GitHubActionsVariableAttribute(string name) : TriggerValueAttribute(name)
 {
-    /// <summary>
-    ///     Is the variable required
-    /// </summary>
-    public bool? Required { get; set; }
+    /// <inheritdoc />
+    public override ITriggerValue ToTriggerValue() => ToVariable();
 
     /// <summary>
     ///     Convert to a variable
@@ -21,6 +19,8 @@ public sealed class GitHubActionsVariableAttribute(string name) : TriggerValueAt
     /// <returns></returns>
     public GitHubActionsVariable ToVariable() => new(Name, Description, Alias);
 
-    /// <inheritdoc />
-    public override ITriggerValue ToTriggerValue() => ToVariable();
+    /// <summary>
+    ///     Is the variable required
+    /// </summary>
+    public bool? Required { get; set; }
 }

@@ -16,38 +16,6 @@ namespace Rocket.Surgery.Nuke;
 [PublicAPI]
 public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
 {
-    private readonly Dictionary<string, string> _defaultSymbols = new()
-    {
-        ["Build"] = "⚙",
-        ["Compile"] = "⚙",
-        ["Test"] = "🚦",
-        ["Pack"] = "📦",
-        ["Restore"] = "📪",
-        ["Publish"] = "🚢",
-    };
-
-    /// <inheritdoc />
-    public override AbsolutePath ConfigurationFile => NukeBuild.RootDirectory / "azure-pipelines.nuke.yml";
-
-    /// <inheritdoc />
-    public override Type HostType => typeof(AzurePipelines);
-
-    /// <inheritdoc />
-    public override IEnumerable<AbsolutePath> GeneratedFiles => [ConfigurationFile];
-
-    /// <inheritdoc />
-    public override IEnumerable<string> RelevantTargetNames => InvokeTargets;
-
-    /// <summary>
-    ///     The targets to invoke
-    /// </summary>
-    public string[] InvokeTargets { get; set; } = [];
-
-    /// <summary>
-    ///     The parameters to be used
-    /// </summary>
-    public string[] Parameters { get; set; } = [];
-
     /// <inheritdoc />
     public override CustomFileWriter CreateWriter(StreamWriter streamWriter) => new(streamWriter, 2, "#");
 
@@ -81,10 +49,7 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
                 ))
             {
                 var value = parameter.GetValue(Build);
-                if (value is AbsolutePath)
-                {
-                    value = null;
-                }
+                if (value is AbsolutePath) value = null;
 
                 paramList.Add(
                     new()
@@ -109,6 +74,28 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
             Steps = steps,
         };
     }
+
+    /// <inheritdoc />
+    public override AbsolutePath ConfigurationFile => NukeBuild.RootDirectory / "azure-pipelines.nuke.yml";
+
+    /// <inheritdoc />
+    public override IEnumerable<AbsolutePath> GeneratedFiles => [ConfigurationFile];
+
+    /// <inheritdoc />
+    public override Type HostType => typeof(AzurePipelines);
+
+    /// <summary>
+    ///     The targets to invoke
+    /// </summary>
+    public string[] InvokeTargets { get; set; } = [];
+
+    /// <summary>
+    ///     The parameters to be used
+    /// </summary>
+    public string[] Parameters { get; set; } = [];
+
+    /// <inheritdoc />
+    public override IEnumerable<string> RelevantTargetNames => InvokeTargets;
 
     /// <summary>
     ///     Get the step for the given targets
@@ -146,4 +133,14 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
                                     .Value;
         return string.IsNullOrWhiteSpace(symbol) ? name : $"{symbol} {name}";
     }
+
+    private readonly Dictionary<string, string> _defaultSymbols = new()
+    {
+        ["Build"] = "⚙",
+        ["Compile"] = "⚙",
+        ["Test"] = "🚦",
+        ["Pack"] = "📦",
+        ["Restore"] = "📪",
+        ["Publish"] = "🚢",
+    };
 }
