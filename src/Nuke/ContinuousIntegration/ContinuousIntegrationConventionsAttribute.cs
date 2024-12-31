@@ -11,14 +11,9 @@ namespace Rocket.Surgery.Nuke.ContinuousIntegration;
 [PublicAPI]
 #pragma warning disable CA1813
 [AttributeUsage(AttributeTargets.Class)]
-[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public partial class ContinuousIntegrationConventionsAttribute : BuildExtensionAttributeBase, IOnBuildFinished
 #pragma warning restore CA1813
 {
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => ToString();
-
-
     private void EmitTestSummaryMarkdown(INukeBuild build, AbsolutePath summary)
     {
 //        // ReSharper disable once SuspiciousTypeConversion.Global

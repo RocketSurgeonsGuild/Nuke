@@ -4,7 +4,6 @@ using Nuke.Common.Tooling;
 namespace Rocket.Surgery.Nuke;
 
 [PublicAPI]
-[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public sealed class Arguments : IArguments
 {
     internal const string Redacted = "[REDACTED]";
@@ -13,8 +12,7 @@ public sealed class Arguments : IArguments
     private readonly List<string> _secrets = [];
     private readonly List<KeyValuePair<string, List<string>>> _arguments = [];
 
-    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => ToString();
+
 
     public Arguments Add(string argumentFormat, bool? condition = true) => condition.HasValue && ( condition.Value || argumentFormat.Contains("{value}") )
             ? Add(argumentFormat, (object)condition.Value)

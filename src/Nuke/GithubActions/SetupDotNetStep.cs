@@ -5,7 +5,6 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 ///     A wrapper around the SetupDotNet Step
 /// </summary>
 [PublicAPI]
-[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class SetupDotNetStep : UsingStep
 {
     /// <summary>
@@ -43,15 +42,6 @@ public class SetupDotNetStep : UsingStep
     ///     Defaults to ${{secrets.GITHUB_TOKEN}} if the source url is given
     /// </remarks>
     public string? NuGetAuthToken { get; set; }
-
-    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay
-    {
-        get
-        {
-            return ToString();
-        }
-    }
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)

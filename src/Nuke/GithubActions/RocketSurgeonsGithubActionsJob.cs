@@ -12,7 +12,6 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// <param name="name"></param>
 /// <exception cref="ArgumentNullException"></exception>
 [PublicAPI]
-[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class RocketSurgeonsGithubActionsJob(string name) : RocketSurgeonsGithubActionsJobBase(name)
 {
 
@@ -43,8 +42,7 @@ public class RocketSurgeonsGithubActionsJob(string name) : RocketSurgeonsGithubA
 
     internal IDictionary<object, object> InternalData { get; } = new Dictionary<object, object>();
 
-    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => ToString();
+
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)

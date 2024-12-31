@@ -16,7 +16,6 @@ namespace Rocket.Surgery.Nuke.Jobs;
 /// </summary>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Class)]
-[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribute
 {
     private readonly string _secretKey;
@@ -61,8 +60,6 @@ public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribu
         _includeBranches = [.. includeBranches ?? []];
         AutoGenerate = false;
     }
-
-    private string DebuggerDisplay => ToString();
 
     /// <inheritdoc />
     public override ConfigurationEntity GetConfiguration(IReadOnlyCollection<ExecutableTarget> relevantTargets)

@@ -3,7 +3,6 @@ namespace Rocket.Surgery.Nuke;
 /// <summary>
 /// A tool definition
 /// </summary>
-[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class ToolDefinition
 {
     /// <summary>
@@ -15,7 +14,6 @@ public class ToolDefinition
     /// </summary>
     public string[] Commands { get; set; } = [];
 
-    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => ToString();
+
     // ReSharper disable once NullableWarningSuppressionIsUsed
 }

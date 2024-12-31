@@ -13,7 +13,6 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// </summary>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Class)]
-[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
 {
     /// <summary>
@@ -50,9 +49,6 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
     ///     Should be in the format of the name of the secret eg RSG_BOT_TOKEN
     /// </remarks>
     public string TokenSecret { get; set; } = "RSG_BOT_TOKEN";
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => ToString();
 
     /// <inheritdoc />
     public override ConfigurationEntity GetConfiguration(IReadOnlyCollection<ExecutableTarget> relevantTargets)

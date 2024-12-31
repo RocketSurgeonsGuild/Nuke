@@ -6,11 +6,9 @@ using static Nuke.Common.EnvironmentInfo;
 
 namespace Rocket.Surgery.Nuke.Tests;
 
-[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class GitVersionTests(ITestOutputHelper outputHelper) : AutoFakeTest<XUnitTestContext>(XUnitTestContext.Create(outputHelper))
 {
-    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => ToString();
+
 
     [Fact]
     public void Fact1()

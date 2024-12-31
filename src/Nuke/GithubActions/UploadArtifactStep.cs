@@ -4,7 +4,6 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 ///     The upload artifact step
 /// </summary>
 [PublicAPI]
-[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class UploadArtifactStep : UsingStep
 {
     /// <summary>
@@ -42,15 +41,6 @@ public class UploadArtifactStep : UsingStep
     ///     Gets or sets a value indicating whether an artifact with a matching name will be deleted before a new one is uploaded. Optional. Default is 'false'.
     /// </summary>
     public bool? Overwrite { get; set; }
-
-    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay
-    {
-        get
-        {
-            return ToString();
-        }
-    }
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)

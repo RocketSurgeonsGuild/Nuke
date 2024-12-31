@@ -4,7 +4,6 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 ///     Download a given artifact
 /// </summary>
 [PublicAPI]
-[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class DownloadArtifactStep : UsingStep
 {
     /// <summary>
@@ -51,9 +50,6 @@ public class DownloadArtifactStep : UsingStep
     ///     will be downloaded from.
     /// </summary>
     public string? RunId { get; set; }
-
-    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => ToString();
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)

@@ -7,7 +7,6 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 ///     A wrapper around the Sticky Pull Request Comment step
 /// </summary>
 [PublicAPI]
-[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class StickyPullRequestStep : UsingStep
 {
     /// <summary>
@@ -76,8 +75,7 @@ public class StickyPullRequestStep : UsingStep
     [IgnoreDataMember]
     public string? GithubToken { get; set; }
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => ToString();
+
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)

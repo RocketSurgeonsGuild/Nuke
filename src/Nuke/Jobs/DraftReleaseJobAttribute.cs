@@ -12,7 +12,6 @@ namespace Rocket.Surgery.Nuke.Jobs;
 /// </summary>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Class)]
-[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public sealed class DraftReleaseJobAttribute : GitHubActionsStepsAttribute
 {
     /// <summary>
@@ -36,8 +35,6 @@ public sealed class DraftReleaseJobAttribute : GitHubActionsStepsAttribute
     {
         AutoGenerate = false;
     }
-
-    private string DebuggerDisplay => ToString();
 
     /// <inheritdoc />
     public override ConfigurationEntity GetConfiguration(IReadOnlyCollection<ExecutableTarget> relevantTargets)

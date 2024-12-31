@@ -7,7 +7,6 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// <summary>
 ///     A detailed trigger for version control
 /// </summary>
-[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTrigger
 {
     /// <summary>
@@ -45,8 +44,7 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
     /// </summary>
     public List<string> Branches { get; set; } = [];
 
-    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => ToString();
+
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)

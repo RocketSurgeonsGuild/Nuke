@@ -9,7 +9,6 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// </remarks>
 /// <param name="condition"></param>
 [PublicAPI]
-[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class GithubActionCondition(string condition)
 {
     /// <summary>
@@ -50,15 +49,6 @@ public class GithubActionCondition(string condition)
     ///     The condition expression
     /// </summary>
     public string Condition { get; } = condition;
-
-    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay
-    {
-        get
-        {
-            return ToString();
-        }
-    }
 
     /// <inheritdoc />
     public override string ToString() => Condition;

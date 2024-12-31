@@ -3,7 +3,6 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// <summary>
 ///     The checkout action
 /// </summary>
-[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class CheckoutStep : UsingStep
 {
     /// <summary>
@@ -115,15 +114,6 @@ public class CheckoutStep : UsingStep
     /// </summary>
     /// <remarks>Default: false</remarks>
     public string? Submodules { get; set; }
-
-    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay
-    {
-        get
-        {
-            return ToString();
-        }
-    }
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)

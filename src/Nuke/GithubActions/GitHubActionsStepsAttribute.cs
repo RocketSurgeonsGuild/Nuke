@@ -18,7 +18,6 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// </summary>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
 {
     /// <summary>
@@ -87,8 +86,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
     /// <inheritdoc />
     public override IEnumerable<string> RelevantTargetNames => InvokedTargets;
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => ToString();
+
 
     // public override IEnumerable<string> IrrelevantTargetNames => new string[0];
 

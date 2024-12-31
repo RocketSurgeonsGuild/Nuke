@@ -3,7 +3,6 @@ using System.Diagnostics;
 
 namespace Rocket.Surgery.Nuke.ProjectModel;
 
-[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public record MsbProject
 (
     string Name,
@@ -61,8 +60,7 @@ public record MsbProject
           .Select(z => new MsbPackageReference(z.Include, z.Metadata)),
     ];
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => ToString();
+
 
     public bool GetBoolProperty(string name) => GetProperty(name) is "true" or "enable" or "enabled";
 

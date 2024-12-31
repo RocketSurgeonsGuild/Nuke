@@ -14,7 +14,6 @@ namespace Rocket.Surgery.Nuke;
 ///     Define a set of azure pipelines steps
 /// </summary>
 [PublicAPI]
-[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
 {
     private readonly Dictionary<string, string> _defaultSymbols = new()
@@ -48,15 +47,6 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
     ///     The parameters to be used
     /// </summary>
     public string[] Parameters { get; set; } = [];
-
-    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay
-    {
-        get
-        {
-            return ToString();
-        }
-    }
 
     /// <inheritdoc />
     public override CustomFileWriter CreateWriter(StreamWriter streamWriter) => new(streamWriter, 2, "#");

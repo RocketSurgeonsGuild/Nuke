@@ -9,7 +9,6 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// <summary>
 ///     The Github actions configuration entity
 /// </summary>
-[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class RocketSurgeonGitHubActionsConfiguration : ConfigurationEntity
 {
     // ReSharper disable once NullableWarningSuppressionIsUsed
@@ -58,8 +57,7 @@ public class RocketSurgeonGitHubActionsConfiguration : ConfigurationEntity
     /// </summary>
     public GithubActionCondition? If { get; set; }
 
-    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => ToString();
+
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
