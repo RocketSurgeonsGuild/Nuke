@@ -25,14 +25,6 @@ public class AzurePipelinesTasks
                                                                   || Environment.GetEnvironmentVariable("LOGNAME") == "vsts" );
 
     /// <summary>
-    ///     Publish the test results
-    /// </summary>
-    private Target PublishAzurePipelinesTestResults => d => d
-                                                           .Before(PublishAzurePipelinesCodeCoverage)
-                                                           .OnlyWhenStatic(IsRunningOnAzurePipelines)
-                                                           .Executes(() => { });
-
-    /// <summary>
     ///     Publish the code coverage
     /// </summary>
     private Target PublishAzurePipelinesCodeCoverage => d => d

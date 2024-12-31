@@ -14,11 +14,11 @@ public static partial class Symbols
     {
         [MyRegex()] = "⚙️",
         [MyRegex1()] = "📦",
-        [new("^Publish", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "📫",
+        [MyRegex2()] = "📫",
         [new("^Use", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🔨",
         [new("^Install", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "📲",
         [new("^Restore", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🎁",
-        [new("^Publish", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🚀",
+        [MyRegex2()] = "🚀",
         [new(".*?Tool.*?", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "⚒️",
         [new(".*?Workload.*?", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🚒",
         [new(".*?Test.*?", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🚦",
@@ -48,4 +48,7 @@ public static partial class Symbols
 
     [GeneratedRegex("^Pack", RegexOptions.IgnoreCase | RegexOptions.Compiled, "")]
     private static partial Regex MyRegex1();
+
+    [GeneratedRegex("^Publish", RegexOptions.IgnoreCase | RegexOptions.Compiled, "")]
+    private static partial Regex MyRegex2();
 }
