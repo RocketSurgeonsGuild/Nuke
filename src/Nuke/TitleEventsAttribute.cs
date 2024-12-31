@@ -70,6 +70,13 @@ public sealed class TitleEventsAttribute : BuildExtensionAttributeBase, IOnBuild
                 return (short)Math.Round((double)step++ / total * 100);
         */
 
+        /* Unmerged change from project 'Rocket.Surgery.Nuke(net9.0)'
+        Before:
+                return (short)Math.Round(( (double)step++ / total ) * 100);
+        After:
+                return (short)Math.Round((double)step++ / total * 100);
+        */
+
 /* Unmerged change from project 'Rocket.Surgery.Nuke(net9.0)'
 Before:
         return (short)Math.Round(( (double)step++ / total ) * 100);
