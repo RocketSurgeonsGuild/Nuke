@@ -1,4 +1,5 @@
 using System.Text;
+
 using Nuke.Common.Tooling;
 
 namespace Rocket.Surgery.Nuke;
@@ -12,26 +13,23 @@ public sealed class Arguments : IArguments
     private readonly List<string> _secrets = [];
     private readonly List<KeyValuePair<string, List<string>>> _arguments = [];
 
-
-
     public Arguments Add(string argumentFormat, bool? condition = true) => condition.HasValue && ( condition.Value || argumentFormat.Contains("{value}") )
-            ? Add(argumentFormat, (object)condition.Value)
-            : this;
+        ? Add(argumentFormat, (object)condition.Value)
+        : this;
 
     public Arguments Add<T>(string argumentFormat, T? value, char? disallowed = null, bool secret = false)
-        where T : struct
-    {
-        return value.HasValue ? Add(argumentFormat, value.Value, disallowed, secret) : this;
-    }
+        where T : struct =>
+        value.HasValue ? Add(argumentFormat, value.Value, disallowed, secret) : this;
 
-    public Arguments Add(string argumentFormat, object? value, char? disallowed = null, bool secret = false) => Add(argumentFormat, value?.ToString() ?? "", disallowed, customValue: false, secret);
+    public Arguments Add(string argumentFormat, object? value, char? disallowed = null, bool secret = false) => Add(argumentFormat, value?.ToString() ?? "", disallowed, false, secret);
 
     public Arguments Add(
         string argumentFormat,
         string? value,
         char? disallowed = null,
         bool customValue = false,
-        bool secret = false)
+        bool secret = false
+    )
     {
         if (string.IsNullOrWhiteSpace(value))
         {
@@ -54,7 +52,8 @@ public sealed class Arguments : IArguments
         IEnumerable<T>? values,
         char? separator = null,
         char? disallowed = null,
-        bool quoteMultiple = false)
+        bool quoteMultiple = false
+    )
     {
         var list = values?.ToList();
         if (list is null || list.Count == 0)
@@ -68,9 +67,10 @@ public sealed class Arguments : IArguments
 
         AddInternal(
             argumentFormat,
-             separator.HasValue
+            separator.HasValue
                 ? [FormatMultiple(list, Format, separator.Value, quoteMultiple)]
-                : list.Select(Format).ToArray());
+                : list.Select(Format).ToArray()
+        );
 
         return this;
     }
@@ -81,7 +81,8 @@ public sealed class Arguments : IArguments
         string itemFormat,
         char? separator = null,
         char? disallowed = null,
-        bool quoteMultiple = false)
+        bool quoteMultiple = false
+    )
     {
         if (dictionary is null || dictionary.Count == 0)
         {
@@ -94,18 +95,18 @@ public sealed class Arguments : IArguments
 
         string Format(object value) => value.ToString().DoubleQuoteIfNeeded(separator, keyValueSeparator.Single(), disallowed, Space);
 
-        string FormatPair(KeyValuePair<TKey, TValue> pair)
-            => itemFormat
-              .Replace("{key}", Format(pair!.Key))
-              .Replace("{value}", Format(pair!.Value));
+        string FormatPair(KeyValuePair<TKey, TValue> pair) => itemFormat
+            .Replace("{key}", Format(pair!.Key))
+            .Replace("{value}", Format(pair!.Value));
 
-        var pairs = dictionary.Where(x =>  x.Value is not null ).ToList();
+        var pairs = dictionary.Where(x => x.Value is { }).ToList();
 
         AddInternal(
             argumentFormat,
-             separator.HasValue
+            separator.HasValue
                 ? [FormatMultiple(pairs, FormatPair, separator.Value, quoteMultiple)]
-                : pairs.Select(FormatPair).ToArray());
+                : pairs.Select(FormatPair).ToArray()
+        );
 
         return this;
     }
@@ -116,7 +117,8 @@ public sealed class Arguments : IArguments
         string itemFormat,
         char? separator = null,
         char? disallowed = null,
-        bool quoteMultiple = false)
+        bool quoteMultiple = false
+    )
     {
         if (lookup is null || lookup.Count == 0)
         {
@@ -129,18 +131,18 @@ public sealed class Arguments : IArguments
 
         string Format(object value) => value?.ToString().DoubleQuoteIfNeeded(separator, listSeparator.Single(), disallowed, Space);
 
-        string FormatLookup(TKey key, string values)
-            => itemFormat
-              .Replace("{key}", Format(key!))
-              .Replace("{value}", values);
+        string FormatLookup(TKey key, string values) => itemFormat
+            .Replace("{key}", Format(key!))
+            .Replace("{value}", values);
 
         foreach (var list in lookup)
         {
             AddInternal(
                 argumentFormat,
-                 separator.HasValue
+                separator.HasValue
                     ? [FormatLookup(list.Key, FormatMultiple(list, x => Format(x!), separator.NotNull().Value, quoteMultiple))]
-                    : list.Select(x => FormatLookup(list.Key, Format(x!))).ToArray());
+                    : list.Select(x => FormatLookup(list.Key, Format(x!))).ToArray()
+            );
         }
 
         return this;
@@ -159,7 +161,7 @@ public sealed class Arguments : IArguments
         if (list is null)
         {
             list = [];
-            _arguments.Add(new KeyValuePair<string, List<string>>(format, list));
+            _arguments.Add(new(format, list));
         }
 
         list.AddRange(values);
@@ -173,14 +175,11 @@ public sealed class Arguments : IArguments
             : values.DoubleQuoteIfNeeded();
     }
 
-    public string FilterSecrets(string text) => _secrets.Aggregate(text, (str, s) => str.Replace(s, Redacted));
-
     private string Render(bool forOutput)
     {
-        string Format(string argument)
-            => !_secrets.Contains(argument) || !forOutput
-                ? argument
-                : Redacted;
+        string Format(string argument) => !_secrets.Contains(argument) || !forOutput
+            ? argument
+            : Redacted;
 
         var builder = new StringBuilder();
         foreach (var argumentPair in _arguments)
@@ -194,17 +193,19 @@ public sealed class Arguments : IArguments
         return builder.ToString().TrimEnd();
     }
 
-    public string RenderForExecution() => Render(forOutput: false);
-
-    public string RenderForOutput() => Render(forOutput: true);
-
     public ArgumentStringHandler RenderForStringHandler()
     {
         var handler = new ArgumentStringHandler();
         if (RenderForExecution() is { Length: > 0 } args)
-        handler.AppendLiteral(args);
+            handler.AppendLiteral(args);
         return handler;
     }
 
     public override string ToString() => RenderForOutput();
+
+    public string FilterSecrets(string text) => _secrets.Aggregate(text, (str, s) => str.Replace(s, Redacted));
+
+    public string RenderForExecution() => Render(false);
+
+    public string RenderForOutput() => Render(true);
 }

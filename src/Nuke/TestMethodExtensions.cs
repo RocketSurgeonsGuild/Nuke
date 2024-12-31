@@ -1,6 +1,8 @@
 using System.Collections.Immutable;
 using System.Xml.Linq;
+
 using Nuke.Common.IO;
+
 using Rocket.Surgery.Nuke.DotNetCore;
 using Rocket.Surgery.Nuke.ProjectModel;
 
@@ -21,55 +23,51 @@ public static class TestMethodExtensions
     // ReSharper disable once IdentifierTypo
     // ReSharper disable once StringLiteralTypo
     public static ITargetDefinition EnsureRunSettingsExists<T>(this ITargetDefinition target, T build)
-        where T : IHaveCodeCoverage, IComprehendTests, IHaveSolution
-    {
-        return target.Executes(
-            async () =>
+        where T : IHaveCodeCoverage, IComprehendTests, IHaveSolution => target.Executes(
+        async () =>
+        {
+            var runsettings = build.RunSettings;
+            // ReSharper disable once IdentifierTypo
+            // ReSharper disable once StringLiteralTypo
+            if (!runsettings.FileExists())
             {
-                var runsettings = build.RunSettings;
-                // ReSharper disable once IdentifierTypo
                 // ReSharper disable once StringLiteralTypo
-                if (!runsettings.FileExists())
-                {
-                    // ReSharper disable once StringLiteralTypo
-                    runsettings = NukeBuild.TemporaryDirectory / "default.runsettings";
-                    await using var tempFile = File.Open(runsettings, runsettings.FileExists() ? FileMode.Truncate : FileMode.CreateNew);
-                    await typeof(ICanTestWithDotNetCore)
-                         .Assembly
-                          // ReSharper disable once NullableWarningSuppressionIsUsed
-                         .GetManifestResourceStream("Rocket.Surgery.Nuke.default.runsettings")!.CopyToAsync(tempFile);
-                }
-
-                var projects = build
-                              .Solution.AnalyzeAllProjects()
-                              .ToImmutableArray();
-                var includeNames = projects
-                                  .Select(z => z.GetProperty("AssemblyName") ?? "")
-                                  .Where(z => !string.IsNullOrWhiteSpace(z))
-                                  .Distinct()
-                                  .Select(z => ( z + ".dll" ).Replace(".", "\\."));
-                var excludePackages = projects
-                                     .SelectMany(z => z.PackageReferences)
-                                     .Select(z => z.Name)
-                                     .Where(z => !string.IsNullOrWhiteSpace(z))
-                                     .Distinct()
-                                     .Select(z => ( z + ".dll" ).Replace(".", "\\."));
-
-
-                ManageRunSettings(
-                    build,
-                    runsettings,
-                    (
-                        build.IncludeModulePaths.Union(includeNames),
-                        build.ExcludeModulePaths.Union(excludePackages)
-                    ),
-                    ( build.IncludeAttributes, build.ExcludeAttributes ),
-                    ( build.IncludeNamespaces, build.ExcludeNamespaces ),
-                    ( build.IncludeSources, build.ExcludeSources )
-                );
+                runsettings = NukeBuild.TemporaryDirectory / "default.runsettings";
+                await using var tempFile = File.Open(runsettings, runsettings.FileExists() ? FileMode.Truncate : FileMode.CreateNew);
+                await typeof(ICanTestWithDotNetCore)
+                     .Assembly
+                     // ReSharper disable once NullableWarningSuppressionIsUsed
+                     .GetManifestResourceStream("Rocket.Surgery.Nuke.default.runsettings")!.CopyToAsync(tempFile);
             }
+
+            var projects = build
+                          .Solution.AnalyzeAllProjects()
+                          .ToImmutableArray();
+            var includeNames = projects
+                              .Select(z => z.GetProperty("AssemblyName") ?? "")
+                              .Where(z => !string.IsNullOrWhiteSpace(z))
+                              .Distinct()
+                              .Select(z => ( z + ".dll" ).Replace(".", "\\."));
+            var excludePackages = projects
+                                 .SelectMany(z => z.PackageReferences)
+                                 .Select(z => z.Name)
+                                 .Where(z => !string.IsNullOrWhiteSpace(z))
+                                 .Distinct()
+                                 .Select(z => ( z + ".dll" ).Replace(".", "\\."));
+
+            ManageRunSettings(
+                build,
+                runsettings,
+                (
+                    build.IncludeModulePaths.Union(includeNames),
+                    build.ExcludeModulePaths.Union(excludePackages)
+                ),
+                (build.IncludeAttributes, build.ExcludeAttributes),
+                (build.IncludeNamespaces, build.ExcludeNamespaces),
+                (build.IncludeSources, build.ExcludeSources)
+            );
+        }
         );
-    }
 
     private static void ManageRunSettings<T>(
         T build,
@@ -83,19 +81,13 @@ public static class TestMethodExtensions
     {
         var doc = XDocument.Load(runsettingsPath);
 
-        var dataCollector = EnsureElement(doc.Root, "DataCollectionRunSettings")
+        var dataCollector = ( EnsureElement(doc.Root, "DataCollectionRunSettings")
                            .Element("DataCollectors")
-                          ?.Element("DataCollector");
-
-        if (dataCollector == null)
-        {
-            throw new InvalidOperationException("DataCollector element is missing in the runsettings file.");
-        }
-
+                          ?.Element("DataCollector") ) ?? throw new InvalidOperationException("DataCollector element is missing in the runsettings file.");
         var codeCoverage = EnsureElement(dataCollector, "Configuration")
            .Element("CodeCoverage");
 
-        if (codeCoverage == null)
+        if (codeCoverage is null)
         {
             codeCoverage = new("CodeCoverage");
             dataCollector.Element("Configuration")?.Add(codeCoverage);
@@ -118,32 +110,19 @@ public static class TestMethodExtensions
         static (IEnumerable<string> include, IEnumerable<string> exclude) transform(
             (IEnumerable<string> include, IEnumerable<string> exclude) attributes,
             Func<string, IEnumerable<string>> transformer
-        )
-        {
-            return ( attributes.include.SelectMany(transformer), attributes.exclude.SelectMany(transformer) );
-        }
+        ) => (attributes.include.SelectMany(transformer), attributes.exclude.SelectMany(transformer));
 
+        static IEnumerable<string> transformAttribute(string attr) => [$"^{attr.Replace(".", "\\.")}$"];
 
-        static IEnumerable<string> transformAttribute(string attr)
-        {
-            return [$"^{attr.Replace(".", "\\.")}$"];
-        }
+        static IEnumerable<string> transformModulePath(string ns) => [$".*{ns}"];
 
-        static IEnumerable<string> transformModulePath(string ns)
-        {
-            return [$".*{ns}"];
-        }
-
-        static IEnumerable<string> transformNamespace(string ns)
-        {
-            return [$"^{ns.Replace(".", "\\.")}.*"];
-        }
+        static IEnumerable<string> transformNamespace(string ns) => [$"^{ns.Replace(".", "\\.")}.*"];
     }
 
     private static XElement EnsureElement(XElement parent, string name)
     {
         var element = parent.Element(name);
-        if (element == null)
+        if (element is null)
         {
             element = new(name);
             parent.Add(element);
@@ -179,7 +158,7 @@ public static class TestMethodExtensions
         {
             var values = include.Elements().DistinctBy(z => z.Value).OrderBy(x => x.Value).ToArray();
             include.RemoveAll();
-            include.Add([..values]);
+            include.Add([.. values]);
             if (!include.Elements().Any()) include.Remove();
         }
 
@@ -187,7 +166,7 @@ public static class TestMethodExtensions
         {
             var values = exclude.Elements().DistinctBy(z => z.Value).OrderBy(x => x.Value).ToArray();
             exclude.RemoveAll();
-            exclude.Add([..values]);
+            exclude.Add([.. values]);
             if (!exclude.Elements().Any()) exclude.Remove();
         }
 

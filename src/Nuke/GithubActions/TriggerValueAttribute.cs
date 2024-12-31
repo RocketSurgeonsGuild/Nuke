@@ -3,19 +3,17 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// <summary>
 ///     A trigger value attribute for use with GithubActions
 /// </summary>
+/// <remarks>
+///     The default constructor
+/// </remarks>
+/// <param name="name"></param>
 [AttributeUsage(AttributeTargets.Class)]
-public abstract class TriggerValueAttribute : Attribute
+public abstract class TriggerValueAttribute(string name) : Attribute
 {
-    /// <summary>
-    ///     The default constructor
-    /// </summary>
-    /// <param name="name"></param>
-    protected TriggerValueAttribute(string name) => Name = name;
-
     /// <summary>
     ///     The name of the trigger value
     /// </summary>
-    public string Name { get; }
+    public string Name { get; } = name;
 
     /// <summary>
     ///     The alias for the trigger value if provided

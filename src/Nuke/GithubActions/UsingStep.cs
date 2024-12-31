@@ -2,21 +2,18 @@ using System.Reflection;
 using System.Runtime.Serialization;
 
 // ReSharper disable MemberCanBeProtected.Global
-#pragma warning disable CA1308
-#pragma warning disable CA2227
+#pragma warning disable CA1308, CA2227
 namespace Rocket.Surgery.Nuke.GithubActions;
 
 /// <summary>
 ///     A step that runs a given action
 /// </summary>
-public class UsingStep : BaseGitHubActionsStep
+/// <remarks>
+///     The constructor with the display name
+/// </remarks>
+/// <param name="name"></param>
+public class UsingStep(string name) : BaseGitHubActionsStep(name)
 {
-    /// <summary>
-    ///     The constructor with the display name
-    /// </summary>
-    /// <param name="name"></param>
-    public UsingStep(string name) : base(name) { }
-
     /// <summary>
     ///     The action to use.
     /// </summary>
@@ -35,20 +32,19 @@ public class UsingStep : BaseGitHubActionsStep
     {
         foreach (var property in GetType()
                                 .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                                .Where(z => z is { CanRead: true, CanWrite: true, } && z.DeclaringType == GetType())
+                                .Where(z => z is { CanRead: true, CanWrite: true } && z.DeclaringType == GetType())
                                 .Where(z => z.GetCustomAttribute<IgnoreDataMemberAttribute>() is null)
                 )
         {
             var value = property.GetValue(this);
-            if (value == null) continue;
+            if (value is null) continue;
 
             With.TryAdd(
                 transformName(property.Name),
-                value switch { null => string.Empty, bool b => b.ToString().ToLowerInvariant(), string s => s, _ => value.ToString() ?? "", }
+                value switch { null => "", bool b => b.ToString().ToLowerInvariant(), string s => s, _ => value.ToString() ?? "" }
             );
         }
     }
-
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)

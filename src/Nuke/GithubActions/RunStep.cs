@@ -3,16 +3,14 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// <summary>
 ///     Defines an step that runs code in the given shell
 /// </summary>
+/// <remarks>
+///     The default constructor
+/// </remarks>
+/// <param name="name"></param>
 [PublicAPI]
-public class RunStep : BaseGitHubActionsStep
+public class RunStep(string name) : BaseGitHubActionsStep(name)
 {
-    private static readonly string[] separator = { "\r\n", "\n" };
-
-    /// <summary>
-    ///     The default constructor
-    /// </summary>
-    /// <param name="name"></param>
-    public RunStep(string name) : base(name) { }
+    private static readonly string[] separator = ["\r\n", "\n"];
 
     // ReSharper disable once NullableWarningSuppressionIsUsed
     /// <summary>

@@ -64,7 +64,7 @@ public class SetupDotNetStep : UsingStep
 
         if (!string.IsNullOrWhiteSpace(SourceUrl))
         {
-            NuGetAuthToken = ( string.IsNullOrWhiteSpace(NuGetAuthToken) ) ? "${{ secrets.GITHUB_TOKEN }}" : NuGetAuthToken;
+            NuGetAuthToken = string.IsNullOrWhiteSpace(NuGetAuthToken) ? "${{ secrets.GITHUB_TOKEN }}" : NuGetAuthToken;
         }
 
         if (!string.IsNullOrWhiteSpace(NuGetAuthToken))

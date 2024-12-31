@@ -1,6 +1,7 @@
 using System.Collections.Immutable;
-using System.Runtime.CompilerServices;
+
 using Microsoft.Extensions.FileSystemGlobbing;
+
 using Nuke.Common.IO;
 using Nuke.Common.Tools.Git;
 
@@ -9,13 +10,10 @@ namespace Rocket.Surgery.Nuke;
 /// <summary>
 ///     Lint paths container
 /// </summary>
-public class LintPaths
+public sealed class LintPaths
 {
-    private readonly Lazy<LintPaths> _allPaths;
-    private readonly Lazy<ImmutableList<AbsolutePath>> _paths;
-
     /// <summary>
-    ///   Create a new lint paths container
+    ///     Create a new lint paths container
     /// </summary>
     /// <param name="matcher"></param>
     /// <param name="trigger"></param>
@@ -30,7 +28,7 @@ public class LintPaths
     );
 
     /// <summary>
-    ///   Lint paths container
+    ///     Lint paths container
     /// </summary>
     /// <param name="matcher"></param>
     /// <param name="trigger"></param>
@@ -58,6 +56,9 @@ public class LintPaths
         }
     );
 
+    private readonly Lazy<LintPaths> _allPaths;
+    private readonly Lazy<ImmutableList<AbsolutePath>> _paths;
+
     /// <summary>
     ///     Lint paths container
     /// </summary>
@@ -70,7 +71,7 @@ public class LintPaths
         Trigger = trigger;
         Message = message;
         _paths = paths;
-        _allPaths = allPaths ?? new Lazy<LintPaths>(() => new(LintTrigger.None, message, new(() => ImmutableList<AbsolutePath>.Empty), null));
+        _allPaths = allPaths ?? new Lazy<LintPaths>(() => new(LintTrigger.None, message, new(() => []), null));
     }
 
     /// <summary>
@@ -108,20 +109,14 @@ public class LintPaths
     /// </summary>
     /// <param name="matcher"></param>
     /// <returns></returns>
-    public bool IsLocalLintOrMatches(Matcher matcher)
-    {
-        return ( Trigger == LintTrigger.None && NukeBuild.IsLocalBuild ) || matcher.Match(Paths.Select(z => z.ToString())).HasMatches;
-    }
+    public bool IsLocalLintOrMatches(Matcher matcher) => ( Trigger == LintTrigger.None && NukeBuild.IsLocalBuild ) || matcher.Match(Paths.Select(z => z.ToString())).HasMatches;
 
     /// <summary>
     ///     Glob against a given matcher to included / exclude files
     /// </summary>
     /// <param name="matcher"></param>
     /// <returns></returns>
-    public ImmutableList<RelativePath> Glob(Matcher matcher)
-    {
-        return [.._paths.Value.Match(matcher).GetRelativePaths()];
-    }
+    public ImmutableList<RelativePath> Glob(Matcher matcher) => [.. _paths.Value.Match(matcher).GetRelativePaths()];
 
     /// <summary>
     ///     Glob against a given matcher to included / exclude files
@@ -135,10 +130,7 @@ public class LintPaths
     /// </summary>
     /// <param name="matcher"></param>
     /// <returns></returns>
-    public ImmutableList<AbsolutePath> GlobAbsolute(Matcher matcher)
-    {
-        return [.._paths.Value.Match(matcher)];
-    }
+    public ImmutableList<AbsolutePath> GlobAbsolute(Matcher matcher) => [.. _paths.Value.Match(matcher)];
 
     /// <summary>
     ///     Glob against a given matcher to included / exclude files

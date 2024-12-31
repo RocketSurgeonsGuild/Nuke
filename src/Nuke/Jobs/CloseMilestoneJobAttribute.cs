@@ -1,48 +1,39 @@
-using System.Diagnostics;
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
+
 using Rocket.Surgery.Nuke.GithubActions;
 
 namespace Rocket.Surgery.Nuke.Jobs;
 
 /// <summary>
-/// Adds draft release support to the build
+///     Adds draft release support to the build
 /// </summary>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Class)]
 public sealed class CloseMilestoneJobAttribute : GitHubActionsStepsAttribute
 {
     /// <summary>
-    /// Adds draft release support to the build
+    ///     Adds draft release support to the build
     /// </summary>
-    public CloseMilestoneJobAttribute() : base("close-milestone", GitHubActionsImage.UbuntuLatest)
-    {
-        AutoGenerate = false;
-    }
+    public CloseMilestoneJobAttribute() : base("close-milestone", GitHubActionsImage.UbuntuLatest) => AutoGenerate = false;
 
     /// <summary>
-    /// Adds draft release support to the build
+    ///     Adds draft release support to the build
     /// </summary>
-    public CloseMilestoneJobAttribute(string image, params string[] images) : base("close-milestone", image, images)
-    {
-        AutoGenerate = false;
-    }
+    public CloseMilestoneJobAttribute(string image, params string[] images) : base("close-milestone", image, images) => AutoGenerate = false;
 
     /// <summary>
-    /// Adds draft release support to the build
+    ///     Adds draft release support to the build
     /// </summary>
-    public CloseMilestoneJobAttribute(GitHubActionsImage image) : base("close-milestone", image)
-    {
-        AutoGenerate = false;
-    }
+    public CloseMilestoneJobAttribute(GitHubActionsImage image) : base("close-milestone", image) => AutoGenerate = false;
 
     /// <inheritdoc />
     public override ConfigurationEntity GetConfiguration(IReadOnlyCollection<ExecutableTarget> relevantTargets)
     {
         var build = new RocketSurgeonGitHubActionsConfiguration
         {
-            Name = "Close Milestone"
+            Name = "Close Milestone",
         };
         build.DetailedTriggers.Add(
             new RocketSurgeonGitHubActionsWorkflowTrigger
@@ -88,7 +79,7 @@ public sealed class CloseMilestoneJobAttribute : GitHubActionsStepsAttribute
                             --token "${{ secrets.GITHUB_TOKEN }}" `
                             -m "v${{ steps.gitversion.outputs.majorMinorPatch }}"
                         """,
-                }
+                },
             ]
         );
         build.Jobs.Add(job);

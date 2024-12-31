@@ -1,15 +1,8 @@
-
-/* Unmerged change from project 'Rocket.Surgery.Nuke(net9.0)'
-Before:
-using System.Collections.Immutable;
-using Nuke.Common.CI;
-After:
-using Nuke.Common.CI;
-*/
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
 using Nuke.Common.IO;
+
 using YamlDotNet.RepresentationModel;
 
 #pragma warning disable CA1851
@@ -29,8 +22,8 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     protected GithubActionsStepsAttributeBase(string name)
     {
         Name = name;
-        ExcludedTargets = Array.Empty<string>();
-        NonEntryTargets = Array.Empty<string>();
+        ExcludedTargets = [];
+        NonEntryTargets = [];
     }
 
     /// <summary>
@@ -143,12 +136,12 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
     public string[] Enhancements { get; set; } = [];
 
     /// <summary>
-    /// The types
+    ///     The types
     /// </summary>
     public string[] Types { get; set; } = [];
 
     /// <summary>
-    /// The workflows
+    ///     The workflows
     /// </summary>
     public string[] Workflows { get; set; } = [];
 
@@ -167,7 +160,7 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
         {
             foreach (var method in Enhancements.Join(Build.GetType().GetMethods(), z => z, z => z.Name, (_, e) => e))
             {
-                config = ( method.IsStatic )
+                config = method.IsStatic
                     ? method.Invoke(null, [config]) as RocketSurgeonGitHubActionsConfiguration ?? config
                     : method.Invoke(Build, [config]) as RocketSurgeonGitHubActionsConfiguration
                  ?? config;
@@ -207,30 +200,10 @@ public abstract class GithubActionsStepsAttributeBase : ChainedConfigurationAttr
 
         string? GetValue(string? uses)
         {
-
-/* Unmerged change from project 'Rocket.Surgery.Nuke(net9.0)'
-Before:
-            if (uses == null) return null;
-            var nodeKey = uses.Split('@')[0];
-            if (nodeList.TryGetValue(nodeKey, out var value)) return value;
-
-            return uses;
-After:
-            if (uses is null)
-            {
-                return null;
-            }
+            if (uses is null) return null;
 
             var nodeKey = uses.Split('@')[0];
-            return ( nodeList.TryGetValue(nodeKey, out var value) ) ? value : uses;
-*/
-            if (uses is null)
-            {
-                return null;
-            }
-
-            var nodeKey = uses.Split('@')[0];
-            return ( nodeList.TryGetValue(nodeKey, out var value) ) ?  value  :  uses;
+            return nodeList.TryGetValue(nodeKey, out var value) ? value : uses;
         }
 
         foreach (var job in config.Jobs)

@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+
 using Nuke.Common.CI.GitHubActions.Configuration;
 using Nuke.Common.Tooling;
 using Nuke.Common.Utilities.Collections;
@@ -37,11 +38,9 @@ public class RocketSurgeonGitHubActionsVcsTrigger : GitHubActionsDetailedTrigger
     public ImmutableArray<string> ExcludePaths { get; set; } = [];
 
     /// <summary>
-    /// The types
+    ///     The types
     /// </summary>
     public ImmutableArray<string> Types { get; set; } = [];
-
-
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
@@ -67,6 +66,7 @@ public class RocketSurgeonGitHubActionsVcsTrigger : GitHubActionsDetailedTrigger
                 }
             }
         }
+
         using (writer.Indent())
         {
             if (Branches.Length > 0)

@@ -1,6 +1,9 @@
 using FluentAssertions;
+
 using Nuke.Common.Tools.NuGet;
+
 using Rocket.Surgery.Extensions.Testing;
+
 using Xunit;
 using Xunit.Abstractions;
 
@@ -8,8 +11,6 @@ namespace Rocket.Surgery.Nuke.Tests;
 
 public class MiscTests(ITestOutputHelper outputHelper) : AutoFakeTest<XUnitTestContext>(XUnitTestContext.Create(outputHelper))
 {
-
-
     [Fact]
     public void Test1()
     {

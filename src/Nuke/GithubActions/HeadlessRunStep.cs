@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 namespace Rocket.Surgery.Nuke.GithubActions;
 
 /// <summary>
@@ -28,8 +26,6 @@ public class HeadlessRunStep : UsingStep
     ///     See https://www.x.org/releases/current/doc/man/man1/Xvfb.1.xhtml#heading4 for the list of supported options
     /// </summary>
     public string? Options { get; set; }
-
-
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)

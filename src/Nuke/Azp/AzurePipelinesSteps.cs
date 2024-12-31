@@ -26,6 +26,7 @@ public class AzurePipelinesSteps : ConfigurationEntity
     {
         writer.WriteLine("#");
         if (Parameters.Count > 0)
+        {
             using (writer.WriteBlock("parameters:"))
             {
                 foreach (var item in Parameters)
@@ -33,15 +34,16 @@ public class AzurePipelinesSteps : ConfigurationEntity
                     item.Write(writer);
                 }
             }
+        }
 
         using (writer.WriteBlock("steps:"))
         {
-            #pragma warning disable CA1308
+#pragma warning disable CA1308
             var parameters = Parameters
                             .Select(z => $"--{z.Name.ToLowerInvariant()} '${{{{ parameters.{z.Name} }}}}'")
                             .ToArray()
                             .JoinSpace();
-            #pragma warning restore CA1308
+#pragma warning restore CA1308
 
             foreach (var step in Steps)
             {

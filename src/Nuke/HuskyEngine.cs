@@ -20,9 +20,9 @@ internal class HuskyEngine : IGitHooksEngine
 
             return hooksPath.StartsWith(".husky") && AbsolutePath.Create(NukeBuild.RootDirectory / hooksPath / "_" / "husky.sh").FileExists();
         }
-        #pragma warning disable CA1031
+#pragma warning disable CA1031
         catch
-            #pragma warning restore CA1031
+#pragma warning restore CA1031
         {
             return false;
         }

@@ -4,8 +4,12 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// <summary>
 ///     A enum like class that defines the possible shells in github actions
 /// </summary>
+/// <remarks>
+///     The default constructor
+/// </remarks>
+/// <param name="shell"></param>
 [PublicAPI]
-public class GithubActionShell
+public class GithubActionShell(string shell)
 {
     /// <summary>
     ///     Get a shell from a given string
@@ -52,15 +56,9 @@ public class GithubActionShell
     public static GithubActionShell Powershell { get; } = new("powershell");
 
     /// <summary>
-    ///     The default constructor
-    /// </summary>
-    /// <param name="shell"></param>
-    public GithubActionShell(string shell) => Shell = shell;
-
-    /// <summary>
     ///     The shell
     /// </summary>
-    public string Shell { get; }
+    public string Shell { get; } = shell;
 
     /// <inheritdoc />
     public override string ToString() => Shell;

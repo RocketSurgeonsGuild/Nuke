@@ -1,4 +1,5 @@
 using System.ComponentModel;
+
 using Nuke.Common.Tooling;
 
 #pragma warning disable CA2211 // Non-constant fields should not be visible
@@ -47,7 +48,7 @@ public class XamarinConfiguration : Enumeration
     public static XamarinConfiguration Store = new() { Value = nameof(Store) };
 
     /// <summary>
-    ///     Performs an implicit conversion from <see cref="XamarinConfiguration" /> to <see cref="System.String" />.
+    ///     Performs an implicit conversion from <see cref="XamarinConfiguration" /> to <see cref="string" />.
     /// </summary>
     /// <param name="configuration">The configuration.</param>
     /// <returns>

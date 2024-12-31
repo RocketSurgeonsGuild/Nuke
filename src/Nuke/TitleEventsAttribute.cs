@@ -1,4 +1,5 @@
 using Nuke.Common.Execution;
+
 using Serilog;
 
 namespace Rocket.Surgery.Nuke;
@@ -12,7 +13,7 @@ public sealed class TitleEventsAttribute : BuildExtensionAttributeBase, IOnBuild
     {
         if (NukeBuild.IsServerBuild) return 0;
         var total = plan.Count + 1;
-        return (short)Math.Round(( (double)step++ / total ) * 100);
+        return (short)Math.Round( (double)step++ / total  * 100);
     }
 
     private static void ProgressBar(ProgressBarState state, short progress = 0)
@@ -63,8 +64,8 @@ public sealed class TitleEventsAttribute : BuildExtensionAttributeBase, IOnBuild
         None = 0,
         Default = 1,
 
-//        Error = 2,
+        //        Error = 2,
         Indeterminate = 3,
-//        Warning = 4
+        //        Warning = 4
     }
 }

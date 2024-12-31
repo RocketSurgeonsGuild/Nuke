@@ -7,7 +7,7 @@ namespace Rocket.Surgery.Nuke.Readme;
 /// </summary>
 public class Badges : IReadmeSection
 {
-    private readonly List<IBadgeSection> _sections = new();
+    private readonly List<IBadgeSection> _sections = [];
 
     /// <summary>
     ///     Adds a new Badge section
@@ -24,7 +24,7 @@ public class Badges : IReadmeSection
     public string Name => "badges";
 
     /// <inheritdoc />
-    public string ConfigKey => string.Empty;
+    public string ConfigKey => "";
 
     /// <inheritdoc />
     public Task<string> Process(
@@ -37,7 +37,7 @@ public class Badges : IReadmeSection
         foreach (var section in _sections)
         {
             var subConfig = string.IsNullOrEmpty(section.ConfigKey) ? config.ToDictionary(x => (object)x.Key, x => x.Value) :
-                config.TryGetValue(section.ConfigKey, out var o)    ? o as IDictionary<object, object?> : null;
+                config.TryGetValue(section.ConfigKey, out var o) ? o as IDictionary<object, object?> : null;
             // Assume if not configured, it will never be able to be rendered
             if (subConfig is null) continue;
 

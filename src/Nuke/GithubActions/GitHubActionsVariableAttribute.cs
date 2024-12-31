@@ -3,15 +3,13 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// <summary>
 ///     Defines a github actions variable
 /// </summary>
+/// <remarks>
+///     The constructor for the <see cref="GitHubActionsVariableAttribute" />
+/// </remarks>
+/// <param name="name"></param>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-public sealed class GitHubActionsVariableAttribute : TriggerValueAttribute
+public sealed class GitHubActionsVariableAttribute(string name) : TriggerValueAttribute(name)
 {
-    /// <summary>
-    ///     The constructor for the <see cref="GitHubActionsVariableAttribute" />
-    /// </summary>
-    /// <param name="name"></param>
-    public GitHubActionsVariableAttribute(string name) : base(name) { }
-
     /// <summary>
     ///     Is the variable required
     /// </summary>

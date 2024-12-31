@@ -1,6 +1,8 @@
 using Microsoft.Extensions.FileSystemGlobbing;
+
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
+
 using Serilog;
 using Serilog.Events;
 
@@ -128,7 +130,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                   .Before(DotnetFormat)
                   .Before(PostLint)
                   .OnlyWhenStatic(() => DotNetTool.IsInstalled("jb"))
-                   // disable for local stagged runs, as it takes a long time.
+                  // disable for local stagged runs, as it takes a long time.
                   .OnlyWhenStatic(
                        () => ( IsLocalBuild && LintPaths.Trigger != LintTrigger.Staged )
                         || !IsLocalBuild
@@ -193,20 +195,17 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                        }
                    );
 
-            static IReadOnlyCollection<Output> runCodeCleanup(ArgumentStringHandler args)
-            {
-                return DotNetTool.GetTool("jb")(
-                    args,
-                    NukeBuild.RootDirectory,
-                    logOutput: true,
-                    logInvocation: NukeBuild.Verbosity == Verbosity.Verbose,
-                    // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-                    logger: static (t, s) => Log.Write(
-                                t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information,
-                                s
-                            )
+            static IReadOnlyCollection<Output> runCodeCleanup(ArgumentStringHandler args) => DotNetTool.GetTool("jb")(
+                args,
+                NukeBuild.RootDirectory,
+                logOutput: true,
+                logInvocation: NukeBuild.Verbosity == Verbosity.Verbose,
+                // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
+                logger: static (t, s) => Log.Write(
+                            t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information,
+                            s
+                        )
                 );
-            }
         };
 
     /// <summary>

@@ -14,17 +14,13 @@ internal class NugetPackagesSection : IReadmeSection
     /// <returns></returns>
     public static string GetResult(IDictionary<string, object?> config, IMarkdownReferences references, string packageName)
     {
-        #pragma warning disable CA1307
-        #pragma warning disable CA1308 // Normalize strings to uppercase
-        #pragma warning disable CA5351
+#pragma warning disable CA1307, CA1308, CA5351
         var hash = Convert
                   .ToBase64String(MD5.HashData(Encoding.ASCII.GetBytes(packageName)))
                   .Replace("=", "")
                    [10..]
                   .ToLowerInvariant();
-        #pragma warning restore CA5351
-        #pragma warning restore CA1308 // Normalize strings to uppercase
-        #pragma warning restore CA1307
+#pragma warning restore CA5351, CA1308, CA1307
         var nugetUrlReference = references.AddReference($"nuget-{hash}", NugetUrl(packageName));
         var nugetVersionBadge = references.AddReference(
             $"nuget-version-{hash}-badge",
@@ -84,7 +80,7 @@ internal class NugetPackagesSection : IReadmeSection
 
     public string Name { get; } = "nuget packages";
 
-    public string ConfigKey { get; } = string.Empty;
+    public string ConfigKey { get; } = "";
 
     public async Task<string> Process(
         IDictionary<string, object?> config,
@@ -106,7 +102,7 @@ internal class NugetPackagesSection : IReadmeSection
             sb.AppendLine("| ------- | ----- |");
         }
 
-        foreach (var package in packageNames.OrderBy(z => z))
+        foreach (var package in packageNames.Order())
         {
             sb.AppendLine(GetResult(config, references, package));
         }

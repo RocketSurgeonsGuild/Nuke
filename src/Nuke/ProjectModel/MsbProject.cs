@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using System.Diagnostics;
 
 namespace Rocket.Surgery.Nuke.ProjectModel;
 
@@ -60,26 +59,15 @@ public record MsbProject
           .Select(z => new MsbPackageReference(z.Include, z.Metadata)),
     ];
 
-
-
     public bool GetBoolProperty(string name) => GetProperty(name) is "true" or "enable" or "enabled";
 
-    public bool ContainsPackageReference(string packageId)
-    {
-        return Items.Any(z => z.ItemType == "PackageReference" && z.Include.Equals(packageId, StringComparison.OrdinalIgnoreCase));
-    }
+    public bool ContainsPackageReference(string packageId) => Items.Any(z => z.ItemType == "PackageReference" && z.Include.Equals(packageId, StringComparison.OrdinalIgnoreCase));
 
-    public string? GetProperty(string name)
-    {
-        return Properties.FirstOrDefault(z => z.Name == name)?.Value;
-    }
+    public string? GetProperty(string name) => Properties.FirstOrDefault(z => z.Name == name)?.Value;
 
     public IReadOnlyCollection<string> GetPropertyValues(string name) => GetPropertyValues([name]);
 
-    public IEnumerable<MsbItem> GetItems(string itemType)
-    {
-        return Items.Where(z => z.ItemType == itemType);
-    }
+    public IEnumerable<MsbItem> GetItems(string itemType) => Items.Where(z => z.ItemType == itemType);
 
     private IReadOnlyCollection<string> GetPropertyValues(params string[] names)
     {

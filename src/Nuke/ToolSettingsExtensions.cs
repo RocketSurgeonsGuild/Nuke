@@ -1,5 +1,7 @@
 using System.Runtime.CompilerServices;
+
 using Newtonsoft.Json.Linq;
+
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.GitVersion;
@@ -97,7 +99,7 @@ public static class ToolSettingsExtensions
     public static T SetGitVersionEnvironment<T>(this T settings, GitVersion? gitVersion)
         where T : ToolOptions
     {
-        if (gitVersion == null) return settings;
+        if (gitVersion is null) return settings;
 
         foreach (var item in JObject.FromObject(gitVersion))
         {
@@ -111,7 +113,7 @@ public static class ToolSettingsExtensions
     }
 
     /// <summary>
-    /// Get the process arguments to pass to another tool
+    ///     Get the process arguments to pass to another tool
     /// </summary>
     /// <param name="options"></param>
     /// <typeparam name="T"></typeparam>
@@ -129,5 +131,5 @@ public static class ToolSettingsExtensions
 
     // The first argument is the instance of the class containing the private method.
     [UnsafeAccessor(UnsafeAccessorKind.Method, Name = "GetArguments")]
-    static extern IEnumerable<string> GetArguments(ToolOptions @this);
+    private static extern IEnumerable<string> GetArguments(ToolOptions @this);
 }

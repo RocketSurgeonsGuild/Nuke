@@ -26,7 +26,7 @@ public interface ICanRestoreWithDotNetCore : IHaveCleanTarget,
                                            .After(Clean)
                                            .TryDependentFor<IHaveRestoreTarget>(a => a.Restore)
                                            .OnlyWhenStatic(() => ( NukeBuild.RootDirectory / ".config" / "dotnet-tools.json" ).FileExists())
-                                           .Executes(() => DotNet($"tool restore", RootDirectory));
+                                           .Executes(() => DotNet("tool restore", RootDirectory));
 
     /// <summary>
     ///     dotnet restore

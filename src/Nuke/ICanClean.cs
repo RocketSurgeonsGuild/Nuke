@@ -82,12 +82,14 @@ public interface ICanClean : IHaveCleanTarget, IHaveBuildTarget
                                                                       .ForEach(AbsolutePathExtensions.DeleteDirectory);
                                                                }
 
-                                                               if (this is IComprehendTests tests && tests.TestsDirectory.DirectoryExists())
+                                                               if (this is not IComprehendTests tests || !tests.TestsDirectory.DirectoryExists())
                                                                {
-                                                                   tests
-                                                                      .TestsDirectory.GlobDirectories("**/bin", "**/obj")
-                                                                      .ForEach(AbsolutePathExtensions.DeleteDirectory);
+                                                                   return;
                                                                }
+
+                                                               tests
+                                                                  .TestsDirectory.GlobDirectories("**/bin", "**/obj")
+                                                                  .ForEach(AbsolutePathExtensions.DeleteDirectory);
                                                            } // ReSharper restore SuspiciousTypeConversion.Global
                                                        );
 }

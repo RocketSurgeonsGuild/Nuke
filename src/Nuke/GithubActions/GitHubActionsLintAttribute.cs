@@ -1,5 +1,5 @@
-using System.Diagnostics;
 using System.Reflection;
+
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
@@ -25,10 +25,7 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
         string name,
         GitHubActionsImage image,
         params GitHubActionsImage[] images
-    ) : base(name, image, images)
-    {
-        InvokedTargets = new[] { nameof(ICanLint.Lint) };
-    }
+    ) : base(name, image, images) => InvokedTargets = [nameof(ICanLint.Lint)];
 
     /// <summary>
     ///     The default constructor
@@ -76,7 +73,7 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
                         .Select(z => z.ToTriggerValue())
                         .Select(value => string.IsNullOrWhiteSpace(value.Prefix) ? value.Name : $"{value.Prefix}.{value.Name}")
                         .FirstOrDefault()
-         ?? ( TokenSecret.Contains(".") ? $"{TokenSecret}" : $"secrets.{TokenSecret}" );
+         ?? ( TokenSecret.Contains('.') ? $"{TokenSecret}" : $"secrets.{TokenSecret}" );
 
         configuration.Concurrency = new()
         {

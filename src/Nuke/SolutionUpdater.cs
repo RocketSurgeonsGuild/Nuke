@@ -1,7 +1,9 @@
 using GlobExpressions;
+
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Utilities.Collections;
+
 using Serilog;
 
 namespace Rocket.Surgery.Nuke;
@@ -85,10 +87,10 @@ internal static class SolutionUpdater
                       .Where(z => z.Configurations.Count > 0)
                       .SelectMany(
                            project => project.Configurations.Where(z => z.Key.Contains(".Build.", StringComparison.OrdinalIgnoreCase)),
-                           (project, pair) => ( Project: project, pair.Key )
+                           (project, pair) => (Project: project, pair.Key)
                        )
                       .ToArray();
-        foreach (( var project, var key ) in projects)
+        foreach ((var project, var key) in projects)
         {
             Log.Logger.Information("Removing {Key} from {Project} configuration", key, project.Name);
             project.Configurations.Remove(key);
@@ -102,10 +104,10 @@ internal static class SolutionUpdater
         var done = false;
         var itemValuesToRemove = solution
                                 .AllSolutionFolders
-                                .SelectMany(z => z.Items, (folder, pair) => ( Folder: folder, ItemPath: pair.Key, FilePath: solution.Directory / pair.Value ))
+                                .SelectMany(z => z.Items, (folder, pair) => (Folder: folder, ItemPath: pair.Key, FilePath: solution.Directory / pair.Value))
                                 .Where(z => !z.FilePath.FileExists() && !implicitConfigItems.Contains(z.FilePath))
                                 .ToArray();
-        foreach (( var folder, var itemPath, _ ) in itemValuesToRemove)
+        foreach ((var folder, var itemPath, _) in itemValuesToRemove)
         {
             done = true;
             Log.Logger.Information("Removing {ItemPath} from {Folder}", GetItemRelativePath(folder, itemPath), GetSolutionFolderPath(folder));
@@ -116,13 +118,13 @@ internal static class SolutionUpdater
                               .AllSolutionFolders
                               .SelectMany(
                                    z => z.Items,
-                                   (folder, pair) => ( Folder: folder, ItemPath: pair.Key,
+                                   (folder, pair) => (Folder: folder, ItemPath: pair.Key,
                                                        FilePath: GetItemPath(solution, GetItemRelativeFilePath(folder, pair.Key)),
-                                                       RealFilePath: solution.Directory / pair.Value )
+                                                       RealFilePath: solution.Directory / pair.Value)
                                )
                               .Where(z => !z.FilePath.FileExists() && !implicitConfigItems.Contains(z.RealFilePath))
                               .ToArray();
-        foreach (( var folder, var itemPath, _, _ ) in itemKeysToRemove)
+        foreach ((var folder, var itemPath, _, _) in itemKeysToRemove)
         {
             done = true;
             Log.Logger.Information("Removing {ItemPath} from {Folder}", GetItemRelativePath(folder, itemPath), GetSolutionFolderPath(folder));
@@ -182,15 +184,9 @@ internal static class SolutionUpdater
             }
         }
 
-        static string toSolutionPath(string path)
-        {
-            return path.Replace('/', '\\');
-        }
+        static string toSolutionPath(string path) => path.Replace('/', '\\');
 
-        static bool isUsingSolutionPath(KeyValuePair<string, string> item)
-        {
-            return item.Value.Contains('\\');
-        }
+        static bool isUsingSolutionPath(KeyValuePair<string, string> item) => item.Value.Contains('\\');
     }
 
     private static void AddSolutionItemToRelativeFolder(Solution solution, SolutionFolder configFolder, AbsolutePath path)
@@ -209,16 +205,19 @@ internal static class SolutionUpdater
     }
 
     private static SolutionFolder? GetNestedFolder(Solution solution, SolutionFolder? placedInto, RelativePath path) => path
-       .ToString()
-       .Split(['/', '\\'], StringSplitOptions.RemoveEmptyEntries)
-       .Aggregate(
-            placedInto,
-            (parent, pathPart) =>
-            {
-                var folder = parent is null ? solution.GetSolutionFolder(pathPart) : parent.GetSolutionFolder(pathPart);
-                return folder ?? solution.AddSolutionFolder(pathPart, solutionFolder: parent);
-            }
-        );
+                                                                                                                       .ToString()
+                                                                                                                       .Split(['/', '\\'], StringSplitOptions.RemoveEmptyEntries)
+                                                                                                                       .Aggregate(
+                                                                                                                            placedInto,
+                                                                                                                            (parent, pathPart) =>
+                                                                                                                            {
+                                                                                                                                var folder = parent is null
+                                                                                                                                    ? solution.GetSolutionFolder(pathPart)
+                                                                                                                                    : parent.GetSolutionFolder(pathPart);
+                                                                                                                                return folder
+                                                                                                                                 ?? solution.AddSolutionFolder(pathPart, solutionFolder: parent);
+                                                                                                                            }
+                                                                                                                        );
 
     private static void AddSolutionItemToFolder(SolutionFolder folder, RelativePath path)
     {

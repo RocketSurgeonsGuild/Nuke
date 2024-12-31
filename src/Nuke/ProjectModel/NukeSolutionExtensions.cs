@@ -1,10 +1,13 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+
 using Microsoft.Build.Construction;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Locator;
+
 using Nuke.Common.ProjectModel;
+
 using Serilog;
 using Project = Nuke.Common.ProjectModel.Project;
 
@@ -25,10 +28,7 @@ public static class NukeSolutionExtensions
         return msbProject;
     }
 
-    public static IEnumerable<MsbProject> AnalyzeAllProjects(this Solution solution)
-    {
-        return solution.AllProjects.Select(x => x.AnalyzeProject());
-    }
+    public static IEnumerable<MsbProject> AnalyzeAllProjects(this Solution solution) => solution.AllProjects.Select(AnalyzeProject);
 
     [ModuleInitializer]
     public static void Initialize()
@@ -48,10 +48,7 @@ public static class NukeSolutionExtensions
 
         return;
 
-        static void triggerAssemblyResolution()
-        {
-            new ProjectCollection();
-        }
+        static void triggerAssemblyResolution() => new ProjectCollection();
     }
 
     internal static Microsoft.Build.Evaluation.Project ParseProject(string projectFile, string? configuration = null, string? targetFramework = null)
@@ -73,7 +70,7 @@ public static class NukeSolutionExtensions
                               .AllEvaluatedItems
                               .Where(x => x.ItemType == "_TargetFrameworks")
                               .Select(x => x.EvaluatedInclude)
-                              .OrderBy(x => x)
+                              .Order()
                               .ToList();
 
         if (targetFramework is null && targetFrameworks is { Count: > 0 })
@@ -103,9 +100,9 @@ public static class NukeSolutionExtensions
     private static Dictionary<string, string> GetProperties(string? configuration, string? targetFramework)
     {
         var properties = new Dictionary<string, string>();
-        if (configuration != null)
+        if (configuration is not null)
             properties.Add("Configuration", configuration);
-        if (targetFramework != null)
+        if (targetFramework is not null)
             properties.Add("TargetFramework", targetFramework);
         return properties;
     }

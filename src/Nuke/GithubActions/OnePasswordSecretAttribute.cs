@@ -3,19 +3,15 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// <summary>
 ///     A one password secret
 /// </summary>
+/// <remarks>
+///     The constructor for the <see cref="GitHubActionsSecretAttribute" />
+/// </remarks>
+/// <param name="name">The name of the variable to be output</param>
+/// <param name="path">The reference path to the item</param>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-public sealed class OnePasswordSecretAttribute : TriggerValueAttribute
+public sealed class OnePasswordSecretAttribute(string name, string path) : TriggerValueAttribute(name)
 {
-    private string? connectToken;
-    private string? connectHost;
     private string? secret;
-
-    /// <summary>
-    ///     The constructor for the <see cref="GitHubActionsSecretAttribute" />
-    /// </summary>
-    /// <param name="name">The name of the variable to be output</param>
-    /// <param name="path">The reference path to the item</param>
-    public OnePasswordSecretAttribute(string name, string path) : base(name) => Path = path;
 
     /// <summary>
     ///     The constructor for the <see cref="GitHubActionsSecretAttribute" />
@@ -48,7 +44,7 @@ public sealed class OnePasswordSecretAttribute : TriggerValueAttribute
     /// <summary>
     ///     The path to the item
     /// </summary>
-    public string Path { get; }
+    public string Path { get; } = path;
 
     /// <summary>
     ///     The secret where the OP_SERVICE_ACCOUNT_TOKEN is stored (defaults to OP_SERVICE_ACCOUNT_TOKEN)
@@ -68,11 +64,11 @@ public sealed class OnePasswordSecretAttribute : TriggerValueAttribute
     /// </summary>
     public string? ConnectHost
     {
-        get => connectHost;
+        get;
         set
         {
             UseConnectServer = true;
-            connectHost = value;
+            field = value;
         }
     }
 
@@ -81,11 +77,11 @@ public sealed class OnePasswordSecretAttribute : TriggerValueAttribute
     /// </summary>
     public string? ConnectToken
     {
-        get => connectToken;
+        get;
         set
         {
             UseConnectServer = true;
-            connectToken = value;
+            field = value;
         }
     }
 
@@ -93,28 +89,24 @@ public sealed class OnePasswordSecretAttribute : TriggerValueAttribute
     ///     Convert to a secret
     /// </summary>
     /// <returns></returns>
-    internal ITriggerValue ToSecret()
-    {
-        if (UseConnectServer)
-            return new OnePasswordConnectServerSecret(
-                Path,
-                Name,
-                Description,
-                Alias,
-                Variable,
-                ConnectHost ?? "OP_CONNECT_HOST",
-                ConnectToken ?? "OP_CONNECT_TOKEN"
-            );
-
-        return new OnePasswordServiceAccountSecret(
+    internal ITriggerValue ToSecret() => UseConnectServer
+        ? new OnePasswordConnectServerSecret(
             Path,
             Name,
             Description,
             Alias,
             Variable,
-            Secret ?? "OP_SERVICE_ACCOUNT_TOKEN"
+            ConnectHost ?? "OP_CONNECT_HOST",
+            ConnectToken ?? "OP_CONNECT_TOKEN"
+        )
+        : new OnePasswordServiceAccountSecret(
+        Path,
+        Name,
+        Description,
+        Alias,
+        Variable,
+        Secret ?? "OP_SERVICE_ACCOUNT_TOKEN"
         );
-    }
 
     /// <inheritdoc />
     public override ITriggerValue ToTriggerValue() => ToSecret();

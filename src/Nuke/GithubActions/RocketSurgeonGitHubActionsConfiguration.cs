@@ -53,11 +53,9 @@ public class RocketSurgeonGitHubActionsConfiguration : ConfigurationEntity
     public GitHubActionsPermissions Permissions { get; set; } = new();
 
     /// <summary>
-    ///   The if condition for the workflow
+    ///     The if condition for the workflow
     /// </summary>
     public GithubActionCondition? If { get; set; }
-
-
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)

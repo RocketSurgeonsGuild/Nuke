@@ -4,6 +4,7 @@ using Nuke.Common.CI.GitLab;
 using Nuke.Common.CI.TeamCity;
 using Nuke.Common.Execution;
 using Nuke.Common.Utilities.Collections;
+
 using Serilog;
 
 // ReSharper disable InconsistentNaming
@@ -14,10 +15,14 @@ namespace Rocket.Surgery.Nuke.ContinuousIntegration;
 /// <summary>
 ///     Print ci environment with additional variables
 /// </summary>
+/// <remarks>
+///     Print ci environment with additional variables
+/// </remarks>
+/// <param name="additionalPrefixes"></param>
 [PublicAPI]
 [UsedImplicitly(ImplicitUseKindFlags.Default)]
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
-public sealed class PrintCIEnvironmentAttribute : BuildExtensionAttributeBase, IOnBuildInitialized, IOnBuildFinished
+public sealed class PrintCIEnvironmentAttribute(params string[] additionalPrefixes) : BuildExtensionAttributeBase, IOnBuildInitialized, IOnBuildFinished
 {
     /// <summary>
     ///     Well know environment variables
@@ -25,20 +30,14 @@ public sealed class PrintCIEnvironmentAttribute : BuildExtensionAttributeBase, I
     /// <remarks>
     ///     Replace default implementation to add values not covered by default
     /// </remarks>
-    private static string[] WellKnownEnvironmentVariablePrefixes => new[]
-    {
+    private static string[] WellKnownEnvironmentVariablePrefixes =>
+    [
         // Azure pipelines
         "CIRCLE", "GITHUB", "APPVEYOR", "TRAVIS", "BITRISE", "BAMBOO", "GITLAB", "JENKINS", "TEAMCITY",
         "AGENT_", "BUILD_", "RELEASE_", "PIPELINE_", "ENVIRONMENT_", "SYSTEM_",
-    };
+    ];
 
-    private readonly string[] _additionalPrefixes;
-
-    /// <summary>
-    ///     Print ci environment with additional variables
-    /// </summary>
-    /// <param name="additionalPrefixes"></param>
-    public PrintCIEnvironmentAttribute(params string[] additionalPrefixes) => _additionalPrefixes = additionalPrefixes;
+    private readonly string[] _additionalPrefixes = additionalPrefixes;
 
     /// <inheritdoc />
     public void OnBuildFinished()

@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Globalization;
 using System.Xml.Linq;
+
 using Nuke.Common.IO;
+
 using Serilog;
 
 // ReSharper disable once CheckNamespace
@@ -31,11 +33,8 @@ internal static class Plist
     /// </summary>
     /// <param name="path">The path to the plist.</param>
     /// <param name="value">The object to serialize.</param>
-    public static void Serialize(AbsolutePath path, object value)
-    {
-        SerializeDocument(value)
-           .Save(path, SaveOptions.OmitDuplicateNamespaces);
-    }
+    public static void Serialize(AbsolutePath path, object value) => SerializeDocument(value)
+        .Save(path, SaveOptions.OmitDuplicateNamespaces);
 
     /// <summary>
     ///     Serializes the .plist file provided.
@@ -50,7 +49,7 @@ internal static class Plist
                 "plist",
                 "-//Apple//DTD PLIST 1.0//EN",
                 "http://www.apple.com/DTDs/PropertyList-1.0.dtd",
-                string.Empty
+                ""
             )
         );
 
@@ -72,32 +71,56 @@ internal static class Plist
         switch (item)
         {
             case string:
-                Log.Verbose("string: {String}", item);
-                return new("string", item);
+                {
+                    Log.Verbose("string: {String}", item);
+                    return new("string", item);
+                }
+
             case double:
             case float:
             case decimal:
-                Log.Verbose("floating point: {Float}", item);
-                return new("real", Convert.ToString(item, CultureInfo.InvariantCulture));
+                {
+                    Log.Verbose("floating point: {Float}", item);
+                    return new("real", Convert.ToString(item, CultureInfo.InvariantCulture));
+                }
+
             case int:
             case long:
-                Log.Verbose("integer: {Integer}", item);
-                return new("integer", Convert.ToString(item, CultureInfo.InvariantCulture));
-            case bool when item as bool? == true:
-                Log.Verbose("boolean: {Boolean}", item);
-                return new("true");
-            case bool when item as bool? == false:
-                Log.Verbose("boolean: {Boolean}", item);
-                return new("false");
+                {
+                    Log.Verbose("integer: {Integer}", item);
+                    return new("integer", Convert.ToString(item, CultureInfo.InvariantCulture));
+                }
+
+            case bool when ( item as bool? ) == true:
+                {
+                    Log.Verbose("boolean: {Boolean}", item);
+                    return new("true");
+                }
+
+            case bool when ( item as bool? ) == false:
+                {
+                    Log.Verbose("boolean: {Boolean}", item);
+                    return new("false");
+                }
+
             case DateTime time:
-                Log.Verbose("DateTime: {DateTime}", item);
-                return new("date", time.ToString("yyyy-MM-ddTHH:mm:ss.fffZ", DateTimeFormatInfo.InvariantInfo));
+                {
+                    Log.Verbose("DateTime: {DateTime}", item);
+                    return new("date", time.ToString("yyyy-MM-ddTHH:mm:ss.fffZ", DateTimeFormatInfo.InvariantInfo));
+                }
+
             case DateTimeOffset offset:
-                Log.Verbose("DateTimeOffset: {DateTimeOffset}", item);
-                return new("date", offset.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ", DateTimeFormatInfo.InvariantInfo));
+                {
+                    Log.Verbose("DateTimeOffset: {DateTimeOffset}", item);
+                    return new("date", offset.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ", DateTimeFormatInfo.InvariantInfo));
+                }
+
             case byte[] bytes:
-                Log.Verbose("DateTimeOffset: {DateTimeOffset}", item);
-                return new("data", Convert.ToBase64String(bytes));
+                {
+                    Log.Verbose("DateTimeOffset: {DateTimeOffset}", item);
+                    return new("data", Convert.ToBase64String(bytes));
+                }
+
             case IDictionary dictionary:
                 {
                     var dict = new XElement("dict");
@@ -180,9 +203,9 @@ internal static class Plist
                         var key = inner[idx];
                         if (key.Name.LocalName != "key")
                         {
-                            #pragma warning disable CA2201
+#pragma warning disable CA2201
                             throw new("Even items need to be keys");
-                            #pragma warning restore CA2201
+#pragma warning restore CA2201
                         }
 
                         idx++;

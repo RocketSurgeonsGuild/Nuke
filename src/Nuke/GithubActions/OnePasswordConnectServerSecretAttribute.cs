@@ -3,16 +3,14 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// <summary>
 ///     A one password connect server secret
 /// </summary>
+/// <remarks>
+///     The constructor for the <see cref="OnePasswordConnectServerSecretAttribute" />
+/// </remarks>
+/// <param name="name">The name of the variable to be output</param>
+/// <param name="path">The reference path to the item</param>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-public sealed class OnePasswordConnectServerSecretAttribute : TriggerValueAttribute
+public sealed class OnePasswordConnectServerSecretAttribute(string name, string path) : TriggerValueAttribute(name)
 {
-    /// <summary>
-    ///     The constructor for the <see cref="OnePasswordConnectServerSecretAttribute" />
-    /// </summary>
-    /// <param name="name">The name of the variable to be output</param>
-    /// <param name="path">The reference path to the item</param>
-    public OnePasswordConnectServerSecretAttribute(string name, string path) : base(name) => Path = path;
-
     /// <summary>
     ///     The constructor for the <see cref="OnePasswordConnectServerSecretAttribute" />
     /// </summary>
@@ -30,7 +28,7 @@ public sealed class OnePasswordConnectServerSecretAttribute : TriggerValueAttrib
     /// <summary>
     ///     The path to the item
     /// </summary>
-    public string Path { get; }
+    public string Path { get; } = path;
 
     /// <summary>
     ///     The value for the connect host (defaults to ${{ vars.OP_CONNECT_HOST }})

@@ -12,7 +12,7 @@ public static class GitVersionFunctions
     /// </summary>
     /// <param name="gitVersion">The git version.</param>
     /// <returns>The converted semantic version.</returns>
-    public static string FullSemanticVersion(this GitVersion? gitVersion) => gitVersion?.FullSemVer.Replace('+', '.') ?? string.Empty;
+    public static string FullSemanticVersion(this GitVersion? gitVersion) => gitVersion?.FullSemVer.Replace('+', '.') ?? "";
 
     /// <summary>
     ///     Gets the assembly version from the <see cref="GitVersion" />.
@@ -26,7 +26,7 @@ public static class GitVersionFunctions
     /// </summary>
     /// <param name="gitVersion">The git version.</param>
     /// <returns>The converted nuget package version with no alpha characters.</returns>
-    public static string PackageVersion(this GitVersion? gitVersion) => gitVersion?.NuGetVersionV2?.RemoveAlphaCharacters() ?? string.Empty;
+    public static string PackageVersion(this GitVersion? gitVersion) => gitVersion?.NuGetVersionV2?.RemoveAlphaCharacters() ?? "";
 
     /// <summary>
     ///     Gets the Major.Minor.Patch from <see cref="GitVersion" />.

@@ -1,6 +1,6 @@
-using System.Diagnostics;
 using Nuke.Common;
 using Nuke.Common.CI.GitHubActions;
+
 using Rocket.Surgery.Nuke.ContinuousIntegration;
 using Rocket.Surgery.Nuke.GithubActions;
 using Rocket.Surgery.Nuke.Jobs;

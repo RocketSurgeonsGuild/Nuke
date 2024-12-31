@@ -1,8 +1,10 @@
 using System.Collections.Immutable;
-using System.Runtime.InteropServices;
+
 using Microsoft.Extensions.FileSystemGlobbing;
+
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
+
 using Serilog;
 using Serilog.Events;
 
@@ -46,17 +48,18 @@ public interface ICanPrettier : ICanLint
 
                      foreach (var group in args)
                      {
-                         ProcessTasks.StartProcess(
-                                          ToolPathResolver.GetPathExecutable("npm"),
-                                          group.RenderForExecution(),
-                                          RootDirectory,
-                                          logOutput: true,
-                                          // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-                                          logger: static (t, s) => Log.Write(t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information, s),
-                                          logInvocation: Verbosity == Verbosity.Verbose
-                                      )
-                                     .AssertWaitForExit()
-                                     .AssertZeroExitCode();
+                         ProcessTasks
+                            .StartProcess(
+                                 ToolPathResolver.GetPathExecutable("npm"),
+                                 group.RenderForExecution(),
+                                 RootDirectory,
+                                 logOutput: true,
+                                 logInvocation: Verbosity == Verbosity.Verbose
+,
+                                 // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
+                                 logger: static (t, s) => Log.Write(t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information, s))
+                            .AssertWaitForExit()
+                            .AssertZeroExitCode();
                      }
 
                      static IEnumerable<Arguments> makeArgsForStagedFiles(ImmutableList<RelativePath> values)
@@ -96,4 +99,3 @@ public interface ICanPrettier : ICanLint
                                                  .AddInclude("**/*.css")
                                                  .AddInclude("**/*.scss");
 }
-

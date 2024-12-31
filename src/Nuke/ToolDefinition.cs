@@ -1,19 +1,19 @@
 namespace Rocket.Surgery.Nuke;
 
 /// <summary>
-/// A tool definition
+///     A tool definition
 /// </summary>
 public class ToolDefinition
 {
     /// <summary>
-    /// The version
+    ///     The version
     /// </summary>
     public string Version { get; set; } = null!;
+
     /// <summary>
-    /// The commands
+    ///     The commands
     /// </summary>
     public string[] Commands { get; set; } = [];
-
 
     // ReSharper disable once NullableWarningSuppressionIsUsed
 }

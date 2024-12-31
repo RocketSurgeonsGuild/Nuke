@@ -30,21 +30,19 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
     public List<GitHubActionsWorkflowOutput> Outputs { get; set; } = [];
 
     /// <summary>
-    /// The types
+    ///     The types
     /// </summary>
     public List<string> Types { get; set; } = [];
 
     /// <summary>
-    /// The workflows
+    ///     The workflows
     /// </summary>
     public List<string> Workflows { get; set; } = [];
 
     /// <summary>
-    /// The branches
+    ///     The branches
     /// </summary>
     public List<string> Branches { get; set; } = [];
-
-
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
@@ -80,7 +78,7 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
 
                                 writer.WriteLine($"required: {( input.Required ?? false ).ToString().ToLowerInvariant()}");
 
-                                if (input.Default is not null)
+                                if (input.Default is { })
                                 {
                                     writer.WriteLine($"default: {input.Default}");
                                 }

@@ -1,4 +1,5 @@
 using System.ComponentModel;
+
 using Nuke.Common.Tooling;
 
 // ReSharper disable InconsistentNaming
@@ -29,7 +30,7 @@ public class TargetPlatform : Enumeration
     public static readonly TargetPlatform AnyCPU = new() { Value = "Any CPU" };
 
     /// <summary>
-    ///     Performs an implicit conversion from <see cref="XamarinConfiguration" /> to <see cref="System.String" />.
+    ///     Performs an implicit conversion from <see cref="XamarinConfiguration" /> to <see cref="string" />.
     /// </summary>
     /// <param name="platform">The target platform.</param>
     /// <returns>

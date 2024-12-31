@@ -1,5 +1,6 @@
 using System.Dynamic;
 using System.Text.RegularExpressions;
+
 using YamlDotNet.Serialization;
 
 namespace Rocket.Surgery.Nuke.Readme;
@@ -8,7 +9,7 @@ namespace Rocket.Surgery.Nuke.Readme;
 ///     The generic class used to contain all the sections, badges, histories and references.
 /// </summary>
 [PublicAPI]
-public class ReadmeUpdater
+public partial class ReadmeUpdater
 {
     /// <summary>
     ///     Default constructor
@@ -70,14 +71,11 @@ public class ReadmeUpdater
     /// <returns></returns>
     public async Task<string> Process(string content, IHaveSolution build)
     {
-        var nukeDataRegex = new Regex(
-            "<!-- nuke-data(.*?)-->",
-            RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase
-        );
+        var nukeDataRegex = MyRegex();
         var match = nukeDataRegex.Match(content);
         var yaml = string.Join(Environment.NewLine, match.Groups.Cast<Group>().Skip(1).Select(x => x.Value));
         var d = new DeserializerBuilder()
-            // .WithNamingConvention(new CamelCaseNamingConvention())
+           // .WithNamingConvention(new CamelCaseNamingConvention())
            .Build();
         using var reader = new StringReader(yaml.Trim('\n', '\r'));
         var config = d.Deserialize<ExpandoObject>(reader);
@@ -103,8 +101,8 @@ public class ReadmeUpdater
             var sectionEnd = sectionMatch.Last().Captures[0];
             var newSectionContent = await section.Process(config, References, build);
             ranges.Add(
-                ( sectionStart.Index + sectionStart.Length,
-                  sectionEnd.Index - ( sectionStart.Index + sectionStart.Length ), newSectionContent )
+                (sectionStart.Index + sectionStart.Length,
+                  sectionEnd.Index - ( sectionStart.Index + sectionStart.Length ), newSectionContent)
             );
         }
 
@@ -120,4 +118,7 @@ public class ReadmeUpdater
 
         return content;
     }
+
+    [GeneratedRegex("<!-- nuke-data(.*?)-->", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline, "en-US")]
+    private static partial Regex MyRegex();
 }

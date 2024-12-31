@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Runtime.Serialization;
 
 namespace Rocket.Surgery.Nuke.GithubActions;
@@ -74,8 +73,6 @@ public class StickyPullRequestStep : UsingStep
     /// </summary>
     [IgnoreDataMember]
     public string? GithubToken { get; set; }
-
-
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)

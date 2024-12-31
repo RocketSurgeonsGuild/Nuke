@@ -1,9 +1,11 @@
 using System.Reflection;
+
 using Nuke.Common.CI;
 using Nuke.Common.CI.AzurePipelines;
 using Nuke.Common.Execution;
 using Nuke.Common.IO;
 using Nuke.Common.Utilities.Collections;
+
 using Rocket.Surgery.Nuke.Azp;
 
 #pragma warning disable CA1813
@@ -69,7 +71,7 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
                             BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy
                         )
                 )
-               .Where(x => x.GetCustomAttribute<ParameterAttribute>() is not null);
+               .Where(x => x.GetCustomAttribute<ParameterAttribute>() is { });
         foreach (var parameter in parameters)
         {
             if (Parameters.Any(
@@ -124,7 +126,7 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
     )
     {
         var chainLinkNames = GetInvokedTargets(executableTarget, relevantTargets).Select(z => z.Name).ToArray();
-        var tool = ( DotNetTool.IsInstalled("nuke.globaltool") ) ? "dotnet nuke" : "nuke";
+        var tool = DotNetTool.IsInstalled("nuke.globaltool") ? "dotnet nuke" : "nuke";
 
         return new()
         {
@@ -144,15 +146,6 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
     {
         var symbol = _defaultSymbols.FirstOrDefault(z => z.Key.EndsWith(name, StringComparison.OrdinalIgnoreCase))
                                     .Value;
-
-/* Unmerged change from project 'Rocket.Surgery.Nuke(net9.0)'
-Before:
-        if (string.IsNullOrWhiteSpace(symbol)) return name;
-
-        return $"{symbol} {name}";
-After:
-        return ( string.IsNullOrWhiteSpace(symbol) ) ? name : $"{symbol} {name}";
-*/
-        return ( string.IsNullOrWhiteSpace(symbol) ) ?  name  :  $"{symbol} {name}";
+        return string.IsNullOrWhiteSpace(symbol) ? name : $"{symbol} {name}";
     }
 }

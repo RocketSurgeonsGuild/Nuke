@@ -6,6 +6,7 @@ using Nuke.Common.ProjectModel;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Tools.MSBuild;
+
 using Rocket.Surgery.Nuke.DotNetCore;
 
 [PublicAPI]
@@ -57,7 +58,6 @@ internal partial class Pipeline : NukeBuild,
     public Target Build => _ => _;
 
     public Target Pack => _ => _;
-
 
     public Target Clean => _ => _;
 

@@ -1,4 +1,5 @@
 using Nuke.Common.Execution;
+
 using Serilog;
 
 namespace Rocket.Surgery.Nuke;
@@ -11,20 +12,17 @@ namespace Rocket.Surgery.Nuke;
 public sealed class LocalBuildConventionsAttribute : BuildExtensionAttributeBase, IOnBuildFinished, IOnBuildInitialized, IOnBuildCreated
 {
     /// <inheritdoc />
-    public void OnBuildCreated(IReadOnlyCollection<ExecutableTarget> executableTargets)
-    {
-        Log.Logger = new LoggerConfiguration()
-                    .ConfigureEnricher()
-                    .ConfigureConsole(null)
-                    .ConfigureLevel()
-                    .CreateLogger();
-    }
+    public void OnBuildCreated(IReadOnlyCollection<ExecutableTarget> executableTargets) => Log.Logger = new LoggerConfiguration()
+        .ConfigureEnricher()
+        .ConfigureConsole(null)
+        .ConfigureLevel()
+        .CreateLogger();
 
     /// <inheritdoc />
     public void OnBuildFinished()
     {
-//        if (Build is not ({ } nukeBuild and IHaveSolution)) return;
-//        if (nukeBuild.IsServerBuild) return;
+        //        if (Build is not ({ } nukeBuild and IHaveSolution)) return;
+        //        if (nukeBuild.IsServerBuild) return;
     }
 
     /// <inheritdoc />
@@ -33,7 +31,7 @@ public sealed class LocalBuildConventionsAttribute : BuildExtensionAttributeBase
     /// <inheritdoc />
     public void OnBuildInitialized(IReadOnlyCollection<ExecutableTarget> executableTargets, IReadOnlyCollection<ExecutableTarget> executionPlan)
     {
-//        if (Build is not (INukeBuild nukeBuild and IHaveSolution haveSolution)) return;
-//        if (nukeBuild.IsServerBuild) return;
+        //        if (Build is not (INukeBuild nukeBuild and IHaveSolution haveSolution)) return;
+        //        if (nukeBuild.IsServerBuild) return;
     }
 }

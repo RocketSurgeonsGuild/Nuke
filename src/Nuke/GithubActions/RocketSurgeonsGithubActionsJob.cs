@@ -14,7 +14,6 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 [PublicAPI]
 public class RocketSurgeonsGithubActionsJob(string name) : RocketSurgeonsGithubActionsJobBase(name)
 {
-
     /// <summary>
     ///     The images to run on in a matrix
     /// </summary>
@@ -41,8 +40,6 @@ public class RocketSurgeonsGithubActionsJob(string name) : RocketSurgeonsGithubA
     public bool FailFast { get; set; } = true;
 
     internal IDictionary<object, object> InternalData { get; } = new Dictionary<object, object>();
-
-
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)

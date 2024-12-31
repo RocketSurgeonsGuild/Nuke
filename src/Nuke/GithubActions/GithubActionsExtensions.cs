@@ -1,9 +1,9 @@
 using System.Collections.Concurrent;
 using System.Reflection;
+
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
 using Nuke.Common.Execution;
-using Nuke.Common.Utilities.Collections;
 
 namespace Rocket.Surgery.Nuke.GithubActions;
 
@@ -63,7 +63,7 @@ public static class GithubActionsExtensions
         static int getCheckStepIndex(RocketSurgeonsGithubActionsJob job)
         {
             var checkoutStep = job.Steps.OfType<CheckoutStep>().SingleOrDefault();
-            return ( checkoutStep is null ) ? 1 : job.Steps.IndexOf(checkoutStep);
+            return checkoutStep is null ? 1 : job.Steps.IndexOf(checkoutStep);
         }
     }
 
@@ -93,7 +93,7 @@ public static class GithubActionsExtensions
     {
         foreach (var item in configuration.DetailedTriggers.OfType<RocketSurgeonGitHubActionsVcsTrigger>())
         {
-            item.IncludePaths = [.. Enumerable.Concat(item.IncludePaths, paths).Distinct()];
+            item.IncludePaths = [..  item.IncludePaths .Concat(paths).Distinct()];
         }
 
         return configuration;
@@ -109,7 +109,7 @@ public static class GithubActionsExtensions
     {
         foreach (var item in configuration.DetailedTriggers.OfType<RocketSurgeonGitHubActionsVcsTrigger>())
         {
-            item.ExcludePaths = [.. Enumerable.Concat(item.IncludePaths, paths).Distinct()];
+            item.ExcludePaths = [..  item.IncludePaths .Concat(paths).Distinct()];
         }
 
         return configuration;
@@ -226,8 +226,8 @@ public static class GithubActionsExtensions
             job.Permissions ??= new();
             job.Permissions.Checks = GitHubActionsPermission.Write;
             job.Permissions.PullRequests = GitHubActionsPermission.Write;
-            job.Permissions.Contents = ( job.Permissions.Contents == GitHubActionsPermission.None ) ? GitHubActionsPermission.Read : job.Permissions.Contents;
-            job.Permissions.Issues = ( job.Permissions.Issues == GitHubActionsPermission.None ) ? GitHubActionsPermission.Read : job.Permissions.Issues;
+            job.Permissions.Contents = job.Permissions.Contents == GitHubActionsPermission.None ? GitHubActionsPermission.Read : job.Permissions.Contents;
+            job.Permissions.Issues = job.Permissions.Issues == GitHubActionsPermission.None ? GitHubActionsPermission.Read : job.Permissions.Issues;
 
             AddStep(
                 job,
@@ -375,7 +375,6 @@ public static class GithubActionsExtensions
         paths.Add(new(outputName, description));
         return target;
     }
-
 
     internal static List<GitHubActionsOutput> GetGithubActionsOutput(ExecutableTarget target)
     {

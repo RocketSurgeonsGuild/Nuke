@@ -1,11 +1,14 @@
 using System.Collections.ObjectModel;
 using System.Reflection;
+
 using Microsoft.Extensions.FileSystemGlobbing;
+
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.ReportGenerator;
 using Nuke.Common.Utilities.Collections;
+
 using Serilog;
 
 namespace Rocket.Surgery.Nuke;
@@ -84,7 +87,7 @@ public static class Extensions
                                                                                         .GetRuntimeFields()
                                                                                         .Single(z => z.Name == "Mappings")
                                                                                         .NotNull()
-                                                                                         // ReSharper disable once NullableWarningSuppressionIsUsed
+                                                                                        // ReSharper disable once NullableWarningSuppressionIsUsed
                                                                                         .GetValue(null)!;
 
         if (!mappings.Contains(typeof(T)))

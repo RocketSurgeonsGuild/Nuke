@@ -1,7 +1,9 @@
 using System.Reflection;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+
 using Nuke.Common.CI.AppVeyor;
 using Nuke.Common.CI.AzurePipelines;
 using Nuke.Common.CI.TeamCity;
@@ -9,33 +11,35 @@ using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.ValueInjection;
+
 using Serilog;
 using static Nuke.Common.EnvironmentInfo;
 
-#pragma warning disable CA1019
-#pragma warning disable CA1813
+#pragma warning disable CA1019, CA1813
 
 namespace Rocket.Surgery.Nuke;
 
 /// <summary>
 ///     Injects an instance of <see cref="GitVersion" /> based on the local repository.
 /// </summary>
+/// <remarks>
+///     Computes the GitVersion for the repository.
+/// </remarks>
+/// <param name="frameworkVersion">The framework version to use with GitVersion.</param>
 [PublicAPI]
 [UsedImplicitly(ImplicitUseKindFlags.Default)]
 [ExcludeFromCodeCoverage]
-public class ComputedGitVersionAttribute : ValueInjectionAttributeBase
+public class ComputedGitVersionAttribute(string? frameworkVersion) : ValueInjectionAttributeBase
 {
     /// <summary>
     ///     Returns if GitVersion data is available
     /// </summary>
-    public static bool HasGitVer()
-    {
-        return Variables.Keys.Any(z => z.StartsWith("GITVERSION_", StringComparison.OrdinalIgnoreCase));
-    }
+    public static bool HasGitVer() => Variables.Keys.Any(z => z.StartsWith("GITVERSION_", StringComparison.OrdinalIgnoreCase));
 
     internal static GitVersion GetGitVersion(string? frameworkVersion, bool updateAssemblyInfo)
     {
         if (!HasGitVer())
+        {
             return GitVersionTasks.GitVersion(
                                        s => s
                                            .SetFramework(frameworkVersion)
@@ -50,6 +54,7 @@ public class ComputedGitVersionAttribute : ValueInjectionAttributeBase
                                             )
                                    )
                                   .Result;
+        }
 
         var json = Variables
                   .Where(z => z.Key.StartsWith("GITVERSION_", StringComparison.OrdinalIgnoreCase))
@@ -68,20 +73,13 @@ public class ComputedGitVersionAttribute : ValueInjectionAttributeBase
         )!;
     }
 
-    private readonly string? _frameworkVersion;
+    private readonly string? _frameworkVersion = frameworkVersion;
 
     /// <summary>
     ///     Computes the GitVersion for the repository.
     /// </summary>
     public ComputedGitVersionAttribute()
         : this(null) { }
-
-
-    /// <summary>
-    ///     Computes the GitVersion for the repository.
-    /// </summary>
-    /// <param name="frameworkVersion">The framework version to use with GitVersion.</param>
-    public ComputedGitVersionAttribute(string? frameworkVersion) => _frameworkVersion = frameworkVersion;
 
     /// <summary>
     ///     DisableOnUnix
@@ -97,7 +95,7 @@ public class ComputedGitVersionAttribute : ValueInjectionAttributeBase
     public override object GetValue(MemberInfo member, object instance)
     {
         var rootDirectory = NukeBuild.RootDirectory.FindParentOrSelf(x => x.GetDirectories(".git").Any());
-        if (rootDirectory == null)
+        if (rootDirectory is null)
         {
             Log.Warning("No git repository found, GitVersion will not be accurate");
 

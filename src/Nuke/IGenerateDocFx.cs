@@ -14,7 +14,7 @@ public interface IGenerateDocFx : IHaveDocs
     /// </summary>
     [Parameter("serve the docs")]
     public bool? Serve => EnvironmentInfo.GetVariable<bool?>("Serve")
-        // ?? ValueInjectionUtility.TryGetValue(() => Serve)
+     // ?? ValueInjectionUtility.TryGetValue(() => Serve)
      ?? false;
 
     /// <summary>

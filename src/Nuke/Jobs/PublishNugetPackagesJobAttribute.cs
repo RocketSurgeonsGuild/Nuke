@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using System.Diagnostics;
 
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
@@ -12,7 +11,7 @@ using Rocket.Surgery.Nuke.GithubActions;
 namespace Rocket.Surgery.Nuke.Jobs;
 
 /// <summary>
-/// Adds close milestone support to the build
+///     Adds close milestone support to the build
 /// </summary>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Class)]
@@ -23,12 +22,16 @@ public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribu
 
     private readonly GithubActionCondition _nugetOrgCondition =
         "startsWith(github.event.workflow_run.head_branch, 'v') && contains(github.event.workflow_run.head_branch, '.') && !contains(github.event.workflow_run.head_branch, '/')";
+
     private readonly ImmutableArray<string> _includeBranches;
 
     /// <summary>
-    /// Adds draft release support to the build
+    ///     Adds draft release support to the build
     /// </summary>
-    public PublishNugetPackagesJobAttribute(string secretKey, string triggeringWorkflow, string[]? includeBranches = null, string? nugetOrgCondition = null) : base("publish-nuget", GitHubActionsImage.UbuntuLatest)
+    public PublishNugetPackagesJobAttribute(string secretKey, string triggeringWorkflow, string[]? includeBranches = null, string? nugetOrgCondition = null) : base(
+        "publish-nuget",
+        GitHubActionsImage.UbuntuLatest
+    )
     {
         _secretKey = secretKey;
         _triggeringWorkflow = triggeringWorkflow;
@@ -38,9 +41,13 @@ public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribu
     }
 
     /// <summary>
-    /// Adds draft release support to the build
+    ///     Adds draft release support to the build
     /// </summary>
-    public PublishNugetPackagesJobAttribute(string secretKey, string triggeringWorkflow, string[] includeBranches, string? nugetOrgCondition, string image, params string[] images) : base("publish-nuget", image, images)
+    public PublishNugetPackagesJobAttribute(string secretKey, string triggeringWorkflow, string[] includeBranches, string? nugetOrgCondition, string image, params string[] images) : base(
+        "publish-nuget",
+        image,
+        images
+    )
     {
         _secretKey = secretKey;
         _triggeringWorkflow = triggeringWorkflow;
@@ -50,9 +57,12 @@ public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribu
     }
 
     /// <summary>
-    /// Adds draft release support to the build
+    ///     Adds draft release support to the build
     /// </summary>
-    public PublishNugetPackagesJobAttribute(string secretKey, string triggeringWorkflow, GitHubActionsImage image, string[]? includeBranches = null, string? nugetOrgCondition = null) : base("publish-nuget", image)
+    public PublishNugetPackagesJobAttribute(string secretKey, string triggeringWorkflow, GitHubActionsImage image, string[]? includeBranches = null, string? nugetOrgCondition = null) : base(
+        "publish-nuget",
+        image
+    )
     {
         _secretKey = secretKey;
         _triggeringWorkflow = triggeringWorkflow;
@@ -66,7 +76,7 @@ public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribu
     {
         var build = new RocketSurgeonGitHubActionsConfiguration
         {
-            Name = "Publish Nuget Packages"
+            Name = "Publish Nuget Packages",
         };
         build.DetailedTriggers.Add(
             new RocketSurgeonGitHubActionsWorkflowTrigger
@@ -80,7 +90,7 @@ public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribu
         build.Jobs.Add(
             new RocketSurgeonsGithubActionsJob("publish_nuget")
             {
-                RunsOn = ( !IsGithubHosted ) ? Images : [],
+                RunsOn = !IsGithubHosted ? Images : [],
                 Matrix = IsGithubHosted ? Images : [],
                 If = "${{ github.event.workflow_run.conclusion == 'success' }}",
                 Steps =
@@ -103,7 +113,7 @@ public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribu
                         Shell = "pwsh",
                         Environment =
                         {
-                            ["ApiKey"] = $"${{{{ secrets.{_secretKey} }}}}"
+                            ["ApiKey"] = $"${{{{ secrets.{_secretKey} }}}}",
                         },
                         Run = @"
                             dotnet nuget push **/*.nupkg  --skip-duplicate -s nuget.org --api-key $ENV:ApiKey

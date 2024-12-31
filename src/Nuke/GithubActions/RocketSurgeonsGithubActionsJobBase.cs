@@ -33,7 +33,7 @@ public abstract class RocketSurgeonsGithubActionsJobBase : ConfigurationEntity
     /// <summary>
     ///     The dependencies of this job
     /// </summary>
-    public List<string> Needs { get; set; } = new();
+    public List<string> Needs { get; set; } = [];
 
     /// <summary>
     ///     The condition to run this job under
@@ -53,7 +53,7 @@ public abstract class RocketSurgeonsGithubActionsJobBase : ConfigurationEntity
     /// <summary>
     ///     The outputs of this job
     /// </summary>
-    public List<GitHubActionsStepOutput> Outputs { get; set; } = new();
+    public List<GitHubActionsStepOutput> Outputs { get; set; } = [];
 
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)

@@ -1,4 +1,5 @@
 using Nuke.Common.CI.AzurePipelines;
+
 using Serilog;
 using static Nuke.Common.EnvironmentInfo;
 
@@ -102,14 +103,4 @@ public class AzurePipelinesTasks
     private Target PublishAzurePipelinesCodeCoverage => d => d
                                                             .OnlyWhenStatic(IsRunningOnAzurePipelines)
                                                             .Executes(() => { });
-
-    /// <summary>
-    ///     Run the azure pipelines targets
-    /// </summary>
-    [UsedImplicitly]
-    private Target AzurePipelines => d => d
-                                         .DependsOn(PrintAzurePipelinesEnvironment)
-                                         .DependsOn(UploadAzurePipelinesArtifacts)
-                                         .DependsOn(PublishAzurePipelinesTestResults)
-                                         .DependsOn(PublishAzurePipelinesCodeCoverage);
 }

@@ -3,16 +3,14 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// <summary>
 ///     one password service account secret
 /// </summary>
+/// <remarks>
+///     The constructor for the <see cref="OnePasswordServiceAccountSecretAttribute" />
+/// </remarks>
+/// <param name="name">The name of the variable to be output</param>
+/// <param name="path">The reference path to the item</param>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-public sealed class OnePasswordServiceAccountSecretAttribute : TriggerValueAttribute
+public sealed class OnePasswordServiceAccountSecretAttribute(string name, string path) : TriggerValueAttribute(name)
 {
-    /// <summary>
-    ///     The constructor for the <see cref="OnePasswordServiceAccountSecretAttribute" />
-    /// </summary>
-    /// <param name="name">The name of the variable to be output</param>
-    /// <param name="path">The reference path to the item</param>
-    public OnePasswordServiceAccountSecretAttribute(string name, string path) : base(name) => Path = path;
-
     /// <summary>
     ///     The constructor for the <see cref="OnePasswordServiceAccountSecretAttribute" />
     /// </summary>
@@ -30,7 +28,7 @@ public sealed class OnePasswordServiceAccountSecretAttribute : TriggerValueAttri
     /// <summary>
     ///     The path to the item
     /// </summary>
-    public string Path { get; }
+    public string Path { get; } = path;
 
     /// <summary>
     ///     The secret where the OP_SERVICE_ACCOUNT_TOKEN is stored (defaults to OP_SERVICE_ACCOUNT_TOKEN)

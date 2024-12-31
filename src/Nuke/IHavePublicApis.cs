@@ -3,7 +3,9 @@ using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
+
 using Rocket.Surgery.Nuke.ProjectModel;
+
 using Serilog;
 using Serilog.Events;
 
@@ -75,13 +77,13 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                     arguments.RenderForStringHandler(),
                                                                     RootDirectory,
                                                                     logOutput: true,
-                                                                    logInvocation: Verbosity == Verbosity.Verbose
-,
+                                                                    logInvocation: Verbosity == Verbosity.Verbose,
                                                                     // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
                                                                     logger: static (t, s) => Log.Write(
-                                                                                ( t == OutputType.Err ) ? LogEventLevel.Error : LogEventLevel.Information,
+                                                                                t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information,
                                                                                 s
-                                                                            ));
+                                                                            )
+                                                                );
                                                             }
                                                         }
                                                     );
@@ -121,11 +123,11 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                 await File.WriteAllTextAsync(unshippedFilePath, "#nullable enable");
                                                             }
 
-                                                            static async Task<List<string>> GetLines(AbsolutePath path) => ( path.FileExists() )
-                                                                    ? ( await File.ReadAllLinesAsync(path) )
-                                                                     .Where(z => z != "#nullable enable")
-                                                                     .ToList()
-                                                                    : [];
+                                                            static async Task<List<string>> GetLines(AbsolutePath path) => path.FileExists()
+                                                                ? ( await File.ReadAllLinesAsync(path) )
+                                                                 .Where(z => z != "#nullable enable")
+                                                                 .ToList()
+                                                                : [];
                                                         }
                                                     );
 
@@ -133,6 +135,6 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
     ///     All the projects that depend on the Microsoft.CodeAnalysis.PublicApiAnalyzers package
     /// </summary>
     private IEnumerable<MsbProject> GetPublicApiAnalyzerProjects(Solution solution) => solution
-              .AnalyzeAllProjects()
-              .Where(project => project.ContainsPackageReference("Microsoft.CodeAnalysis.PublicApiAnalyzers"));
+                                                                                      .AnalyzeAllProjects()
+                                                                                      .Where(project => project.ContainsPackageReference("Microsoft.CodeAnalysis.PublicApiAnalyzers"));
 }

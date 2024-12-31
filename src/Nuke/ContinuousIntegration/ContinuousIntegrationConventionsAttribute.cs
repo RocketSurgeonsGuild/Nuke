@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
 using Nuke.Common.IO;
@@ -16,20 +15,20 @@ public partial class ContinuousIntegrationConventionsAttribute : BuildExtensionA
 {
     private void EmitTestSummaryMarkdown(INukeBuild build, AbsolutePath summary)
     {
-//        // ReSharper disable once SuspiciousTypeConversion.Global
-//        if (build.ExecutionPlan.Any(z => z.Name == nameof(IGenerateCodeCoverageSummary.GenerateCodeCoverageSummary))
-//         && build is IGenerateCodeCoverageSummary codeCoverage
-//         && ( codeCoverage.CoverageSummaryDirectory / "Summary.md" ).FileExists())
-//        {
-//            summary.TouchFile();
-//            var coverageSummary = ( codeCoverage.CoverageSummaryDirectory / "Summary.md" ).ReadAllText();
-//            if (coverageSummary.IndexOf("|**Name**", StringComparison.Ordinal) is > -1 and var index)
-//            {
-//                coverageSummary = coverageSummary[..( index - 1 )];
-//            }
-//
-//            summary.WriteAllText(coverageSummary + summary.ReadAllText().TrimStart());
-//        }
+        //        // ReSharper disable once SuspiciousTypeConversion.Global
+        //        if (build.ExecutionPlan.Any(z => z.Name == nameof(IGenerateCodeCoverageSummary.GenerateCodeCoverageSummary))
+        //         && build is IGenerateCodeCoverageSummary codeCoverage
+        //         && ( codeCoverage.CoverageSummaryDirectory / "Summary.md" ).FileExists())
+        //        {
+        //            summary.TouchFile();
+        //            var coverageSummary = ( codeCoverage.CoverageSummaryDirectory / "Summary.md" ).ReadAllText();
+        //            if (coverageSummary.IndexOf("|**Name**", StringComparison.Ordinal) is > -1 and var index)
+        //            {
+        //                coverageSummary = coverageSummary[..( index - 1 )];
+        //            }
+        //
+        //            summary.WriteAllText(coverageSummary + summary.ReadAllText().TrimStart());
+        //        }
     }
 
     /// <inheritdoc />

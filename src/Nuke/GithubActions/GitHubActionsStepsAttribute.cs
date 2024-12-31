@@ -1,6 +1,6 @@
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Reflection;
+
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
@@ -8,6 +8,7 @@ using Nuke.Common.Execution;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Utilities.Collections;
+
 using YamlDotNet.RepresentationModel;
 
 #pragma warning disable CA1019, CA1308, CA1721, CA1813
@@ -20,16 +21,6 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
 {
-    /// <summary>
-    /// The images
-    /// </summary>
-    public ImmutableArray<string> Images { get; }
-
-    /// <summary>
-    ///  If it's github hosted or not
-    /// </summary>
-    public bool IsGithubHosted { get; }
-
     /// <summary>
     ///     The default constructor
     /// </summary>
@@ -57,10 +48,18 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         string name,
         string image,
         params string[] images
-    ) : base(name)
-    {
+    ) : base(name) =>
         Images = [image, .. images];
-    }
+
+    /// <summary>
+    ///     The images
+    /// </summary>
+    public ImmutableArray<string> Images { get; }
+
+    /// <summary>
+    ///     If it's github hosted or not
+    /// </summary>
+    public bool IsGithubHosted { get; }
 
     /// <summary>
     ///     The targets to invoke
@@ -86,15 +85,12 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
     /// <inheritdoc />
     public override IEnumerable<string> RelevantTargetNames => InvokedTargets;
 
-
-
     // public override IEnumerable<string> IrrelevantTargetNames => new string[0];
 
     /// <inheritdoc />
     public override ConfigurationEntity GetConfiguration(IReadOnlyCollection<ExecutableTarget> relevantTargets)
     {
         var steps = new List<GitHubActionsStep>();
-
 
         var attributes = Build.GetType().GetCustomAttributes().OfType<TriggerValueAttribute>().ToArray();
         var environmentAttributes = Build
@@ -171,7 +167,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                                                  .Select(
                                                       z => new KeyValuePair<string, string>(
                                                           z.Name,
-                                                            ( string.IsNullOrWhiteSpace(z.Variable) )
+                                                          string.IsNullOrWhiteSpace(z.Variable)
                                                               ? $"{z.Path}"
                                                               : $$$"""${{ vars.{{{z.Variable}}} }}/{{{z.Path.TrimStart('/')}}}"""
                                                       )
@@ -232,7 +228,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                                                  .Select(
                                                       z => new KeyValuePair<string, string>(
                                                           z.Name,
-                                                            ( string.IsNullOrWhiteSpace(z.Variable) )
+                                                          string.IsNullOrWhiteSpace(z.Variable)
                                                               ? $"{z.Path}"
                                                               : $$$"""${{ vars.{{{z.Variable}}} }}/{{{z.Path.TrimStart('/')}}}"""
                                                       )
@@ -324,8 +320,8 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                 continue;
             }
 
-            var name = ( string.IsNullOrWhiteSpace(value.Prefix) ) ? value.Name : $"{value.Prefix}.{value.Name}";
-            stepParameters.Add(new(key, $"{name}{( ( string.IsNullOrWhiteSpace(value.Default) ) ? "" : $" || {value.Default}" )}"));
+            var name = string.IsNullOrWhiteSpace(value.Prefix) ? value.Name : $"{value.Prefix}.{value.Name}";
+            stepParameters.Add(new(key, $"{name}{( string.IsNullOrWhiteSpace(value.Default) ? "" : $" || {value.Default}" )}"));
         }
 
         var jobOutputs = new List<GitHubActionsStepOutput>();
@@ -360,7 +356,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                             0,
                             new(
                                 key,
-                                $"{value.Prefix}.{value.Name}{( ( string.IsNullOrWhiteSpace(value.Default) ) ? "" : $" || {value.Default}" )}"
+                                $"{value.Prefix}.{value.Name}{( string.IsNullOrWhiteSpace(value.Default) ? "" : $" || {value.Default}" )}"
                             )
                         );
                     }
@@ -410,7 +406,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         {
             Steps = steps,
             Outputs = jobOutputs,
-            RunsOn = ( !IsGithubHosted ) ? Images : [],
+            RunsOn = !IsGithubHosted ? Images : [],
             Matrix = IsGithubHosted ? Images : [],
             // TODO: Figure out what this looks like here
             //                    Environment = inputs
@@ -469,7 +465,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                     steps.IndexOf(step),
                     new UploadArtifactStep($$$"""{{{step.StepName}}} (${{ matrix.os }})""")
                     {
-                        If = ( step.If is { } ) ? $"{step.If} && matrix.os != '{mainOs}'" : $"matrix.os != '{mainOs}'",
+                        If = step.If is { } ? $"{step.If} && matrix.os != '{mainOs}'" : $"matrix.os != '{mainOs}'",
                         Name = $$$"""${{ matrix.os }}-{{{step.Name}}}""",
                         Path = step.Path,
                         Environment = step.Environment.ToDictionary(z => z.Key, z => z.Value),
@@ -483,7 +479,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                         IfNoFilesFound = step.IfNoFilesFound,
                     }
                 );
-                step.If = ( step.If is { } ) ? $"{step.If} && matrix.os == '{mainOs}'" : $"matrix.os == '{mainOs}'";
+                step.If = step.If is { } ? $"{step.If} && matrix.os == '{mainOs}'" : $"matrix.os == '{mainOs}'";
             }
         }
 
@@ -536,7 +532,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             }
 
             var nodeKey = uses.Split('@')[0];
-            return ( nodeList.TryGetValue(nodeKey, out var value) ) ? value : uses;
+            return nodeList.TryGetValue(nodeKey, out var value) ? value : uses;
         }
 
         foreach (var job in config.Jobs)

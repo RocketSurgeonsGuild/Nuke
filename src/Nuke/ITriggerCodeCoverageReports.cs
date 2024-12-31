@@ -1,6 +1,7 @@
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.ReportGenerator;
+
 using Rocket.Surgery.Nuke.ProjectModel;
 
 // ReSharper disable SuspiciousTypeConversion.Global
@@ -64,7 +65,6 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                   }
                                               );
 
-
     /// <summary>
     ///     This will generate code coverage reports from emitted coverage data
     /// </summary>
@@ -92,8 +92,8 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
     /// </summary>
     /// <param name="settings"></param>
     /// <returns></returns>
-    protected ReportGeneratorSettings Defaults(ReportGeneratorSettings settings)
-        => ( this switch
+    protected ReportGeneratorSettings Defaults(ReportGeneratorSettings settings) =>
+        ( this switch
         {
             IHaveGitVersion gitVersion => settings.SetTag(gitVersion.GitVersion.InformationalVersion),
             IHaveGitRepository { GitRepository: { } } gitRepository => settings.SetTag(gitRepository.GitRepository.Head),

@@ -3,15 +3,13 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// <summary>
 ///     Defines a github actions input variable
 /// </summary>
+/// <remarks>
+///     The constructor for the <see cref="GitHubActionsInputAttribute" />
+/// </remarks>
+/// <param name="name"></param>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-public sealed class GitHubActionsInputAttribute : TriggerValueAttribute
+public sealed class GitHubActionsInputAttribute(string name) : TriggerValueAttribute(name)
 {
-    /// <summary>
-    ///     The constructor for the <see cref="GitHubActionsInputAttribute" />
-    /// </summary>
-    /// <param name="name"></param>
-    public GitHubActionsInputAttribute(string name) : base(name) { }
-
     /// <summary>
     ///     The type of the input
     /// </summary>

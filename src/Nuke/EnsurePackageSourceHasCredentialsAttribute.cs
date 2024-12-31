@@ -1,30 +1,29 @@
 using NuGet.Configuration;
+
 using Nuke.Common.Execution;
+
 using Serilog;
 
-#pragma warning disable CA1813
-#pragma warning disable CA2201
+#pragma warning disable CA1813, CA2201
 namespace Rocket.Surgery.Nuke;
 
 /// <summary>
 ///     Ensures that the package source name has credentials set
 ///     This is useful to ensure that credentials are defined on a users local environment
 /// </summary>
+/// <remarks>
+///     Ensures that the package source name has credentials set
+///     This is useful to ensure that credentials are defined on a users local environment
+/// </remarks>
 [PublicAPI]
 [UsedImplicitly(ImplicitUseKindFlags.Default)]
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
-public class EnsurePackageSourceHasCredentialsAttribute : BuildExtensionAttributeBase, IOnBuildCreated
+public class EnsurePackageSourceHasCredentialsAttribute(string sourceName) : BuildExtensionAttributeBase, IOnBuildCreated
 {
-    /// <summary>
-    ///     Ensures that the package source name has credentials set
-    ///     This is useful to ensure that credentials are defined on a users local environment
-    /// </summary>
-    public EnsurePackageSourceHasCredentialsAttribute(string sourceName) => SourceName = sourceName;
-
     /// <summary>
     ///     The nuget source name
     /// </summary>
-    public string SourceName { get; }
+    public string SourceName { get; } = sourceName;
 
     /// <inheritdoc />
     public void OnBuildCreated(IReadOnlyCollection<ExecutableTarget> executableTargets)
@@ -35,7 +34,7 @@ public class EnsurePackageSourceHasCredentialsAttribute : BuildExtensionAttribut
         var source = packageSourceProvider
                     .LoadPackageSources()
                     .FirstOrDefault(x => x.Name.Equals(SourceName, StringComparison.OrdinalIgnoreCase));
-        if (source == null)
+        if (source is null)
         {
             Log.Error(
                 "NuGet Package Source {SourceName} could not be found. This is required for the build to complete",
@@ -44,13 +43,15 @@ public class EnsurePackageSourceHasCredentialsAttribute : BuildExtensionAttribut
             throw new();
         }
 
-        if (source.Credentials?.IsValid() != true)
+        if (source.Credentials?.IsValid() == true)
         {
-            Log.Error(
-                "NuGet Package Source {SourceName} does not have any credentials defined.  Please configure the credentials for the source to build",
-                SourceName
-            );
-            throw new();
+            return;
         }
+
+        Log.Error(
+            "NuGet Package Source {SourceName} does not have any credentials defined.  Please configure the credentials for the source to build",
+            SourceName
+        );
+        throw new();
     }
 }

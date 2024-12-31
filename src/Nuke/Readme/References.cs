@@ -14,10 +14,7 @@ public class References : IMarkdownReferences, IReadmeSection
     public string AddReference(string name, string value, string? altText = null)
     {
         var key = $"[{name}]";
-        if (string.IsNullOrEmpty(altText))
-            altText = "";
-        else
-            altText = $" \"{altText}\"";
+        altText = string.IsNullOrEmpty(altText) ? "" : $" \"{altText}\"";
 
         _references.Add(key, $"{value}{altText}");
         return key;
@@ -27,7 +24,7 @@ public class References : IMarkdownReferences, IReadmeSection
     public string Name { get; } = "generated references";
 
     /// <inheritdoc />
-    public string ConfigKey { get; } = string.Empty;
+    public string ConfigKey { get; } = "";
 
     /// <inheritdoc />
     public Task<string> Process(

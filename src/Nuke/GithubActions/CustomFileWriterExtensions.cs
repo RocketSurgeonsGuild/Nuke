@@ -15,19 +15,21 @@ public static class CustomFileWriterExtensions
     /// <param name="dictionary"></param>
     public static void WriteKeyValues(this CustomFileWriter writer, string key, IDictionary<string, string> dictionary)
     {
-        if (dictionary.Any())
+        if (!dictionary.Any())
         {
-            writer.WriteLine(key + ":");
-            using (writer.Indent())
-            {
-                dictionary.ForEach(z => WriteValue(writer, z));
-            }
+            return;
+        }
+
+        writer.WriteLine(key + ":");
+        using (writer.Indent())
+        {
+            dictionary.ForEach(z => WriteValue(writer, z));
         }
     }
 
     internal static void WriteValue(this CustomFileWriter writer, KeyValuePair<string, string> kvp)
     {
-        ( var key, var value ) = kvp;
+        (var key, var value) = kvp;
         if (value.StartsWith('>') || value.StartsWith('|'))
         {
             var values = value.Split('\n');
