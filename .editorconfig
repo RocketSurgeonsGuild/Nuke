@@ -271,7 +271,7 @@ dotnet_style_parentheses_in_other_operators = never_if_unnecessary
 # Applicable to: IDE0047, IDE0048
 # always_for_clarity, never_if_unnecessary
 
-dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity
+dotnet_style_parentheses_in_relational_binary_operators = never_if_unnecessary
 # Applicable to: IDE0047, IDE0048
 # always_for_clarity, never_if_unnecessary
 
@@ -2227,7 +2227,7 @@ dotnet_diagnostic.IDE0047.severity = warning
 # Options: dotnet_style_parentheses_in_arithmetic_binary_operators, dotnet_style_parentheses_in_relational_binary_operators, dotnet_style_parentheses_in_other_binary_operators, dotnet_style_parentheses_in_other_operators
 
 # IDE0048: Add parentheses for clarity
-dotnet_diagnostic.IDE0048.severity = warning
+dotnet_diagnostic.IDE0048.severity = none
 # Options: dotnet_style_parentheses_in_arithmetic_binary_operators, dotnet_style_parentheses_in_relational_binary_operators, dotnet_style_parentheses_in_other_binary_operators, dotnet_style_parentheses_in_other_operators
 
 # IDE0049: Use language keywords instead of framework type names for type references
@@ -4781,7 +4781,7 @@ resharper_outdent_binary_pattern_ops = true
 resharper_outdent_namespace_member = false
 resharper_outdent_statement_labels = true
 resharper_outdent_ternary_ops = false
-resharper_parentheses_non_obvious_operations = none, shift, bitwise_and, bitwise_exclusive_or, bitwise_inclusive_or, bitwise
+resharper_parentheses_non_obvious_operations = shift, bitwise_and, bitwise_exclusive_or, bitwise_inclusive_or, bitwise
 resharper_parentheses_redundancy_style = remove_if_not_clarifies_precedence
 resharper_parentheses_same_type_operations = true
 resharper_pi_attributes_indent = align_by_first_attribute
