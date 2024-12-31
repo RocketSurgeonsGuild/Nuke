@@ -8,14 +8,9 @@ namespace Rocket.Surgery.Nuke;
 public interface IComprehendTests : IComprehend
 {
     /// <summary>
-    ///     The build configuration to use for testing
+    ///     The coverage data collector
     /// </summary>
-    string TestBuildConfiguration => "Debug";
-
-    /// <summary>
-    ///     The directory where tests will be placed
-    /// </summary>
-    AbsolutePath TestsDirectory => FilePathExtensions.PickDirectory(NukeBuild.RootDirectory / "test", NukeBuild.RootDirectory / "tests");
+    public string DataCollector => "Code Coverage";
 
     /// <summary>
     ///     The default path to look for user (eg. commited to the repo) test runsettings
@@ -32,7 +27,12 @@ public interface IComprehendTests : IComprehend
      ?? NukeBuild.TemporaryDirectory / "default.runsettings";
 
     /// <summary>
-    ///     The coverage data collector
+    ///     The build configuration to use for testing
     /// </summary>
-    public string DataCollector => "Code Coverage";
+    string TestBuildConfiguration => "Debug";
+
+    /// <summary>
+    ///     The directory where tests will be placed
+    /// </summary>
+    AbsolutePath TestsDirectory => FilePathExtensions.PickDirectory(NukeBuild.RootDirectory / "test", NukeBuild.RootDirectory / "tests");
 }

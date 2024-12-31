@@ -40,26 +40,6 @@ public partial class ReadmeUpdater
     }
 
     /// <summary>
-    ///     The sections container
-    /// </summary>
-    public Sections Sections { get; }
-
-    /// <summary>
-    ///     The badges container
-    /// </summary>
-    public Badges Badges { get; }
-
-    /// <summary>
-    ///     The history container
-    /// </summary>
-    public Histories History { get; set; }
-
-    /// <summary>
-    ///     The references container for markdown references
-    /// </summary>
-    public References References { get; }
-
-    /// <summary>
     ///     <para>Updates the given markdown content with all the sections replaced.</para>
     ///     <para>
     ///         The "generated references" is special and will always be run through last, to make sure all sections can
@@ -80,10 +60,7 @@ public partial class ReadmeUpdater
         using var reader = new StringReader(yaml.Trim('\n', '\r'));
         var config = d.Deserialize<ExpandoObject>(reader);
 
-        var sectionRegex = new Regex(
-            "<!-- (.*?) -->",
-            RegexOptions.Multiline | RegexOptions.Compiled | RegexOptions.IgnoreCase
-        );
+        var sectionRegex = MyRegex1();
 
         var sections = sectionRegex.Matches(content);
 
@@ -119,6 +96,29 @@ public partial class ReadmeUpdater
         return content;
     }
 
+    /// <summary>
+    ///     The badges container
+    /// </summary>
+    public Badges Badges { get; }
+
+    /// <summary>
+    ///     The history container
+    /// </summary>
+    public Histories History { get; set; }
+
+    /// <summary>
+    ///     The references container for markdown references
+    /// </summary>
+    public References References { get; }
+
+    /// <summary>
+    ///     The sections container
+    /// </summary>
+    public Sections Sections { get; }
+
     [GeneratedRegex("<!-- nuke-data(.*?)-->", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline, "en-US")]
     private static partial Regex MyRegex();
+
+    [GeneratedRegex("<!-- (.*?) -->", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled, "en-US")]
+    private static partial Regex MyRegex1();
 }

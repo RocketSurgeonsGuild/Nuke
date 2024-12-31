@@ -18,14 +18,6 @@ namespace Rocket.Surgery.Nuke;
 public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarget, IHaveTestArtifacts, ITrigger, IHaveSolution
 {
     /// <summary>
-    ///     The input reports
-    /// </summary>
-    /// <remarks>
-    ///     used to determine if any coverage was emitted, if not the tasks will skip to avoid errors
-    /// </remarks>
-    public IEnumerable<AbsolutePath> InputReports => CoverageDirectory.GlobFiles("**/*.cobertura.xml");
-
-    /// <summary>
     ///     This will generate code coverage reports from emitted coverage data
     /// </summary>
     [NonEntryTarget]
@@ -38,10 +30,7 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                   () =>
                                                   {
                                                       var files = TestResultsDirectory.GlobFiles("**/*.xml", "**/*.json", "**/*.coverage");
-                                                      if (!files.Any())
-                                                      {
-                                                          return;
-                                                      }
+                                                      if (!files.Any()) return;
 
                                                       ReportGeneratorTasks.ReportGenerator(
                                                           settings => settings
@@ -88,6 +77,14 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                               );
 
     /// <summary>
+    ///     The input reports
+    /// </summary>
+    /// <remarks>
+    ///     used to determine if any coverage was emitted, if not the tasks will skip to avoid errors
+    /// </remarks>
+    public IEnumerable<AbsolutePath> InputReports => CoverageDirectory.GlobFiles("**/*.cobertura.xml");
+
+    /// <summary>
     ///     ensures that ReportGenerator is called with the appropriate settings given the current state.
     /// </summary>
     /// <param name="settings"></param>
@@ -99,27 +96,27 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
             IHaveGitRepository { GitRepository: { } } gitRepository => settings.SetTag(gitRepository.GitRepository.Head),
             _ => settings,
         }
-           )
-          .SetReports(InputReports)
-          .SetSourceDirectories(NukeBuild.RootDirectory)
-          .SetFramework(Constants.ReportGeneratorFramework)
-          // this is more or less a hack / compromise because
-          // I was unable to coverage to exclude everything in a given assembly by default.
-          .AddAssemblyFilters(
-               Solution
-                  .AnalyzeAllProjects()
-                  .Select(z => z.GetProperty("AssemblyName") ?? "")
-                  .Where(z => !string.IsNullOrWhiteSpace(z))
-                  .Distinct()
-                  .Select(z => "+" + z)
-           )
-          .AddAssemblyFilters(
-               Solution
-                  .AnalyzeAllProjects()
-                  .SelectMany(z => z.PackageReferences)
-                  .Select(z => z.Name)
-                  .Where(z => !string.IsNullOrWhiteSpace(z))
-                  .Distinct()
-                  .Select(z => "-" + z)
-           );
+        )
+       .SetReports(InputReports)
+       .SetSourceDirectories(NukeBuild.RootDirectory)
+       .SetFramework(Constants.ReportGeneratorFramework)
+       // this is more or less a hack / compromise because
+       // I was unable to coverage to exclude everything in a given assembly by default.
+       .AddAssemblyFilters(
+            Solution
+               .AnalyzeAllProjects()
+               .Select(z => z.GetProperty("AssemblyName") ?? "")
+               .Where(z => !string.IsNullOrWhiteSpace(z))
+               .Distinct()
+               .Select(z => "+" + z)
+        )
+       .AddAssemblyFilters(
+            Solution
+               .AnalyzeAllProjects()
+               .SelectMany(z => z.PackageReferences)
+               .Select(z => z.Name)
+               .Where(z => !string.IsNullOrWhiteSpace(z))
+               .Distinct()
+               .Select(z => "-" + z)
+        );
 }

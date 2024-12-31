@@ -39,22 +39,11 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
         params string[] images
     ) : base(name, image, images) { }
 
-    /// <summary>
-    ///     The PAT token that is used to access the repository
-    /// </summary>
-    /// <remarks>
-    ///     Should be in the format of the name of the secret eg RSG_BOT_TOKEN
-    /// </remarks>
-    public string TokenSecret { get; set; } = "RSG_BOT_TOKEN";
-
     /// <inheritdoc />
     public override ConfigurationEntity GetConfiguration(IReadOnlyCollection<ExecutableTarget> relevantTargets)
     {
         var config = base.GetConfiguration(relevantTargets);
-        if (config is not RocketSurgeonGitHubActionsConfiguration configuration)
-        {
-            return config;
-        }
+        if (config is not RocketSurgeonGitHubActionsConfiguration configuration) return config;
 
         var buildJob =
             configuration
@@ -117,10 +106,7 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
                                        .OfType<RocketSurgeonGitHubActionsWorkflowTrigger>()
                 )
         {
-            if (workflowTrigger.Secrets.Any(z => z.Name == TokenSecret || z.Alias == TokenSecret))
-            {
-                continue;
-            }
+            if (workflowTrigger.Secrets.Any(z => z.Name == TokenSecret || z.Alias == TokenSecret)) continue;
 
             workflowTrigger.Secrets.Add(new(TokenSecret, "The token used to commit back when linting", true));
         }
@@ -130,4 +116,12 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
         NormalizeActionVersions(configuration);
         return configuration;
     }
+
+    /// <summary>
+    ///     The PAT token that is used to access the repository
+    /// </summary>
+    /// <remarks>
+    ///     Should be in the format of the name of the secret eg RSG_BOT_TOKEN
+    /// </remarks>
+    public string TokenSecret { get; set; } = "RSG_BOT_TOKEN";
 }

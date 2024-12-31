@@ -16,20 +16,6 @@ namespace Rocket.Surgery.Nuke;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
 public sealed class EnsureGitHooksAttribute(params GitHook[] hookNames) : BuildExtensionAttributeBase, IOnBuildCreated, IOnBuildInitialized
 {
-    /// <summary>
-    ///     The hooks that were asked for.
-    /// </summary>
-    public string[] HookNames { get; } = hookNames
-                   .Select(
-                        x => x
-                            .ToString()
-                            .Humanize()
-                            .Replace(" ", "_", StringComparison.Ordinal)
-                            .Dasherize()
-                            .ToLowerInvariant()
-                    )
-                   .ToArray();
-
     /// <inheritdoc />
     public void OnBuildCreated(IReadOnlyCollection<ExecutableTarget> executableTargets)
     {
@@ -37,25 +23,16 @@ public sealed class EnsureGitHooksAttribute(params GitHook[] hookNames) : BuildE
         if (!NukeBuild.IsLocalBuild) return;
 
         // ReSharper disable once SuspiciousTypeConversion.Global
-        if (Build is IGitHooksEngine engine)
-        {
-            installHooks(engine, HookNames);
-        }
+        if (Build is IGitHooksEngine engine) installHooks(engine, HookNames);
 
-        if (!( Build.RootDirectory / ".husky" ).DirectoryExists())
-        {
-            return;
-        }
+        if (!( Build.RootDirectory / ".husky" ).DirectoryExists()) return;
 
         engine = new HuskyEngine();
         installHooks(engine, HookNames);
 
         static void installHooks(IGitHooksEngine engine, string[] hookNames)
         {
-            if (engine.AreHooksInstalled(hookNames))
-            {
-                return;
-            }
+            if (engine.AreHooksInstalled(hookNames)) return;
 
             Log.Information("git hooks not found...");
             engine.InstallHooks(hookNames);
@@ -65,14 +42,25 @@ public sealed class EnsureGitHooksAttribute(params GitHook[] hookNames) : BuildE
     /// <inheritdoc />
     public void OnBuildInitialized(IReadOnlyCollection<ExecutableTarget> executableTargets, IReadOnlyCollection<ExecutableTarget> executionPlan)
     {
-        if (!( NukeBuild.RootDirectory / "package.json" ).FileExists() || NukeBuild.RootDirectory.ContainsDirectory("node_modules"))
-        {
-            return;
-        }
+        if (!( NukeBuild.RootDirectory / "package.json" ).FileExists() || NukeBuild.RootDirectory.ContainsDirectory("node_modules")) return;
 
         ProcessTasks
            .StartProcess(ToolPathResolver.GetPathExecutable("npm"), NukeBuild.IsLocalBuild ? "install" : "ci --ignore-scripts", NukeBuild.RootDirectory)
            .AssertWaitForExit()
            .AssertZeroExitCode();
     }
+
+    /// <summary>
+    ///     The hooks that were asked for.
+    /// </summary>
+    public string[] HookNames { get; } = hookNames
+                                        .Select(
+                                             x => x
+                                                 .ToString()
+                                                 .Humanize()
+                                                 .Replace(" ", "_", StringComparison.Ordinal)
+                                                 .Dasherize()
+                                                 .ToLowerInvariant()
+                                         )
+                                        .ToArray();
 }

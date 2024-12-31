@@ -12,21 +12,6 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 [PublicAPI]
 public class RocketSurgeonsGithubWorkflowJob(string name) : RocketSurgeonsGithubActionsJobBase(name)
 {
-    /// <summary>
-    ///     The action to use.
-    /// </summary>
-    public string? Uses { get; set; }
-
-    /// <summary>
-    ///     The properties to use with the action
-    /// </summary>
-    public Dictionary<string, string> With { get; set; } = new(StringComparer.OrdinalIgnoreCase);
-
-    /// <summary>
-    ///     The properties to use with the action
-    /// </summary>
-    public Dictionary<string, string> Secrets { get; set; } = new(StringComparer.OrdinalIgnoreCase);
-
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
@@ -39,4 +24,19 @@ public class RocketSurgeonsGithubWorkflowJob(string name) : RocketSurgeonsGithub
             writer.WriteKeyValues("secrets", Secrets);
         }
     }
+
+    /// <summary>
+    ///     The properties to use with the action
+    /// </summary>
+    public Dictionary<string, string> Secrets { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>
+    ///     The action to use.
+    /// </summary>
+    public string? Uses { get; set; }
+
+    /// <summary>
+    ///     The properties to use with the action
+    /// </summary>
+    public Dictionary<string, string> With { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 }

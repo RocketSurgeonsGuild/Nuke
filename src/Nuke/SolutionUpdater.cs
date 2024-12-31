@@ -18,10 +18,7 @@ internal static class SolutionUpdater
         IEnumerable<string> additionalIgnoreFolderFilePatterns
     )
     {
-        if (solution.GetSolutionFolder(configFolderName) is not { } configFolder)
-        {
-            configFolder = solution.AddSolutionFolder(configFolderName);
-        }
+        if (solution.GetSolutionFolder(configFolderName) is not { } configFolder) configFolder = solution.AddSolutionFolder(configFolderName);
 
         _configFolder = configFolder;
 
@@ -41,25 +38,37 @@ internal static class SolutionUpdater
         solution.Save();
     }
 
-    private static SolutionFolder _configFolder = null!;
+    private static void AddConfigurationFiles(
+        Solution solution,
+        IEnumerable<string> additionalRelativeFolderFilePatterns,
+        IEnumerable<string> additionalConfigFolderFilePatterns,
+        IEnumerable<string> additionalIgnoreFolderFilePatterns,
+        SolutionFolder configFolder
+    )
+    {
+        var ignoreGlobs = _ignoreFolderFilePatterns.Concat(additionalIgnoreFolderFilePatterns).Select(z => new Glob(z)).ToList();
 
-    private static readonly string[] _relativeFolderFilePatterns = ["**/Directory.*.props", "**/Directory.*.targets", "**/.editorconfig"];
+        solution
+           .Directory
+           .GlobFiles(".config/*")
+           .ForEach(path => AddSolutionItemToFolder(configFolder, NukeBuild.RootDirectory.GetRelativePathTo(path)));
 
-    private static readonly string[] _configFolderFilePatterns =
-    [
-        "build.*", "*.yaml", "*.yml", "LICENSE", "*.md", ".git*",
-        ".prettier*", "*lintstaged*", "NuGet.config", ".github/**/*", ".husky/*", ".vscode/**/*", "*.props", "*.targets",
-        "package.json",
-    ];
+        solution
+           .Directory
+           .GlobFiles([.. _relativeFolderFilePatterns, .. additionalRelativeFolderFilePatterns])
+           .Where(path => ignoreGlobs.All(z => !z.IsMatch(path)))
+           .ForEach(path => AddSolutionItemToRelativeFolder(solution, configFolder, path));
 
-    private static readonly string[] _ignoreFolderFilePatterns = ["**/node_modules/**", "**/.idea/**"];
+        solution
+           .Directory
+           .GlobFiles([.. _configFolderFilePatterns, .. additionalConfigFolderFilePatterns])
+           .Where(path => ignoreGlobs.All(z => !z.IsMatch(path)))
+           .ForEach(path => AddSolutionItemToRelativeConfigFolder(solution, configFolder, path));
+    }
 
     private static void AddNukeBuilds(Solution solution, SolutionFolder configFolder)
     {
-        if (solution.Directory != NukeBuild.RootDirectory)
-        {
-            return;
-        }
+        if (solution.Directory != NukeBuild.RootDirectory) return;
 
         var projectPaths = NukeBuild
                           .RootDirectory.GlobFiles("*build/*.csproj")
@@ -68,10 +77,7 @@ internal static class SolutionUpdater
 
         foreach (var project in projectPaths)
         {
-            if (solution.GetProject(project.Name) is { })
-            {
-                continue;
-            }
+            if (solution.GetProject(project.Name) is { }) continue;
 
             solution.AddProject(
                 project.NameWithoutExtension,
@@ -95,6 +101,31 @@ internal static class SolutionUpdater
             Log.Logger.Information("Removing {Key} from {Project} configuration", key, project.Name);
             project.Configurations.Remove(key);
         }
+    }
+
+    private static void AddSolutionItemToFolder(SolutionFolder folder, RelativePath path)
+    {
+        path = path.ToWinRelativePath();
+        var key = Path.GetFileName(path);
+        if (folder.Items.ContainsKey(key)) return;
+
+        Log.Logger.Information("Adding {Path} to {Folder}", path, GetSolutionFolderPath(folder));
+        folder.Items.Add(key, path);
+    }
+
+    private static void AddSolutionItemToRelativeConfigFolder(Solution solution, SolutionFolder configFolder, AbsolutePath path)
+    {
+        var folder = GetNestedFolder(solution, configFolder, NukeBuild.RootDirectory.GetRelativePathTo(path.Parent)) ?? configFolder;
+        AddSolutionItemToFolder(folder, NukeBuild.RootDirectory.GetRelativePathTo(path));
+    }
+
+    private static void AddSolutionItemToRelativeFolder(Solution solution, SolutionFolder configFolder, AbsolutePath path)
+    {
+        var folder = path.Parent == NukeBuild.RootDirectory
+            ? configFolder
+            // ReSharper disable once NullableWarningSuppressionIsUsed
+            : GetNestedFolder(solution, null, NukeBuild.RootDirectory.GetRelativePathTo(path.Parent))!;
+        AddSolutionItemToFolder(folder, NukeBuild.RootDirectory.GetRelativePathTo(path));
     }
 
     private static bool CleanupSolution(Solution solution)
@@ -145,32 +176,39 @@ internal static class SolutionUpdater
         return done;
     }
 
-    private static void AddConfigurationFiles(
-        Solution solution,
-        IEnumerable<string> additionalRelativeFolderFilePatterns,
-        IEnumerable<string> additionalConfigFolderFilePatterns,
-        IEnumerable<string> additionalIgnoreFolderFilePatterns,
-        SolutionFolder configFolder
-    )
+    private static AbsolutePath GetItemPath(Solution solution, RelativePath relativePath) => solution.Directory / relativePath;
+
+    private static RelativePath GetItemRelativeFilePath(SolutionFolder folder, string path) => GetSolutionFolderPath(folder, true) / path;
+
+    private static RelativePath GetItemRelativePath(SolutionFolder folder, string path) => GetSolutionFolderPath(folder) / path;
+
+    private static SolutionFolder? GetNestedFolder(Solution solution, SolutionFolder? placedInto, RelativePath path) => path
+                                                                                                                       .ToString()
+                                                                                                                       .Split(['/', '\\'], StringSplitOptions.RemoveEmptyEntries)
+                                                                                                                       .Aggregate(
+                                                                                                                            placedInto,
+                                                                                                                            (parent, pathPart) =>
+                                                                                                                            {
+                                                                                                                                var folder = parent is null
+                                                                                                                                    ? solution.GetSolutionFolder(pathPart)
+                                                                                                                                    : parent.GetSolutionFolder(pathPart);
+                                                                                                                                return folder
+                                                                                                                                 ?? solution.AddSolutionFolder(pathPart, solutionFolder: parent);
+                                                                                                                            }
+                                                                                                                        );
+
+    private static RelativePath GetSolutionFolderPath(SolutionFolder folder, bool withoutConfig = false)
     {
-        var ignoreGlobs = _ignoreFolderFilePatterns.Concat(additionalIgnoreFolderFilePatterns).Select(z => new Glob(z)).ToList();
+        var parts = new List<string>();
+        while (folder is { })
+        {
+            if (withoutConfig && ( folder == _configFolder || ( folder.Name == _configFolder.Name && folder.SolutionFolder is null ) )) break;
 
-        solution
-           .Directory
-           .GlobFiles(".config/*")
-           .ForEach(path => AddSolutionItemToFolder(configFolder, NukeBuild.RootDirectory.GetRelativePathTo(path)));
+            parts.Insert(0, folder.Name);
+            folder = folder.SolutionFolder;
+        }
 
-        solution
-           .Directory
-           .GlobFiles([.. _relativeFolderFilePatterns, .. additionalRelativeFolderFilePatterns])
-           .Where(path => ignoreGlobs.All(z => !z.IsMatch(path)))
-           .ForEach(path => AddSolutionItemToRelativeFolder(solution, configFolder, path));
-
-        solution
-           .Directory
-           .GlobFiles([.. _configFolderFilePatterns, .. additionalConfigFolderFilePatterns])
-           .Where(path => ignoreGlobs.All(z => !z.IsMatch(path)))
-           .ForEach(path => AddSolutionItemToRelativeConfigFolder(solution, configFolder, path));
+        return ( (RelativePath)string.Join("/", parts) ).ToWinRelativePath();
     }
 
     private static void NormalizePaths(Solution solution)
@@ -189,69 +227,16 @@ internal static class SolutionUpdater
         static bool isUsingSolutionPath(KeyValuePair<string, string> item) => item.Value.Contains('\\');
     }
 
-    private static void AddSolutionItemToRelativeFolder(Solution solution, SolutionFolder configFolder, AbsolutePath path)
-    {
-        var folder = path.Parent == NukeBuild.RootDirectory
-            ? configFolder
-            // ReSharper disable once NullableWarningSuppressionIsUsed
-            : GetNestedFolder(solution, null, NukeBuild.RootDirectory.GetRelativePathTo(path.Parent))!;
-        AddSolutionItemToFolder(folder, NukeBuild.RootDirectory.GetRelativePathTo(path));
-    }
+    private static SolutionFolder _configFolder = null!;
 
-    private static void AddSolutionItemToRelativeConfigFolder(Solution solution, SolutionFolder configFolder, AbsolutePath path)
-    {
-        var folder = GetNestedFolder(solution, configFolder, NukeBuild.RootDirectory.GetRelativePathTo(path.Parent)) ?? configFolder;
-        AddSolutionItemToFolder(folder, NukeBuild.RootDirectory.GetRelativePathTo(path));
-    }
+    private static readonly string[] _configFolderFilePatterns =
+    [
+        "build.*", "*.yaml", "*.yml", "LICENSE", "*.md", ".git*",
+        ".prettier*", "*lintstaged*", "NuGet.config", ".github/**/*", ".husky/*", ".vscode/**/*", "*.props", "*.targets",
+        "package.json",
+    ];
 
-    private static SolutionFolder? GetNestedFolder(Solution solution, SolutionFolder? placedInto, RelativePath path) => path
-                                                                                                                       .ToString()
-                                                                                                                       .Split(['/', '\\'], StringSplitOptions.RemoveEmptyEntries)
-                                                                                                                       .Aggregate(
-                                                                                                                            placedInto,
-                                                                                                                            (parent, pathPart) =>
-                                                                                                                            {
-                                                                                                                                var folder = parent is null
-                                                                                                                                    ? solution.GetSolutionFolder(pathPart)
-                                                                                                                                    : parent.GetSolutionFolder(pathPart);
-                                                                                                                                return folder
-                                                                                                                                 ?? solution.AddSolutionFolder(pathPart, solutionFolder: parent);
-                                                                                                                            }
-                                                                                                                        );
+    private static readonly string[] _ignoreFolderFilePatterns = ["**/node_modules/**", "**/.idea/**"];
 
-    private static void AddSolutionItemToFolder(SolutionFolder folder, RelativePath path)
-    {
-        path = path.ToWinRelativePath();
-        var key = Path.GetFileName(path);
-        if (folder.Items.ContainsKey(key))
-        {
-            return;
-        }
-
-        Log.Logger.Information("Adding {Path} to {Folder}", path, GetSolutionFolderPath(folder));
-        folder.Items.Add(key, path);
-    }
-
-    private static AbsolutePath GetItemPath(Solution solution, RelativePath relativePath) => solution.Directory / relativePath;
-
-    private static RelativePath GetItemRelativeFilePath(SolutionFolder folder, string path) => GetSolutionFolderPath(folder, true) / path;
-
-    private static RelativePath GetItemRelativePath(SolutionFolder folder, string path) => GetSolutionFolderPath(folder) / path;
-
-    private static RelativePath GetSolutionFolderPath(SolutionFolder folder, bool withoutConfig = false)
-    {
-        var parts = new List<string>();
-        while (folder is { })
-        {
-            if (withoutConfig && ( folder == _configFolder || ( folder.Name == _configFolder.Name && folder.SolutionFolder is null ) ))
-            {
-                break;
-            }
-
-            parts.Insert(0, folder.Name);
-            folder = folder.SolutionFolder;
-        }
-
-        return ( (RelativePath)string.Join("/", parts) ).ToWinRelativePath();
-    }
+    private static readonly string[] _relativeFolderFilePatterns = ["**/Directory.*.props", "**/Directory.*.targets", "**/.editorconfig"];
 }

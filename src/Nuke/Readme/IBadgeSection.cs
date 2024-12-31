@@ -6,16 +6,6 @@ namespace Rocket.Surgery.Nuke.Readme;
 public interface IBadgeSection
 {
     /// <summary>
-    ///     The name of the section
-    /// </summary>
-    string Name { get; }
-
-    /// <summary>
-    ///     The configuration key, if you expect to get configuration from the yaml block.
-    /// </summary>
-    string ConfigKey { get; }
-
-    /// <summary>
     ///     Returns the markdown that will produce the badge
     /// </summary>
     /// <param name="config"></param>
@@ -23,4 +13,14 @@ public interface IBadgeSection
     /// <param name="build"></param>
     /// <returns></returns>
     string Process(IDictionary<object, object?> config, IMarkdownReferences references, IHaveSolution build);
+
+    /// <summary>
+    ///     The configuration key, if you expect to get configuration from the yaml block.
+    /// </summary>
+    string ConfigKey { get; }
+
+    /// <summary>
+    ///     The name of the section
+    /// </summary>
+    string Name { get; }
 }

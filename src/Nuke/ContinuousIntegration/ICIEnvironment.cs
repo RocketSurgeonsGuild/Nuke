@@ -10,19 +10,6 @@ namespace Rocket.Surgery.Nuke.ContinuousIntegration;
 public interface ICIEnvironment : IHaveBuildVersion
 {
     /// <summary>
-    ///     Well know environment variables
-    /// </summary>
-    /// <remarks>
-    ///     Replace default implementation to add values not covered by default
-    /// </remarks>
-    public IEnumerable<string> WellKnownEnvironmentVariablePrefixes => new[]
-    {
-        // Azure pipelines
-        "CIRCLE", "GITHUB", "APPVEYOR", "TRAVIS", "BITRISE", "BAMBOO", "GITLAB", "JENKINS", "TEAMCITY",
-        "AGENT_", "BUILD_", "RELEASE_", "PIPELINE_", "ENVIRONMENT_", "SYSTEM_",
-    };
-
-    /// <summary>
     ///     Prints CI environment state for debug purposes
     /// </summary>
     [NonEntryTarget]
@@ -45,4 +32,17 @@ public interface ICIEnvironment : IHaveBuildVersion
                                                 }
                                             }
                                         );
+
+    /// <summary>
+    ///     Well know environment variables
+    /// </summary>
+    /// <remarks>
+    ///     Replace default implementation to add values not covered by default
+    /// </remarks>
+    public IEnumerable<string> WellKnownEnvironmentVariablePrefixes => new[]
+    {
+        // Azure pipelines
+        "CIRCLE", "GITHUB", "APPVEYOR", "TRAVIS", "BITRISE", "BAMBOO", "GITLAB", "JENKINS", "TEAMCITY",
+        "AGENT_", "BUILD_", "RELEASE_", "PIPELINE_", "ENVIRONMENT_", "SYSTEM_",
+    };
 }

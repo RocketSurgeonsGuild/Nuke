@@ -9,8 +9,8 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 public record GitHubActionsVariable(string Name, string? Description = null, string? Alias = null) : ITriggerValue
 {
     /// <inheritdoc />
-    public string Prefix => "vars";
+    public string? Default => null;
 
     /// <inheritdoc />
-    public string? Default => null;
+    public string Prefix => "vars";
 }

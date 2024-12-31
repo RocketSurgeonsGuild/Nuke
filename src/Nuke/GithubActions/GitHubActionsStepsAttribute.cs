@@ -52,14 +52,20 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         Images = [image, .. images];
 
     /// <summary>
+    ///     Determine if you always want to build the nuke project during the ci run
+    /// </summary>
+    public bool AlwaysBuildNukeProject { get; set; }
+
+    /// <inheritdoc />
+    public override IEnumerable<AbsolutePath> GeneratedFiles => [ConfigurationFile];
+
+    /// <inheritdoc />
+    public override string IdPostfix => Name;
+
+    /// <summary>
     ///     The images
     /// </summary>
     public ImmutableArray<string> Images { get; }
-
-    /// <summary>
-    ///     If it's github hosted or not
-    /// </summary>
-    public bool IsGithubHosted { get; }
 
     /// <summary>
     ///     The targets to invoke
@@ -67,20 +73,14 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
     public string[] InvokedTargets { get; set; } = [];
 
     /// <summary>
+    ///     If it's github hosted or not
+    /// </summary>
+    public bool IsGithubHosted { get; }
+
+    /// <summary>
     ///     The parameters to import
     /// </summary>
     public string[] Parameters { get; set; } = [];
-
-    /// <inheritdoc />
-    public override string IdPostfix => Name;
-
-    /// <inheritdoc />
-    public override IEnumerable<AbsolutePath> GeneratedFiles => [ConfigurationFile];
-
-    /// <summary>
-    ///     Determine if you always want to build the nuke project during the ci run
-    /// </summary>
-    public bool AlwaysBuildNukeProject { get; set; }
 
     /// <inheritdoc />
     public override IEnumerable<string> RelevantTargetNames => InvokedTargets;
@@ -276,10 +276,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         }
 
         var localTool = DotNetTool.IsInstalled("nuke");
-        if (!localTool)
-        {
-            steps.Add(globalToolStep);
-        }
+        if (!localTool) steps.Add(globalToolStep);
 
         var environmentVariables =
             Enumerable
@@ -315,10 +312,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         foreach (var par in implicitParameters)
         {
             var key = par.GetCustomAttribute<ParameterAttribute>()?.Name ?? par.Name;
-            if (!environmentVariables.TryGetValue(key, out var value) || value is GitHubActionsInput)
-            {
-                continue;
-            }
+            if (!environmentVariables.TryGetValue(key, out var value) || value is GitHubActionsInput) continue;
 
             var name = string.IsNullOrWhiteSpace(value.Prefix) ? value.Name : $"{value.Prefix}.{value.Name}";
             stepParameters.Add(new(key, $"{name}{( string.IsNullOrWhiteSpace(value.Default) ? "" : $" || {value.Default}" )}"));
@@ -447,10 +441,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         {
             foreach (var trigger in config.DetailedTriggers.OfType<RocketSurgeonGitHubActionsWorkflowTrigger>())
             {
-                if (trigger.Secrets.Any(s => s.Name == "CODECOV_TOKEN"))
-                {
-                    continue;
-                }
+                if (trigger.Secrets.Any(s => s.Name == "CODECOV_TOKEN")) continue;
 
                 trigger.Secrets.Add(new("CODECOV_TOKEN", "The codecov token", Alias: "CodecovToken"));
             }
@@ -484,10 +475,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         }
 
         // This will normalize the version numbers against the existing file.
-        if (!File.Exists(ConfigurationFile))
-        {
-            return config;
-        }
+        if (!File.Exists(ConfigurationFile)) return config;
 
         NormalizeActionVersions(config);
         return config;
@@ -526,10 +514,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
 
         string? GetValue(string? uses)
         {
-            if (uses is null)
-            {
-                return null;
-            }
+            if (uses is null) return null;
 
             var nodeKey = uses.Split('@')[0];
             return nodeList.TryGetValue(nodeKey, out var value) ? value : uses;
@@ -538,9 +523,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         foreach (var job in config.Jobs)
         {
             if (job is RocketSurgeonsGithubWorkflowJob workflowJob)
-            {
                 workflowJob.Uses = GetValue(workflowJob.Uses);
-            }
             else if (job is RocketSurgeonsGithubActionsJob actionsJob)
             {
                 foreach (var step in actionsJob.Steps.OfType<UsingStep>())
@@ -576,10 +559,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                 ))
             {
                 var value = parameter.GetValue(build);
-                if (value is AbsolutePath)
-                {
-                    value = null;
-                }
+                if (value is AbsolutePath) value = null;
 
                 yield return new()
                 {

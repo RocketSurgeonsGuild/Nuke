@@ -25,46 +25,28 @@ public static class WorkflowHelpers
         RunsOn = !attribute.IsGithubHosted ? attribute.Images : [],
         Matrix = attribute.IsGithubHosted ? attribute.Images : [],
         Steps =
-            [
-                new CheckoutStep("Checkout")
-                {
-                    FetchDepth = fetchHistory ? 0 : null,
-                },
-                ..fetchHistory
-                    ?
-                    [
-                        new RunStep("Fetch all history for all tags and branches")
-                        {
-                            Run = "git fetch --prune",
-                        },
-                    ]
-                    : Array.Empty<BaseGitHubActionsStep>(),
-                new SetupDotNetStep("Install DotNet"),
-                new RunStep("dotnet tool restore")
-                {
-                    Run = "dotnet tool restore",
-                },
-                ..steps,
-            ],
-    };
-
-    /// <summary>
-    ///     Install the git release manager
-    /// </summary>
-    /// <param name="condition"></param>
-    /// <returns></returns>
-    public static IEnumerable<BaseGitHubActionsStep> InstallGitReleaseManager(GithubActionCondition? condition = null)
-    {
-        yield return new UsingStep("Install GitReleaseManager")
-        {
-            If = condition,
-            Uses = "gittools/actions/gitreleasemanager/setup@v3.1.1",
-            With =
+        [
+            new CheckoutStep("Checkout")
             {
-                ["versionSpec"] = DotNetTool.GetToolDefinition("GitReleaseManager.Tool").Version,
+                FetchDepth = fetchHistory ? 0 : null,
             },
-        };
-    }
+            ..fetchHistory
+                ?
+                [
+                    new RunStep("Fetch all history for all tags and branches")
+                    {
+                        Run = "git fetch --prune",
+                    },
+                ]
+                : Array.Empty<BaseGitHubActionsStep>(),
+            new SetupDotNetStep("Install DotNet"),
+            new RunStep("dotnet tool restore")
+            {
+                Run = "dotnet tool restore",
+            },
+            ..steps,
+        ],
+    };
 
     /// <summary>
     ///     Create a milestone
@@ -89,20 +71,19 @@ public static class WorkflowHelpers
     }
 
     /// <summary>
-    ///     Sync the milestones
+    ///     Install the git release manager
     /// </summary>
     /// <param name="condition"></param>
     /// <returns></returns>
-    public static IEnumerable<BaseGitHubActionsStep> SyncMilestones(GithubActionCondition? condition = null)
+    public static IEnumerable<BaseGitHubActionsStep> InstallGitReleaseManager(GithubActionCondition? condition = null)
     {
-        yield return new UsingStep("sync milestones")
+        yield return new UsingStep("Install GitReleaseManager")
         {
             If = condition,
-            Uses = "RocketSurgeonsGuild/actions/sync-milestone@v0.3.15",
+            Uses = "gittools/actions/gitreleasemanager/setup@v3.1.1",
             With =
             {
-                ["default-label"] = ":sparkles: mysterious",
-                ["github-token"] = "${{ secrets.GITHUB_TOKEN }}",
+                ["versionSpec"] = DotNetTool.GetToolDefinition("GitReleaseManager.Tool").Version,
             },
         };
     }
@@ -155,6 +136,25 @@ public static class WorkflowHelpers
                                     echo "$($key.Substring(0,1).ToLower() + $key.Substring(1))=$value" >> $env:GITHUB_OUTPUT
                                 }
                 """,
+        };
+    }
+
+    /// <summary>
+    ///     Sync the milestones
+    /// </summary>
+    /// <param name="condition"></param>
+    /// <returns></returns>
+    public static IEnumerable<BaseGitHubActionsStep> SyncMilestones(GithubActionCondition? condition = null)
+    {
+        yield return new UsingStep("sync milestones")
+        {
+            If = condition,
+            Uses = "RocketSurgeonsGuild/actions/sync-milestone@v0.3.15",
+            With =
+            {
+                ["default-label"] = ":sparkles: mysterious",
+                ["github-token"] = "${{ secrets.GITHUB_TOKEN }}",
+            },
         };
     }
 }

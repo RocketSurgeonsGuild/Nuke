@@ -43,16 +43,14 @@
     <ItemGroup Condition="'$(NukeBanProjectModel)' == 'true'">
         <AdditionalFiles
             Include="$(MSBuildThisFileDirectory)/BannedSymbols.Rocket.Surgery.Nuke.txt"
-            Condition="Exists('$(MSBuildThisFileDirectory)/BannedSymbols.Rocket.Surgery.Nuke.txt')"
-        />
+            Condition="Exists('$(MSBuildThisFileDirectory)/BannedSymbols.Rocket.Surgery.Nuke.txt')" />
         <GlobalAnalyzerConfigFiles Include="$(MSBuildThisFileDirectory)/banned_symbols.globalconfig" />
     </ItemGroup>
 
     <Target
         Name="EnsureNukeRestore"
         BeforeTargets="Restore;CollectPackageReferences"
-        Condition="'$(CI)' == '' and '$(DesignTimeBuild)' != 'true' and '$(EnsureNukeRestore)' == 'enable' and !Exists('$(_NukeTemp)')"
-    >
+        Condition="'$(CI)' == '' and '$(DesignTimeBuild)' != 'true' and '$(EnsureNukeRestore)' == 'enable' and !Exists('$(_NukeTemp)')">
         <Exec Command="dotnet tool restore" StandardOutputImportance="Low" StandardErrorImportance="High" WorkingDirectory="$(_NukeRoot)" />
         <Exec Command="dotnet nuke $(EnsureNukeRestoreTask)" StandardOutputImportance="Low" StandardErrorImportance="High" WorkingDirectory="$(_NukeRoot)" />
     </Target>

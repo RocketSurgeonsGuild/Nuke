@@ -13,6 +13,27 @@ namespace Rocket.Surgery.Nuke.ContinuousIntegration;
 public partial class ContinuousIntegrationConventionsAttribute : BuildExtensionAttributeBase, IOnBuildFinished
 #pragma warning restore CA1813
 {
+    /// <inheritdoc />
+    public void OnBuildFinished()
+    {
+        if (Build is not IHaveArtifacts nukeBuild) return;
+
+        switch (nukeBuild.Host)
+        {
+            case GitHubActions:
+                {
+                    EmitTestSummaryMarkdown(Build, GitHubActions.Instance.StepSummaryFile);
+                    break;
+                }
+
+            default:
+                {
+                    EmitTestSummaryMarkdown(Build, nukeBuild.ArtifactsDirectory / "github" / "summary.md");
+                    break;
+                }
+        }
+    }
+
     private void EmitTestSummaryMarkdown(INukeBuild build, AbsolutePath summary)
     {
         //        // ReSharper disable once SuspiciousTypeConversion.Global
@@ -29,29 +50,5 @@ public partial class ContinuousIntegrationConventionsAttribute : BuildExtensionA
         //
         //            summary.WriteAllText(coverageSummary + summary.ReadAllText().TrimStart());
         //        }
-    }
-
-    /// <inheritdoc />
-    public void OnBuildFinished()
-    {
-        if (Build is not IHaveArtifacts nukeBuild)
-        {
-            return;
-        }
-
-        switch (nukeBuild.Host)
-        {
-            case GitHubActions:
-                {
-                    EmitTestSummaryMarkdown(Build, GitHubActions.Instance.StepSummaryFile);
-                    break;
-                }
-
-            default:
-                {
-                    EmitTestSummaryMarkdown(Build, nukeBuild.ArtifactsDirectory / "github" / "summary.md");
-                    break;
-                }
-        }
     }
 }

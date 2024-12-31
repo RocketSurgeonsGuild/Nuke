@@ -16,10 +16,6 @@ namespace Rocket.Surgery.Nuke;
 [PublicAPI]
 public interface ICanPrettier : ICanLint
 {
-    private static Matcher? matcher;
-
-    private static readonly Arguments _prettierBaseArgs = new Arguments().Add("exec").Add("prettier").Add("--");
-
     /// <summary>
     ///     The prettier target
     /// </summary>
@@ -54,10 +50,10 @@ public interface ICanPrettier : ICanLint
                                  group.RenderForExecution(),
                                  RootDirectory,
                                  logOutput: true,
-                                 logInvocation: Verbosity == Verbosity.Verbose
-,
+                                 logInvocation: Verbosity == Verbosity.Verbose,
                                  // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-                                 logger: static (t, s) => Log.Write(t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information, s))
+                                 logger: static (t, s) => Log.Write(t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information, s)
+                             )
                             .AssertWaitForExit()
                             .AssertZeroExitCode();
                      }
@@ -98,4 +94,7 @@ public interface ICanPrettier : ICanLint
                                                  .AddInclude("**/*.yaml")
                                                  .AddInclude("**/*.css")
                                                  .AddInclude("**/*.scss");
+
+    private static readonly Arguments _prettierBaseArgs = new Arguments().Add("exec").Add("prettier").Add("--");
+    private static Matcher? matcher;
 }

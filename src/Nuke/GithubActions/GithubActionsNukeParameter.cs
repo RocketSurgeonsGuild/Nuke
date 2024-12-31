@@ -8,11 +8,11 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// </summary>
 public class GithubActionsNukeParameter : ConfigurationEntity
 {
-    // ReSharper disable once NullableWarningSuppressionIsUsed
-    /// <summary>
-    ///     The name
-    /// </summary>
-    public string Name { get; set; } = null!;
+    /// <inheritdoc />
+    public override void Write(CustomFileWriter writer)
+    {
+        using var a = writer.WriteBlock($"{Name}: '{Default}'");
+    }
 
     // ReSharper disable once NullableWarningSuppressionIsUsed
     /// <summary>
@@ -20,9 +20,9 @@ public class GithubActionsNukeParameter : ConfigurationEntity
     /// </summary>
     public string Default { get; set; } = null!;
 
-    /// <inheritdoc />
-    public override void Write(CustomFileWriter writer)
-    {
-        using var a = writer.WriteBlock($"{Name}: '{Default}'");
-    }
+    // ReSharper disable once NullableWarningSuppressionIsUsed
+    /// <summary>
+    ///     The name
+    /// </summary>
+    public string Name { get; set; } = null!;
 }

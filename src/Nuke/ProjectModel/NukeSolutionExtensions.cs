@@ -17,18 +17,15 @@ namespace Rocket.Surgery.Nuke.ProjectModel;
 
 public static class NukeSolutionExtensions
 {
+    public static IEnumerable<MsbProject> AnalyzeAllProjects(this Solution solution) => solution.AllProjects.Select(AnalyzeProject);
+
     public static MsbProject AnalyzeProject(this Project project)
     {
-        if (_projects.TryGetValue(project, out var msbProject))
-        {
-            return msbProject;
-        }
+        if (_projects.TryGetValue(project, out var msbProject)) return msbProject;
 
         _projects[project] = msbProject = MsbProject.LoadProject(project.Path);
         return msbProject;
     }
-
-    public static IEnumerable<MsbProject> AnalyzeAllProjects(this Solution solution) => solution.AllProjects.Select(AnalyzeProject);
 
     [ModuleInitializer]
     public static void Initialize()
@@ -95,15 +92,15 @@ public static class NukeSolutionExtensions
         return msbuildProject;
     }
 
-    private static readonly ConcurrentDictionary<Project, MsbProject> _projects = new();
-
     private static Dictionary<string, string> GetProperties(string? configuration, string? targetFramework)
     {
         var properties = new Dictionary<string, string>();
-        if (configuration is not null)
+        if (configuration is { })
             properties.Add("Configuration", configuration);
-        if (targetFramework is not null)
+        if (targetFramework is { })
             properties.Add("TargetFramework", targetFramework);
         return properties;
     }
+
+    private static readonly ConcurrentDictionary<Project, MsbProject> _projects = new();
 }

@@ -9,26 +9,6 @@ namespace Rocket.Surgery.Nuke.Azp;
 public class AzurePipelinesStep
 {
     /// <summary>
-    ///     The step name
-    /// </summary>
-    public string Name { get; set; } = null!;
-
-    /// <summary>
-    ///     The display name
-    /// </summary>
-    public string DisplayName { get; set; } = null!;
-
-    /// <summary>
-    ///     The script path
-    /// </summary>
-    public string ScriptPath { get; set; } = null!;
-
-    /// <summary>
-    ///     The targets to invoke
-    /// </summary>
-    public IEnumerable<string> InvokedTargets { get; set; } = Array.Empty<string>();
-
-    /// <summary>
     ///     Write the pipelines step
     /// </summary>
     /// <param name="writer"></param>
@@ -42,4 +22,24 @@ public class AzurePipelinesStep
             writer.WriteLine($"displayName: {DisplayName.SingleQuote()}");
         }
     }
+
+    /// <summary>
+    ///     The display name
+    /// </summary>
+    public string DisplayName { get; set; } = null!;
+
+    /// <summary>
+    ///     The targets to invoke
+    /// </summary>
+    public IEnumerable<string> InvokedTargets { get; set; } = Array.Empty<string>();
+
+    /// <summary>
+    ///     The step name
+    /// </summary>
+    public string Name { get; set; } = null!;
+
+    /// <summary>
+    ///     The script path
+    /// </summary>
+    public string ScriptPath { get; set; } = null!;
 }

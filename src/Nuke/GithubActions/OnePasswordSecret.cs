@@ -19,8 +19,8 @@ public record OnePasswordSecret
     string? Secret = null) : ITriggerValue
 {
     /// <inheritdoc />
-    public string Prefix => "steps.1password.outputs";
+    public string? Default => null;
 
     /// <inheritdoc />
-    public string? Default => null;
+    public string Prefix => "steps.1password.outputs";
 }

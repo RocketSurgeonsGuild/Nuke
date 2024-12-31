@@ -32,20 +32,14 @@ public static class PathGrouper
             currentGroup.Add(path);
             currentLength += pathLength + 1; // +1 for the space or separator
 
-            if (currentLength + pathLength + 1 <= MaxCommandLineLength)
-            {
-                continue;
-            }
+            if (currentLength + pathLength + 1 <= MaxCommandLineLength) continue;
 
             yield return currentGroup.ToImmutable();
             currentGroup.Clear();
             currentLength = 0;
         }
 
-        if (!currentGroup.Any())
-        {
-            yield break;
-        }
+        if (!currentGroup.Any()) yield break;
 
         yield return currentGroup.ToImmutable();
         currentGroup.Clear();

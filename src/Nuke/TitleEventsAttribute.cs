@@ -9,22 +9,6 @@ namespace Rocket.Surgery.Nuke;
 /// </summary>
 public sealed class TitleEventsAttribute : BuildExtensionAttributeBase, IOnBuildCreated, IOnBuildInitialized, IOnTargetRunning, IOnBuildFinished
 {
-    private static short ProgressPercent(IReadOnlyCollection<ExecutableTarget> plan, ref int step)
-    {
-        if (NukeBuild.IsServerBuild) return 0;
-        var total = plan.Count + 1;
-        return (short)Math.Round( (double)step++ / total  * 100);
-    }
-
-    private static void ProgressBar(ProgressBarState state, short progress = 0)
-    {
-        if (NukeBuild.IsServerBuild) return;
-        Console.Write($"\x1b]9;4;{state};{progress}\x07");
-    }
-
-    private IReadOnlyCollection<ExecutableTarget> _plan = [];
-    private int step;
-
     /// <inheritdoc />
     public void OnBuildCreated(IReadOnlyCollection<ExecutableTarget> executableTargets)
     {
@@ -68,4 +52,27 @@ public sealed class TitleEventsAttribute : BuildExtensionAttributeBase, IOnBuild
         Indeterminate = 3,
         //        Warning = 4
     }
+
+    private static void ProgressBar(ProgressBarState state, short progress = 0)
+    {
+        if (NukeBuild.IsServerBuild) return;
+        Console.Write($"\x1b]9;4;{state};{progress}\x07");
+    }
+
+    private static short ProgressPercent(IReadOnlyCollection<ExecutableTarget> plan, ref int step)
+    {
+        if (NukeBuild.IsServerBuild) return 0;
+        var total = plan.Count + 1;
+
+/* Unmerged change from project 'Rocket.Surgery.Nuke(net9.0)'
+Before:
+        return (short)Math.Round(( (double)step++ / total ) * 100);
+After:
+        return (short)Math.Round((double)step++ / total * 100);
+*/
+        return (short)Math.Round( (double)step++ / total  * 100);
+    }
+
+    private IReadOnlyCollection<ExecutableTarget> _plan = [];
+    private int step;
 }

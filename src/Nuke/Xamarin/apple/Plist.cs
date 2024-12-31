@@ -34,128 +34,7 @@ internal static class Plist
     /// <param name="path">The path to the plist.</param>
     /// <param name="value">The object to serialize.</param>
     public static void Serialize(AbsolutePath path, object value) => SerializeDocument(value)
-        .Save(path, SaveOptions.OmitDuplicateNamespaces);
-
-    /// <summary>
-    ///     Serializes the .plist file provided.
-    /// </summary>
-    /// <param name="item">The plist object.</param>
-    /// <returns>The xml document.</returns>
-    private static XDocument SerializeDocument(object item)
-    {
-        var doc = new XDocument(new XDeclaration("1.0", "UTF-8", "yes"));
-        doc.AddFirst(
-            new XDocumentType(
-                "plist",
-                "-//Apple//DTD PLIST 1.0//EN",
-                "http://www.apple.com/DTDs/PropertyList-1.0.dtd",
-                ""
-            )
-        );
-
-        var plist = new XElement("plist");
-        plist.SetAttributeValue("version", "1.0");
-        plist.Add(SerializeObject(item));
-        doc.Add(plist);
-
-        return doc;
-    }
-
-    /// <summary>
-    ///     Serializes the .plist file provided.
-    /// </summary>
-    /// <param name="item">The plist object.</param>
-    /// <returns>The xml element.</returns>
-    private static XElement? SerializeObject(object item)
-    {
-        switch (item)
-        {
-            case string:
-                {
-                    Log.Verbose("string: {String}", item);
-                    return new("string", item);
-                }
-
-            case double:
-            case float:
-            case decimal:
-                {
-                    Log.Verbose("floating point: {Float}", item);
-                    return new("real", Convert.ToString(item, CultureInfo.InvariantCulture));
-                }
-
-            case int:
-            case long:
-                {
-                    Log.Verbose("integer: {Integer}", item);
-                    return new("integer", Convert.ToString(item, CultureInfo.InvariantCulture));
-                }
-
-            case bool when ( item as bool? ) == true:
-                {
-                    Log.Verbose("boolean: {Boolean}", item);
-                    return new("true");
-                }
-
-            case bool when ( item as bool? ) == false:
-                {
-                    Log.Verbose("boolean: {Boolean}", item);
-                    return new("false");
-                }
-
-            case DateTime time:
-                {
-                    Log.Verbose("DateTime: {DateTime}", item);
-                    return new("date", time.ToString("yyyy-MM-ddTHH:mm:ss.fffZ", DateTimeFormatInfo.InvariantInfo));
-                }
-
-            case DateTimeOffset offset:
-                {
-                    Log.Verbose("DateTimeOffset: {DateTimeOffset}", item);
-                    return new("date", offset.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ", DateTimeFormatInfo.InvariantInfo));
-                }
-
-            case byte[] bytes:
-                {
-                    Log.Verbose("DateTimeOffset: {DateTimeOffset}", item);
-                    return new("data", Convert.ToBase64String(bytes));
-                }
-
-            case IDictionary dictionary:
-                {
-                    var dict = new XElement("dict");
-
-                    var enumerator = dictionary.GetEnumerator();
-
-                    while (enumerator.MoveNext())
-                    {
-                        dict.Add(new XElement("key", enumerator.Key));
-                        // ReSharper disable once NullableWarningSuppressionIsUsed
-                        dict.Add(SerializeObject(enumerator.Value!));
-                    }
-
-                    Log.Verbose("Dictionary: {Dictionary}", item);
-                    return dict;
-                }
-
-            case IEnumerable enumerable:
-                {
-                    var array = new XElement("array");
-
-                    foreach (var itm in enumerable)
-                    {
-                        // ReSharper disable once NullableWarningSuppressionIsUsed
-                        array.Add(SerializeObject(itm!));
-                    }
-
-                    Log.Verbose("Array: {Array}", item);
-                    return array;
-                }
-
-            default:
-                return null;
-        }
-    }
+       .Save(path, SaveOptions.OmitDuplicateNamespaces);
 
     private static dynamic DeserializeXml(XElement element)
     {
@@ -218,6 +97,127 @@ internal static class Plist
             default:
                 // ReSharper disable once NullableWarningSuppressionIsUsed
                 return null!;
+        }
+    }
+
+    /// <summary>
+    ///     Serializes the .plist file provided.
+    /// </summary>
+    /// <param name="item">The plist object.</param>
+    /// <returns>The xml document.</returns>
+    private static XDocument SerializeDocument(object item)
+    {
+        var doc = new XDocument(new XDeclaration("1.0", "UTF-8", "yes"));
+        doc.AddFirst(
+            new XDocumentType(
+                "plist",
+                "-//Apple//DTD PLIST 1.0//EN",
+                "http://www.apple.com/DTDs/PropertyList-1.0.dtd",
+                ""
+            )
+        );
+
+        var plist = new XElement("plist");
+        plist.SetAttributeValue("version", "1.0");
+        plist.Add(SerializeObject(item));
+        doc.Add(plist);
+
+        return doc;
+    }
+
+    /// <summary>
+    ///     Serializes the .plist file provided.
+    /// </summary>
+    /// <param name="item">The plist object.</param>
+    /// <returns>The xml element.</returns>
+    private static XElement? SerializeObject(object item)
+    {
+        switch (item)
+        {
+            case string:
+                {
+                    Log.Verbose("string: {String}", item);
+                    return new("string", item);
+                }
+
+            case double:
+            case float:
+            case decimal:
+                {
+                    Log.Verbose("floating point: {Float}", item);
+                    return new("real", Convert.ToString(item, CultureInfo.InvariantCulture));
+                }
+
+            case int:
+            case long:
+                {
+                    Log.Verbose("integer: {Integer}", item);
+                    return new("integer", Convert.ToString(item, CultureInfo.InvariantCulture));
+                }
+
+            case bool when item as bool? == true:
+                {
+                    Log.Verbose("boolean: {Boolean}", item);
+                    return new("true");
+                }
+
+            case bool when item as bool? == false:
+                {
+                    Log.Verbose("boolean: {Boolean}", item);
+                    return new("false");
+                }
+
+            case DateTime time:
+                {
+                    Log.Verbose("DateTime: {DateTime}", item);
+                    return new("date", time.ToString("yyyy-MM-ddTHH:mm:ss.fffZ", DateTimeFormatInfo.InvariantInfo));
+                }
+
+            case DateTimeOffset offset:
+                {
+                    Log.Verbose("DateTimeOffset: {DateTimeOffset}", item);
+                    return new("date", offset.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ", DateTimeFormatInfo.InvariantInfo));
+                }
+
+            case byte[] bytes:
+                {
+                    Log.Verbose("DateTimeOffset: {DateTimeOffset}", item);
+                    return new("data", Convert.ToBase64String(bytes));
+                }
+
+            case IDictionary dictionary:
+                {
+                    var dict = new XElement("dict");
+
+                    var enumerator = dictionary.GetEnumerator();
+
+                    while (enumerator.MoveNext())
+                    {
+                        dict.Add(new XElement("key", enumerator.Key));
+                        // ReSharper disable once NullableWarningSuppressionIsUsed
+                        dict.Add(SerializeObject(enumerator.Value!));
+                    }
+
+                    Log.Verbose("Dictionary: {Dictionary}", item);
+                    return dict;
+                }
+
+            case IEnumerable enumerable:
+                {
+                    var array = new XElement("array");
+
+                    foreach (var itm in enumerable)
+                    {
+                        // ReSharper disable once NullableWarningSuppressionIsUsed
+                        array.Add(SerializeObject(itm!));
+                    }
+
+                    Log.Verbose("Array: {Array}", item);
+                    return array;
+                }
+
+            default:
+                return null;
         }
     }
 }

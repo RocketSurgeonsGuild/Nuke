@@ -28,19 +28,19 @@ internal class ResolvedToolsManifest
         return new(source.Tools.ToImmutableDictionary(z => z.Key, z => z.Value, StringComparer.OrdinalIgnoreCase), commandBuilder.ToImmutable());
     }
 
-    private static void DefaultLogger(OutputType kind, string message)
-    {
-        // ReSharper disable TemplateIsNotCompileTimeConstantProblem
-        if (kind == OutputType.Std)
-        {
-            Log.Information(message);
-        }
-        else
-        {
-            Log.Warning(message);
-        }
-        // ReSharper restore TemplateIsNotCompileTimeConstantProblem
-    }
+    public Tool GetProperTool(string nugetPackageName) => GetTool(nugetPackageName);
+
+    public Tool GetTool(string nugetPackageName) => toolDefinitions.TryGetValue(nugetPackageName, out var tool)
+        ? CreateHandler(tool.Commands.First())
+        : commandDefinitions.TryGetValue(nugetPackageName, out var command)
+            ? CreateHandler(command.Command)
+            : throw new InvalidOperationException($"Tool {nugetPackageName} is not installed");
+
+    public ToolDefinition GetToolDefinition(string nugetPackageName) => toolDefinitions.TryGetValue(nugetPackageName, out var tool)
+        ? tool
+        : throw new InvalidOperationException($"Tool {nugetPackageName} is not installed");
+
+    public bool IsInstalled(string commandName) => commandDefinitions.ContainsKey(commandName) || toolDefinitions.ContainsKey(commandName);
 
     private static Tool CreateHandler(string command) => (arguments, directory, variables, timeout, output, invocation, logger, handler) =>
                                                          {
@@ -62,10 +62,7 @@ internal class ResolvedToolsManifest
                                                                  logger ?? DefaultLogger,
                                                                  process =>
                                                                  {
-                                                                     if (handler is null)
-                                                                     {
-                                                                         return process.AssertZeroExitCode();
-                                                                     }
+                                                                     if (handler is null) return process.AssertZeroExitCode();
 
                                                                      handler.Invoke(process);
                                                                      return process;
@@ -73,17 +70,13 @@ internal class ResolvedToolsManifest
                                                              );
                                                          };
 
-    public bool IsInstalled(string commandName) => commandDefinitions.ContainsKey(commandName) || toolDefinitions.ContainsKey(commandName);
-
-    public ToolDefinition GetToolDefinition(string nugetPackageName) => toolDefinitions.TryGetValue(nugetPackageName, out var tool)
-        ? tool
-        : throw new InvalidOperationException($"Tool {nugetPackageName} is not installed");
-
-    public Tool GetTool(string nugetPackageName) => toolDefinitions.TryGetValue(nugetPackageName, out var tool)
-        ? CreateHandler(tool.Commands.First())
-        : commandDefinitions.TryGetValue(nugetPackageName, out var command)
-            ? CreateHandler(command.Command)
-            : throw new InvalidOperationException($"Tool {nugetPackageName} is not installed");
-
-    public Tool GetProperTool(string nugetPackageName) => GetTool(nugetPackageName);
+    private static void DefaultLogger(OutputType kind, string message)
+    {
+        // ReSharper disable TemplateIsNotCompileTimeConstantProblem
+        if (kind == OutputType.Std)
+            Log.Information(message);
+        else
+            Log.Warning(message);
+        // ReSharper restore TemplateIsNotCompileTimeConstantProblem
+    }
 }

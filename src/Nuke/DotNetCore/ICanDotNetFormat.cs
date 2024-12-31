@@ -14,56 +14,6 @@ namespace Rocket.Surgery.Nuke.DotNetCore;
 [PublicAPI]
 public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
 {
-    private static Matcher? jbMatcher;
-    private static Matcher? dnfMatcher;
-    private static readonly HashSet<string> _dotNetFormatIncludedDiagnostics = new(StringComparer.OrdinalIgnoreCase);
-
-    private static readonly HashSet<string> _dotNetFormatExcludedDiagnostics = new(StringComparer.OrdinalIgnoreCase)
-    {
-        "CS0103",
-        "CS0108",
-        "CS0246",
-        "CS1591",
-        "CA1869",
-        "CS8602",
-        "CS8604",
-        "IDE0052",
-        "IDE0060",
-        "IDE0130",
-        "IDE1006",
-        "RCS1060",
-        "RCS1093",
-        "RCS1110",
-        "RCS1112",
-        "RCS1163",
-        "RCS1175",
-        "RCS1246",
-        "RCS1250",
-        "RCS1251",
-        "RCS1264",
-        "RS0026",
-    };
-
-    /// <summary>
-    ///     The default severity to use for DotNetFormat
-    /// </summary>
-    public DotNetFormatSeverity DotNetFormatSeverity => DotNetFormatSeverity.info;
-
-    /// <summary>
-    ///     The default profile to use for JetBrainsCleanupCode
-    /// </summary>
-    public string JetBrainsCleanupCodeProfile => "Full Cleanup";
-
-    /// <summary>
-    ///     A list of diagnostic ids to exclude from the dotnet format
-    /// </summary>
-    public HashSet<string> DotNetFormatExcludedDiagnostics => _dotNetFormatExcludedDiagnostics;
-
-    /// <summary>
-    ///     A list of diagnostic ids to include in the dotnet format
-    /// </summary>
-    public HashSet<string>? DotNetFormatIncludedDiagnostics => _dotNetFormatIncludedDiagnostics;
-
     /// <summary>
     ///     The dotnet format target
     /// </summary>
@@ -113,11 +63,30 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                          }
                      }
                      else
-                     {
                          DotNetTasks.DotNetFormat(formatSettings);
-                     }
                  }
              );
+
+    /// <summary>
+    ///     A list of diagnostic ids to exclude from the dotnet format
+    /// </summary>
+    public HashSet<string> DotNetFormatExcludedDiagnostics => _dotNetFormatExcludedDiagnostics;
+
+    /// <summary>
+    ///     A list of diagnostic ids to include in the dotnet format
+    /// </summary>
+    public HashSet<string>? DotNetFormatIncludedDiagnostics => _dotNetFormatIncludedDiagnostics;
+
+    /// <summary>
+    ///     The default matcher for jetbrains cleanup code
+    /// </summary>
+    public Matcher DotnetFormatMatcher => dnfMatcher ??= new Matcher(StringComparison.OrdinalIgnoreCase)
+       .AddInclude("**/*.cs");
+
+    /// <summary>
+    ///     The default severity to use for DotNetFormat
+    /// </summary>
+    public DotNetFormatSeverity DotNetFormatSeverity => DotNetFormatSeverity.info;
 
     /// <summary>
     ///     Use the jetbrains code cleanup tool to format the code if installed
@@ -219,8 +188,37 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                .AddInclude("**/*.xml");
 
     /// <summary>
-    ///     The default matcher for jetbrains cleanup code
+    ///     The default profile to use for JetBrainsCleanupCode
     /// </summary>
-    public Matcher DotnetFormatMatcher => dnfMatcher ??= new Matcher(StringComparison.OrdinalIgnoreCase)
-       .AddInclude("**/*.cs");
+    public string JetBrainsCleanupCodeProfile => "Full Cleanup";
+
+    private static readonly HashSet<string> _dotNetFormatExcludedDiagnostics = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "CS0103",
+        "CS0108",
+        "CS0246",
+        "CS1591",
+        "CA1869",
+        "CS8602",
+        "CS8604",
+        "IDE0052",
+        "IDE0060",
+        "IDE0130",
+        "IDE1006",
+        "RCS1060",
+        "RCS1093",
+        "RCS1110",
+        "RCS1112",
+        "RCS1163",
+        "RCS1175",
+        "RCS1246",
+        "RCS1250",
+        "RCS1251",
+        "RCS1264",
+        "RS0026",
+    };
+
+    private static readonly HashSet<string> _dotNetFormatIncludedDiagnostics = new(StringComparer.OrdinalIgnoreCase);
+    private static Matcher? dnfMatcher;
+    private static Matcher? jbMatcher;
 }

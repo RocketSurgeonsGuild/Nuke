@@ -67,69 +67,7 @@ public static class TestMethodExtensions
                 (build.IncludeSources, build.ExcludeSources)
             );
         }
-        );
-
-    private static void ManageRunSettings<T>(
-        T build,
-        AbsolutePath runsettingsPath,
-        (IEnumerable<string> include, IEnumerable<string> exclude) modulePaths,
-        (IEnumerable<string> include, IEnumerable<string> exclude) attributes,
-        (IEnumerable<string> include, IEnumerable<string> exclude) namespaces,
-        (IEnumerable<string> include, IEnumerable<string> exclude) sources
-    )
-        where T : IHaveCodeCoverage, IComprehendTests
-    {
-        var doc = XDocument.Load(runsettingsPath);
-
-        var dataCollector = ( EnsureElement(doc.Root, "DataCollectionRunSettings")
-                           .Element("DataCollectors")
-                          ?.Element("DataCollector") ) ?? throw new InvalidOperationException("DataCollector element is missing in the runsettings file.");
-        var codeCoverage = EnsureElement(dataCollector, "Configuration")
-           .Element("CodeCoverage");
-
-        if (codeCoverage is null)
-        {
-            codeCoverage = new("CodeCoverage");
-            dataCollector.Element("Configuration")?.Add(codeCoverage);
-        }
-
-        AddItems(codeCoverage, "Attributes", "Attribute", transform(attributes, transformAttribute));
-        AddItems(codeCoverage, "Functions", "Function", transform(namespaces, transformNamespace));
-        AddItems(codeCoverage, "ModulePaths", "ModulePath", transform(modulePaths, transformModulePath));
-        AddItems(codeCoverage, "Sources", "Source", sources);
-
-        build.CustomizeCoverageRunSettings(doc);
-
-        DistinctAndOrganize(codeCoverage, "Attributes");
-        DistinctAndOrganize(codeCoverage, "Functions");
-        DistinctAndOrganize(codeCoverage, "ModulePaths");
-        DistinctAndOrganize(codeCoverage, "Sources");
-
-        doc.Save(runsettingsPath);
-
-        static (IEnumerable<string> include, IEnumerable<string> exclude) transform(
-            (IEnumerable<string> include, IEnumerable<string> exclude) attributes,
-            Func<string, IEnumerable<string>> transformer
-        ) => (attributes.include.SelectMany(transformer), attributes.exclude.SelectMany(transformer));
-
-        static IEnumerable<string> transformAttribute(string attr) => [$"^{attr.Replace(".", "\\.")}$"];
-
-        static IEnumerable<string> transformModulePath(string ns) => [$".*{ns}"];
-
-        static IEnumerable<string> transformNamespace(string ns) => [$"^{ns.Replace(".", "\\.")}.*"];
-    }
-
-    private static XElement EnsureElement(XElement parent, string name)
-    {
-        var element = parent.Element(name);
-        if (element is null)
-        {
-            element = new(name);
-            parent.Add(element);
-        }
-
-        return element;
-    }
+    );
 
     private static void AddItems(XElement parent, string parentName, string childName, (IEnumerable<string> include, IEnumerable<string> exclude) values)
     {
@@ -171,5 +109,68 @@ public static class TestMethodExtensions
         }
 
         if (!item.Elements().Any()) item.Remove();
+    }
+
+    private static XElement EnsureElement(XElement parent, string name)
+    {
+        var element = parent.Element(name);
+        if (element is null)
+        {
+            element = new(name);
+            parent.Add(element);
+        }
+
+        return element;
+    }
+
+    private static void ManageRunSettings<T>(
+        T build,
+        AbsolutePath runsettingsPath,
+        (IEnumerable<string> include, IEnumerable<string> exclude) modulePaths,
+        (IEnumerable<string> include, IEnumerable<string> exclude) attributes,
+        (IEnumerable<string> include, IEnumerable<string> exclude) namespaces,
+        (IEnumerable<string> include, IEnumerable<string> exclude) sources
+    )
+        where T : IHaveCodeCoverage, IComprehendTests
+    {
+        var doc = XDocument.Load(runsettingsPath);
+
+        var dataCollector = EnsureElement(doc.Root, "DataCollectionRunSettings")
+                           .Element("DataCollectors")
+                          ?.Element("DataCollector")
+         ?? throw new InvalidOperationException("DataCollector element is missing in the runsettings file.");
+        var codeCoverage = EnsureElement(dataCollector, "Configuration")
+           .Element("CodeCoverage");
+
+        if (codeCoverage is null)
+        {
+            codeCoverage = new("CodeCoverage");
+            dataCollector.Element("Configuration")?.Add(codeCoverage);
+        }
+
+        AddItems(codeCoverage, "Attributes", "Attribute", transform(attributes, transformAttribute));
+        AddItems(codeCoverage, "Functions", "Function", transform(namespaces, transformNamespace));
+        AddItems(codeCoverage, "ModulePaths", "ModulePath", transform(modulePaths, transformModulePath));
+        AddItems(codeCoverage, "Sources", "Source", sources);
+
+        build.CustomizeCoverageRunSettings(doc);
+
+        DistinctAndOrganize(codeCoverage, "Attributes");
+        DistinctAndOrganize(codeCoverage, "Functions");
+        DistinctAndOrganize(codeCoverage, "ModulePaths");
+        DistinctAndOrganize(codeCoverage, "Sources");
+
+        doc.Save(runsettingsPath);
+
+        static (IEnumerable<string> include, IEnumerable<string> exclude) transform(
+            (IEnumerable<string> include, IEnumerable<string> exclude) attributes,
+            Func<string, IEnumerable<string>> transformer
+        ) => (attributes.include.SelectMany(transformer), attributes.exclude.SelectMany(transformer));
+
+        static IEnumerable<string> transformAttribute(string attr) => [$"^{attr.Replace(".", "\\.")}$"];
+
+        static IEnumerable<string> transformModulePath(string ns) => [$".*{ns}"];
+
+        static IEnumerable<string> transformNamespace(string ns) => [$"^{ns.Replace(".", "\\.")}.*"];
     }
 }

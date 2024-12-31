@@ -21,6 +21,14 @@ public record OnePasswordServiceAccountSecret
     string? Variable = null,
     string Secret = "OP_SERVICE_ACCOUNT_TOKEN") : ITriggerValue
 {
+    /// <inheritdoc />
+    public string? Default => null;
+
+    /// <inheritdoc />
+    public string Prefix => $"steps.{OutputId}.outputs";
+
+    internal string OutputId => $"op{HashId(Secret)}";
+
     private static string HashId(string value)
     {
         var data = SHA256.HashData(Encoding.UTF8.GetBytes(value));
@@ -33,12 +41,4 @@ public record OnePasswordServiceAccountSecret
 
         return sBuilder.ToString()[..8];
     }
-
-    internal string OutputId => $"op{HashId(Secret)}";
-
-    /// <inheritdoc />
-    public string Prefix => $"steps.{OutputId}.outputs";
-
-    /// <inheritdoc />
-    public string? Default => null;
 }

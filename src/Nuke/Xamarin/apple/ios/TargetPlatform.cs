@@ -14,20 +14,8 @@ namespace Rocket.Surgery.Nuke.Xamarin;
 [TypeConverter(typeof(TypeConverter<TargetPlatform>))]
 public class TargetPlatform : Enumeration
 {
-    /// <summary>
-    ///     iPhone Target
-    /// </summary>
-    public static readonly TargetPlatform iPhone = new() { Value = nameof(iPhone) };
-
-    /// <summary>
-    ///     iPhone Simulator Target
-    /// </summary>
-    public static readonly TargetPlatform iPhoneSimulator = new() { Value = nameof(iPhoneSimulator) };
-
-    /// <summary>
-    ///     Any CPU Target
-    /// </summary>
-    public static readonly TargetPlatform AnyCPU = new() { Value = "Any CPU" };
+    /// <inheritdoc />
+    public override string ToString() => this;
 
     /// <summary>
     ///     Performs an implicit conversion from <see cref="XamarinConfiguration" /> to <see cref="string" />.
@@ -38,6 +26,18 @@ public class TargetPlatform : Enumeration
     /// </returns>
     public static implicit operator string(TargetPlatform platform) => platform.Value;
 
-    /// <inheritdoc />
-    public override string ToString() => this;
+    /// <summary>
+    ///     Any CPU Target
+    /// </summary>
+    public static readonly TargetPlatform AnyCPU = new() { Value = "Any CPU" };
+
+    /// <summary>
+    ///     iPhone Target
+    /// </summary>
+    public static readonly TargetPlatform iPhone = new() { Value = nameof(iPhone) };
+
+    /// <summary>
+    ///     iPhone Simulator Target
+    /// </summary>
+    public static readonly TargetPlatform iPhoneSimulator = new() { Value = nameof(iPhoneSimulator) };
 }

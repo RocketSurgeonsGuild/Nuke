@@ -8,8 +8,6 @@ namespace Rocket.Surgery.Nuke.Readme;
 [PublicAPI]
 public class Histories : IReadmeSection
 {
-    private readonly List<IHistorySection> _sections = [];
-
     /// <summary>
     ///     Adds a new history section
     /// </summary>
@@ -20,12 +18,6 @@ public class Histories : IReadmeSection
         _sections.Add(section);
         return this;
     }
-
-    /// <inheritdoc />
-    public string Name => "history badges";
-
-    /// <inheritdoc />
-    public string ConfigKey => "";
 
     /// <inheritdoc />
     public Task<string> Process(
@@ -53,4 +45,12 @@ public class Histories : IReadmeSection
         sb.Append("| ").AppendJoin(" | ", results.Select(z => z.history)).AppendLine(" |");
         return Task.FromResult(sb.ToString());
     }
+
+    /// <inheritdoc />
+    public string ConfigKey => "";
+
+    /// <inheritdoc />
+    public string Name => "history badges";
+
+    private readonly List<IHistorySection> _sections = [];
 }

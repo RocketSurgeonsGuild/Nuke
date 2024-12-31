@@ -2,10 +2,6 @@ namespace Rocket.Surgery.Nuke.Readme;
 
 internal class CodecovSection : IBadgeSection
 {
-    public string Name => "Codecov";
-
-    public string ConfigKey => "github";
-
     public string Process(
         IDictionary<object, object?> config,
         IMarkdownReferences references,
@@ -23,4 +19,7 @@ internal class CodecovSection : IBadgeSection
         );
         return $"[!{badge}]{url}";
     }
+
+    public string ConfigKey => "github";
+    public string Name => "Codecov";
 }

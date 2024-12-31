@@ -15,11 +15,6 @@ public interface ICanPackWithMsBuild : IHavePackTarget,
     ICan
 {
     /// <summary>
-    ///     The directory where templates will be placed
-    /// </summary>
-    public static AbsolutePath NuspecDirectory => NukeBuild.RootDirectory / ".nuspec";
-
-    /// <summary>
     ///     nuget pack
     /// </summary>
     public Target NetPack => d => d
@@ -45,4 +40,9 @@ public interface ICanPackWithMsBuild : IHavePackTarget,
                                           }
                                       }
                                   );
+
+    /// <summary>
+    ///     The directory where templates will be placed
+    /// </summary>
+    public static AbsolutePath NuspecDirectory => NukeBuild.RootDirectory / ".nuspec";
 }

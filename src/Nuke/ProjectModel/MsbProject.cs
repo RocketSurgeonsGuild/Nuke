@@ -10,6 +10,16 @@ public record MsbProject
     ImmutableArray<MsbProperty> Properties,
     ImmutableArray<MsbItem> Items)
 {
+    public bool ContainsPackageReference(string packageId) => Items.Any(z => z.ItemType == "PackageReference" && z.Include.Equals(packageId, StringComparison.OrdinalIgnoreCase));
+
+    public bool GetBoolProperty(string name) => GetProperty(name) is "true" or "enable" or "enabled";
+
+    public IEnumerable<MsbItem> GetItems(string itemType) => Items.Where(z => z.ItemType == itemType);
+
+    public string? GetProperty(string name) => Properties.FirstOrDefault(z => z.Name == name)?.Value;
+
+    public IReadOnlyCollection<string> GetPropertyValues(string name) => GetPropertyValues([name]);
+
     public static MsbProject LoadProject(string projectFile)
     {
         var msbProject = NukeSolutionExtensions.ParseProject(projectFile);
@@ -43,14 +53,11 @@ public record MsbProject
         );
     }
 
-    public IEnumerable<string> TargetFrameworks => GetPropertyValues("TargetFramework", "TargetFrameworks");
-    public IEnumerable<string> RuntimeIdentifiers => GetPropertyValues("RuntimeIdentifier", "RuntimeIdentifiers");
-
     public bool IsPackable => GetBoolProperty("IsPackable");
     public bool IsTestProject => GetBoolProperty("IsTestProject");
-    public string PackageId => GetProperty("PackageId") ?? Name;
 
     public string? OutputType => GetProperty("OutputType");
+    public string PackageId => GetProperty("PackageId") ?? Name;
 
     public ImmutableArray<MsbPackageReference> PackageReferences { get; } =
     [
@@ -59,25 +66,16 @@ public record MsbProject
           .Select(z => new MsbPackageReference(z.Include, z.Metadata)),
     ];
 
-    public bool GetBoolProperty(string name) => GetProperty(name) is "true" or "enable" or "enabled";
+    public IEnumerable<string> RuntimeIdentifiers => GetPropertyValues("RuntimeIdentifier", "RuntimeIdentifiers");
 
-    public bool ContainsPackageReference(string packageId) => Items.Any(z => z.ItemType == "PackageReference" && z.Include.Equals(packageId, StringComparison.OrdinalIgnoreCase));
-
-    public string? GetProperty(string name) => Properties.FirstOrDefault(z => z.Name == name)?.Value;
-
-    public IReadOnlyCollection<string> GetPropertyValues(string name) => GetPropertyValues([name]);
-
-    public IEnumerable<MsbItem> GetItems(string itemType) => Items.Where(z => z.ItemType == itemType);
+    public IEnumerable<string> TargetFrameworks => GetPropertyValues("TargetFramework", "TargetFrameworks");
 
     private IReadOnlyCollection<string> GetPropertyValues(params string[] names)
     {
         foreach (var name in names)
         {
             var property = GetProperty(name);
-            if (property is { Length: > 0 })
-            {
-                return property.Split(';');
-            }
+            if (property is { Length: > 0 }) return property.Split(';');
         }
 
         return [];

@@ -13,11 +13,16 @@ namespace Rocket.Surgery.Nuke;
 /// </remarks>
 public interface IHaveCodeCoverage : IHaveArtifacts
 {
-    public static IEnumerable<string> DefaultIncludeModulePaths => [];
-    public static IEnumerable<string> DefaultExcludeModulePaths => [];
-    public static IEnumerable<string> DefaultIncludeSources => [];
-    public static IEnumerable<string> DefaultExcludeSources => [];
-    public static IEnumerable<string> DefaultIncludeAttributes => [];
+    public XDocument CustomizeCoverageRunSettings(XDocument document) => document;
+
+    /// <summary>
+    ///     The directory where coverage artifacts are to be dropped
+    /// </summary>
+    [Parameter("The directory where coverage artifacts are to be dropped", Name = "Coverage")]
+    public AbsolutePath CoverageDirectory =>
+        EnvironmentInfo.GetVariable<AbsolutePath>("Coverage")
+     ?? TryGetValue(() => CoverageDirectory)
+     ?? NukeBuild.RootDirectory / "coverage";
 
     public static IEnumerable<string> DefaultExcludeAttributes =>
     [
@@ -28,7 +33,7 @@ public interface IHaveCodeCoverage : IHaveArtifacts
         "System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute",
     ];
 
-    public static IEnumerable<string> DefaultIncludeNamespaces => [];
+    public static IEnumerable<string> DefaultExcludeModulePaths => [];
 
     public static IEnumerable<string> DefaultExcludeNamespaces =>
     [
@@ -48,23 +53,19 @@ public interface IHaveCodeCoverage : IHaveArtifacts
         "Serilog",
     ];
 
-    /// <summary>
-    ///     The directory where coverage artifacts are to be dropped
-    /// </summary>
-    [Parameter("The directory where coverage artifacts are to be dropped", Name = "Coverage")]
-    public AbsolutePath CoverageDirectory =>
-        EnvironmentInfo.GetVariable<AbsolutePath>("Coverage")
-     ?? TryGetValue(() => CoverageDirectory)
-     ?? NukeBuild.RootDirectory / "coverage";
+    public static IEnumerable<string> DefaultExcludeSources => [];
+    public static IEnumerable<string> DefaultIncludeAttributes => [];
+    public static IEnumerable<string> DefaultIncludeModulePaths => [];
+
+    public static IEnumerable<string> DefaultIncludeNamespaces => [];
+    public static IEnumerable<string> DefaultIncludeSources => [];
+    public IEnumerable<string> ExcludeAttributes => DefaultExcludeAttributes;
+    public IEnumerable<string> ExcludeModulePaths => DefaultExcludeModulePaths;
+    public IEnumerable<string> ExcludeNamespaces => DefaultExcludeNamespaces;
+    public IEnumerable<string> ExcludeSources => DefaultExcludeSources;
+    public IEnumerable<string> IncludeAttributes => DefaultIncludeAttributes;
+    public IEnumerable<string> IncludeModulePaths => DefaultIncludeModulePaths;
 
     public IEnumerable<string> IncludeNamespaces => DefaultIncludeNamespaces;
-    public IEnumerable<string> ExcludeNamespaces => DefaultExcludeNamespaces;
-    public IEnumerable<string> IncludeAttributes => DefaultIncludeAttributes;
-    public IEnumerable<string> ExcludeAttributes => DefaultExcludeAttributes;
     public IEnumerable<string> IncludeSources => DefaultIncludeSources;
-    public IEnumerable<string> ExcludeSources => DefaultExcludeSources;
-    public IEnumerable<string> IncludeModulePaths => DefaultIncludeModulePaths;
-    public IEnumerable<string> ExcludeModulePaths => DefaultExcludeModulePaths;
-
-    public XDocument CustomizeCoverageRunSettings(XDocument document) => document;
 }

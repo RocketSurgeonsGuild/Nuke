@@ -24,42 +24,21 @@ public interface ICanClean : IHaveCleanTarget, IHaveBuildTarget
                                                                if (this is IHaveArtifacts artifacts)
                                                                {
                                                                    artifacts.ArtifactsDirectory.CreateOrCleanDirectory();
-                                                                   if (artifacts is IHaveOutputLogs logs)
-                                                                   {
-                                                                       logs.LogsDirectory.CreateDirectory();
-                                                                   }
+                                                                   if (artifacts is IHaveOutputLogs logs) logs.LogsDirectory.CreateDirectory();
 
-                                                                   if (artifacts is IHaveTestArtifacts testArtifacts)
-                                                                   {
-                                                                       testArtifacts.TestResultsDirectory.CreateDirectory();
-                                                                   }
+                                                                   if (artifacts is IHaveTestArtifacts testArtifacts) testArtifacts.TestResultsDirectory.CreateDirectory();
 
-                                                                   if (artifacts is IHaveNuGetPackages nuGetArtifacts)
-                                                                   {
-                                                                       nuGetArtifacts.NuGetPackageDirectory.CreateDirectory();
-                                                                   }
+                                                                   if (artifacts is IHaveNuGetPackages nuGetArtifacts) nuGetArtifacts.NuGetPackageDirectory.CreateDirectory();
 
-                                                                   if (artifacts is IHavePublishArtifacts publishArtifacts)
-                                                                   {
-                                                                       publishArtifacts.PublishDirectory.CreateDirectory();
-                                                                   }
+                                                                   if (artifacts is IHavePublishArtifacts publishArtifacts) publishArtifacts.PublishDirectory.CreateDirectory();
 
-                                                                   if (artifacts is IHaveOutputArtifacts outputArtifacts)
-                                                                   {
-                                                                       outputArtifacts.OutputArtifactsDirectory.CreateDirectory();
-                                                                   }
+                                                                   if (artifacts is IHaveOutputArtifacts outputArtifacts) outputArtifacts.OutputArtifactsDirectory.CreateDirectory();
                                                                }
 
-                                                               if (this is IHaveCodeCoverage codeCoverage)
-                                                               {
-                                                                   codeCoverage.CoverageDirectory.CreateOrCleanDirectory();
-                                                               }
+                                                               if (this is IHaveCodeCoverage codeCoverage) codeCoverage.CoverageDirectory.CreateOrCleanDirectory();
 
                                                                // ReSharper disable SuspiciousTypeConversion.Global
-                                                               if (this is not IMayTheForceBeWithYou forceBeWithYou || !forceBeWithYou.Force)
-                                                               {
-                                                                   return;
-                                                               }
+                                                               if (this is not IMayTheForceBeWithYou forceBeWithYou || !forceBeWithYou.Force) return;
 
                                                                if (this is IComprehendSamples samples && samples.SampleDirectory.DirectoryExists())
                                                                {
@@ -82,10 +61,7 @@ public interface ICanClean : IHaveCleanTarget, IHaveBuildTarget
                                                                       .ForEach(AbsolutePathExtensions.DeleteDirectory);
                                                                }
 
-                                                               if (this is not IComprehendTests tests || !tests.TestsDirectory.DirectoryExists())
-                                                               {
-                                                                   return;
-                                                               }
+                                                               if (this is not IComprehendTests tests || !tests.TestsDirectory.DirectoryExists()) return;
 
                                                                tests
                                                                   .TestsDirectory.GlobDirectories("**/bin", "**/obj")

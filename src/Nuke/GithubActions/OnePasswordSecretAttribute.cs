@@ -11,8 +11,6 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 public sealed class OnePasswordSecretAttribute(string name, string path) : TriggerValueAttribute(name)
 {
-    private string? secret;
-
     /// <summary>
     ///     The constructor for the <see cref="GitHubActionsSecretAttribute" />
     /// </summary>
@@ -22,42 +20,8 @@ public sealed class OnePasswordSecretAttribute(string name, string path) : Trigg
     /// param>
     public OnePasswordSecretAttribute(string name, string variable, string path) : this(name, path) => Variable = variable;
 
-    /// <summary>
-    ///     If you are using a service account for connect server
-    /// </summary>
-    public bool UseServiceAccount { get; set; } = true;
-
-    /// <summary>
-    ///     If you are using a service account for connect server
-    /// </summary>
-    public bool UseConnectServer
-    {
-        get => !UseServiceAccount;
-        set => UseServiceAccount = !value;
-    }
-
-    /// <summary>
-    ///     The github variable that defines the item in the vault
-    /// </summary>
-    public string? Variable { get; }
-
-    /// <summary>
-    ///     The path to the item
-    /// </summary>
-    public string Path { get; } = path;
-
-    /// <summary>
-    ///     The secret where the OP_SERVICE_ACCOUNT_TOKEN is stored (defaults to OP_SERVICE_ACCOUNT_TOKEN)
-    /// </summary>
-    public string? Secret
-    {
-        get => secret;
-        set
-        {
-            UseServiceAccount = true;
-            secret = value;
-        }
-    }
+    /// <inheritdoc />
+    public override ITriggerValue ToTriggerValue() => ToSecret();
 
     /// <summary>
     ///     The value for the connect host (defaults to ${{ vars.OP_CONNECT_HOST }})
@@ -86,6 +50,43 @@ public sealed class OnePasswordSecretAttribute(string name, string path) : Trigg
     }
 
     /// <summary>
+    ///     The path to the item
+    /// </summary>
+    public string Path { get; } = path;
+
+    /// <summary>
+    ///     The secret where the OP_SERVICE_ACCOUNT_TOKEN is stored (defaults to OP_SERVICE_ACCOUNT_TOKEN)
+    /// </summary>
+    public string? Secret
+    {
+        get;
+        set
+        {
+            UseServiceAccount = true;
+            field = value;
+        }
+    }
+
+    /// <summary>
+    ///     If you are using a service account for connect server
+    /// </summary>
+    public bool UseConnectServer
+    {
+        get => !UseServiceAccount;
+        set => UseServiceAccount = !value;
+    }
+
+    /// <summary>
+    ///     If you are using a service account for connect server
+    /// </summary>
+    public bool UseServiceAccount { get; set; } = true;
+
+    /// <summary>
+    ///     The github variable that defines the item in the vault
+    /// </summary>
+    public string? Variable { get; }
+
+    /// <summary>
     ///     Convert to a secret
     /// </summary>
     /// <returns></returns>
@@ -100,14 +101,11 @@ public sealed class OnePasswordSecretAttribute(string name, string path) : Trigg
             ConnectToken ?? "OP_CONNECT_TOKEN"
         )
         : new OnePasswordServiceAccountSecret(
-        Path,
-        Name,
-        Description,
-        Alias,
-        Variable,
-        Secret ?? "OP_SERVICE_ACCOUNT_TOKEN"
+            Path,
+            Name,
+            Description,
+            Alias,
+            Variable,
+            Secret ?? "OP_SERVICE_ACCOUNT_TOKEN"
         );
-
-    /// <inheritdoc />
-    public override ITriggerValue ToTriggerValue() => ToSecret();
 }

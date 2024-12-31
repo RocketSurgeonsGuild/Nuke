@@ -32,64 +32,10 @@ namespace Rocket.Surgery.Nuke;
 public class ComputedGitVersionAttribute(string? frameworkVersion) : ValueInjectionAttributeBase
 {
     /// <summary>
-    ///     Returns if GitVersion data is available
-    /// </summary>
-    public static bool HasGitVer() => Variables.Keys.Any(z => z.StartsWith("GITVERSION_", StringComparison.OrdinalIgnoreCase));
-
-    internal static GitVersion GetGitVersion(string? frameworkVersion, bool updateAssemblyInfo)
-    {
-        if (!HasGitVer())
-        {
-            return GitVersionTasks.GitVersion(
-                                       s => s
-                                           .SetFramework(frameworkVersion)
-                                           .DisableProcessLogOutput()
-                                           .SetUpdateAssemblyInfo(updateAssemblyInfo)
-                                           .SetProcessToolPath(
-                                                NuGetToolPathResolver.GetPackageExecutable(
-                                                    "GitVersion.Tool",
-                                                    "gitversion.dll|gitversion.exe",
-                                                    framework: frameworkVersion
-                                                )
-                                            )
-                                   )
-                                  .Result;
-        }
-
-        var json = Variables
-                  .Where(z => z.Key.StartsWith("GITVERSION_", StringComparison.OrdinalIgnoreCase))
-                  .Aggregate(
-                       new JObject(),
-                       (acc, record) =>
-                       {
-                           var key = record.Key["GITVERSION_".Length..];
-                           acc[key] = record.Value;
-                           return acc;
-                       }
-                   );
-        // ReSharper disable once NullableWarningSuppressionIsUsed
-        return json.ToObject<GitVersion>(
-            new() { ContractResolver = new AllWritableContractResolver() }
-        )!;
-    }
-
-    private readonly string? _frameworkVersion = frameworkVersion;
-
-    /// <summary>
     ///     Computes the GitVersion for the repository.
     /// </summary>
     public ComputedGitVersionAttribute()
         : this(null) { }
-
-    /// <summary>
-    ///     DisableOnUnix
-    /// </summary>
-    public bool DisableOnUnix { get; set; }
-
-    /// <summary>
-    ///     UpdateAssemblyInfo
-    /// </summary>
-    public bool UpdateAssemblyInfo { get; set; }
 
     /// <inheritdoc />
     public override object GetValue(MemberInfo member, object instance)
@@ -145,6 +91,21 @@ public class ComputedGitVersionAttribute(string? frameworkVersion) : ValueInject
         return gitVersion;
     }
 
+    /// <summary>
+    ///     Returns if GitVersion data is available
+    /// </summary>
+    public static bool HasGitVer() => Variables.Keys.Any(z => z.StartsWith("GITVERSION_", StringComparison.OrdinalIgnoreCase));
+
+    /// <summary>
+    ///     DisableOnUnix
+    /// </summary>
+    public bool DisableOnUnix { get; set; }
+
+    /// <summary>
+    ///     UpdateAssemblyInfo
+    /// </summary>
+    public bool UpdateAssemblyInfo { get; set; }
+
     private class AllWritableContractResolver : DefaultContractResolver
     {
         protected override JsonProperty CreateProperty(
@@ -157,4 +118,43 @@ public class ComputedGitVersionAttribute(string? frameworkVersion) : ValueInject
             return property;
         }
     }
+
+    internal static GitVersion GetGitVersion(string? frameworkVersion, bool updateAssemblyInfo)
+    {
+        if (!HasGitVer())
+        {
+            return GitVersionTasks.GitVersion(
+                                       s => s
+                                           .SetFramework(frameworkVersion)
+                                           .DisableProcessLogOutput()
+                                           .SetUpdateAssemblyInfo(updateAssemblyInfo)
+                                           .SetProcessToolPath(
+                                                NuGetToolPathResolver.GetPackageExecutable(
+                                                    "GitVersion.Tool",
+                                                    "gitversion.dll|gitversion.exe",
+                                                    framework: frameworkVersion
+                                                )
+                                            )
+                                   )
+                                  .Result;
+        }
+
+        var json = Variables
+                  .Where(z => z.Key.StartsWith("GITVERSION_", StringComparison.OrdinalIgnoreCase))
+                  .Aggregate(
+                       new JObject(),
+                       (acc, record) =>
+                       {
+                           var key = record.Key["GITVERSION_".Length..];
+                           acc[key] = record.Value;
+                           return acc;
+                       }
+                   );
+        // ReSharper disable once NullableWarningSuppressionIsUsed
+        return json.ToObject<GitVersion>(
+            new() { ContractResolver = new AllWritableContractResolver() }
+        )!;
+    }
+
+    private readonly string? _frameworkVersion = frameworkVersion;
 }

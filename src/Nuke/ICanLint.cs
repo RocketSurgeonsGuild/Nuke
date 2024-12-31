@@ -25,10 +25,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
         foreach (var item in patch)
         {
             var result = item switch { { Status: ChangeKind.Added or ChangeKind.Modified or ChangeKind.Renamed or ChangeKind.Copied } => item.Path, _ => null };
-            if (string.IsNullOrWhiteSpace(result))
-            {
-                continue;
-            }
+            if (string.IsNullOrWhiteSpace(result)) continue;
 
             yield return item.Path;
         }
@@ -38,6 +35,135 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
     ///     The default matcher to exclude files from linting
     /// </summary>
     public static Matcher DefaultLintMatcher { get; } = ResolveLintMatcher();
+
+    /// <summary>
+    ///     A ensure only the linted files are added to the commit
+    /// </summary>
+    [ExcludeTarget]
+    public Target HuskyLint =>
+        t => t
+            .Unlisted()
+            .OnlyWhenStatic(() => IsLocalBuild)
+            .TriggeredBy(Lint)
+            .Before(PostLint)
+            .Executes(
+                 () =>
+                 {
+                     var toolInstalled = DotNetTool.IsInstalled("husky");
+                     if (!toolInstalled) return;
+
+                     var tool = DotNetTool.GetTool("husky");
+                     tool(
+                         "run --group lint",
+                         logOutput: true,
+                         logInvocation: Verbosity == Verbosity.Verbose,
+                         // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
+                         logger: static (t, s) => Log.Write(t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information, s)
+                     );
+                 }
+             );
+
+    /// <summary>
+    ///     The lint target
+    /// </summary>
+    public Target LintFiles => t => t
+                                   .OnlyWhenDynamic(() => LintPaths.Active)
+                                   .TryDependsOn<IHaveRestoreTarget>(a => a.Restore)
+                                   .TryDependentFor<IHaveLintTarget>(a => a.Lint)
+                                   .Executes(
+                                        () =>
+                                        {
+                                            Log.Information("Linting files with trigger {Trigger}", LintPaths.Trigger);
+                                            WriteFileTreeWithEmoji(LintPaths.Paths);
+                                        }
+                                    );
+
+    /// <summary>
+    ///     A ensure only the linted files are added to the commit
+    /// </summary>
+    public Target LintGitAdd =>
+        t => t
+            .Unlisted()
+            .After(Lint)
+            .TriggeredBy(PostLint)
+            .Executes(
+                 () =>
+                 {
+                     List<string> patterns = [".nuke/build.schema.json", ".github/workflows", "Readme.md"];
+                     if (this is IHavePublicApis)
+                     {
+                         patterns.Add("**/PublicAPI.Shipped.txt");
+                         patterns.Add("**/PublicAPI.Unshipped.txt");
+                     }
+
+                     if (this is ICanUpdateSolution sln) patterns.Add(sln.Solution.Path);
+
+                     if (LintPaths.Active) patterns.AddRange(LintPaths.RelativePaths.Select(z => z.ToString()));
+
+                     patterns.ForEach(static pattern => GitTasks.Git($"add {pattern}", exitHandler: _ => null));
+                 }
+             );
+
+    /// <summary>
+    ///     The default matcher to exclude files from linting
+    /// </summary>
+    public Matcher LintMatcher => DefaultLintMatcher;
+
+    /// <summary>
+    ///     The lint paths rooted as an absolute path.
+    /// </summary>
+    public LintPaths LintPaths => lintPaths ??= ResolveLintPathsImpl();
+
+    /// <summary>
+    ///     A lint target that runs last
+    /// </summary>
+    [ExcludeTarget]
+    public Target PostLint => t => t.Unlisted().After(Lint).TriggeredBy(Lint);
+
+    private static Matcher ResolveLintMatcher() =>
+        new Matcher(StringComparison.OrdinalIgnoreCase)
+           .AddInclude("**/*")
+           .AddExclude("**/node_modules/**/*")
+           .AddExclude(".idea/**/*")
+           .AddExclude(".vscode/**/*")
+           .AddExclude(".nuke/**/*")
+           .AddExclude("**/bin/**/*")
+           .AddExclude("**/obj/**/*")
+           .AddExclude("**/*.g.*")
+           .AddExclude("**/*.verified.*")
+           .AddExclude("**/*.received.*");
+
+    private LintPaths ResolveLintPathsImpl()
+    {
+        using var repo = new Repository(RootDirectory);
+        List<string> files = [];
+        var trigger = LintTrigger.None;
+        var message = "Linting all files";
+        if (PrivateLintFiles.Any())
+        {
+            trigger = LintTrigger.Specific;
+            message = "Linting only the files provided";
+            files.AddRange(PrivateLintFiles);
+        }
+        else if (GitHubActions.Instance.IsPullRequest())
+        {
+            trigger = LintTrigger.PullRequest;
+            message = "Linting only the files in the Pull Request";
+            var diff = repo.Diff.Compare<TreeChanges>(
+                repo.Branches[$"origin/{GitHubActions.Instance.BaseRef}"].Tip.Tree,
+                repo.Branches[$"origin/{GitHubActions.Instance.HeadRef}"].Tip.Tree
+            );
+            files.AddRange(FilterFiles(diff));
+        }
+        else if (IsLocalBuild && FilterFiles(repo.Diff.Compare<TreeChanges>(repo.Head.Tip?.Tree, DiffTargets.Index)).ToArray() is { Length: > 0 } stagedFiles)
+        {
+            trigger = LintTrigger.Staged;
+            message = "Linting only the staged files";
+            files.AddRange(stagedFiles);
+        }
+
+        return LintPaths.Create(LintMatcher, trigger, message, files is { Count: > 0 } ? files : ImmutableList<string>.Empty);
+    }
 
     private static void WriteFileTreeWithEmoji(IEnumerable<AbsolutePath> stagedFiles)
     {
@@ -77,10 +203,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
             {
                 // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
                 lastFolder = currentPath;
-                if (!string.IsNullOrWhiteSpace(currentPath))
-                {
-                    Log.Information($"📂 {currentPath}");
-                }
+                if (!string.IsNullOrWhiteSpace(currentPath)) Log.Information($"📂 {currentPath}");
             }
 
             // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
@@ -90,147 +213,9 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
 
     private static LintPaths? lintPaths;
 
-    private static Matcher ResolveLintMatcher() =>
-        new Matcher(StringComparison.OrdinalIgnoreCase)
-           .AddInclude("**/*")
-           .AddExclude("**/node_modules/**/*")
-           .AddExclude(".idea/**/*")
-           .AddExclude(".vscode/**/*")
-           .AddExclude(".nuke/**/*")
-           .AddExclude("**/bin/**/*")
-           .AddExclude("**/obj/**/*")
-           .AddExclude("**/*.g.*")
-           .AddExclude("**/*.verified.*")
-           .AddExclude("**/*.received.*");
-
-    /// <summary>
-    ///     The lint target
-    /// </summary>
-    public Target LintFiles => t => t
-                                   .OnlyWhenDynamic(() => LintPaths.Active)
-                                   .TryDependsOn<IHaveRestoreTarget>(a => a.Restore)
-                                   .TryDependentFor<IHaveLintTarget>(a => a.Lint)
-                                   .Executes(
-                                        () =>
-                                        {
-                                            Log.Information("Linting files with trigger {Trigger}", LintPaths.Trigger);
-                                            WriteFileTreeWithEmoji(LintPaths.Paths);
-                                        }
-                                    );
-
-    /// <summary>
-    ///     A lint target that runs last
-    /// </summary>
-    [ExcludeTarget]
-    public Target PostLint => t => t.Unlisted().After(Lint).TriggeredBy(Lint);
-
-    /// <summary>
-    ///     A ensure only the linted files are added to the commit
-    /// </summary>
-    [ExcludeTarget]
-    public Target HuskyLint =>
-        t => t
-            .Unlisted()
-            .OnlyWhenStatic(() => IsLocalBuild)
-            .TriggeredBy(Lint)
-            .Before(PostLint)
-            .Executes(
-                 () =>
-                 {
-                     var toolInstalled = DotNetTool.IsInstalled("husky");
-                     if (!toolInstalled)
-                     {
-                         return;
-                     }
-
-                     var tool = DotNetTool.GetTool("husky");
-                     tool(
-                         "run --group lint",
-                         logOutput: true,
-                         logInvocation: Verbosity == Verbosity.Verbose,
-                         // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-                         logger: static (t, s) => Log.Write(t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information, s)
-                     );
-                 }
-             );
-
-    /// <summary>
-    ///     A ensure only the linted files are added to the commit
-    /// </summary>
-    public Target LintGitAdd =>
-        t => t
-            .Unlisted()
-            .After(Lint)
-            .TriggeredBy(PostLint)
-            .Executes(
-                 () =>
-                 {
-                     List<string> patterns = [".nuke/build.schema.json", ".github/workflows", "Readme.md"];
-                     if (this is IHavePublicApis)
-                     {
-                         patterns.Add("**/PublicAPI.Shipped.txt");
-                         patterns.Add("**/PublicAPI.Unshipped.txt");
-                     }
-
-                     if (this is ICanUpdateSolution sln)
-                     {
-                         patterns.Add(sln.Solution.Path);
-                     }
-
-                     if (LintPaths.Active)
-                     {
-                         patterns.AddRange(LintPaths.RelativePaths.Select(z => z.ToString()));
-                     }
-
-                     patterns.ForEach(static pattern => GitTasks.Git($"add {pattern}", exitHandler: _ => null));
-                 }
-             );
-
-    /// <summary>
-    ///     The lint paths rooted as an absolute path.
-    /// </summary>
-    public LintPaths LintPaths => lintPaths ??= ResolveLintPathsImpl();
-
-    /// <summary>
-    ///     The default matcher to exclude files from linting
-    /// </summary>
-    public Matcher LintMatcher => DefaultLintMatcher;
-
     /// <summary>
     ///     The files to lint, if not given lints all files
     /// </summary>
     [Parameter("The files to lint, if not given lints all files", Separator = " ", Name = "lint-files")]
     private string[] PrivateLintFiles => TryGetValue(() => PrivateLintFiles) ?? [];
-
-    private LintPaths ResolveLintPathsImpl()
-    {
-        using var repo = new Repository(RootDirectory);
-        List<string> files = [];
-        var trigger = LintTrigger.None;
-        var message = "Linting all files";
-        if (PrivateLintFiles.Any())
-        {
-            trigger = LintTrigger.Specific;
-            message = "Linting only the files provided";
-            files.AddRange(PrivateLintFiles);
-        }
-        else if (GitHubActions.Instance.IsPullRequest())
-        {
-            trigger = LintTrigger.PullRequest;
-            message = "Linting only the files in the Pull Request";
-            var diff = repo.Diff.Compare<TreeChanges>(
-                repo.Branches[$"origin/{GitHubActions.Instance.BaseRef}"].Tip.Tree,
-                repo.Branches[$"origin/{GitHubActions.Instance.HeadRef}"].Tip.Tree
-            );
-            files.AddRange(FilterFiles(diff));
-        }
-        else if (IsLocalBuild && FilterFiles(repo.Diff.Compare<TreeChanges>(repo.Head.Tip?.Tree, DiffTargets.Index)).ToArray() is { Length: > 0 } stagedFiles)
-        {
-            trigger = LintTrigger.Staged;
-            message = "Linting only the staged files";
-            files.AddRange(stagedFiles);
-        }
-
-        return LintPaths.Create(LintMatcher, trigger, message, files is { Count: > 0 } ? files : ImmutableList<string>.Empty);
-    }
 }

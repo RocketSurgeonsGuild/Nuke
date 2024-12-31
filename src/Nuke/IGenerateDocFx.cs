@@ -10,14 +10,6 @@ namespace Rocket.Surgery.Nuke;
 public interface IGenerateDocFx : IHaveDocs
 {
     /// <summary>
-    ///     Parameter to be used to serve documentation
-    /// </summary>
-    [Parameter("serve the docs")]
-    public bool? Serve => EnvironmentInfo.GetVariable<bool?>("Serve")
-     // ?? ValueInjectionUtility.TryGetValue(() => Serve)
-     ?? false;
-
-    /// <summary>
     ///     The docfx tool
     /// </summary>
     public Tool Docfx => DotNetTool.GetTool("docfx");
@@ -48,4 +40,12 @@ public interface IGenerateDocFx : IHaveDocs
                                                 Docfx($"{DocumentationDirectory / "docfx.json"}");
                                             }
                                         );
+
+    /// <summary>
+    ///     Parameter to be used to serve documentation
+    /// </summary>
+    [Parameter("serve the docs")]
+    public bool? Serve => EnvironmentInfo.GetVariable<bool?>("Serve")
+     // ?? ValueInjectionUtility.TryGetValue(() => Serve)
+     ?? false;
 }

@@ -14,15 +14,10 @@ namespace Rocket.Surgery.Nuke.ContinuousIntegration;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
 public sealed class UploadLogsAttribute : BuildExtensionAttributeBase, IOnBuildFinished
 {
-    private static void UploadFile(AbsolutePath path) => AzurePipelines.Instance?.WriteCommand("task.uploadfile", path);
-
     /// <inheritdoc />
     public void OnBuildFinished()
     {
-        if (Build is not IHaveOutputLogs logs)
-        {
-            return;
-        }
+        if (Build is not IHaveOutputLogs logs) return;
 
         foreach (var item in logs.LogsDirectory.GlobFiles("**/*"))
         {
@@ -32,4 +27,6 @@ public sealed class UploadLogsAttribute : BuildExtensionAttributeBase, IOnBuildF
 
     /// <inheritdoc />
     public override float Priority { get; set; } = -1000;
+
+    private static void UploadFile(AbsolutePath path) => AzurePipelines.Instance?.WriteCommand("task.uploadfile", path);
 }

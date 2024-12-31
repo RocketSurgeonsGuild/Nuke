@@ -15,6 +15,8 @@ public interface ICanTestWithDotNetCore : IHaveBuildTarget,
     IHaveOutputLogs,
     ICan
 {
+    public DotNetTestSettings CustomizeDotNetTestSettings(DotNetTestSettings settings) => settings;
+
     /// <summary>
     ///     dotnet test
     /// </summary>
@@ -70,6 +72,4 @@ public interface ICanTestWithDotNetCore : IHaveBuildTarget,
                                                  RootDirectory
                                              )
                                          );
-
-    public DotNetTestSettings CustomizeDotNetTestSettings(DotNetTestSettings settings) => settings;
 }
