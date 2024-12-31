@@ -30,7 +30,7 @@ public interface IGenerateCodeCoverageReport : ITriggerCodeCoverageReports, IGen
                                                              s => Defaults(s)
                                                                  .SetTargetDirectory(CoverageReportDirectory)
                                                                   // these trample... don't forget next time.
-                                                                 .SetReportTypes(/*ReportTypes.HtmlInline_AzurePipelines_Dark, */ReportTypes.Html_Dark)
+                                                                 .SetReportTypes( /*ReportTypes.HtmlInline_AzurePipelines_Dark, */ReportTypes.Html_Dark)
                                                          )
                                                      );
 }

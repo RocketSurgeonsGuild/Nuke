@@ -14,20 +14,14 @@ namespace Rocket.Surgery.Nuke.ProjectModel;
 
 public static class NukeSolutionExtensions
 {
+    public static IEnumerable<MsbProject> AnalyzeAllProjects(this Solution solution) => solution.AllProjects.Select(AnalyzeProject);
+
     public static MsbProject AnalyzeProject(this Project project)
     {
-        if (_projects.TryGetValue(project, out var msbProject))
-        {
-            return msbProject;
-        }
+        if (_projects.TryGetValue(project, out var msbProject)) return msbProject;
 
         _projects[project] = msbProject = MsbProject.LoadProject(project.Path);
         return msbProject;
-    }
-
-    public static IEnumerable<MsbProject> AnalyzeAllProjects(this Solution solution)
-    {
-        return solution.AllProjects.Select(x => x.AnalyzeProject());
     }
 
     [ModuleInitializer]
@@ -50,7 +44,7 @@ public static class NukeSolutionExtensions
 
         static void triggerAssemblyResolution()
         {
-            _ = new ProjectCollection();
+            new ProjectCollection();
         }
     }
 
@@ -73,7 +67,7 @@ public static class NukeSolutionExtensions
                               .AllEvaluatedItems
                               .Where(x => x.ItemType == "_TargetFrameworks")
                               .Select(x => x.EvaluatedInclude)
-                              .OrderBy(x => x)
+                              .Order()
                               .ToList();
 
         if (targetFramework is null && targetFrameworks is { Count: > 0 })
@@ -98,15 +92,15 @@ public static class NukeSolutionExtensions
         return msbuildProject;
     }
 
-    private static readonly ConcurrentDictionary<Project, MsbProject> _projects = new();
-
     private static Dictionary<string, string> GetProperties(string? configuration, string? targetFramework)
     {
         var properties = new Dictionary<string, string>();
-        if (configuration != null)
+        if (configuration is { })
             properties.Add("Configuration", configuration);
-        if (targetFramework != null)
+        if (targetFramework is { })
             properties.Add("TargetFramework", targetFramework);
         return properties;
     }
+
+    private static readonly ConcurrentDictionary<Project, MsbProject> _projects = new();
 }

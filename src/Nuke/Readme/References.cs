@@ -8,26 +8,15 @@ namespace Rocket.Surgery.Nuke.Readme;
 /// </summary>
 public class References : IMarkdownReferences, IReadmeSection
 {
-    private readonly Dictionary<string, string> _references = new(StringComparer.OrdinalIgnoreCase);
-
     /// <inheritdoc />
     public string AddReference(string name, string value, string? altText = null)
     {
         var key = $"[{name}]";
-        if (string.IsNullOrEmpty(altText))
-            altText = "";
-        else
-            altText = $" \"{altText}\"";
+        altText = string.IsNullOrEmpty(altText) ? "" : $" \"{altText}\"";
 
         _references.Add(key, $"{value}{altText}");
         return key;
     }
-
-    /// <inheritdoc />
-    public string Name { get; } = "generated references";
-
-    /// <inheritdoc />
-    public string ConfigKey { get; } = string.Empty;
 
     /// <inheritdoc />
     public Task<string> Process(
@@ -44,4 +33,12 @@ public class References : IMarkdownReferences, IReadmeSection
 
         return Task.FromResult(sb.ToString());
     }
+
+    /// <inheritdoc />
+    public string ConfigKey { get; } = "";
+
+    /// <inheritdoc />
+    public string Name { get; } = "generated references";
+
+    private readonly Dictionary<string, string> _references = new(StringComparer.OrdinalIgnoreCase);
 }

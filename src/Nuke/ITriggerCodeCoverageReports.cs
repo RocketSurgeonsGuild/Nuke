@@ -17,14 +17,6 @@ namespace Rocket.Surgery.Nuke;
 public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarget, IHaveTestArtifacts, ITrigger, IHaveSolution
 {
     /// <summary>
-    ///     The input reports
-    /// </summary>
-    /// <remarks>
-    ///     used to determine if any coverage was emitted, if not the tasks will skip to avoid errors
-    /// </remarks>
-    public IEnumerable<AbsolutePath> InputReports => CoverageDirectory.GlobFiles("**/*.cobertura.xml");
-
-    /// <summary>
     ///     This will generate code coverage reports from emitted coverage data
     /// </summary>
     [NonEntryTarget]
@@ -37,12 +29,9 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                   () =>
                                                   {
                                                       var files = TestResultsDirectory.GlobFiles("**/*.xml", "**/*.json", "**/*.coverage");
-                                                      if (!files.Any())
-                                                      {
-                                                          return;
-                                                      }
+                                                      if (!files.Any()) return;
 
-                                                      _ = ReportGeneratorTasks.ReportGenerator(
+                                                      ReportGeneratorTasks.ReportGenerator(
                                                           settings => settings
                                                                      .SetReports(files)
                                                                      .SetSourceDirectories(NukeBuild.RootDirectory)
@@ -57,13 +46,12 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                                       )
                                                       );
 
-                                                      _ = ( CoverageDirectory / "Cobertura.xml" ).Move(
+                                                      ( CoverageDirectory / "Cobertura.xml" ).Move(
                                                           CoverageDirectory / "test.cobertura.xml",
                                                           ExistsPolicy.FileOverwriteIfNewer
                                                       );
                                                   }
                                               );
-
 
     /// <summary>
     ///     This will generate code coverage reports from emitted coverage data
@@ -79,7 +67,7 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                                   () =>
                                                                   {
                                                                       // var toolPath = ToolPathResolver.GetPackageExecutable("ReportGenerator", "ReportGenerator.dll", framework: "netcoreapp3.0");
-                                                                      _ = ReportGeneratorTasks.ReportGenerator(
+                                                                      ReportGeneratorTasks.ReportGenerator(
                                                                           s => Defaults(s)
                                                                               .SetTargetDirectory(CoverageDirectory)
                                                                               .SetReportTypes(ReportTypes.Cobertura)
@@ -88,38 +76,46 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
                                                               );
 
     /// <summary>
+    ///     The input reports
+    /// </summary>
+    /// <remarks>
+    ///     used to determine if any coverage was emitted, if not the tasks will skip to avoid errors
+    /// </remarks>
+    public IEnumerable<AbsolutePath> InputReports => CoverageDirectory.GlobFiles("**/*.cobertura.xml");
+
+    /// <summary>
     ///     ensures that ReportGenerator is called with the appropriate settings given the current state.
     /// </summary>
     /// <param name="settings"></param>
     /// <returns></returns>
-    protected ReportGeneratorSettings Defaults(ReportGeneratorSettings settings)
-        => ( this switch
-        {
-            IHaveGitVersion gitVersion => settings.SetTag(gitVersion.GitVersion.InformationalVersion),
-            IHaveGitRepository { GitRepository: { } } gitRepository => settings.SetTag(gitRepository.GitRepository.Head),
-            _ => settings,
-        }
-           )
-          .SetReports(InputReports)
-          .SetSourceDirectories(NukeBuild.RootDirectory)
-          .SetFramework(Constants.ReportGeneratorFramework)
-          // this is more or less a hack / compromise because
-          // I was unable to coverage to exclude everything in a given assembly by default.
-          .AddAssemblyFilters(
-               Solution
-                  .AnalyzeAllProjects()
-                  .Select(z => z.GetProperty("AssemblyName") ?? "")
-                  .Where(z => !string.IsNullOrWhiteSpace(z))
-                  .Distinct()
-                  .Select(z => "+" + z)
-           )
-          .AddAssemblyFilters(
-               Solution
-                  .AnalyzeAllProjects()
-                  .SelectMany(z => z.PackageReferences)
-                  .Select(z => z.Name)
-                  .Where(z => !string.IsNullOrWhiteSpace(z))
-                  .Distinct()
-                  .Select(z => "-" + z)
-           );
+    protected ReportGeneratorSettings Defaults(ReportGeneratorSettings settings) =>
+        ( this switch
+          {
+              IHaveGitVersion gitVersion                              => settings.SetTag(gitVersion.GitVersion.InformationalVersion),
+              IHaveGitRepository { GitRepository: { } } gitRepository => settings.SetTag(gitRepository.GitRepository.Head),
+              _                                                       => settings,
+          }
+        )
+       .SetReports(InputReports)
+       .SetSourceDirectories(NukeBuild.RootDirectory)
+       .SetFramework(Constants.ReportGeneratorFramework)
+        // this is more or less a hack / compromise because
+        // I was unable to coverage to exclude everything in a given assembly by default.
+       .AddAssemblyFilters(
+            Solution
+               .AnalyzeAllProjects()
+               .Select(z => z.GetProperty("AssemblyName") ?? "")
+               .Where(z => !string.IsNullOrWhiteSpace(z))
+               .Distinct()
+               .Select(z => "+" + z)
+        )
+       .AddAssemblyFilters(
+            Solution
+               .AnalyzeAllProjects()
+               .SelectMany(z => z.PackageReferences)
+               .Select(z => z.Name)
+               .Where(z => !string.IsNullOrWhiteSpace(z))
+               .Distinct()
+               .Select(z => "-" + z)
+        );
 }

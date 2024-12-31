@@ -14,50 +14,8 @@ namespace Rocket.Surgery.Nuke;
 ///     Define a set of azure pipelines steps
 /// </summary>
 [PublicAPI]
-[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
 {
-    private readonly Dictionary<string, string> _defaultSymbols = new()
-    {
-        ["Build"] = "⚙",
-        ["Compile"] = "⚙",
-        ["Test"] = "🚦",
-        ["Pack"] = "📦",
-        ["Restore"] = "📪",
-        ["Publish"] = "🚢",
-    };
-
-    /// <inheritdoc />
-    public override AbsolutePath ConfigurationFile => NukeBuild.RootDirectory / "azure-pipelines.nuke.yml";
-
-    /// <inheritdoc />
-    public override Type HostType => typeof(AzurePipelines);
-
-    /// <inheritdoc />
-    public override IEnumerable<AbsolutePath> GeneratedFiles => [ConfigurationFile];
-
-    /// <inheritdoc />
-    public override IEnumerable<string> RelevantTargetNames => InvokeTargets;
-
-    /// <summary>
-    ///     The targets to invoke
-    /// </summary>
-    public string[] InvokeTargets { get; set; } = [];
-
-    /// <summary>
-    ///     The parameters to be used
-    /// </summary>
-    public string[] Parameters { get; set; } = [];
-
-    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay
-    {
-        get
-        {
-            return ToString();
-        }
-    }
-
     /// <inheritdoc />
     public override CustomFileWriter CreateWriter(StreamWriter streamWriter) => new(streamWriter, 2, "#");
 
@@ -79,7 +37,7 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
                             BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy
                         )
                 )
-               .Where(x => x.GetCustomAttribute<ParameterAttribute>() is not null);
+               .Where(x => x.GetCustomAttribute<ParameterAttribute>() is { });
         foreach (var parameter in parameters)
         {
             if (Parameters.Any(
@@ -91,10 +49,7 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
                 ))
             {
                 var value = parameter.GetValue(Build);
-                if (value is AbsolutePath)
-                {
-                    value = null;
-                }
+                if (value is AbsolutePath) value = null;
 
                 paramList.Add(
                     new()
@@ -108,7 +63,7 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
 
         var lookupTable = new LookupTable<ExecutableTarget, AzurePipelinesStep>();
         var steps = relevantTargets
-                   .Select(x => (ExecutableTarget: x, Job: GetStep(x, relevantTargets, lookupTable)))
+                   .Select(x => ( ExecutableTarget: x, Job: GetStep(x, relevantTargets, lookupTable) ))
                    .ForEachLazy(x => lookupTable.Add(x.ExecutableTarget, x.Job))
                    .Select(x => x.Job)
                    .ToArray();
@@ -119,6 +74,28 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
             Steps = steps,
         };
     }
+
+    /// <inheritdoc />
+    public override AbsolutePath ConfigurationFile => NukeBuild.RootDirectory / "azure-pipelines.nuke.yml";
+
+    /// <inheritdoc />
+    public override IEnumerable<AbsolutePath> GeneratedFiles => [ConfigurationFile];
+
+    /// <inheritdoc />
+    public override Type HostType => typeof(AzurePipelines);
+
+    /// <summary>
+    ///     The targets to invoke
+    /// </summary>
+    public string[] InvokeTargets { get; set; } = [];
+
+    /// <summary>
+    ///     The parameters to be used
+    /// </summary>
+    public string[] Parameters { get; set; } = [];
+
+    /// <inheritdoc />
+    public override IEnumerable<string> RelevantTargetNames => InvokeTargets;
 
     /// <summary>
     ///     Get the step for the given targets
@@ -134,7 +111,7 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
     )
     {
         var chainLinkNames = GetInvokedTargets(executableTarget, relevantTargets).Select(z => z.Name).ToArray();
-        var tool = ( DotNetTool.IsInstalled("nuke.globaltool") ) ? "dotnet nuke" : "nuke";
+        var tool = DotNetTool.IsInstalled("nuke.globaltool") ? "dotnet nuke" : "nuke";
 
         return new()
         {
@@ -154,15 +131,16 @@ public class AzurePipelinesStepsAttribute : ChainedConfigurationAttributeBase
     {
         var symbol = _defaultSymbols.FirstOrDefault(z => z.Key.EndsWith(name, StringComparison.OrdinalIgnoreCase))
                                     .Value;
-
-/* Unmerged change from project 'Rocket.Surgery.Nuke(net9.0)'
-Before:
-        if (string.IsNullOrWhiteSpace(symbol)) return name;
-
-        return $"{symbol} {name}";
-After:
-        return ( string.IsNullOrWhiteSpace(symbol) ) ? name : $"{symbol} {name}";
-*/
-        return ( string.IsNullOrWhiteSpace(symbol) ) ?  name  :  $"{symbol} {name}";
+        return string.IsNullOrWhiteSpace(symbol) ? name : $"{symbol} {name}";
     }
+
+    private readonly Dictionary<string, string> _defaultSymbols = new()
+    {
+        ["Build"] = "⚙",
+        ["Compile"] = "⚙",
+        ["Test"] = "🚦",
+        ["Pack"] = "📦",
+        ["Restore"] = "📪",
+        ["Publish"] = "🚢",
+    };
 }

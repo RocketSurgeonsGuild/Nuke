@@ -8,22 +8,6 @@ namespace Rocket.Surgery.Nuke;
 /// </summary>
 public sealed class TitleEventsAttribute : BuildExtensionAttributeBase, IOnBuildCreated, IOnBuildInitialized, IOnTargetRunning, IOnBuildFinished
 {
-    private static short ProgressPercent(IReadOnlyCollection<ExecutableTarget> plan, ref int step)
-    {
-        if (NukeBuild.IsServerBuild) return 0;
-        var total = plan.Count + 1;
-        return (short)Math.Round(( (double)step++ / total ) * 100);
-    }
-
-    private static void ProgressBar(ProgressBarState state, short progress = 0)
-    {
-        if (NukeBuild.IsServerBuild) return;
-        Console.Write($"\x1b]9;4;{state};{progress}\x07");
-    }
-
-    private IReadOnlyCollection<ExecutableTarget> _plan = [];
-    private int step;
-
     /// <inheritdoc />
     public void OnBuildCreated(IReadOnlyCollection<ExecutableTarget> executableTargets)
     {
@@ -63,8 +47,50 @@ public sealed class TitleEventsAttribute : BuildExtensionAttributeBase, IOnBuild
         None = 0,
         Default = 1,
 
-//        Error = 2,
+        //        Error = 2,
         Indeterminate = 3,
-//        Warning = 4
+        //        Warning = 4
     }
+
+    private static void ProgressBar(ProgressBarState state, short progress = 0)
+    {
+        if (NukeBuild.IsServerBuild) return;
+        Console.Write($"\x1b]9;4;{state};{progress}\x07");
+    }
+
+    private static short ProgressPercent(IReadOnlyCollection<ExecutableTarget> plan, ref int step) =>
+        /* Unmerged change from project 'Rocket.Surgery.Nuke(net9.0)'
+        Before:
+                Convert.ToInt16(NukeBuild.IsServerBuild ? 0 : Math.Round(( (double)step++ / ( (short)plan.Count + 1 ) ) * 100));
+        After:
+                Convert.ToInt16(NukeBuild.IsServerBuild ? 0 : Math.Round((double)step++ / ( (short)plan.Count + 1 ) * 100));
+        */
+        /* Unmerged change from project 'Rocket.Surgery.Nuke(net9.0)'
+        Before:
+                Convert.ToInt16(NukeBuild.IsServerBuild ? 0 : Math.Round(( (double)step++ / ( (short)plan.Count + 1 ) ) * 100));
+        After:
+                Convert.ToInt16(NukeBuild.IsServerBuild ? 0 : Math.Round((double)step++ / ( (short)plan.Count + 1 ) * 100));
+        */
+        /* Unmerged change from project 'Rocket.Surgery.Nuke(net9.0)'
+        Before:
+                Convert.ToInt16(NukeBuild.IsServerBuild ? 0 : Math.Round(( (double)step++ / ( (short)plan.Count + 1 ) ) * 100));
+        After:
+                Convert.ToInt16(NukeBuild.IsServerBuild ? 0 : Math.Round((double)step++ / ( (short)plan.Count + 1 ) * 100));
+        */
+        /* Unmerged change from project 'Rocket.Surgery.Nuke(net9.0)'
+        Before:
+                Convert.ToInt16(NukeBuild.IsServerBuild ? 0 : Math.Round(( (double)step++ / ( (short)plan.Count + 1 ) ) * 100));
+        After:
+                Convert.ToInt16(NukeBuild.IsServerBuild ? 0 : Math.Round((double)step++ / ( (short)plan.Count + 1 ) * 100));
+        */
+        /* Unmerged change from project 'Rocket.Surgery.Nuke(net9.0)'
+        Before:
+                Convert.ToInt16(NukeBuild.IsServerBuild ? 0 : Math.Round(( (double)step++ / ( (short)plan.Count + 1 ) ) * 100));
+        After:
+                Convert.ToInt16(NukeBuild.IsServerBuild ? 0 : Math.Round((double)step++ / ( (short)plan.Count + 1 ) * 100));
+        */
+        Convert.ToInt16(NukeBuild.IsServerBuild ? 0 : Math.Round(( (double)step++ / ( (short)plan.Count + 1 ) ) * 100));
+
+    private IReadOnlyCollection<ExecutableTarget> _plan = [];
+    private int step;
 }

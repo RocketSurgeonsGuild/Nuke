@@ -15,20 +15,6 @@ namespace Rocket.Surgery.Nuke;
 [PublicAPI]
 public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
 {
-    private static AbsolutePath GetShippedFilePath(MsbProject project) => AbsolutePath.Create(project.Directory) / "PublicAPI.Shipped.txt";
-
-    private static AbsolutePath GetUnshippedFilePath(MsbProject project) => AbsolutePath.Create(project.Directory) / "PublicAPI.Unshipped.txt";
-
-    /// <summary>
-    ///     Determine if Unshipped apis should always be pushed the Shipped file used in lint-staged to automatically update the shipped file
-    /// </summary>
-    public bool ShouldMoveUnshippedToShipped => true;
-
-    /// <summary>
-    ///     Setup to lint the public api projects
-    /// </summary>
-    public Target ShipPublicApis => d => d.Triggers(LintPublicApiAnalyzers);
-
     /// <summary>
     ///     Setup to lint the public api projects
     /// </summary>
@@ -44,15 +30,9 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
                                                             {
                                                                 var shippedFilePath = GetShippedFilePath(project);
                                                                 var unshippedFilePath = GetUnshippedFilePath(project);
-                                                                if (!shippedFilePath.FileExists())
-                                                                {
-                                                                    await File.WriteAllTextAsync(shippedFilePath, "#nullable enable");
-                                                                }
+                                                                if (!shippedFilePath.FileExists()) await File.WriteAllTextAsync(shippedFilePath, "#nullable enable");
 
-                                                                if (!unshippedFilePath.FileExists())
-                                                                {
-                                                                    await File.WriteAllTextAsync(unshippedFilePath, "#nullable enable");
-                                                                }
+                                                                if (!unshippedFilePath.FileExists()) await File.WriteAllTextAsync(unshippedFilePath, "#nullable enable");
 
                                                                 var arguments = new Arguments()
                                                                                .Add("format")
@@ -71,17 +51,17 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                                 )
                                                                                .Add("--diagnostics {value}", "RS0016");
 
-                                                                _ = DotNetTasks.DotNet(
-                                                                    arguments.RenderForExecution(),
+                                                                DotNetTasks.DotNet(
+                                                                    arguments.RenderForStringHandler(),
                                                                     RootDirectory,
                                                                     logOutput: true,
-                                                                    logInvocation: Verbosity == Verbosity.Verbose
-,
+                                                                    logInvocation: Verbosity == Verbosity.Verbose,
                                                                     // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
                                                                     logger: static (t, s) => Log.Write(
-                                                                                ( t == OutputType.Err ) ? LogEventLevel.Error : LogEventLevel.Information,
+                                                                                t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information,
                                                                                 s
-                                                                            ));
+                                                                            )
+                                                                );
                                                             }
                                                         }
                                                     );
@@ -107,10 +87,7 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                 var unshipped = await GetLines(unshippedFilePath);
                                                                 foreach (var item in unshipped)
                                                                 {
-                                                                    if (item is not { Length: > 0 })
-                                                                    {
-                                                                        continue;
-                                                                    }
+                                                                    if (item is not { Length: > 0 }) continue;
 
                                                                     shipped.Add(item);
                                                                 }
@@ -121,18 +98,35 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                 await File.WriteAllTextAsync(unshippedFilePath, "#nullable enable");
                                                             }
 
-                                                            static async Task<List<string>> GetLines(AbsolutePath path) => ( path.FileExists() )
+                                                            static async Task<List<string>> GetLines(AbsolutePath path)
+                                                            {
+                                                                return path.FileExists()
                                                                     ? ( await File.ReadAllLinesAsync(path) )
                                                                      .Where(z => z != "#nullable enable")
                                                                      .ToList()
                                                                     : [];
+                                                            }
                                                         }
                                                     );
+
+    /// <summary>
+    ///     Setup to lint the public api projects
+    /// </summary>
+    public Target ShipPublicApis => d => d.Triggers(LintPublicApiAnalyzers);
+
+    /// <summary>
+    ///     Determine if Unshipped apis should always be pushed the Shipped file used in lint-staged to automatically update the shipped file
+    /// </summary>
+    public bool ShouldMoveUnshippedToShipped => true;
 
     /// <summary>
     ///     All the projects that depend on the Microsoft.CodeAnalysis.PublicApiAnalyzers package
     /// </summary>
     private IEnumerable<MsbProject> GetPublicApiAnalyzerProjects(Solution solution) => solution
-              .AnalyzeAllProjects()
-              .Where(project => project.ContainsPackageReference("Microsoft.CodeAnalysis.PublicApiAnalyzers"));
+                                                                                      .AnalyzeAllProjects()
+                                                                                      .Where(project => project.ContainsPackageReference("Microsoft.CodeAnalysis.PublicApiAnalyzers"));
+
+    private static AbsolutePath GetShippedFilePath(MsbProject project) => AbsolutePath.Create(project.Directory) / "PublicAPI.Shipped.txt";
+
+    private static AbsolutePath GetUnshippedFilePath(MsbProject project) => AbsolutePath.Create(project.Directory) / "PublicAPI.Unshipped.txt";
 }

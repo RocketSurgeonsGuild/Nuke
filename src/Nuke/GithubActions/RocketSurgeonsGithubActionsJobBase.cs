@@ -9,52 +9,6 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// </summary>
 public abstract class RocketSurgeonsGithubActionsJobBase : ConfigurationEntity
 {
-    /// <summary>
-    ///     Create the base job
-    /// </summary>
-    /// <param name="name"></param>
-    /// <exception cref="ArgumentNullException"></exception>
-    protected RocketSurgeonsGithubActionsJobBase(string name)
-    {
-        if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
-        Name = name;
-    }
-
-    /// <summary>
-    ///     The name of the job
-    /// </summary>
-    public string Name { get; set; }
-
-    /// <summary>
-    ///     The dependencies of this job
-    /// </summary>
-    public Dictionary<string, string> Environment { get; set; } = new(StringComparer.OrdinalIgnoreCase);
-
-    /// <summary>
-    ///     The dependencies of this job
-    /// </summary>
-    public List<string> Needs { get; set; } = new();
-
-    /// <summary>
-    ///     The condition to run this job under
-    /// </summary>
-    public GithubActionCondition? If { get; set; }
-
-    /// <summary>
-    ///     The concurrency of the job
-    /// </summary>
-    public RocketSurgeonsGithubActionsConcurrency? Concurrency { get; set; }
-
-    /// <summary>
-    ///     The defaults of the job
-    /// </summary>
-    public RocketSurgeonsGithubActionsDefaults? Defaults { get; set; }
-
-    /// <summary>
-    ///     The outputs of this job
-    /// </summary>
-    public List<GitHubActionsStepOutput> Outputs { get; set; } = new();
-
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
@@ -89,5 +43,51 @@ public abstract class RocketSurgeonsGithubActionsJobBase : ConfigurationEntity
 
             if (!string.IsNullOrWhiteSpace(If?.ToString())) writer.WriteLine($"if: {If}");
         }
+    }
+
+    /// <summary>
+    ///     The concurrency of the job
+    /// </summary>
+    public RocketSurgeonsGithubActionsConcurrency? Concurrency { get; set; }
+
+    /// <summary>
+    ///     The defaults of the job
+    /// </summary>
+    public RocketSurgeonsGithubActionsDefaults? Defaults { get; set; }
+
+    /// <summary>
+    ///     The dependencies of this job
+    /// </summary>
+    public Dictionary<string, string> Environment { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>
+    ///     The condition to run this job under
+    /// </summary>
+    public GithubActionCondition? If { get; set; }
+
+    /// <summary>
+    ///     The name of the job
+    /// </summary>
+    public string Name { get; set; }
+
+    /// <summary>
+    ///     The dependencies of this job
+    /// </summary>
+    public List<string> Needs { get; set; } = [];
+
+    /// <summary>
+    ///     The outputs of this job
+    /// </summary>
+    public List<GitHubActionsStepOutput> Outputs { get; set; } = [];
+
+    /// <summary>
+    ///     Create the base job
+    /// </summary>
+    /// <param name="name"></param>
+    /// <exception cref="ArgumentNullException"></exception>
+    protected RocketSurgeonsGithubActionsJobBase(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
+        Name = name;
     }
 }

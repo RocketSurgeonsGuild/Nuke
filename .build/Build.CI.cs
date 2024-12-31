@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Nuke.Common;
 using Nuke.Common.CI.GitHubActions;
 using Rocket.Surgery.Nuke.ContinuousIntegration;
@@ -69,7 +68,6 @@ using Rocket.Surgery.Nuke.Jobs;
 [UploadLogs]
 [TitleEvents]
 [ContinuousIntegrationConventions]
-[DebuggerDisplay("{DebuggerDisplay,nq}")]
 internal partial class Pipeline
 {
     public static RocketSurgeonGitHubActionsConfiguration CiIgnoreMiddleware(RocketSurgeonGitHubActionsConfiguration configuration)
@@ -89,7 +87,7 @@ internal partial class Pipeline
                                       .ProducesGithubActionsOutput("iSetAThing", "Some output value")
                                       .Requires(() => ThisIsAInput)
                                       .Executes(() => GitHubActions.Instance?.SetOutput("iSetAThing", "myValue"));
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     [Parameter]
     public string ThisIsAInput { get; set; }
 
@@ -120,17 +118,14 @@ internal partial class Pipeline
     [Parameter]
     public string MyOtherOnepasswordText { get; set; }
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => ToString();
-
     public static RocketSurgeonGitHubActionsConfiguration CiMiddleware(RocketSurgeonGitHubActionsConfiguration configuration)
     {
-        _ = configuration
+        configuration
            .ExcludeRepositoryConfigurationFiles()
            .Jobs.OfType<RocketSurgeonsGithubActionsJob>()
            .First(z => z.Name.Equals("Build", StringComparison.OrdinalIgnoreCase))
            .UseDotNetSdks("8.0", "9.0")
-           // .ConfigureForGitVersion()
+            // .ConfigureForGitVersion()
            .ConfigureStep<CheckoutStep>(step => step.FetchDepth = 0)
            .PublishLogs<Pipeline>();
 
@@ -139,7 +134,7 @@ internal partial class Pipeline
 
     public static RocketSurgeonGitHubActionsConfiguration LintStagedMiddleware(RocketSurgeonGitHubActionsConfiguration configuration)
     {
-        _ = configuration
+        configuration
            .Jobs.OfType<RocketSurgeonsGithubActionsJob>()
            .First(z => z.Name.Equals("Build", StringComparison.OrdinalIgnoreCase))
            .UseDotNetSdks("8.0", "9.0");

@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
@@ -7,21 +6,33 @@ using Rocket.Surgery.Nuke.GithubActions;
 namespace Rocket.Surgery.Nuke.Jobs;
 
 /// <summary>
-/// Adds update milestone support to the build
+///     Adds update milestone support to the build
 /// </summary>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Class)]
-[DebuggerDisplay("{DebuggerDisplay,nq}")]
-public sealed class UpdateMilestoneJobAttribute() : GitHubActionsStepsAttribute("update-milestone", GitHubActionsImage.UbuntuLatest)
+public sealed class UpdateMilestoneJobAttribute : GitHubActionsStepsAttribute
 {
-    private string DebuggerDisplay => ToString();
+    /// <summary>
+    ///     Adds update milestone support to the build
+    /// </summary>
+    public UpdateMilestoneJobAttribute() : base("update-milestone", GitHubActionsImage.UbuntuLatest) => AutoGenerate = false;
+
+    /// <summary>
+    ///     Adds update milestone support to the build
+    /// </summary>
+    public UpdateMilestoneJobAttribute(string image, params string[] images) : base("update-milestone", image, images) => AutoGenerate = false;
+
+    /// <summary>
+    ///     Adds update milestone support to the build
+    /// </summary>
+    public UpdateMilestoneJobAttribute(GitHubActionsImage image) : base("update-milestone", image) => AutoGenerate = false;
 
     /// <inheritdoc />
     public override ConfigurationEntity GetConfiguration(IReadOnlyCollection<ExecutableTarget> relevantTargets)
     {
         var build = new RocketSurgeonGitHubActionsConfiguration
         {
-            Name = "Update Milestone"
+            Name = "Update Milestone",
         };
         build.DetailedTriggers.Add(new RocketSurgeonGitHubActionsWorkflowTrigger());
         build.DetailedTriggers.Add(

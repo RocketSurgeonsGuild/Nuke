@@ -15,13 +15,12 @@ public static class CustomFileWriterExtensions
     /// <param name="dictionary"></param>
     public static void WriteKeyValues(this CustomFileWriter writer, string key, IDictionary<string, string> dictionary)
     {
-        if (dictionary.Any())
+        if (!dictionary.Any()) return;
+
+        writer.WriteLine(key + ":");
+        using (writer.Indent())
         {
-            writer.WriteLine(key + ":");
-            using (writer.Indent())
-            {
-                dictionary.ForEach(z => WriteValue(writer, z));
-            }
+            dictionary.ForEach(z => WriteValue(writer, z));
         }
     }
 

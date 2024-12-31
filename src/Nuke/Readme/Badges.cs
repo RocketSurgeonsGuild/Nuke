@@ -7,8 +7,6 @@ namespace Rocket.Surgery.Nuke.Readme;
 /// </summary>
 public class Badges : IReadmeSection
 {
-    private readonly List<IBadgeSection> _sections = new();
-
     /// <summary>
     ///     Adds a new Badge section
     /// </summary>
@@ -19,12 +17,6 @@ public class Badges : IReadmeSection
         _sections.Add(section);
         return this;
     }
-
-    /// <inheritdoc />
-    public string Name => "badges";
-
-    /// <inheritdoc />
-    public string ConfigKey => string.Empty;
 
     /// <inheritdoc />
     public Task<string> Process(
@@ -49,4 +41,12 @@ public class Badges : IReadmeSection
 
         return Task.FromResult(sb.ToString());
     }
+
+    /// <inheritdoc />
+    public string ConfigKey => "";
+
+    /// <inheritdoc />
+    public string Name => "badges";
+
+    private readonly List<IBadgeSection> _sections = [];
 }

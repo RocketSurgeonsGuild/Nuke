@@ -17,20 +17,23 @@ internal static class TargetAttributeCache
         return result;
     }
 
+    private record CacheItem(string Key, ExcludeTargetAttribute? ExcludeTarget, NonEntryTargetAttribute? NonEntryTarget)
+    {
+        public IEnumerable<string> GetTargets()
+        {
+            if (ExcludeTarget is { }) yield return ExcludeTarget.GetType().FullName!;
+            if (NonEntryTarget is { }) yield return NonEntryTarget.GetType().FullName!;
+        }
+    }
+
     internal static FrozenDictionary<string, FrozenSet<string>> BuildCache()
     {
         var cache = PopulateCache();
-        AttributeCache.WriteAllText(JsonSerializer.Serialize(cache, new JsonSerializerOptions { WriteIndented = true, }));
+        AttributeCache.WriteAllText(JsonSerializer.Serialize(cache, new JsonSerializerOptions { WriteIndented = true }));
         return cache.ToFrozenDictionary(z => z.Key, z => z.Value.ToFrozenSet());
     }
 
-    private static readonly FrozenDictionary<string, FrozenSet<string>> _cache = EnsureAttributeCacheIsUptoDate();
-
-    private static FrozenDictionary<string, FrozenSet<string>> PopulateCacheFromDisk()
-    {
-        return JsonSerializer.Deserialize<Dictionary<string, HashSet<string>>>(AttributeCache.ReadAllText())!
-                             .ToFrozenDictionary(z => z.Key, z => z.Value.ToFrozenSet());
-    }
+    private static FrozenDictionary<string, FrozenSet<string>> EnsureAttributeCacheIsUptoDate() => !AttributeCache.ShouldUpdate(createFile: false) ? PopulateCacheFromDisk() : BuildCache();
 
     private static ImmutableSortedDictionary<string, ImmutableArray<string>> PopulateCache()
     {
@@ -60,25 +63,15 @@ internal static class TargetAttributeCache
 
         return items
               .GroupBy(z => z.Key)
-              .Select(z => ( z.Key, Targets: z.SelectMany(x => x.GetTargets()).Distinct().OrderBy(z => z).ToImmutableArray() ))
+              .Select(z => ( z.Key, Targets: z.SelectMany(x => x.GetTargets()).Distinct().Order().ToImmutableArray() ))
               .OrderBy(z => z.Key)
               .ToImmutableSortedDictionary(z => z.Key, z => z.Targets);
     }
 
+    private static FrozenDictionary<string, FrozenSet<string>> PopulateCacheFromDisk() => JsonSerializer.Deserialize<Dictionary<string, HashSet<string>>>(AttributeCache.ReadAllText())!
+                                                                                                        .ToFrozenDictionary(z => z.Key, z => z.Value.ToFrozenSet());
+
+    private static readonly FrozenDictionary<string, FrozenSet<string>> _cache = EnsureAttributeCacheIsUptoDate();
+
     private static AbsolutePath AttributeCache => NukeBuild.TemporaryDirectory / "attributes.cache";
-
-    private static FrozenDictionary<string, FrozenSet<string>> EnsureAttributeCacheIsUptoDate()
-    {
-        if (!AttributeCache.ShouldUpdate(createFile: false)) return PopulateCacheFromDisk();
-        return BuildCache();
-    }
-
-    private record CacheItem(string Key, ExcludeTargetAttribute? ExcludeTarget, NonEntryTargetAttribute? NonEntryTarget)
-    {
-        public IEnumerable<string> GetTargets()
-        {
-            if (ExcludeTarget is { }) yield return ExcludeTarget.GetType().FullName!;
-            if (NonEntryTarget is { }) yield return NonEntryTarget.GetType().FullName!;
-        }
-    }
 }

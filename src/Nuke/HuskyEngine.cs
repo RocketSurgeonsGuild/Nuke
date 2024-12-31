@@ -8,10 +8,7 @@ internal class HuskyEngine : IGitHooksEngine
 {
     public bool AreHooksInstalled(IReadOnlyCollection<string> hooks)
     {
-        if (NukeBuild.IsServerBuild)
-        {
-            return true;
-        }
+        if (NukeBuild.IsServerBuild) return true;
 
         try
         {
@@ -30,11 +27,8 @@ internal class HuskyEngine : IGitHooksEngine
 
     public void InstallHooks(IReadOnlyCollection<string> hooks)
     {
-        if (AreHooksInstalled(hooks))
-        {
-            return;
-        }
+        if (AreHooksInstalled(hooks)) return;
 
-        _ = DotNetTool.GetTool("husky")("install");
+        DotNetTool.GetTool("husky")("install");
     }
 }

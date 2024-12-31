@@ -40,7 +40,7 @@ public interface ICanRegenerateBuildConfiguration : ICanLint
 
                          Log.Logger.Information("Regenerating {HostName} configuration id {Name}", host.HostName, host.Id);
 
-                         _ = DotNetTasks.DotNet(
+                         DotNetTasks.DotNet(
                              args.RenderForExecution(),
                              RootDirectory,
                              EnvironmentInfo.Variables.AddIfMissing("NUKE_INTERNAL_INTERCEPTOR", "1"),

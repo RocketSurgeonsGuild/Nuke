@@ -7,47 +7,8 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// <summary>
 ///     A detailed trigger for version control
 /// </summary>
-[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTrigger
 {
-    /// <summary>
-    ///     The kind of the trigger
-    /// </summary>
-    public RocketSurgeonGitHubActionsTrigger Kind { get; set; }
-
-    /// <summary>
-    ///     The input variables for the workflow
-    /// </summary>
-    public List<GitHubActionsInput> Inputs { get; set; } = [];
-
-    /// <summary>
-    ///     The secret variables for the workflow
-    /// </summary>
-    public List<GitHubActionsSecret> Secrets { get; set; } = [];
-
-    /// <summary>
-    ///     The output variables for the workflow
-    /// </summary>
-    public List<GitHubActionsWorkflowOutput> Outputs { get; set; } = [];
-
-    /// <summary>
-    /// The types
-    /// </summary>
-    public List<string> Types { get; set; } = [];
-
-    /// <summary>
-    /// The workflows
-    /// </summary>
-    public List<string> Workflows { get; set; } = [];
-
-    /// <summary>
-    /// The branches
-    /// </summary>
-    public List<string> Branches { get; set; } = [];
-
-    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => ToString();
-
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
@@ -56,14 +17,11 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
         if (Kind is not RocketSurgeonGitHubActionsTrigger.WorkflowDispatch
                 and not RocketSurgeonGitHubActionsTrigger.WorkflowCall
                 and not RocketSurgeonGitHubActionsTrigger.WorkflowRun)
-        {
             return;
-        }
 
         using (writer.Indent())
         {
             if (Kind is not RocketSurgeonGitHubActionsTrigger.WorkflowRun)
-            {
                 if (Inputs.Count > 0)
                 {
                     writer.WriteLine("inputs:");
@@ -75,22 +33,15 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
                             using (writer.Indent())
                             {
                                 writer.WriteLine($"type: {input.Type.GetValue()}");
-                                if (!string.IsNullOrWhiteSpace(input.Description))
-                                {
-                                    writer.WriteLine($"description: '{input.Description}'");
-                                }
+                                if (!string.IsNullOrWhiteSpace(input.Description)) writer.WriteLine($"description: '{input.Description}'");
 
                                 writer.WriteLine($"required: {( input.Required ?? false ).ToString().ToLowerInvariant()}");
 
-                                if (input.Default is not null)
-                                {
-                                    writer.WriteLine($"default: {input.Default}");
-                                }
+                                if (input.Default is { }) writer.WriteLine($"default: {input.Default}");
                             }
                         }
                     }
                 }
-            }
 
             if (Kind is RocketSurgeonGitHubActionsTrigger.WorkflowRun)
             {
@@ -143,10 +94,7 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
                             writer.WriteLine($"{input.Name}:");
                             using (writer.Indent())
                             {
-                                if (!string.IsNullOrWhiteSpace(input.Description))
-                                {
-                                    writer.WriteLine($"description: '{input.Description}'");
-                                }
+                                if (!string.IsNullOrWhiteSpace(input.Description)) writer.WriteLine($"description: '{input.Description}'");
 
                                 writer.WriteLine($"required: {( input.Required ?? false ).ToString().ToLowerInvariant()}");
                             }
@@ -164,10 +112,7 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
                             writer.WriteLine($"{input.OutputName}:");
                             using (writer.Indent())
                             {
-                                if (!string.IsNullOrWhiteSpace(input.Description))
-                                {
-                                    writer.WriteLine($"description: '{input.Description}'");
-                                }
+                                if (!string.IsNullOrWhiteSpace(input.Description)) writer.WriteLine($"description: '{input.Description}'");
 
                                 writer.WriteLine($"value: {input}");
                             }
@@ -177,4 +122,39 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
             }
         }
     }
+
+    /// <summary>
+    ///     The branches
+    /// </summary>
+    public List<string> Branches { get; set; } = [];
+
+    /// <summary>
+    ///     The input variables for the workflow
+    /// </summary>
+    public List<GitHubActionsInput> Inputs { get; set; } = [];
+
+    /// <summary>
+    ///     The kind of the trigger
+    /// </summary>
+    public RocketSurgeonGitHubActionsTrigger Kind { get; set; }
+
+    /// <summary>
+    ///     The output variables for the workflow
+    /// </summary>
+    public List<GitHubActionsWorkflowOutput> Outputs { get; set; } = [];
+
+    /// <summary>
+    ///     The secret variables for the workflow
+    /// </summary>
+    public List<GitHubActionsSecret> Secrets { get; set; } = [];
+
+    /// <summary>
+    ///     The types
+    /// </summary>
+    public List<string> Types { get; set; } = [];
+
+    /// <summary>
+    ///     The workflows
+    /// </summary>
+    public List<string> Workflows { get; set; } = [];
 }

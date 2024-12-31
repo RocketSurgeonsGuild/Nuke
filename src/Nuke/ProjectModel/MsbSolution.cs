@@ -9,8 +9,5 @@ public record MsbSolution
     string Directory,
     ImmutableArray<MsbProject> Projects)
 {
-    public MsbProject? GetProject(string name)
-    {
-        return Projects.FirstOrDefault(z => z.Name == name);
-    }
+    public MsbProject? GetProject(string name) => Projects.FirstOrDefault(z => z.Name == name);
 }

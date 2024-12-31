@@ -9,58 +9,8 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// <summary>
 ///     The Github actions configuration entity
 /// </summary>
-[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class RocketSurgeonGitHubActionsConfiguration : ConfigurationEntity
 {
-    // ReSharper disable once NullableWarningSuppressionIsUsed
-    /// <summary>
-    ///     The name of the build
-    /// </summary>
-    public string Name { get; set; } = null!;
-
-    /// <summary>
-    ///     The short triggers
-    /// </summary>
-    public List<RocketSurgeonGitHubActionsTrigger> ShortTriggers { get; set; } = [];
-
-    /// <summary>
-    ///     The detailed triggers
-    /// </summary>
-    public List<GitHubActionsDetailedTrigger> DetailedTriggers { get; set; } = [];
-
-    /// <summary>
-    ///     The jobs
-    /// </summary>
-    public List<RocketSurgeonsGithubActionsJobBase> Jobs { get; set; } = [];
-
-    /// <summary>
-    ///     The dependencies of this workflow
-    /// </summary>
-    public Dictionary<string, string> Environment { get; set; } = new(StringComparer.OrdinalIgnoreCase);
-
-    /// <summary>
-    ///     The concurrency of the workflow
-    /// </summary>
-    public RocketSurgeonsGithubActionsConcurrency? Concurrency { get; set; }
-
-    /// <summary>
-    ///     The defaults of the job
-    /// </summary>
-    public RocketSurgeonsGithubActionsDefaults? Defaults { get; set; }
-
-    /// <summary>
-    ///     The permissions of this workflow
-    /// </summary>
-    public GitHubActionsPermissions Permissions { get; set; } = new();
-
-    /// <summary>
-    ///   The if condition for the workflow
-    /// </summary>
-    public GithubActionCondition? If { get; set; }
-
-    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => ToString();
-
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
@@ -82,10 +32,7 @@ public class RocketSurgeonGitHubActionsConfiguration : ConfigurationEntity
 
         Permissions.Write(writer);
 
-        if (!string.IsNullOrWhiteSpace(If?.ToString()))
-        {
-            writer.WriteLine($"if: {If}");
-        }
+        if (!string.IsNullOrWhiteSpace(If?.ToString())) writer.WriteLine($"if: {If}");
 
         writer.WriteKeyValues("env", Environment);
         if (Concurrency is { } concurrency)
@@ -108,4 +55,50 @@ public class RocketSurgeonGitHubActionsConfiguration : ConfigurationEntity
             Jobs.ForEach(x => x.Write(writer));
         }
     }
+
+    /// <summary>
+    ///     The concurrency of the workflow
+    /// </summary>
+    public RocketSurgeonsGithubActionsConcurrency? Concurrency { get; set; }
+
+    /// <summary>
+    ///     The defaults of the job
+    /// </summary>
+    public RocketSurgeonsGithubActionsDefaults? Defaults { get; set; }
+
+    /// <summary>
+    ///     The detailed triggers
+    /// </summary>
+    public List<GitHubActionsDetailedTrigger> DetailedTriggers { get; set; } = [];
+
+    /// <summary>
+    ///     The dependencies of this workflow
+    /// </summary>
+    public Dictionary<string, string> Environment { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>
+    ///     The if condition for the workflow
+    /// </summary>
+    public GithubActionCondition? If { get; set; }
+
+    /// <summary>
+    ///     The jobs
+    /// </summary>
+    public List<RocketSurgeonsGithubActionsJobBase> Jobs { get; set; } = [];
+
+    // ReSharper disable once NullableWarningSuppressionIsUsed
+    /// <summary>
+    ///     The name of the build
+    /// </summary>
+    public string Name { get; set; } = null!;
+
+    /// <summary>
+    ///     The permissions of this workflow
+    /// </summary>
+    public GitHubActionsPermissions Permissions { get; set; } = new();
+
+    /// <summary>
+    ///     The short triggers
+    /// </summary>
+    public List<RocketSurgeonGitHubActionsTrigger> ShortTriggers { get; set; } = [];
 }

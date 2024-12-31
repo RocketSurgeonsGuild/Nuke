@@ -3,12 +3,12 @@ using Rocket.Surgery.Nuke.GithubActions;
 namespace Rocket.Surgery.Nuke.Jobs;
 
 /// <summary>
-/// Common helpers for creating github workflows
+///     Common helpers for creating github workflows
 /// </summary>
 public static class WorkflowHelpers
 {
     /// <summary>
-    /// Create a job with the correct runson matrix
+    ///     Create a job with the correct runson matrix
     /// </summary>
     /// <param name="attribute"></param>
     /// <param name="name"></param>
@@ -20,57 +20,36 @@ public static class WorkflowHelpers
         string name,
         bool fetchHistory = false,
         params IEnumerable<BaseGitHubActionsStep> steps
-    )
+    ) => new(name)
     {
-        return new(name)
-        {
-            RunsOn = ( !attribute.IsGithubHosted ) ? attribute.Images : [],
-            Matrix = ( attribute.IsGithubHosted ) ? attribute.Images : [],
-            Steps =
-                                    [
-                                        new CheckoutStep("Checkout")
-                                        {
-                                            FetchDepth = fetchHistory ? 0 : null,
-                                        },
-                                        ..fetchHistory
-                                            ?
-                                            [
-                                                new RunStep("Fetch all history for all tags and branches")
-                                                {
-                                                    Run = "git fetch --prune",
-                                                }
-                                            ]
-                                            : Array.Empty<BaseGitHubActionsStep>(),
-                                        new SetupDotNetStep("Install DotNet"),
-                                        new RunStep("dotnet tool restore")
-                                        {
-                                            Run = "dotnet tool restore",
-                                        },
-                                        ..steps
-                                    ]
-        };
-    }
-
-    /// <summary>
-    /// Install the git release manager
-    /// </summary>
-    /// <param name="condition"></param>
-    /// <returns></returns>
-    public static IEnumerable<BaseGitHubActionsStep> InstallGitReleaseManager(GithubActionCondition? condition = null)
-    {
-        yield return new UsingStep("Install GitReleaseManager")
-        {
-            If = condition,
-            Uses = "gittools/actions/gitreleasemanager/setup@v3.1.1",
-            With =
+        RunsOn = !attribute.IsGithubHosted ? attribute.Images : [],
+        Matrix = attribute.IsGithubHosted ? attribute.Images : [],
+        Steps =
+        [
+            new CheckoutStep("Checkout")
             {
-                ["versionSpec"] = DotNetTool.GetToolDefinition("GitReleaseManager.Tool").Version
+                FetchDepth = fetchHistory ? 0 : null,
             },
-        };
-    }
+            ..fetchHistory
+                ?
+                [
+                    new RunStep("Fetch all history for all tags and branches")
+                    {
+                        Run = "git fetch --prune",
+                    },
+                ]
+                : Array.Empty<BaseGitHubActionsStep>(),
+            new SetupDotNetStep("Install DotNet"),
+            new RunStep("dotnet tool restore")
+            {
+                Run = "dotnet tool restore",
+            },
+            ..steps,
+        ],
+    };
 
     /// <summary>
-    /// Create a milestone
+    ///     Create a milestone
     /// </summary>
     /// <param name="condition"></param>
     /// <returns></returns>
@@ -82,36 +61,35 @@ public static class WorkflowHelpers
             Uses = "WyriHaximus/github-action-create-milestone@v1",
             With =
             {
-                ["title"] = "v${{ steps.gitversion.outputs.majorMinorPatch }}"
+                ["title"] = "v${{ steps.gitversion.outputs.majorMinorPatch }}",
             },
             Environment =
             {
-                ["GITHUB_TOKEN"] = "${{ secrets.GITHUB_TOKEN }}"
+                ["GITHUB_TOKEN"] = "${{ secrets.GITHUB_TOKEN }}",
             },
         };
     }
 
     /// <summary>
-    /// Sync the milestones
+    ///     Install the git release manager
     /// </summary>
     /// <param name="condition"></param>
     /// <returns></returns>
-    public static IEnumerable<BaseGitHubActionsStep> SyncMilestones(GithubActionCondition? condition = null)
+    public static IEnumerable<BaseGitHubActionsStep> InstallGitReleaseManager(GithubActionCondition? condition = null)
     {
-        yield return new UsingStep("sync milestones")
+        yield return new UsingStep("Install GitReleaseManager")
         {
             If = condition,
-            Uses = "RocketSurgeonsGuild/actions/sync-milestone@v0.3.15",
+            Uses = "gittools/actions/gitreleasemanager/setup@v3.1.1",
             With =
             {
-                ["default-label"] = ":sparkles: mysterious",
-                ["github-token"] = "${{ secrets.GITHUB_TOKEN }}"
-            }
+                ["versionSpec"] = DotNetTool.GetToolDefinition("GitReleaseManager.Tool").Version,
+            },
         };
     }
 
     /// <summary>
-    /// Run gitversion
+    ///     Run gitversion
     /// </summary>
     /// <param name="condition"></param>
     /// <returns></returns>
@@ -151,13 +129,32 @@ public static class WorkflowHelpers
             ],
             Shell = "pwsh",
             Run = """
-                $data = dotnet gitversion | ConvertFrom-Json
-                foreach ($item in $data.PSObject.Properties) {
-                    $key = $item.Name
-                    $value = $item.Value
-                    echo "$($key.Substring(0,1).ToLower() + $key.Substring(1))=$value" >> $env:GITHUB_OUTPUT
-                }
-"""
+                                $data = dotnet gitversion | ConvertFrom-Json
+                                foreach ($item in $data.PSObject.Properties) {
+                                    $key = $item.Name
+                                    $value = $item.Value
+                                    echo "$($key.Substring(0,1).ToLower() + $key.Substring(1))=$value" >> $env:GITHUB_OUTPUT
+                                }
+                """,
+        };
+    }
+
+    /// <summary>
+    ///     Sync the milestones
+    /// </summary>
+    /// <param name="condition"></param>
+    /// <returns></returns>
+    public static IEnumerable<BaseGitHubActionsStep> SyncMilestones(GithubActionCondition? condition = null)
+    {
+        yield return new UsingStep("sync milestones")
+        {
+            If = condition,
+            Uses = "RocketSurgeonsGuild/actions/sync-milestone@v0.3.15",
+            With =
+            {
+                ["default-label"] = ":sparkles: mysterious",
+                ["github-token"] = "${{ secrets.GITHUB_TOKEN }}",
+            },
         };
     }
 }

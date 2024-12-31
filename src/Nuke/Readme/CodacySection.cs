@@ -2,17 +2,13 @@ namespace Rocket.Surgery.Nuke.Readme;
 
 internal class CodacySection : IBadgeSection
 {
-    public string Name => "Codacy";
-
-    public string ConfigKey => string.Empty;
-
     public string Process(
         IDictionary<object, object?> config,
         IMarkdownReferences references,
         IHaveSolution build
     )
     {
-        if (!( config.TryGetValue("github", out var githubObj) && config.TryGetValue("codacy", out var codacyObj) )) return string.Empty;
+        if (!( config.TryGetValue("github", out var githubObj) && config.TryGetValue("codacy", out var codacyObj) )) return "";
 
         // ReSharper disable once NullableWarningSuppressionIsUsed
         var github = (IDictionary<object, object>)githubObj!;
@@ -29,4 +25,7 @@ internal class CodacySection : IBadgeSection
         );
         return $"[!{badge}]{url}";
     }
+
+    public string ConfigKey => "";
+    public string Name => "Codacy";
 }

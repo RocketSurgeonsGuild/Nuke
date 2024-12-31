@@ -15,7 +15,7 @@ public sealed class OptionalGitRepositoryAttribute : GitRepositoryAttribute
     public override object? GetValue(MemberInfo member, object instance)
     {
         var rootDirectory = NukeBuild.RootDirectory.FindParentOrSelf(x => x.GetDirectories(".git").Any());
-        if (rootDirectory != null) return base.GetValue(member, instance);
+        if (rootDirectory is { }) return base.GetValue(member, instance);
 
         Log.Warning("No git repository found, GitRepository will not be available");
         return null;

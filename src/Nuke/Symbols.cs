@@ -5,35 +5,14 @@ namespace Rocket.Surgery.Nuke;
 /// <summary>
 ///     Symbol store
 /// </summary>
-public static class Symbols
+public static partial class Symbols
 {
-    /// <summary>
-    ///     The default symbols
-    /// </summary>
-    public static readonly Dictionary<Regex, string> DefaultSymbols = new()
-    {
-        [new("(^Compile|^Build)", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "⚙️",
-        [new("^Pack", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "📦",
-        [new("^Publish", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "📫",
-        [new("^Use", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🔨",
-        [new("^Install", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "📲",
-        [new("^Restore", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🎁",
-        [new("^Publish", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🚀",
-        [new(".*?Tool.*?", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "⚒️",
-        [new(".*?Workload.*?", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🚒",
-        [new(".*?Test.*?", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🚦",
-        [new(".*?Test.*?", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "💨",
-    };
-
     /// <summary>
     ///     Add the symbol from the given step
     /// </summary>
     /// <param name="key"></param>
     /// <param name="symbol"></param>
-    public static void AddSymbol(Regex key, string symbol)
-    {
-        DefaultSymbols.Add(key, symbol);
-    }
+    public static void AddSymbol(Regex key, string symbol) => DefaultSymbols.Add(key, symbol);
 
     /// <summary>
     ///     Configure the step name
@@ -43,8 +22,51 @@ public static class Symbols
     public static string StepName(string name)
     {
         var symbol = DefaultSymbols.FirstOrDefault(z => z.Key.IsMatch(name)).Value;
-        if (string.IsNullOrWhiteSpace(symbol)) return name;
-
-        return $"{symbol} {name}";
+        return string.IsNullOrWhiteSpace(symbol) ? name : $"{symbol} {name}";
     }
+
+    /// <summary>
+    ///     The default symbols
+    /// </summary>
+    public static readonly Dictionary<Regex, string> DefaultSymbols = new()
+    {
+        [MyRegex()] = "⚙️",
+        [MyRegex1()] = "📦",
+        [MyRegex2()] = "📫",
+        [MyRegex3()] = "🔨",
+        [MyRegex4()] = "📲",
+        [MyRegex5()] = "🎁",
+        [MyRegex2()] = "🚀",
+        [MyRegex6()] = "⚒️",
+        [MyRegex7()] = "🚒",
+        [MyRegex8()] = "🚦",
+        [MyRegex8()] = "💨",
+    };
+
+    [GeneratedRegex("(^Compile|^Build)", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-US")]
+    private static partial Regex MyRegex();
+
+    [GeneratedRegex("^Pack", RegexOptions.IgnoreCase | RegexOptions.Compiled, "")]
+    private static partial Regex MyRegex1();
+
+    [GeneratedRegex("^Publish", RegexOptions.IgnoreCase | RegexOptions.Compiled, "")]
+    private static partial Regex MyRegex2();
+
+    [GeneratedRegex("^Use", RegexOptions.IgnoreCase | RegexOptions.Compiled, "")]
+    private static partial Regex MyRegex3();
+
+    [GeneratedRegex("^Install", RegexOptions.IgnoreCase | RegexOptions.Compiled, "")]
+    private static partial Regex MyRegex4();
+
+    [GeneratedRegex("^Restore", RegexOptions.IgnoreCase | RegexOptions.Compiled, "")]
+    private static partial Regex MyRegex5();
+
+    [GeneratedRegex(".*?Tool.*?", RegexOptions.IgnoreCase | RegexOptions.Compiled, "")]
+    private static partial Regex MyRegex6();
+
+    [GeneratedRegex(".*?Workload.*?", RegexOptions.IgnoreCase | RegexOptions.Compiled, "")]
+    private static partial Regex MyRegex7();
+
+    [GeneratedRegex(".*?Test.*?", RegexOptions.IgnoreCase | RegexOptions.Compiled, "")]
+    private static partial Regex MyRegex8();
 }

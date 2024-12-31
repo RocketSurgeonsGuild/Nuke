@@ -3,38 +3,18 @@ using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Serilog;
 
-#pragma warning disable CA1019
-#pragma warning disable CA1308
+#pragma warning disable CA1019, CA1308
 namespace Rocket.Surgery.Nuke;
 
 /// <summary>
 ///     Ensures that the given git hooks are defined in the .git directory
 /// </summary>
+/// <remarks>
+///     Ensures that the given git hooks are defined in the .git directory
+/// </remarks>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
-public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBuildCreated, IOnBuildInitialized
+public sealed class EnsureGitHooksAttribute(params GitHook[] hookNames) : BuildExtensionAttributeBase, IOnBuildCreated, IOnBuildInitialized
 {
-    /// <summary>
-    ///     Ensures that the given git hooks are defined in the .git directory
-    /// </summary>
-    public EnsureGitHooksAttribute(params GitHook[] hookNames)
-    {
-        HookNames = hookNames
-                   .Select(
-                        x => x
-                            .ToString()
-                            .Humanize()
-                            .Replace(" ", "_", StringComparison.Ordinal)
-                            .Dasherize()
-                            .ToLowerInvariant()
-                    )
-                   .ToArray();
-    }
-
-    /// <summary>
-    ///     The hooks that were asked for.
-    /// </summary>
-    public string[] HookNames { get; }
-
     /// <inheritdoc />
     public void OnBuildCreated(IReadOnlyCollection<ExecutableTarget> executableTargets)
     {
@@ -42,36 +22,44 @@ public sealed class EnsureGitHooksAttribute : BuildExtensionAttributeBase, IOnBu
         if (!NukeBuild.IsLocalBuild) return;
 
         // ReSharper disable once SuspiciousTypeConversion.Global
-        if (Build is IGitHooksEngine engine)
-        {
-            installHooks(engine, HookNames);
-        }
+        if (Build is IGitHooksEngine engine) installHooks(engine, HookNames);
 
-        if (( Build.RootDirectory / ".husky" ).DirectoryExists())
-        {
-            engine = new HuskyEngine();
-            installHooks(engine, HookNames);
-        }
+        if (!( Build.RootDirectory / ".husky" ).DirectoryExists()) return;
+
+        engine = new HuskyEngine();
+        installHooks(engine, HookNames);
 
         static void installHooks(IGitHooksEngine engine, string[] hookNames)
         {
-            if (!engine.AreHooksInstalled(hookNames))
-            {
-                Log.Information("git hooks not found...");
-                engine.InstallHooks(hookNames);
-            }
+            if (engine.AreHooksInstalled(hookNames)) return;
+
+            Log.Information("git hooks not found...");
+            engine.InstallHooks(hookNames);
         }
     }
 
     /// <inheritdoc />
     public void OnBuildInitialized(IReadOnlyCollection<ExecutableTarget> executableTargets, IReadOnlyCollection<ExecutableTarget> executionPlan)
     {
-        if (( NukeBuild.RootDirectory / "package.json" ).FileExists() && !NukeBuild.RootDirectory.ContainsDirectory("node_modules"))
-        {
-            ProcessTasks
-               .StartProcess(ToolPathResolver.GetPathExecutable("npm"), NukeBuild.IsLocalBuild ? "install" : "ci --ignore-scripts", NukeBuild.RootDirectory)
-               .AssertWaitForExit()
-               .AssertZeroExitCode();
-        }
+        if (!( NukeBuild.RootDirectory / "package.json" ).FileExists() || NukeBuild.RootDirectory.ContainsDirectory("node_modules")) return;
+
+        ProcessTasks
+           .StartProcess(ToolPathResolver.GetPathExecutable("npm"), NukeBuild.IsLocalBuild ? "install" : "ci --ignore-scripts", NukeBuild.RootDirectory)
+           .AssertWaitForExit()
+           .AssertZeroExitCode();
     }
+
+    /// <summary>
+    ///     The hooks that were asked for.
+    /// </summary>
+    public string[] HookNames { get; } = hookNames
+                                        .Select(
+                                             x => x
+                                                 .ToString()
+                                                 .Humanize()
+                                                 .Replace(" ", "_", StringComparison.Ordinal)
+                                                 .Dasherize()
+                                                 .ToLowerInvariant()
+                                         )
+                                        .ToArray();
 }

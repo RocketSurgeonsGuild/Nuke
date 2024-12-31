@@ -12,11 +12,11 @@ namespace Rocket.Surgery.Nuke;
 public static class DotNetTool
 {
     /// <summary>
-    ///     Determine if a dotnet tool is installed in the dotnet-tools.json
+    ///     Gets the tool definition for a given local dotnet tool
     /// </summary>
     /// <param name="nugetPackageName"></param>
     /// <returns></returns>
-    public static bool IsInstalled(string nugetPackageName) => ResolveToolsManifest().IsInstalled(nugetPackageName);
+    public static Tool GetProperTool(string nugetPackageName) => ResolveToolsManifest().GetProperTool(nugetPackageName);
 
     /// <summary>
     ///     Gets the tool definition for a given local dotnet tool
@@ -30,35 +30,29 @@ public static class DotNetTool
     /// </summary>
     /// <param name="nugetPackageName"></param>
     /// <returns></returns>
-    public static Tool GetProperTool(string nugetPackageName) => ResolveToolsManifest().GetProperTool(nugetPackageName);
+    public static ToolDefinition GetToolDefinition(string nugetPackageName) => ResolveToolsManifest().GetToolDefinition(nugetPackageName);
 
     /// <summary>
-    ///     Gets the tool definition for a given local dotnet tool
+    ///     Determine if a dotnet tool is installed in the dotnet-tools.json
     /// </summary>
     /// <param name="nugetPackageName"></param>
     /// <returns></returns>
-    public static ToolDefinition GetToolDefinition(string nugetPackageName) => ResolveToolsManifest().GetToolDefinition(nugetPackageName);
-
-    private static ResolvedToolsManifest? toolsManifest;
-    private static Lazy<AbsolutePath> ToolsManifestLocation { get; } = new(() => NukeBuild.RootDirectory / ".config" / "dotnet-tools.json");
+    public static bool IsInstalled(string nugetPackageName) => ResolveToolsManifest().IsInstalled(nugetPackageName);
 
     private static ResolvedToolsManifest ResolveToolsManifest()
     {
-        if (toolsManifest is { })
-        {
-            return toolsManifest;
-        }
+        if (toolsManifest is { }) return toolsManifest;
 
         if (ToolsManifestLocation.Value.FileExists())
         {
-#pragma warning disable CA1869
+            #pragma warning disable CA1869
             var manifest =
                 // ReSharper disable once NullableWarningSuppressionIsUsed
                 JsonSerializer.Deserialize<ToolsManifset>(
                     File.ReadAllText(ToolsManifestLocation.Value),
                     new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }
                 )!;
-#pragma warning restore CA1869
+            #pragma warning restore CA1869
             toolsManifest = ResolvedToolsManifest.Create(manifest);
         }
         else
@@ -68,4 +62,7 @@ public static class DotNetTool
 
         return toolsManifest;
     }
+
+    private static ResolvedToolsManifest? toolsManifest;
+    private static Lazy<AbsolutePath> ToolsManifestLocation { get; } = new(() => NukeBuild.RootDirectory / ".config" / "dotnet-tools.json");
 }

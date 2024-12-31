@@ -9,54 +9,16 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// <summary>
 ///     A detailed trigger for version control
 /// </summary>
-[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class RocketSurgeonGitHubActionsVcsTrigger : GitHubActionsDetailedTrigger
 {
-    /// <summary>
-    ///     The kind of the trigger
-    /// </summary>
-    public RocketSurgeonGitHubActionsTrigger Kind { get; set; }
-
-    /// <summary>
-    ///     The branches
-    /// </summary>
-    public ImmutableArray<string> Branches { get; set; } = [];
-
-    /// <summary>
-    ///     The Tags
-    /// </summary>
-    public ImmutableArray<string> Tags { get; set; } = [];
-
-    /// <summary>
-    ///     The included paths
-    /// </summary>
-    public ImmutableArray<string> IncludePaths { get; set; } = [];
-
-    /// <summary>
-    ///     The excluded paths
-    /// </summary>
-    public ImmutableArray<string> ExcludePaths { get; set; } = [];
-
-    /// <summary>
-    /// The types
-    /// </summary>
-    public ImmutableArray<string> Types { get; set; } = [];
-
-    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => ToString();
-
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
         writer.WriteLine(Kind.GetValue() + ":");
 
-        if (Kind is RocketSurgeonGitHubActionsTrigger.WorkflowDispatch or RocketSurgeonGitHubActionsTrigger.WorkflowCall or RocketSurgeonGitHubActionsTrigger.WorkflowRun)
-        {
-            return;
-        }
+        if (Kind is RocketSurgeonGitHubActionsTrigger.WorkflowDispatch or RocketSurgeonGitHubActionsTrigger.WorkflowCall or RocketSurgeonGitHubActionsTrigger.WorkflowRun) return;
 
         if (Kind is RocketSurgeonGitHubActionsTrigger.PullRequest or RocketSurgeonGitHubActionsTrigger.PullRequestTarget)
-        {
             using (writer.Indent())
             {
                 if (Types.Length > 0)
@@ -68,7 +30,7 @@ public class RocketSurgeonGitHubActionsVcsTrigger : GitHubActionsDetailedTrigger
                     }
                 }
             }
-        }
+
         using (writer.Indent())
         {
             if (Branches.Length > 0)
@@ -116,4 +78,34 @@ public class RocketSurgeonGitHubActionsVcsTrigger : GitHubActionsDetailedTrigger
             }
         }
     }
+
+    /// <summary>
+    ///     The branches
+    /// </summary>
+    public ImmutableArray<string> Branches { get; set; } = [];
+
+    /// <summary>
+    ///     The excluded paths
+    /// </summary>
+    public ImmutableArray<string> ExcludePaths { get; set; } = [];
+
+    /// <summary>
+    ///     The included paths
+    /// </summary>
+    public ImmutableArray<string> IncludePaths { get; set; } = [];
+
+    /// <summary>
+    ///     The kind of the trigger
+    /// </summary>
+    public RocketSurgeonGitHubActionsTrigger Kind { get; set; }
+
+    /// <summary>
+    ///     The Tags
+    /// </summary>
+    public ImmutableArray<string> Tags { get; set; } = [];
+
+    /// <summary>
+    ///     The types
+    /// </summary>
+    public ImmutableArray<string> Types { get; set; } = [];
 }

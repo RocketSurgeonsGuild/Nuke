@@ -17,18 +17,6 @@ public interface ICanRestoreWithDotNetCore : IHaveCleanTarget,
     ICan
 {
     /// <summary>
-    ///     This will ensure that all local dotnet tools are installed
-    /// </summary>
-    [ExcludeTarget]
-    [NonEntryTarget]
-    public Target DotnetToolRestore => d => d
-                                           .Unlisted()
-                                           .After(Clean)
-                                           .TryDependentFor<IHaveRestoreTarget>(a => a.Restore)
-                                           .OnlyWhenStatic(() => ( NukeBuild.RootDirectory / ".config" / "dotnet-tools.json" ).FileExists())
-                                           .Executes(() => DotNet($"tool restore", RootDirectory));
-
-    /// <summary>
     ///     dotnet restore
     /// </summary>
     [NonEntryTarget]
@@ -48,4 +36,16 @@ public interface ICanRestoreWithDotNetCore : IHaveCleanTarget,
                                                         .SetGitVersionEnvironment(GitVersion)
                                                 )
                                             );
+
+    /// <summary>
+    ///     This will ensure that all local dotnet tools are installed
+    /// </summary>
+    [ExcludeTarget]
+    [NonEntryTarget]
+    public Target DotnetToolRestore => d => d
+                                           .Unlisted()
+                                           .After(Clean)
+                                           .TryDependentFor<IHaveRestoreTarget>(a => a.Restore)
+                                           .OnlyWhenStatic(() => ( NukeBuild.RootDirectory / ".config" / "dotnet-tools.json" ).FileExists())
+                                           .Executes(() => DotNet("tool restore", RootDirectory));
 }

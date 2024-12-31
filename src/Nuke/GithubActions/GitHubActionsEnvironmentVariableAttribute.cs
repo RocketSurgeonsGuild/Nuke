@@ -3,17 +3,18 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// <summary>
 ///     An attribute to define this build consumes a given environment variable
 /// </summary>
+/// <remarks>
+///     The constructor for the <see cref="GitHubActionsEnvironmentVariableAttribute" />
+/// </remarks>
+/// <param name="name"></param>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-public sealed class GitHubActionsEnvironmentVariableAttribute : Attribute
+public sealed class GitHubActionsEnvironmentVariableAttribute(string name) : Attribute
 {
     /// <summary>
-    ///     The constructor for the <see cref="GitHubActionsEnvironmentVariableAttribute" />
+    ///     Convert it to an environment variable
     /// </summary>
-    /// <param name="name"></param>
-    public GitHubActionsEnvironmentVariableAttribute(string name) => Name = name;
-
-    /// <inheritdoc cref="ITriggerValue.Name" />
-    public string Name { get; }
+    /// <returns></returns>
+    public GitHubActionsEnvironmentVariable ToEnvironmentVariable() => new(Name, Default, Alias);
 
     /// <inheritdoc cref="ITriggerValue.Alias" />
     public string? Alias { get; set; }
@@ -21,9 +22,6 @@ public sealed class GitHubActionsEnvironmentVariableAttribute : Attribute
     /// <inheritdoc cref="ITriggerValue.Default" />
     public string? Default { get; set; }
 
-    /// <summary>
-    ///     Convert it to an environment variable
-    /// </summary>
-    /// <returns></returns>
-    public GitHubActionsEnvironmentVariable ToEnvironmentVariable() => new(Name, Default, Alias);
+    /// <inheritdoc cref="ITriggerValue.Name" />
+    public string Name { get; } = name;
 }
