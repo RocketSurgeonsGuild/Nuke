@@ -35,7 +35,7 @@ public static partial class Symbols
         [MyRegex2()] = "📫",
         [MyRegex3()] = "🔨",
         [MyRegex4()] = "📲",
-        [new("^Restore", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🎁",
+        [MyRegex5()] = "🎁",
         [MyRegex2()] = "🚀",
         [new(".*?Tool.*?", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "⚒️",
         [new(".*?Workload.*?", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🚒",
@@ -57,4 +57,7 @@ public static partial class Symbols
 
     [GeneratedRegex("^Install", RegexOptions.IgnoreCase | RegexOptions.Compiled, "")]
     private static partial Regex MyRegex4();
+
+    [GeneratedRegex("^Restore", RegexOptions.IgnoreCase | RegexOptions.Compiled, "")]
+    private static partial Regex MyRegex5();
 }
