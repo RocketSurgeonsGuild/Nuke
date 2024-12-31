@@ -39,8 +39,8 @@ public static partial class Symbols
         [MyRegex2()] = "🚀",
         [MyRegex6()] = "⚒️",
         [MyRegex7()] = "🚒",
-        [new(".*?Test.*?", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "🚦",
-        [new(".*?Test.*?", RegexOptions.Compiled | RegexOptions.IgnoreCase)] = "💨",
+        [MyRegex8()] = "🚦",
+        [MyRegex8()] = "💨",
     };
 
     [GeneratedRegex("(^Compile|^Build)", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-US")]
@@ -66,4 +66,7 @@ public static partial class Symbols
 
     [GeneratedRegex(".*?Workload.*?", RegexOptions.IgnoreCase | RegexOptions.Compiled, "")]
     private static partial Regex MyRegex7();
+
+    [GeneratedRegex(".*?Test.*?", RegexOptions.IgnoreCase | RegexOptions.Compiled, "")]
+    private static partial Regex MyRegex8();
 }
