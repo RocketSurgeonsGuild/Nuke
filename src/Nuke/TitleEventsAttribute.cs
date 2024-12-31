@@ -1,4 +1,5 @@
 using Nuke.Common.Execution;
+
 using Serilog;
 
 namespace Rocket.Surgery.Nuke;
@@ -58,33 +59,8 @@ public sealed class TitleEventsAttribute : BuildExtensionAttributeBase, IOnBuild
         Console.Write($"\x1b]9;4;{state};{progress}\x07");
     }
 
-    private static short ProgressPercent(IReadOnlyCollection<ExecutableTarget> plan, ref int step)
-    {
-        if (NukeBuild.IsServerBuild) return 0;
-        var total = plan.Count + 1;
-
-        /* Unmerged change from project 'Rocket.Surgery.Nuke(net9.0)'
-        Before:
-                return (short)Math.Round(( (double)step++ / total ) * 100);
-        After:
-                return (short)Math.Round((double)step++ / total * 100);
-        */
-
-        /* Unmerged change from project 'Rocket.Surgery.Nuke(net9.0)'
-        Before:
-                return (short)Math.Round(( (double)step++ / total ) * 100);
-        After:
-                return (short)Math.Round((double)step++ / total * 100);
-        */
-
-/* Unmerged change from project 'Rocket.Surgery.Nuke(net9.0)'
-Before:
-        return (short)Math.Round(( (double)step++ / total ) * 100);
-After:
-        return (short)Math.Round((double)step++ / total * 100);
-*/
-        return (short)Math.Round(( (double)step++ / total ) * 100);
-    }
+    private static short ProgressPercent(IReadOnlyCollection<ExecutableTarget> plan, ref int step) =>
+        Convert.ToInt16(NukeBuild.IsServerBuild ? 0 : Math.Round( (double)step++ / ( (short)plan.Count + 1 )  * 100));
 
     private IReadOnlyCollection<ExecutableTarget> _plan = [];
     private int step;
