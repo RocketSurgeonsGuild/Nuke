@@ -1,6 +1,7 @@
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
+
 using Rocket.Surgery.Nuke.GithubActions;
 
 namespace Rocket.Surgery.Nuke.Jobs;
@@ -82,6 +83,7 @@ public sealed class CloseMilestoneJobAttribute : GitHubActionsStepsAttribute
             ]
         );
         build.Jobs.Add(job);
+        NormalizeActionVersions(build);
 
         return build;
     }
