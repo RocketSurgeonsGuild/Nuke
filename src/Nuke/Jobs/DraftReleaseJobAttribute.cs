@@ -79,6 +79,7 @@ public sealed class DraftReleaseJobAttribute : GitHubActionsStepsAttribute
             ]
         );
         build.Jobs.Add(job);
+        NormalizeActionVersions(build);
 
         return build;
     }

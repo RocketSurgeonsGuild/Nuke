@@ -52,6 +52,7 @@ public sealed class UpdateMilestoneJobAttribute : GitHubActionsStepsAttribute
             ]
         );
         build.Jobs.Add(job);
+        NormalizeActionVersions(build);
 
         return build;
     }
