@@ -1,6 +1,8 @@
 using Microsoft.Extensions.FileSystemGlobbing;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
+using Nuke.Common.Tools.ReSharper;
+using Nuke.Common.Utilities.Collections;
 using Serilog;
 using Serilog.Events;
 
@@ -43,17 +45,16 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                          );
 
                      if (LintPaths.Glob(DotnetFormatMatcher) is { Count: > 0 } values)
+                     {
                          foreach (var group in PathGrouper.GroupPaths(values))
                          {
                              DotNetTasks.DotNetFormat(formatSettings.AddInclude(group.Select(z => z.ToString())));
                          }
-                     else if (LintPaths.AllPaths.Glob(DotnetFormatMatcher) is { Count: > 0 } allFiles)
-                         foreach (var group in PathGrouper.GroupPaths(allFiles))
-                         {
-                             DotNetTasks.DotNetFormat(formatSettings.AddInclude(group.Select(z => z.ToString())));
-                         }
+                     }
                      else
+                     {
                          DotNetTasks.DotNetFormat(formatSettings);
+                     }
                  }
              );
 
@@ -93,7 +94,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                   .OnlyWhenStatic(
                        () => ( IsLocalBuild && LintPaths.Trigger != LintTrigger.Staged )
                         || !IsLocalBuild
-                        || ExecutionPlan.Contains(JetBrainsCleanupCode)
+                        || InvokedTargets.Contains(JetBrainsCleanupCode)
                    )
                   .ProceedAfterFailure()
                   .OnlyWhenDynamic(() => LintPaths.IsLocalLintOrMatches(JetBrainsCleanupCodeMatcher))
@@ -101,58 +102,63 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                   .Executes(
                        () =>
                        {
-                           if (LintPaths.Glob(JetBrainsCleanupCodeMatcher) is { Count: > 0 } files)
-                           {
-                               foreach (var group in PathGrouper.GroupPaths(files))
-                               {
-                                   var arguments = new Arguments()
-                                                  .Add("cleanupcode")
-                                                  .Add(Solution.Path)
-                                                  .Add("--profile={value}", JetBrainsCleanupCodeProfile)
-                                                  .Add(
-                                                       "--disable-settings-layers={value}",
-                                                       "GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal"
-                                                   );
-                                   runCodeCleanup(
-                                       arguments
-                                          .Add("--include={value}", group.Select(z => z.ToString()), ';')
-                                          .RenderForExecution()
+                           var cleanupCodeSettings = new ReSharperCleanupCodeSettings()
+                                                    .SetTargetPath(Solution.Path)
+                                                    .SetProcessWorkingDirectory(RootDirectory)
+                                                    .SetProfile(JetBrainsCleanupCodeProfile)
+                                                    .SetDisableSettingsLayers("GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal")
+                               ;
+
+                           if (LintPaths.Glob(JetBrainsCleanupCodeMatcher) is { Count: > 0, } files)
+                               PathGrouper
+                                  .GroupPaths(files)
+                                  .ForEach(
+                                       group => ReSharperTasks.ReSharperCleanupCode(
+                                           cleanupCodeSettings.SetInclude(group.Select(z => z.ToString()))
+                                       )
                                    );
-                               }
-                           }
-                           else if (LintPaths.AllPaths.Glob(JetBrainsCleanupCodeMatcher) is { Count: > 0 } allFiles)
-                           {
-                               foreach (var group in PathGrouper.GroupPaths(allFiles))
-                               {
-                                   var arguments = new Arguments()
-                                                  .Add("cleanupcode")
-                                                  .Add(Solution.Path)
-                                                  .Add("--profile={value}", JetBrainsCleanupCodeProfile)
-                                                  .Add(
-                                                       "--disable-settings-layers={value}",
-                                                       "GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal"
-                                                   );
-                                   runCodeCleanup(
-                                       arguments
-                                          .Add("--include={value}", group.Select(z => z.ToString()), ';')
-                                          .RenderForExecution()
-                                   );
-                               }
-                           }
+
                            else
-                           {
-                               var arguments = new Arguments()
-                                              .Add("cleanupcode")
-                                              .Add(Solution.Path)
-                                              .Add("--profile={value}", JetBrainsCleanupCodeProfile)
-                                              .Add(
-                                                   "--disable-settings-layers={value}",
-                                                   "GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal"
-                                               );
-                               runCodeCleanup(arguments.RenderForStringHandler());
-                           }
+                               ReSharperTasks.ReSharperCleanupCode(cleanupCodeSettings);
                        }
                    );
+//                  .Executes(
+//                       () =>
+//                       {
+//                           if (LintPaths.Glob(JetBrainsCleanupCodeMatcher) is { Count: > 0 } files)
+//                           {
+//                               foreach (var group in PathGrouper.GroupPaths(files))
+//                               {
+//                                   var arguments = new Arguments()
+//                                                  .Add("cleanupcode")
+//                                                  .Add(Solution.Path)
+//                                                  .Add("--profile={value}", JetBrainsCleanupCodeProfile)
+//                                                  .Add(
+//                                                       "--disable-settings-layers={value}",
+//                                                       "GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal"
+//                                                   );
+//                                   runCodeCleanup(
+//                                       arguments
+//                                          .Add("--include={value}", group.Select(z => z.ToString()), ';')
+//                                          .RenderForExecution()
+//                                   );
+//                               }
+//                           }
+//                           else
+//                           {
+//                               var arguments = new Arguments()
+//                                              .Add("cleanupcode")
+//                                              .Add(Solution.Path)
+//                                              .Add("--profile={value}", JetBrainsCleanupCodeProfile)
+//                                              .Add(
+//                                                   "--disable-settings-layers={value}",
+//                                                   "GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal"
+//                                               );
+//                               runCodeCleanup(arguments.RenderForStringHandler());
+//                           }
+//                       }
+//                   )
+
 
             static IReadOnlyCollection<Output> runCodeCleanup(ArgumentStringHandler args)
             {

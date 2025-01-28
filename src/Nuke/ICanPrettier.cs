@@ -25,7 +25,7 @@ public interface ICanPrettier : ICanLint
             .Executes(
                  () =>
                  {
-                     var args = makeArgsForStagedFiles(LintPaths.Active ? LintPaths.Glob(PrettierMatcher) : LintPaths.AllPaths.Glob(PrettierMatcher));
+                     var args = makeArgsForStagedFiles(LintPaths.Glob(PrettierMatcher));
 
                      if (( NukeBuild.RootDirectory / "package.json" ).FileExists() && !NukeBuild.RootDirectory.ContainsDirectory("node_modules"))
                          ProcessTasks
