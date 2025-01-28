@@ -1,10 +1,9 @@
 using Microsoft.Extensions.FileSystemGlobbing;
+
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.ReSharper;
 using Nuke.Common.Utilities.Collections;
-using Serilog;
-using Serilog.Events;
 
 namespace Rocket.Surgery.Nuke.DotNetCore;
 
@@ -35,14 +34,18 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                          ;
 
                      if (DotNetFormatIncludedDiagnostics is { Count: > 0 })
+                     {
                          formatSettings = formatSettings.SetProcessAdditionalArguments(
                              ["--diagnostics", .. DotNetFormatIncludedDiagnostics]
                          );
+                     }
 
                      if (DotNetFormatExcludedDiagnostics is { Count: > 0 })
+                     {
                          formatSettings = formatSettings.SetProcessAdditionalArguments(
                              ["--exclude-diagnostics", .. DotNetFormatExcludedDiagnostics]
                          );
+                     }
 
                      if (LintPaths.Glob(DotnetFormatMatcher) is { Count: > 0 } values)
                      {
@@ -52,9 +55,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                          }
                      }
                      else
-                     {
                          DotNetTasks.DotNetFormat(formatSettings);
-                     }
                  }
              );
 
@@ -90,7 +91,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                   .Before(DotnetFormat)
                   .Before(PostLint)
                   .OnlyWhenStatic(() => DotNetTool.IsInstalled("jb"))
-                   // disable for local stagged runs, as it takes a long time.
+                  // disable for local stagged runs, as it takes a long time.
                   .OnlyWhenStatic(
                        () => ( IsLocalBuild && LintPaths.Trigger != LintTrigger.Staged )
                         || !IsLocalBuild
@@ -109,7 +110,8 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                                     .SetDisableSettingsLayers("GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal")
                                ;
 
-                           if (LintPaths.Glob(JetBrainsCleanupCodeMatcher) is { Count: > 0, } files)
+                           if (LintPaths.Glob(JetBrainsCleanupCodeMatcher) is { Count: > 0 } files)
+                           {
                                PathGrouper
                                   .GroupPaths(files)
                                   .ForEach(
@@ -117,7 +119,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                            cleanupCodeSettings.SetInclude(group.Select(z => z.ToString()))
                                        )
                                    );
-
+                           }
                            else
                                ReSharperTasks.ReSharperCleanupCode(cleanupCodeSettings);
                        }

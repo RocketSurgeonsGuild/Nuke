@@ -1,7 +1,10 @@
 using System.Collections.Immutable;
+
 using Microsoft.Extensions.FileSystemGlobbing;
+
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
+
 using Serilog;
 using Serilog.Events;
 
@@ -28,6 +31,7 @@ public interface ICanPrettier : ICanLint
                      var args = makeArgsForStagedFiles(LintPaths.Glob(PrettierMatcher));
 
                      if (( NukeBuild.RootDirectory / "package.json" ).FileExists() && !NukeBuild.RootDirectory.ContainsDirectory("node_modules"))
+                     {
                          ProcessTasks
                             .StartProcess(
                                  ToolPathResolver.GetPathExecutable("npm"),
@@ -36,6 +40,7 @@ public interface ICanPrettier : ICanLint
                              )
                             .AssertWaitForExit()
                             .AssertZeroExitCode();
+                     }
 
                      foreach (var group in args)
                      {
