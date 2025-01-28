@@ -122,58 +122,6 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                ReSharperTasks.ReSharperCleanupCode(cleanupCodeSettings);
                        }
                    );
-//                  .Executes(
-//                       () =>
-//                       {
-//                           if (LintPaths.Glob(JetBrainsCleanupCodeMatcher) is { Count: > 0 } files)
-//                           {
-//                               foreach (var group in PathGrouper.GroupPaths(files))
-//                               {
-//                                   var arguments = new Arguments()
-//                                                  .Add("cleanupcode")
-//                                                  .Add(Solution.Path)
-//                                                  .Add("--profile={value}", JetBrainsCleanupCodeProfile)
-//                                                  .Add(
-//                                                       "--disable-settings-layers={value}",
-//                                                       "GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal"
-//                                                   );
-//                                   runCodeCleanup(
-//                                       arguments
-//                                          .Add("--include={value}", group.Select(z => z.ToString()), ';')
-//                                          .RenderForExecution()
-//                                   );
-//                               }
-//                           }
-//                           else
-//                           {
-//                               var arguments = new Arguments()
-//                                              .Add("cleanupcode")
-//                                              .Add(Solution.Path)
-//                                              .Add("--profile={value}", JetBrainsCleanupCodeProfile)
-//                                              .Add(
-//                                                   "--disable-settings-layers={value}",
-//                                                   "GlobalAll;GlobalPerProduct;SolutionPersonal;ProjectPersonal"
-//                                               );
-//                               runCodeCleanup(arguments.RenderForStringHandler());
-//                           }
-//                       }
-//                   )
-
-
-            static IReadOnlyCollection<Output> runCodeCleanup(ArgumentStringHandler args)
-            {
-                return DotNetTool.GetTool("jb")(
-                    args,
-                    NukeBuild.RootDirectory,
-                    logOutput: true,
-                    logInvocation: NukeBuild.Verbosity == Verbosity.Verbose,
-                    // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-                    logger: static (t, s) => Log.Write(
-                                t == OutputType.Err ? LogEventLevel.Error : LogEventLevel.Information,
-                                s
-                            )
-                );
-            }
         };
 
     /// <summary>
