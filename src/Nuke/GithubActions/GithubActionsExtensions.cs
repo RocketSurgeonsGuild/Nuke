@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Reflection;
+
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
 using Nuke.Common.Execution;
@@ -235,6 +236,7 @@ public static class GithubActionsExtensions
     public static RocketSurgeonsGithubActionsJob PublishLogs<T>(this RocketSurgeonsGithubActionsJob job) where T : INukeBuild
     {
         if (typeof(IHaveOutputLogs).IsAssignableFrom(typeof(T)))
+        {
             AddStep(
                 job,
                 new UploadArtifactStep("Publish logs")
@@ -244,6 +246,7 @@ public static class GithubActionsExtensions
                     If = "always()",
                 }
             );
+        }
 
         if (typeof(IHaveTestArtifacts).IsAssignableFrom(typeof(T)))
         {
@@ -303,6 +306,7 @@ public static class GithubActionsExtensions
             );
 
             if (DotNetTool.IsInstalled("codecov.tool"))
+            {
                 AddStep(
                     job,
                     new UsingStep("Publish Codecov Coverage")
@@ -320,6 +324,7 @@ public static class GithubActionsExtensions
                         },
                     }
                 );
+            }
         }
 
         PublishArtifacts<T>(job);
@@ -363,7 +368,7 @@ public static class GithubActionsExtensions
     /// <returns></returns>
     public static RocketSurgeonsGithubActionsJob UseDotNetSdks(this RocketSurgeonsGithubActionsJob job, params string[] versions)
     {
-        foreach (var version in versions.Reverse())
+        foreach (var version in versions.AsEnumerable().Reverse())
         {
             job.UseDotNetSdk(version);
         }
