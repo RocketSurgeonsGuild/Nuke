@@ -1,5 +1,7 @@
 using Nuke.Common.Tools.NuGet;
+
 using Rocket.Surgery.Extensions.Testing;
+
 using Xunit;
 using Xunit.Abstractions;
 
