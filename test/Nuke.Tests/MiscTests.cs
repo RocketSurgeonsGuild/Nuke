@@ -1,6 +1,7 @@
-using FluentAssertions;
 using Nuke.Common.Tools.NuGet;
+
 using Rocket.Surgery.Extensions.Testing;
+
 using Xunit;
 using Xunit.Abstractions;
 
@@ -12,16 +13,16 @@ public class MiscTests(ITestOutputHelper outputHelper) : AutoFakeTest<XUnitTestC
     public void Test1()
     {
         var attr = new EnsurePackageSourceHasCredentialsAttribute("Source");
-        attr.SourceName.Should().Be("Source");
+        attr.SourceName.ShouldBe("Source");
     }
 
     [Fact]
     public void NuGetVerbosityMappingAttribute()
     {
         var attr = new NuGetVerbosityMappingAttribute();
-        attr.Quiet.Should().Be(nameof(NuGetVerbosity.Quiet));
-        attr.Minimal.Should().Be(nameof(NuGetVerbosity.Normal));
-        attr.Normal.Should().Be(nameof(NuGetVerbosity.Normal));
-        attr.Verbose.Should().Be(nameof(NuGetVerbosity.Detailed));
+        attr.Quiet.ShouldBe(nameof(NuGetVerbosity.Quiet));
+        attr.Minimal.ShouldBe(nameof(NuGetVerbosity.Normal));
+        attr.Normal.ShouldBe(nameof(NuGetVerbosity.Normal));
+        attr.Verbose.ShouldBe(nameof(NuGetVerbosity.Detailed));
     }
 }

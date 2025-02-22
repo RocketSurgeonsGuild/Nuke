@@ -1,5 +1,5 @@
-using FluentAssertions;
 using Rocket.Surgery.Extensions.Testing;
+
 using Xunit;
 using Xunit.Abstractions;
 using static Nuke.Common.EnvironmentInfo;
@@ -13,6 +13,6 @@ public class GitVersionTests(ITestOutputHelper outputHelper) : AutoFakeTest<XUni
     {
         SetVariable("GITVERSION_SomeOtherValue", "someValue");
 
-        ComputedGitVersionAttribute.HasGitVer().Should().BeTrue();
+        ComputedGitVersionAttribute.HasGitVer().ShouldBe(true);
     }
 }
