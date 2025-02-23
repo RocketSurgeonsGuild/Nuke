@@ -20,7 +20,10 @@ public static class CustomFileWriterExtensions
         writer.WriteLine(key + ":");
         using (writer.Indent())
         {
-            dictionary.ForEach(z => WriteValue(writer, z));
+            foreach (var z in dictionary)
+            {
+                WriteValue(writer, z);
+            }
         }
     }
 
@@ -42,9 +45,6 @@ public static class CustomFileWriterExtensions
             return;
         }
 
-        if (value.Contains('\'', StringComparison.Ordinal))
-            writer.WriteLine($"{key}: \"{value}\"");
-        else
-            writer.WriteLine($"{key}: '{value}'");
+        writer.WriteLine(value.Contains('\'', StringComparison.Ordinal) ? $"{key}: \"{value}\"" : $"{key}: '{value}'");
     }
 }

@@ -30,6 +30,7 @@ internal partial class Pipeline : NukeBuild,
     IGenerateCodeCoverageReport,
     IGenerateCodeCoverageSummary,
     IGenerateCodeCoverageBadges,
+    IRemoveUnusedDependencies,
     IHaveConfiguration<Configuration>
 {
     /// <summary>

@@ -11,6 +11,7 @@
     <PackageReference Include="Nuke.Common" />
     <PackageReference Include="Serilog.Extensions.Logging" />
     <PackageReference Include="System.Collections.Immutable" />
+<!--    <PackageReference Include="System.Interactive" />-->
     <PackageReference Include="System.Interactive.Async" />
     <PackageReference Include="YamlDotNet" />
     <PackageReference Include="Humanizer.Core" />
