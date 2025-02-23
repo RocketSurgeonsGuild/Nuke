@@ -52,6 +52,7 @@
         "PostLint",
         "Prettier",
         "RegenerateBuildConfigurations",
+        "RemoveUnusedDependencies",
         "Restore",
         "ShipPublicApis",
         "Test",
