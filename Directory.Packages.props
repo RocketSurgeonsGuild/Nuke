@@ -22,7 +22,7 @@
         <GlobalPackageReference Include="xunit.analyzers" Version="1.21.0" />
     </ItemGroup>
     <ItemGroup>
-        <PackageVersion Include="JetBrains.ExternalAnnotations" Version="10.2.158" />
+        <PackageVersion Include="JetBrains.ExternalAnnotations" Version="10.2.161" />
         <PackageVersion Include="JetBrains.Annotations" Version="2024.3.0" />
         <PackageVersion Include="JetBrains.dotCover.CommandLineTools" Version="2024.3.7" />
         <PackageVersion Include="JetBrains.ReSharper.GlobalTools" Version="2024.3.7" />
