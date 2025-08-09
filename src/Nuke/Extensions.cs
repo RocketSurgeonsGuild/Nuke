@@ -310,6 +310,11 @@ public static class Extensions
     public static bool DisableNet9MsBuildFix { get; set; }
 
     /// <summary>
+    ///     allow disabling dotnet workload restore.
+    /// </summary>
+    public static bool EnableDotNetWorkloadRestore { get; set; }
+
+    /// <summary>
     ///     allow disabling the temporary fix for net9 msbuild issues
     /// </summary>
     public static bool EnableNet9MsBuildFix { get; set; }

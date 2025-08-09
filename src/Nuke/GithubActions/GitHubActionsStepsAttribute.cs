@@ -252,14 +252,16 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         {
             Run = "dotnet tool install -g Nuke.GlobalTool",
         };
-        // TODO: Add configuration to disable this?
-        steps.Add(
-            new RunStep("dotnet workload restore")
-            {
-                Run = "dotnet workload restore",
-                ContinueOnError = true,
-            }
-        );
+
+        if (Extensions.EnableDotNetWorkloadRestore)
+            steps.Add(
+                new RunStep("dotnet workload restore")
+                {
+                    Run = "dotnet workload restore",
+                    ContinueOnError = true,
+                }
+            );
+
         var dotnetTools = Path.Combine(NukeBuild.RootDirectory, ".config/dotnet-tools.json");
         if (File.Exists(dotnetTools))
         {
