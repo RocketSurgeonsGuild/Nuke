@@ -19,7 +19,7 @@
         <GlobalPackageReference Include="Roslynator.CodeFixes" Version="4.13.1" />
         <GlobalPackageReference Include="Roslynator.Refactorings" Version="4.13.1" />
         <GlobalPackageReference Include="FakeItEasy.Analyzer.CSharp" Version="6.1.1" />
-        <GlobalPackageReference Include="xunit.analyzers" Version="1.22.0" />
+        <GlobalPackageReference Include="xunit.analyzers" Version="1.24.0" />
     </ItemGroup>
     <ItemGroup>
         <PackageVersion Include="JetBrains.ExternalAnnotations" Version="10.2.162" />
@@ -53,7 +53,7 @@
         <PackageVersion Include="Rocket.Surgery.Extensions.Testing.FakeItEasy" Version="9.0.5" />
         <PackageVersion Include="Rocket.Surgery.Extensions.Testing.XUnit" Version="9.0.5" />
         <PackageVersion Include="xunit" Version="2.9.3" />
-        <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.1" />
+        <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.4" />
     </ItemGroup>
     <Import
         Project="$(MSBuildThisFileDirectory)/Directory.Packages.support.props"
