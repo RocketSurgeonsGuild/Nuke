@@ -58,7 +58,9 @@ public static class DotNetTool
         }
         else
         {
-            toolsManifest = new([], []);
+            var definitions = ImmutableDictionary<string, ToolDefinition>.Empty;
+            var otherDefinitions = ImmutableDictionary<string, FullToolCommandDefinition>.Empty;
+            toolsManifest = new(definitions, otherDefinitions);
         }
 
         return toolsManifest;
