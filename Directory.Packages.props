@@ -39,7 +39,7 @@
         <PackageVersion Include="GitVersion.Tool" Version="6.3.0" />
         <PackageVersion Include="Humanizer.Core" Version="2.14.1" />
         <PackageVersion Include="Nuke.Common" Version="9.0.4" />
-        <PackageVersion Include="ReportGenerator" Version="5.4.8" />
+        <PackageVersion Include="ReportGenerator" Version="5.4.12" />
         <PackageVersion Include="Serilog.Extensions.Logging" Version="9.0.2" />
         <PackageVersion Include="YamlDotNet" Version="16.3.0" />
         <PackageVersion Include="System.Collections.Immutable" Version="9.0.8" />
