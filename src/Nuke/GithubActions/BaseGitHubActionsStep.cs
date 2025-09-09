@@ -48,14 +48,21 @@ public abstract class BaseGitHubActionsStep : GitHubActionsStep
     /// <summary>
     ///     The outputs of this step
     /// </summary>
-    #pragma warning disable CA1002
+#pragma warning disable CA1002
     public List<GitHubActionsOutput> Outputs { get; set; } = [];
-    #pragma warning restore CA1002
+#pragma warning restore CA1002
 
     /// <summary>
     ///     The step name
     /// </summary>
     public string StepName { get; }
+
+    /// <summary>
+    ///     Configure the step name
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    protected virtual string ComputeStepName(string name) => Symbols.StepName(name);
 
     /// <summary>
     ///     The default constructor
@@ -67,11 +74,4 @@ public abstract class BaseGitHubActionsStep : GitHubActionsStep
         if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
         StepName = name;
     }
-
-    /// <summary>
-    ///     Configure the step name
-    /// </summary>
-    /// <param name="name"></param>
-    /// <returns></returns>
-    protected virtual string ComputeStepName(string name) => Symbols.StepName(name);
 }

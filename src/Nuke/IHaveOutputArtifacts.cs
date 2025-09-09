@@ -10,5 +10,5 @@ public interface IHaveOutputArtifacts : IHaveArtifacts
     /// <summary>
     ///     The directory where packaged output should be placed (zip, webdeploy, etc)
     /// </summary>
-    public AbsolutePath OutputArtifactsDirectory => ArtifactsDirectory / "output";
+    AbsolutePath OutputArtifactsDirectory => ArtifactsDirectory / "output";
 }

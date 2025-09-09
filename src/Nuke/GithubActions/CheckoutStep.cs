@@ -5,18 +5,12 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// </summary>
 public class CheckoutStep : UsingStep
 {
-    /// <summary>
-    ///     Uses the checkout resource action
-    /// </summary>
-    /// <param name="name"></param>
-    public CheckoutStep(string name) : base(name) => Uses = "actions/checkout@v4";
-
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
-        #pragma warning disable CA1308
+#pragma warning disable CA1308
         WithProperties(x => x.Kebaberize());
-        #pragma warning restore CA1308
+#pragma warning restore CA1308
         base.Write(writer);
     }
 
@@ -123,4 +117,10 @@ public class CheckoutStep : UsingStep
     /// </summary>
     /// <remarks>Default: ${{ github.token }}</remarks>
     public string? Token { get; set; }
+
+    /// <summary>
+    ///     Uses the checkout resource action
+    /// </summary>
+    /// <param name="name"></param>
+    public CheckoutStep(string name) : base(name) => Uses = "actions/checkout@v4";
 }

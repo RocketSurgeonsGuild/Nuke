@@ -7,11 +7,6 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// </summary>
 public class RocketSurgeonsGithubActionsDefaults : ConfigurationEntity
 {
-    /// <summary>
-    ///     The defaults of run
-    /// </summary>
-    public RocketSurgeonsGithubActionsDefaultsRun? Run { get; set; }
-
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
@@ -20,4 +15,9 @@ public class RocketSurgeonsGithubActionsDefaults : ConfigurationEntity
         writer.WriteLine("run:");
         Run.Write(writer);
     }
+
+    /// <summary>
+    ///     The defaults of run
+    /// </summary>
+    public RocketSurgeonsGithubActionsDefaultsRun? Run { get; set; }
 }

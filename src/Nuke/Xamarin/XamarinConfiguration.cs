@@ -1,4 +1,5 @@
 using System.ComponentModel;
+
 using Nuke.Common.Tooling;
 
 #pragma warning disable CA2211 // Non-constant fields should not be visible

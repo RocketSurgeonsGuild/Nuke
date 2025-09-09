@@ -11,7 +11,7 @@ public interface IHaveArtifacts : IHave
     ///     The directory where artifacts are to be dropped
     /// </summary>
     [Parameter("The directory where artifacts are to be dropped", Name = "Artifacts")]
-    public AbsolutePath ArtifactsDirectory => EnvironmentInfo.GetVariable<AbsolutePath>("Artifacts")
+    AbsolutePath ArtifactsDirectory => EnvironmentInfo.GetVariable<AbsolutePath>("Artifacts")
      ?? TryGetValue(() => ArtifactsDirectory)
      ?? NukeBuild.RootDirectory / "artifacts";
 }

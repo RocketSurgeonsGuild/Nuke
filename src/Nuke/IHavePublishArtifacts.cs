@@ -10,5 +10,5 @@ public interface IHavePublishArtifacts : IHaveArtifacts
     /// <summary>
     ///     The directory where publish output should be placed
     /// </summary>
-    public AbsolutePath PublishDirectory => ArtifactsDirectory / "publish";
+    AbsolutePath PublishDirectory => ArtifactsDirectory / "publish";
 }

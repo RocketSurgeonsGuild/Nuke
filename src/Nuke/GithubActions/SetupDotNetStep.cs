@@ -7,14 +7,6 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 [PublicAPI]
 public class SetupDotNetStep : UsingStep
 {
-    /// <summary>
-    ///     The default constructor
-    /// </summary>
-    /// <param name="name"></param>
-    public SetupDotNetStep(string name) : base(name) =>
-        // temporary to deal with sxs issue roll back once https://github.com/actions/setup-dotnet/pull/71 is merged
-        Uses = "actions/setup-dotnet@v4";
-
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
@@ -59,4 +51,12 @@ public class SetupDotNetStep : UsingStep
     ///     NuGet.config using the NUGET_AUTH_TOKEN environment variable as a ClearTextPassword
     /// </summary>
     public string? SourceUrl { get; set; }
+
+    /// <summary>
+    ///     The default constructor
+    /// </summary>
+    /// <param name="name"></param>
+    public SetupDotNetStep(string name) : base(name) =>
+        // temporary to deal with sxs issue roll back once https://github.com/actions/setup-dotnet/pull/71 is merged
+        Uses = "actions/setup-dotnet@v4";
 }

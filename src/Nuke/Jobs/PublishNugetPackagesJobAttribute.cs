@@ -1,7 +1,9 @@
 using System.Collections.Immutable;
+
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
+
 using Rocket.Surgery.Nuke.GithubActions;
 
 #pragma warning disable RS0026, RS0027
@@ -15,52 +17,6 @@ namespace Rocket.Surgery.Nuke.Jobs;
 [AttributeUsage(AttributeTargets.Class)]
 public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribute
 {
-    /// <summary>
-    ///     Adds draft release support to the build
-    /// </summary>
-    public PublishNugetPackagesJobAttribute(string secretKey, string triggeringWorkflow, string[]? includeBranches = null, string? nugetOrgCondition = null) : base(
-        "publish-nuget",
-        GitHubActionsImage.UbuntuLatest
-    )
-    {
-        _secretKey = secretKey;
-        _triggeringWorkflow = triggeringWorkflow;
-        _nugetOrgCondition = nugetOrgCondition ?? _nugetOrgCondition;
-        _includeBranches = [.. includeBranches ?? []];
-        AutoGenerate = false;
-    }
-
-    /// <summary>
-    ///     Adds draft release support to the build
-    /// </summary>
-    public PublishNugetPackagesJobAttribute(string secretKey, string triggeringWorkflow, string[] includeBranches, string? nugetOrgCondition, string image, params string[] images) : base(
-        "publish-nuget",
-        image,
-        images
-    )
-    {
-        _secretKey = secretKey;
-        _triggeringWorkflow = triggeringWorkflow;
-        _nugetOrgCondition = nugetOrgCondition ?? _nugetOrgCondition;
-        _includeBranches = [.. includeBranches];
-        AutoGenerate = false;
-    }
-
-    /// <summary>
-    ///     Adds draft release support to the build
-    /// </summary>
-    public PublishNugetPackagesJobAttribute(string secretKey, string triggeringWorkflow, GitHubActionsImage image, string[]? includeBranches = null, string? nugetOrgCondition = null) : base(
-        "publish-nuget",
-        image
-    )
-    {
-        _secretKey = secretKey;
-        _triggeringWorkflow = triggeringWorkflow;
-        _nugetOrgCondition = nugetOrgCondition ?? _nugetOrgCondition;
-        _includeBranches = [.. includeBranches ?? []];
-        AutoGenerate = false;
-    }
-
     /// <inheritdoc />
     public override ConfigurationEntity GetConfiguration(IReadOnlyCollection<ExecutableTarget> relevantTargets)
     {
@@ -115,6 +71,52 @@ public sealed class PublishNugetPackagesJobAttribute : GitHubActionsStepsAttribu
         );
 
         return build;
+    }
+
+    /// <summary>
+    ///     Adds draft release support to the build
+    /// </summary>
+    public PublishNugetPackagesJobAttribute(string secretKey, string triggeringWorkflow, string[]? includeBranches = null, string? nugetOrgCondition = null) : base(
+        "publish-nuget",
+        GitHubActionsImage.UbuntuLatest
+    )
+    {
+        _secretKey = secretKey;
+        _triggeringWorkflow = triggeringWorkflow;
+        _nugetOrgCondition = nugetOrgCondition ?? _nugetOrgCondition;
+        _includeBranches = [.. includeBranches ?? []];
+        AutoGenerate = false;
+    }
+
+    /// <summary>
+    ///     Adds draft release support to the build
+    /// </summary>
+    public PublishNugetPackagesJobAttribute(string secretKey, string triggeringWorkflow, string[] includeBranches, string? nugetOrgCondition, string image, params string[] images) : base(
+        "publish-nuget",
+        image,
+        images
+    )
+    {
+        _secretKey = secretKey;
+        _triggeringWorkflow = triggeringWorkflow;
+        _nugetOrgCondition = nugetOrgCondition ?? _nugetOrgCondition;
+        _includeBranches = [.. includeBranches];
+        AutoGenerate = false;
+    }
+
+    /// <summary>
+    ///     Adds draft release support to the build
+    /// </summary>
+    public PublishNugetPackagesJobAttribute(string secretKey, string triggeringWorkflow, GitHubActionsImage image, string[]? includeBranches = null, string? nugetOrgCondition = null) : base(
+        "publish-nuget",
+        image
+    )
+    {
+        _secretKey = secretKey;
+        _triggeringWorkflow = triggeringWorkflow;
+        _nugetOrgCondition = nugetOrgCondition ?? _nugetOrgCondition;
+        _includeBranches = [.. includeBranches ?? []];
+        AutoGenerate = false;
     }
 
     private readonly ImmutableArray<string> _includeBranches;

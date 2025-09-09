@@ -15,7 +15,7 @@ public interface ICIEnvironment : IHaveBuildVersion
     /// <remarks>
     ///     Replace default implementation to add values not covered by default
     /// </remarks>
-    public IEnumerable<string> WellKnownEnvironmentVariablePrefixes => new[]
+    IEnumerable<string> WellKnownEnvironmentVariablePrefixes => new[]
     {
         // Azure pipelines
         "CIRCLE", "GITHUB", "APPVEYOR", "TRAVIS", "BITRISE", "BAMBOO", "GITLAB", "JENKINS", "TEAMCITY",
@@ -26,23 +26,23 @@ public interface ICIEnvironment : IHaveBuildVersion
     ///     Prints CI environment state for debug purposes
     /// </summary>
     [NonEntryTarget]
-    public Target CIEnvironment => d => d
-                                       .Unlisted()
-                                       .OnlyWhenStatic(() => NukeBuild.IsServerBuild)
-                                       .Executes(
-                                            () =>
-                                            {
-                                                Log.Information("CI: {CI}", EnvironmentInfo.GetVariable<string>("CI"));
-
-                                                foreach (var variable in WellKnownEnvironmentVariablePrefixes
-                                                            .SelectMany(
-                                                                 prefix => EnvironmentInfo.Variables.Keys.Where(
-                                                                     key => key.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)
-                                                                 )
-                                                             ))
+    Target CIEnvironment => d => d
+                                           .Unlisted()
+                                           .OnlyWhenStatic(() => NukeBuild.IsServerBuild)
+                                           .Executes(
+                                                () =>
                                                 {
-                                                    Log.Information("{Key}: {Value}", variable, EnvironmentInfo.Variables[variable]);
+                                                    Log.Information("CI: {CI}", EnvironmentInfo.GetVariable<string>("CI"));
+
+                                                    foreach (var variable in WellKnownEnvironmentVariablePrefixes
+                                                                .SelectMany(
+                                                                     prefix => EnvironmentInfo.Variables.Keys.Where(
+                                                                         key => key.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)
+                                                                     )
+                                                                 ))
+                                                    {
+                                                        Log.Information("{Key}: {Value}", variable, EnvironmentInfo.Variables[variable]);
+                                                    }
                                                 }
-                                            }
-                                        );
+                                            );
 }

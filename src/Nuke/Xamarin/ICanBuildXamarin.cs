@@ -16,19 +16,19 @@ public interface ICanBuildXamarin : IHaveRestoreTarget,
     /// <summary>
     ///     msbuild
     /// </summary>
-    public Target Build => d => d
-                               .DependsOn(Restore)
-                               .Executes(
-                                    () => MSBuild(
-                                        settings =>
-                                            settings
-                                               .SetSolutionFile(Solution)
-                                               .SetTargetPlatform(MSBuildTargetPlatform.x64)
-                                               .SetConfiguration(Configuration)
-                                               .SetDefaultLoggers(LogsDirectory / "build.log")
-                                               .SetGitVersionEnvironment(GitVersion)
-                                               .SetAssemblyVersion(GitVersion.AssemblyVersion())
-                                               .SetPackageVersion(GitVersion.PackageVersion())
-                                    )
-                                );
+    Target Build => d => d
+                        .DependsOn(Restore)
+                        .Executes(
+                             () => MSBuild(
+                                 settings =>
+                                     settings
+                                        .SetSolutionFile(Solution)
+                                        .SetTargetPlatform(MSBuildTargetPlatform.x64)
+                                        .SetConfiguration(Configuration)
+                                        .SetDefaultLoggers(LogsDirectory / "build.log")
+                                        .SetGitVersionEnvironment(GitVersion)
+                                        .SetAssemblyVersion(GitVersion.AssemblyVersion())
+                                        .SetPackageVersion(GitVersion.PackageVersion())
+                             )
+                         );
 }

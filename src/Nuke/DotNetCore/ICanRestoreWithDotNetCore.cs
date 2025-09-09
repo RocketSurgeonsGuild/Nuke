@@ -20,32 +20,32 @@ public interface ICanRestoreWithDotNetCore : IHaveCleanTarget,
     ///     dotnet restore
     /// </summary>
     [NonEntryTarget]
-    public Target DotnetCoreRestore => d => d
-                                           .Description("Restores the dependencies.")
-                                           .Unlisted()
-                                           .TryDependentFor<IHaveRestoreTarget>(a => a.Restore)
-                                           .After(Clean)
-                                           .DependsOn(DotnetToolRestore)
-                                           .Net9MsBuildFix()
-                                           .Executes(
-                                                () => DotNetRestore(
-                                                    s => s
-                                                        .SetProcessWorkingDirectory(RootDirectory)
-                                                        .SetProjectFile(Solution)
-                                                        .SetDefaultLoggers(LogsDirectory / "restore.log")
-                                                        .SetGitVersionEnvironment(GitVersion)
-                                                )
-                                            );
+    Target DotnetCoreRestore => d => d
+                                               .Description("Restores the dependencies.")
+                                               .Unlisted()
+                                               .TryDependentFor<IHaveRestoreTarget>(a => a.Restore)
+                                               .After(Clean)
+                                               .DependsOn(DotnetToolRestore)
+                                               .Net9MsBuildFix()
+                                               .Executes(
+                                                    () => DotNetRestore(
+                                                        s => s
+                                                            .SetProcessWorkingDirectory(RootDirectory)
+                                                            .SetProjectFile(Solution)
+                                                            .SetDefaultLoggers(LogsDirectory / "restore.log")
+                                                            .SetGitVersionEnvironment(GitVersion)
+                                                    )
+                                                );
 
     /// <summary>
     ///     This will ensure that all local dotnet tools are installed
     /// </summary>
     [ExcludeTarget]
     [NonEntryTarget]
-    public Target DotnetToolRestore => d => d
-                                           .Unlisted()
-                                           .After(Clean)
-                                           .TryDependentFor<IHaveRestoreTarget>(a => a.Restore)
-                                           .OnlyWhenStatic(() => ( NukeBuild.RootDirectory / ".config" / "dotnet-tools.json" ).FileExists())
-                                           .Executes(() => DotNet("tool restore", RootDirectory));
+    Target DotnetToolRestore => d => d
+                                               .Unlisted()
+                                               .After(Clean)
+                                               .TryDependentFor<IHaveRestoreTarget>(a => a.Restore)
+                                               .OnlyWhenStatic(() => ( NukeBuild.RootDirectory / ".config" / "dotnet-tools.json" ).FileExists())
+                                               .Executes(() => DotNet("tool restore", RootDirectory));
 }

@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using System.Text.Json;
+
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 
@@ -45,19 +46,19 @@ public static class DotNetTool
 
         if (ToolsManifestLocation.Value.FileExists())
         {
-            #pragma warning disable CA1869
+#pragma warning disable CA1869
             var manifest =
                 // ReSharper disable once NullableWarningSuppressionIsUsed
                 JsonSerializer.Deserialize<ToolsManifset>(
                     File.ReadAllText(ToolsManifestLocation.Value),
                     new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }
                 )!;
-            #pragma warning restore CA1869
+#pragma warning restore CA1869
             toolsManifest = ResolvedToolsManifest.Create(manifest);
         }
         else
         {
-            toolsManifest = new(ImmutableDictionary<string, ToolDefinition>.Empty, ImmutableDictionary<string, FullToolCommandDefinition>.Empty);
+            toolsManifest = new([], []);
         }
 
         return toolsManifest;

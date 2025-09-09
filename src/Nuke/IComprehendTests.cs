@@ -34,5 +34,5 @@ public interface IComprehendTests : IComprehend
     /// <summary>
     ///     The coverage data collector
     /// </summary>
-    public string DataCollector => "Code Coverage";
+    string DataCollector => "Code Coverage";
 }

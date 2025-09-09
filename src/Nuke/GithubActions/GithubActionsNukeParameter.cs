@@ -8,6 +8,12 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// </summary>
 public class GithubActionsNukeParameter : ConfigurationEntity
 {
+    /// <inheritdoc />
+    public override void Write(CustomFileWriter writer)
+    {
+        using var a = writer.WriteBlock($"{Name}: '{Default}'");
+    }
+
     // ReSharper disable once NullableWarningSuppressionIsUsed
     /// <summary>
     ///     The name
@@ -19,10 +25,4 @@ public class GithubActionsNukeParameter : ConfigurationEntity
     ///     The default value of the parameter
     /// </summary>
     public string Default { get; set; } = null!;
-
-    /// <inheritdoc />
-    public override void Write(CustomFileWriter writer)
-    {
-        using var a = writer.WriteBlock($"{Name}: '{Default}'");
-    }
 }

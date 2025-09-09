@@ -13,21 +13,6 @@ namespace Rocket.Surgery.Nuke.Jobs;
 [AttributeUsage(AttributeTargets.Class)]
 public sealed class UpdateMilestoneJobAttribute : GitHubActionsStepsAttribute
 {
-    /// <summary>
-    ///     Adds update milestone support to the build
-    /// </summary>
-    public UpdateMilestoneJobAttribute() : base("update-milestone", GitHubActionsImage.UbuntuLatest) => AutoGenerate = false;
-
-    /// <summary>
-    ///     Adds update milestone support to the build
-    /// </summary>
-    public UpdateMilestoneJobAttribute(string image, params string[] images) : base("update-milestone", image, images) => AutoGenerate = false;
-
-    /// <summary>
-    ///     Adds update milestone support to the build
-    /// </summary>
-    public UpdateMilestoneJobAttribute(GitHubActionsImage image) : base("update-milestone", image) => AutoGenerate = false;
-
     /// <inheritdoc />
     public override ConfigurationEntity GetConfiguration(IReadOnlyCollection<ExecutableTarget> relevantTargets)
     {
@@ -57,4 +42,19 @@ public sealed class UpdateMilestoneJobAttribute : GitHubActionsStepsAttribute
 
         return build;
     }
+
+    /// <summary>
+    ///     Adds update milestone support to the build
+    /// </summary>
+    public UpdateMilestoneJobAttribute() : base("update-milestone", GitHubActionsImage.UbuntuLatest) => AutoGenerate = false;
+
+    /// <summary>
+    ///     Adds update milestone support to the build
+    /// </summary>
+    public UpdateMilestoneJobAttribute(string image, params string[] images) : base("update-milestone", image, images) => AutoGenerate = false;
+
+    /// <summary>
+    ///     Adds update milestone support to the build
+    /// </summary>
+    public UpdateMilestoneJobAttribute(GitHubActionsImage image) : base("update-milestone", image) => AutoGenerate = false;
 }

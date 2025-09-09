@@ -1,4 +1,5 @@
 using System.Text;
+
 using Nuke.Common.Tooling;
 
 namespace Rocket.Surgery.Nuke;
@@ -47,16 +48,13 @@ public sealed class Arguments : IArguments
 
         argumentFormat = argumentFormat.Replace("{value}", "{0}");
 
-        string Format(T value)
-        {
-            return value.ToString().DoubleQuoteIfNeeded(separator, disallowed, Space);
-        }
+        string Format(T value) => value.ToString().DoubleQuoteIfNeeded(separator, disallowed, Space);
 
         AddInternal(
             argumentFormat,
             separator.HasValue
                 ? [FormatMultiple(list, Format, separator.Value, quoteMultiple)]
-                : list.Select(Format).ToArray()
+                : [.. list.Select(Format)]
         );
 
         return this;
@@ -77,17 +75,11 @@ public sealed class Arguments : IArguments
         var keyValueSeparator = itemFormat.Replace("{key}", "").Replace("{value}", "");
         Assert.True(keyValueSeparator.Length == 1);
 
-        string Format(object value)
-        {
-            return value.ToString().DoubleQuoteIfNeeded(separator, keyValueSeparator.Single(), disallowed, Space);
-        }
+        string Format(object value) => value.ToString().DoubleQuoteIfNeeded(separator, keyValueSeparator.Single(), disallowed, Space);
 
-        string FormatPair(KeyValuePair<TKey, TValue> pair)
-        {
-            return itemFormat
-                  .Replace("{key}", Format(pair!.Key))
-                  .Replace("{value}", Format(pair!.Value));
-        }
+        string FormatPair(KeyValuePair<TKey, TValue> pair) => itemFormat
+            .Replace("{key}", Format(pair!.Key))
+            .Replace("{value}", Format(pair!.Value));
 
         var pairs = dictionary.Where(x => x.Value is { }).ToList();
 
@@ -95,7 +87,7 @@ public sealed class Arguments : IArguments
             argumentFormat,
             separator.HasValue
                 ? [FormatMultiple(pairs, FormatPair, separator.Value, quoteMultiple)]
-                : pairs.Select(FormatPair).ToArray()
+                : [.. pairs.Select(FormatPair)]
         );
 
         return this;
@@ -116,17 +108,11 @@ public sealed class Arguments : IArguments
         var listSeparator = itemFormat.Replace("{key}", "").Replace("{value}", "");
         Assert.True(listSeparator.Length == 1);
 
-        string Format(object value)
-        {
-            return value?.ToString().DoubleQuoteIfNeeded(separator, listSeparator.Single(), disallowed, Space);
-        }
+        string Format(object value) => value?.ToString().DoubleQuoteIfNeeded(separator, listSeparator.Single(), disallowed, Space);
 
-        string FormatLookup(TKey key, string values)
-        {
-            return itemFormat
-                  .Replace("{key}", Format(key!))
-                  .Replace("{value}", values);
-        }
+        string FormatLookup(TKey key, string values) => itemFormat
+            .Replace("{key}", Format(key!))
+            .Replace("{value}", values);
 
         foreach (var list in lookup)
         {
@@ -134,7 +120,7 @@ public sealed class Arguments : IArguments
                 argumentFormat,
                 separator.HasValue
                     ? [FormatLookup(list.Key, FormatMultiple(list, x => Format(x!), separator.NotNull().Value, quoteMultiple))]
-                    : list.Select(x => FormatLookup(list.Key, Format(x!))).ToArray()
+                    : [.. list.Select(x => FormatLookup(list.Key, Format(x!)))]
             );
         }
 
@@ -187,12 +173,9 @@ public sealed class Arguments : IArguments
 
     private string Render(bool forOutput)
     {
-        string Format(string argument)
-        {
-            return !_secrets.Contains(argument) || !forOutput
-                ? argument
-                : Redacted;
-        }
+        string Format(string argument) => !_secrets.Contains(argument) || !forOutput
+            ? argument
+            : Redacted;
 
         var builder = new StringBuilder();
         foreach (var argumentPair in _arguments)

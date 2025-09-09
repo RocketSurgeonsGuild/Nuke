@@ -2,10 +2,6 @@ namespace Rocket.Surgery.Nuke.Readme;
 
 internal class GitHubActionsHistory : IHistorySection
 {
-    public string Name { get; } = "GitHub Actions";
-
-    public string ConfigKey { get; } = "github";
-
     public (string badge, string history) Process(
         IDictionary<object, object?> config,
         IMarkdownReferences references,
@@ -27,6 +23,10 @@ internal class GitHubActionsHistory : IHistorySection
             "GitHub Actions History"
         );
 
-        return ( $"[!{badge}]{url}", $"[!{historyBadge}]{url}" );
+        return ($"[!{badge}]{url}", $"[!{historyBadge}]{url}");
     }
+
+    public string Name { get; } = "GitHub Actions";
+
+    public string ConfigKey { get; } = "github";
 }

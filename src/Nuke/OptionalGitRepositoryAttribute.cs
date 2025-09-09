@@ -1,6 +1,8 @@
 using System.Reflection;
+
 using Nuke.Common.Git;
 using Nuke.Common.IO;
+
 using Serilog;
 
 namespace Rocket.Surgery.Nuke;

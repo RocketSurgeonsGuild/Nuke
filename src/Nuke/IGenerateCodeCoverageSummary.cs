@@ -12,29 +12,29 @@ public interface IGenerateCodeCoverageSummary : ITriggerCodeCoverageReports, IGe
     /// <summary>
     ///     The directory where the summary will be places
     /// </summary>
-    public AbsolutePath CoverageSummaryDirectory => CoverageDirectory / "summary";
+    AbsolutePath CoverageSummaryDirectory => CoverageDirectory / "summary";
 
     /// <summary>
     ///     Generate a code coverage summary for the given reports
     /// </summary>
     [NonEntryTarget]
-    public Target GenerateCodeCoverageSummary => d => d
-                                                     .After(GenerateCodeCoverageReportCobertura)
-                                                     .TriggeredBy(CollectCodeCoverage)
-                                                     .Unlisted()
-                                                     .AssuredAfterFailure()
-                                                     .ProceedAfterFailure()
-                                                     .OnlyWhenDynamic(() => InputReports.Any())
-                                                     .Executes(
-                                                          () => ReportGeneratorTasks.ReportGenerator(
-                                                              s => Defaults(s)
-                                                                  .SetTargetDirectory(CoverageSummaryDirectory)
-                                                                  .SetReportTypes(
-                                                                       ReportTypes.HtmlSummary,
-                                                                       ReportTypes.TextSummary,
-                                                                       ReportTypes.MarkdownSummary,
-                                                                       ReportTypes.MarkdownSummaryGithub
-                                                                   )
-                                                          )
-                                                      );
+    Target GenerateCodeCoverageSummary => d => d
+                                                         .After(GenerateCodeCoverageReportCobertura)
+                                                         .TriggeredBy(CollectCodeCoverage)
+                                                         .Unlisted()
+                                                         .AssuredAfterFailure()
+                                                         .ProceedAfterFailure()
+                                                         .OnlyWhenDynamic(() => InputReports.Any())
+                                                         .Executes(
+                                                              () => ReportGeneratorTasks.ReportGenerator(
+                                                                  s => Defaults(s)
+                                                                      .SetTargetDirectory(CoverageSummaryDirectory)
+                                                                      .SetReportTypes(
+                                                                           ReportTypes.HtmlSummary,
+                                                                           ReportTypes.TextSummary,
+                                                                           ReportTypes.MarkdownSummary,
+                                                                           ReportTypes.MarkdownSummaryGithub
+                                                                       )
+                                                              )
+                                                          );
 }

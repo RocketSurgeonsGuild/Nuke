@@ -11,16 +11,16 @@ public partial interface IXamarinAppleTarget : IHaveBundleIdentifier, IHaveGitVe
     /// <summary>
     ///     modify info.plist
     /// </summary>
-    public Target ModifyInfoPlist => d => d
+    Target ModifyInfoPlist => d => d
                                         .Executes(
                                              () =>
                                              {
                                                  Log.Verbose("Info.plist Path: {InfoPlist}", InfoPlist);
                                                  var plist = Plist.Deserialize(InfoPlist);
 
-                                                 #pragma warning disable CA1304, CA1308
+#pragma warning disable CA1304, CA1308
                                                  plist["CFBundleIdentifier"] = $"{BundleIdentifier}.{Suffix.ToLowerInvariant()}".TrimEnd('.');
-                                                 #pragma warning restore CA1304, CA1308
+#pragma warning restore CA1304, CA1308
                                                  Log.Information("CFBundleIdentifier: {CFBundleIdentifier}", plist["CFBundleIdentifier"]);
 
                                                  plist["CFBundleShortVersionString"] = GitVersion.MajorMinorPatch();

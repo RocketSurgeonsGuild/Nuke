@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+
 using Nuke.Common.CI.GitHubActions.Configuration;
 using Nuke.Common.Tooling;
 using Nuke.Common.Utilities.Collections;
@@ -19,6 +20,7 @@ public class RocketSurgeonGitHubActionsVcsTrigger : GitHubActionsDetailedTrigger
         if (Kind is RocketSurgeonGitHubActionsTrigger.WorkflowDispatch or RocketSurgeonGitHubActionsTrigger.WorkflowCall or RocketSurgeonGitHubActionsTrigger.WorkflowRun) return;
 
         if (Kind is RocketSurgeonGitHubActionsTrigger.PullRequest or RocketSurgeonGitHubActionsTrigger.PullRequestTarget)
+        {
             using (writer.Indent())
             {
                 if (Types.Length > 0)
@@ -30,6 +32,7 @@ public class RocketSurgeonGitHubActionsVcsTrigger : GitHubActionsDetailedTrigger
                     }
                 }
             }
+        }
 
         using (writer.Indent())
         {

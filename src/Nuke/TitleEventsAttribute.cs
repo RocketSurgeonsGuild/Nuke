@@ -1,4 +1,5 @@
 using Nuke.Common.Execution;
+
 using Serilog;
 
 namespace Rocket.Surgery.Nuke;
@@ -89,7 +90,7 @@ public sealed class TitleEventsAttribute : BuildExtensionAttributeBase, IOnBuild
         After:
                 Convert.ToInt16(NukeBuild.IsServerBuild ? 0 : Math.Round((double)step++ / ( (short)plan.Count + 1 ) * 100));
         */
-        Convert.ToInt16(NukeBuild.IsServerBuild ? 0 : Math.Round(( (double)step++ / ( (short)plan.Count + 1 ) ) * 100));
+        Convert.ToInt16(NukeBuild.IsServerBuild ? 0 : Math.Round((double)step++ / ( (short)plan.Count + 1 ) * 100));
 
     private IReadOnlyCollection<ExecutableTarget> _plan = [];
     private int step;

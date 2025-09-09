@@ -18,7 +18,7 @@ public interface IHavePackXamarinMac : IHavePackTarget,
     /// <summary>
     ///     packages a binary for distribution.
     /// </summary>
-    public Target Package => d => d
+    Target Package => d => d
                                  .DependsOn(Test)
                                  .OnlyWhenStatic(() => EnvironmentInfo.Platform == PlatformFamily.OSX)
                                  .Executes(

@@ -7,6 +7,15 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// </summary>
 public class RocketSurgeonsGithubActionsConcurrency : ConfigurationEntity
 {
+    /// <inheritdoc />
+    public override void Write(CustomFileWriter writer)
+    {
+        using var _ = writer.Indent();
+        if (!string.IsNullOrWhiteSpace(Group)) writer.WriteValue(new("group", Group));
+
+        if (CancelInProgress.HasValue) writer.WriteLine($"cancel-in-progress: {CancelInProgress.Value.ToString().ToLowerInvariant()}");
+    }
+
     /// <summary>
     ///     The concurrency group
     /// </summary>
@@ -16,13 +25,4 @@ public class RocketSurgeonsGithubActionsConcurrency : ConfigurationEntity
     ///     Cancel existing jobs
     /// </summary>
     public bool? CancelInProgress { get; set; }
-
-    /// <inheritdoc />
-    public override void Write(CustomFileWriter writer)
-    {
-        using var _ = writer.Indent();
-        if (!string.IsNullOrWhiteSpace(Group)) writer.WriteValue(new("group", Group));
-
-        if (CancelInProgress.HasValue) writer.WriteLine($"cancel-in-progress: {CancelInProgress.Value.ToString().ToLowerInvariant()}");
-    }
 }

@@ -22,25 +22,25 @@ public interface ICanPackWithDotNetCore : IHaveBuildTarget,
     ///     dotnet pack
     /// </summary>
     [NonEntryTarget]
-    public Target DotnetCorePack => d => d
-                                        .Description("Packs all the NuGet packages.")
-                                        .Unlisted()
-                                        .After(Clean)
-                                        .TryDependentFor<IHavePackTarget>(a => a.Pack)
-                                        .TryDependsOn<IHaveBuildTarget>(b => b.Build)
-                                        .TryAfter<IHaveRestoreTarget>(a => a.Restore)
-                                        .Net9MsBuildFix()
-                                        .Executes(
-                                             () => DotNetTasks.DotNetPack(
-                                                 s => s
-                                                     .SetProcessWorkingDirectory(RootDirectory)
-                                                     .SetProject(Solution)
-                                                     .SetDefaultLoggers(LogsDirectory / "pack.log")
-                                                     .SetGitVersionEnvironment(GitVersion)
-                                                     .SetConfiguration(Configuration)
-                                                     .EnableNoRestore()
-                                                     .EnableNoBuild()
-                                                     .AddProperty("PackageOutputPath", NuGetPackageDirectory)
-                                             )
-                                         );
+    Target DotnetCorePack => d => d
+                                            .Description("Packs all the NuGet packages.")
+                                            .Unlisted()
+                                            .After(Clean)
+                                            .TryDependentFor<IHavePackTarget>(a => a.Pack)
+                                            .TryDependsOn<IHaveBuildTarget>(b => b.Build)
+                                            .TryAfter<IHaveRestoreTarget>(a => a.Restore)
+                                            .Net9MsBuildFix()
+                                            .Executes(
+                                                 () => DotNetTasks.DotNetPack(
+                                                     s => s
+                                                         .SetProcessWorkingDirectory(RootDirectory)
+                                                         .SetProject(Solution)
+                                                         .SetDefaultLoggers(LogsDirectory / "pack.log")
+                                                         .SetGitVersionEnvironment(GitVersion)
+                                                         .SetConfiguration(Configuration)
+                                                         .EnableNoRestore()
+                                                         .EnableNoBuild()
+                                                         .AddProperty("PackageOutputPath", NuGetPackageDirectory)
+                                                 )
+                                             );
 }

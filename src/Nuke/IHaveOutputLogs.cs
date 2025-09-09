@@ -10,5 +10,5 @@ public interface IHaveOutputLogs : IHaveArtifacts
     /// <summary>
     ///     The directory where logs will be placed
     /// </summary>
-    public AbsolutePath LogsDirectory => ArtifactsDirectory / "logs";
+    AbsolutePath LogsDirectory => ArtifactsDirectory / "logs";
 }

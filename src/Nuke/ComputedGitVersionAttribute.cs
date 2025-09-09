@@ -1,7 +1,9 @@
 using System.Reflection;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+
 using Nuke.Common.CI.AppVeyor;
 using Nuke.Common.CI.AzurePipelines;
 using Nuke.Common.CI.TeamCity;
@@ -9,6 +11,7 @@ using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.ValueInjection;
+
 using Serilog;
 using static Nuke.Common.EnvironmentInfo;
 
@@ -28,12 +31,6 @@ namespace Rocket.Surgery.Nuke;
 [ExcludeFromCodeCoverage]
 public class ComputedGitVersionAttribute(string? frameworkVersion) : ValueInjectionAttributeBase
 {
-    /// <summary>
-    ///     Computes the GitVersion for the repository.
-    /// </summary>
-    public ComputedGitVersionAttribute()
-        : this(null) { }
-
     /// <inheritdoc />
     public override object GetValue(MemberInfo member, object instance)
     {
@@ -103,6 +100,12 @@ public class ComputedGitVersionAttribute(string? frameworkVersion) : ValueInject
     /// </summary>
     public bool UpdateAssemblyInfo { get; set; }
 
+    /// <summary>
+    ///     Computes the GitVersion for the repository.
+    /// </summary>
+    public ComputedGitVersionAttribute()
+        : this(null) { }
+
     private class AllWritableContractResolver : DefaultContractResolver
     {
         protected override JsonProperty CreateProperty(
@@ -119,6 +122,7 @@ public class ComputedGitVersionAttribute(string? frameworkVersion) : ValueInject
     internal static GitVersion GetGitVersion(string? frameworkVersion, bool updateAssemblyInfo)
     {
         if (!HasGitVer())
+        {
             return GitVersionTasks.GitVersion(
                                        s => s
                                            .SetFramework(frameworkVersion)
@@ -133,6 +137,7 @@ public class ComputedGitVersionAttribute(string? frameworkVersion) : ValueInject
                                             )
                                    )
                                   .Result;
+        }
 
         var json = Variables
                   .Where(z => z.Key.StartsWith("GITVERSION_", StringComparison.OrdinalIgnoreCase))

@@ -13,5 +13,5 @@ public interface IHaveTestArtifacts : IHaveArtifacts
     /// <summary>
     ///     The directory where test results will be placed
     /// </summary>
-    public AbsolutePath TestResultsDirectory => ArtifactsDirectory / "test";
+    AbsolutePath TestResultsDirectory => ArtifactsDirectory / "test";
 }

@@ -20,7 +20,7 @@ public interface ICanTestXamarin : IHaveTestTarget,
     /// <summary>
     ///     test
     /// </summary>
-    public new Target Test => d => d
+    new Target Test => d => d
                                   .DependsOn(Build)
                                   .OnlyWhenStatic(() => TestsDirectory.DirectoryExists())
                                   .CreateOrCleanDirectory(TestResultsDirectory)

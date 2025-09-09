@@ -16,7 +16,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
     /// <summary>
     ///     The dotnet format target
     /// </summary>
-    public Target DotnetFormat =>
+    Target DotnetFormat =>
         d => d
             .TriggeredBy(Lint)
             .Before(PostLint)
@@ -55,35 +55,37 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                          }
                      }
                      else
+                     {
                          DotNetTasks.DotNetFormat(formatSettings);
+                     }
                  }
              );
 
     /// <summary>
     ///     A list of diagnostic ids to exclude from the dotnet format
     /// </summary>
-    public HashSet<string> DotNetFormatExcludedDiagnostics => _dotNetFormatExcludedDiagnostics;
+    HashSet<string> DotNetFormatExcludedDiagnostics => _dotNetFormatExcludedDiagnostics;
 
     /// <summary>
     ///     A list of diagnostic ids to include in the dotnet format
     /// </summary>
-    public HashSet<string>? DotNetFormatIncludedDiagnostics => _dotNetFormatIncludedDiagnostics;
+    HashSet<string>? DotNetFormatIncludedDiagnostics => _dotNetFormatIncludedDiagnostics;
 
     /// <summary>
     ///     The default matcher for jetbrains cleanup code
     /// </summary>
-    public Matcher DotnetFormatMatcher => dnfMatcher ??= new Matcher(StringComparison.OrdinalIgnoreCase)
+    Matcher DotnetFormatMatcher => dnfMatcher ??= new Matcher(StringComparison.OrdinalIgnoreCase)
        .AddInclude("**/*.cs");
 
     /// <summary>
     ///     The default severity to use for DotNetFormat
     /// </summary>
-    public DotNetFormatSeverity DotNetFormatSeverity => DotNetFormatSeverity.info;
+    DotNetFormatSeverity DotNetFormatSeverity => DotNetFormatSeverity.info;
 
     /// <summary>
     ///     Use the jetbrains code cleanup tool to format the code if installed
     /// </summary>
-    public Target JetBrainsCleanupCode =>
+    Target JetBrainsCleanupCode =>
         d =>
         {
             return d
@@ -121,7 +123,9 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
                                    );
                            }
                            else
+                           {
                                ReSharperTasks.ReSharperCleanupCode(cleanupCodeSettings);
+                           }
                        }
                    );
         };
@@ -129,7 +133,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
     /// <summary>
     ///     The default matcher for jetbrains cleanup code
     /// </summary>
-    public Matcher JetBrainsCleanupCodeMatcher => jbMatcher ??= new Matcher(StringComparison.OrdinalIgnoreCase)
+    Matcher JetBrainsCleanupCodeMatcher => jbMatcher ??= new Matcher(StringComparison.OrdinalIgnoreCase)
                                                                .AddInclude("**/*.cs")
                                                                .AddInclude("**/*.csproj")
                                                                .AddInclude("**/*.targets")
@@ -139,7 +143,7 @@ public interface ICanDotNetFormat : IHaveSolution, ICanLint, IHaveOutputLogs
     /// <summary>
     ///     The default profile to use for JetBrainsCleanupCode
     /// </summary>
-    public string JetBrainsCleanupCodeProfile => "Full Cleanup";
+    string JetBrainsCleanupCodeProfile => "Full Cleanup";
 
     private static readonly HashSet<string> _dotNetFormatExcludedDiagnostics = new(StringComparer.OrdinalIgnoreCase)
     {

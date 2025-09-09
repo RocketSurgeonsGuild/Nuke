@@ -1,22 +1,25 @@
 using System.Collections.Immutable;
 using System.Xml.Linq;
+
 using Microsoft.Extensions.FileSystemGlobbing;
+
 using Nuke.Common.IO;
 using Nuke.Common.Tools.Git;
+
 using Serilog;
 
 namespace Rocket.Surgery.Nuke;
 
 /// <summary>
-/// Looks at project, props, and target files and removes unused dependencies
+///     Looks at project, props, and target files and removes unused dependencies
 /// </summary>
 public interface IRemoveUnusedDependencies : INukeBuild
 {
     /// <summary>
-    /// Looks at project, props, and target files and removes unused dependencies
+    ///     Looks at project, props, and target files and removes unused dependencies
     /// </summary>
-    public Target RemoveUnusedDependencies
-        => _ => _
+    Target RemoveUnusedDependencies =>
+        _ => _
                .TriggeredBy<ICanLint>(x => x.Lint)
                .Executes(
                     async () =>
@@ -31,17 +34,7 @@ public interface IRemoveUnusedDependencies : INukeBuild
                                              .Select(AbsolutePath.Create)
                                              .Match(matcher)
                                              .ToAsyncEnumerable()
-                                             .SelectAwait(
-                                                  x => ValueTask.FromResult(
-                                                      ( Path: x,
-                                                        Document: XDocument.Load(
-                                                            x,
-                                                            LoadOptions.PreserveWhitespace
-                                                          | LoadOptions.SetBaseUri
-                                                          | LoadOptions.SetLineInfo
-                                                        ) )
-                                                  )
-                                              )
+                                             .Select(x => (Path: x, Document: XDocument.Load(x, LoadOptions.PreserveWhitespace | LoadOptions.SetBaseUri | LoadOptions.SetLineInfo)))
                                              .ToListAsync();
 
                         var xmlDocs = documents.ToImmutableDictionary(

@@ -11,7 +11,7 @@ public interface IHaveBundleIdentifier : IHave
     ///     Gets the path for the info plist.
     /// </summary>
     [Parameter("The application bundle identifier.", Name = "BundleIdentifier")]
-    public string BundleIdentifier => EnvironmentInfo.GetVariable<string>("BundleIdentifier")
+    string BundleIdentifier => EnvironmentInfo.GetVariable<string>("BundleIdentifier")
      ?? TryGetValue(() => BundleIdentifier)
      ?? "com.surgery.rocket.nuke";
 
@@ -19,5 +19,5 @@ public interface IHaveBundleIdentifier : IHave
     ///     Gets the suffix for the bundle identifier.
     /// </summary>
     [Parameter("The identifier suffix.")]
-    public string Suffix { get; set; }
+    string Suffix { get; set; }
 }

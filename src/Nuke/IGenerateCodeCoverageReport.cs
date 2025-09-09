@@ -12,25 +12,25 @@ public interface IGenerateCodeCoverageReport : ITriggerCodeCoverageReports, IGen
     /// <summary>
     ///     The directory where the report will be placed
     /// </summary>
-    public AbsolutePath CoverageReportDirectory => CoverageDirectory / "report";
+    AbsolutePath CoverageReportDirectory => CoverageDirectory / "report";
 
     /// <summary>
     ///     Generates a code coverage report got the given set of input reports
     /// </summary>
     [NonEntryTarget]
-    public Target GenerateCodeCoverageReport => d => d
-                                                    .After(GenerateCodeCoverageReportCobertura)
-                                                    .TriggeredBy(CollectCodeCoverage)
-                                                    .Unlisted()
-                                                    .AssuredAfterFailure()
-                                                    .ProceedAfterFailure()
-                                                    .OnlyWhenDynamic(() => InputReports.Any())
-                                                    .Executes(
-                                                         () => ReportGeneratorTasks.ReportGenerator(
-                                                             s => Defaults(s)
-                                                                 .SetTargetDirectory(CoverageReportDirectory)
-                                                                  // these trample... don't forget next time.
-                                                                 .SetReportTypes( /*ReportTypes.HtmlInline_AzurePipelines_Dark, */ReportTypes.Html_Dark)
-                                                         )
-                                                     );
+    Target GenerateCodeCoverageReport => d => d
+                                                        .After(GenerateCodeCoverageReportCobertura)
+                                                        .TriggeredBy(CollectCodeCoverage)
+                                                        .Unlisted()
+                                                        .AssuredAfterFailure()
+                                                        .ProceedAfterFailure()
+                                                        .OnlyWhenDynamic(() => InputReports.Any())
+                                                        .Executes(
+                                                             () => ReportGeneratorTasks.ReportGenerator(
+                                                                 s => Defaults(s)
+                                                                     .SetTargetDirectory(CoverageReportDirectory)
+                                                                     // these trample... don't forget next time.
+                                                                     .SetReportTypes( /*ReportTypes.HtmlInline_AzurePipelines_Dark, */ReportTypes.Html_Dark)
+                                                             )
+                                                         );
 }

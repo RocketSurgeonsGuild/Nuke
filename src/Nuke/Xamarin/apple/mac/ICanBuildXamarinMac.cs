@@ -19,7 +19,7 @@ public interface ICanBuildXamarinMac : IXamarinAppleTarget,
     /// <summary>
     ///     msbuild
     /// </summary>
-    public new Target Build => d => d
+    new Target Build => d => d
                                    .DependsOn(Restore)
                                    .Executes(
                                         () => MSBuild(

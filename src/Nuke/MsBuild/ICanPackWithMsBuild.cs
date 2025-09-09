@@ -17,12 +17,12 @@ public interface ICanPackWithMsBuild : IHavePackTarget,
     /// <summary>
     ///     The directory where templates will be placed
     /// </summary>
-    public static AbsolutePath NuspecDirectory => NukeBuild.RootDirectory / ".nuspec";
+    static AbsolutePath NuspecDirectory => NukeBuild.RootDirectory / ".nuspec";
 
     /// <summary>
     ///     nuget pack
     /// </summary>
-    public Target NetPack => d => d
+    Target NetPack => d => d
                                  .DependsOn(Build)
                                  .Unlisted()
                                  .After(Test)
