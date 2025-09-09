@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
     <NoWarn>$(NoWarn);CS0436</NoWarn>
     <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
@@ -11,12 +11,12 @@
     <PackageReference Include="Nuke.Common" />
     <PackageReference Include="Serilog.Extensions.Logging" />
     <PackageReference Include="System.Collections.Immutable" />
-<!--    <PackageReference Include="System.Interactive" />-->
-    <PackageReference Include="System.Interactive.Async" />
+    <!--    <PackageReference Include="System.Interactive" />-->
+    <PackageReference Include="System.Interactive.Async" Condition="'$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net9.0'" />
     <PackageReference Include="YamlDotNet" />
     <PackageReference Include="Humanizer.Core" />
     <PackageReference Include="JetBrains.Annotations" PrivateAssets="all" />
-      
+
     <PackageReference Include="Microsoft.Build.Locator" />
     <PackageReference Include="Microsoft.Build" ExcludeAssets="runtime" />
     <PackageReference Include="Microsoft.Build.Framework" ExcludeAssets="runtime" />

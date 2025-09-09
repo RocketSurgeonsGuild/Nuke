@@ -6,12 +6,6 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 [PublicAPI]
 public class HeadlessRunStep : UsingStep
 {
-    /// <summary>
-    ///     The default constructor
-    /// </summary>
-    /// <param name="name"></param>
-    public HeadlessRunStep(string name) : base(name) => Uses = "coactions/setup-xvfb@v1";
-
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
@@ -33,4 +27,10 @@ public class HeadlessRunStep : UsingStep
     ///     The working directory where the script is run
     /// </summary>
     public string? WorkingDirectory { get; set; }
+
+    /// <summary>
+    ///     The default constructor
+    /// </summary>
+    /// <param name="name"></param>
+    public HeadlessRunStep(string name) : base(name) => Uses = "coactions/setup-xvfb@v1";
 }

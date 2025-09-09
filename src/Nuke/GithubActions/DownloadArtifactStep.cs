@@ -6,18 +6,12 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 [PublicAPI]
 public class DownloadArtifactStep : UsingStep
 {
-    /// <summary>
-    ///     The default constructor
-    /// </summary>
-    /// <param name="name"></param>
-    public DownloadArtifactStep(string name) : base(name) => Uses = "actions/download-artifact@v4";
-
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
-        #pragma warning disable CA1308
+#pragma warning disable CA1308
         WithProperties(x => x.Kebaberize());
-        #pragma warning restore CA1308
+#pragma warning restore CA1308
         base.Write(writer);
     }
 
@@ -59,6 +53,12 @@ public class DownloadArtifactStep : UsingStep
     ///     will be downloaded from.
     /// </summary>
     public string? RunId { get; set; }
+
+    /// <summary>
+    ///     The default constructor
+    /// </summary>
+    /// <param name="name"></param>
+    public DownloadArtifactStep(string name) : base(name) => Uses = "actions/download-artifact@v4";
 
     /// <inheritdoc />
     protected override string ComputeStepName(string name) => $"🚀 {name}";

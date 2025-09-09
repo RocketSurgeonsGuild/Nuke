@@ -15,61 +15,61 @@ public interface ICanTestWithDotNetCore : IHaveBuildTarget,
     IHaveOutputLogs,
     ICan
 {
+    DotNetTestSettings CustomizeDotNetTestSettings(DotNetTestSettings settings) => settings;
+
     /// <summary>
     ///     dotnet test
     /// </summary>
     [NonEntryTarget]
-    public Target DotnetCoreTest => d => d
-                                        .Description("Executes all the unit tests.")
-                                        .Unlisted()
-                                        .After(Build)
-                                        .TryDependentFor<IHaveTestTarget>(a => a.Test)
-                                        .TryAfter<IHaveRestoreTarget>(a => a.Restore)
-                                        .WhenSkipped(DependencyBehavior.Execute)
-                                        .Net9MsBuildFix()
-                                        .Executes(
-                                             () => DotNetTasks.DotNetBuild(
-                                                 s => s
-                                                     .SetProcessWorkingDirectory(RootDirectory)
-                                                     .SetProjectFile(Solution)
-                                                     .SetDefaultLoggers(LogsDirectory / "test.build.log")
-                                                     .SetGitVersionEnvironment(GitVersion)
-                                                     .SetConfiguration(TestBuildConfiguration)
-                                                     .EnableNoRestore()
+    Target DotnetCoreTest => d => d
+                                            .Description("Executes all the unit tests.")
+                                            .Unlisted()
+                                            .After(Build)
+                                            .TryDependentFor<IHaveTestTarget>(a => a.Test)
+                                            .TryAfter<IHaveRestoreTarget>(a => a.Restore)
+                                            .WhenSkipped(DependencyBehavior.Execute)
+                                            .Net9MsBuildFix()
+                                            .Executes(
+                                                 () => DotNetTasks.DotNetBuild(
+                                                     s => s
+                                                         .SetProcessWorkingDirectory(RootDirectory)
+                                                         .SetProjectFile(Solution)
+                                                         .SetDefaultLoggers(LogsDirectory / "test.build.log")
+                                                         .SetGitVersionEnvironment(GitVersion)
+                                                         .SetConfiguration(TestBuildConfiguration)
+                                                         .EnableNoRestore()
+                                                 )
                                              )
-                                         )
-                                        .CreateOrCleanDirectory(TestResultsDirectory)
-                                        .EnsureRunSettingsExists(this)
-                                        .Net9MsBuildFix()
-                                        .Executes(
-                                             () => DotNetTool.GetTool("dotnet-coverage")(
-                                                 $"{new Arguments()
-                                                   .Add("collect")
-                                                   .Add("--settings {value}", RunSettings)
-                                                   .Add("--output {value}", TestResultsDirectory / "test.cobertura.xml")
-                                                   .Add("--output-format {value}", "cobertura")
-                                                   .Add("--")
-                                                   .Add("dotnet")
-                                                   .Concatenate(
-                                                        CustomizeDotNetTestSettings(
-                                                                new DotNetTestSettings()
-                                                                   .SetProcessWorkingDirectory(RootDirectory)
-                                                                   .SetProjectFile(Solution)
-                                                                   .SetDefaultLoggers(LogsDirectory / "test.log")
-                                                                   .SetGitVersionEnvironment(GitVersion)
-                                                                   .SetConfiguration(TestBuildConfiguration)
-                                                                   .EnableNoRestore()
-                                                                   .EnableNoBuild()
-                                                                   .SetLoggers("trx")
-                                                                   .SetResultsDirectory(TestResultsDirectory)
-                                                            )
-                                                           .RemoveLoggers()
-                                                           .GetProcessArguments()
-                                                    )
-                                                   .RenderForExecution()}",
-                                                 RootDirectory
-                                             )
-                                         );
-
-    public DotNetTestSettings CustomizeDotNetTestSettings(DotNetTestSettings settings) => settings;
+                                            .CreateOrCleanDirectory(TestResultsDirectory)
+                                            .EnsureRunSettingsExists(this)
+                                            .Net9MsBuildFix()
+                                            .Executes(
+                                                 () => DotNetTool.GetTool("dotnet-coverage")(
+                                                     $"{new Arguments()
+                                                       .Add("collect")
+                                                       .Add("--settings {value}", RunSettings)
+                                                       .Add("--output {value}", TestResultsDirectory / "test.cobertura.xml")
+                                                       .Add("--output-format {value}", "cobertura")
+                                                       .Add("--")
+                                                       .Add("dotnet")
+                                                       .Concatenate(
+                                                            CustomizeDotNetTestSettings(
+                                                                    new DotNetTestSettings()
+                                                                       .SetProcessWorkingDirectory(RootDirectory)
+                                                                       .SetProjectFile(Solution)
+                                                                       .SetDefaultLoggers(LogsDirectory / "test.log")
+                                                                       .SetGitVersionEnvironment(GitVersion)
+                                                                       .SetConfiguration(TestBuildConfiguration)
+                                                                       .EnableNoRestore()
+                                                                       .EnableNoBuild()
+                                                                       .SetLoggers("trx")
+                                                                       .SetResultsDirectory(TestResultsDirectory)
+                                                                )
+                                                               .RemoveLoggers()
+                                                               .GetProcessArguments()
+                                                        )
+                                                       .RenderForExecution()}",
+                                                     RootDirectory
+                                                 )
+                                             );
 }

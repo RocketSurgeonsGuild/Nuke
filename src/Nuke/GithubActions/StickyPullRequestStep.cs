@@ -8,12 +8,6 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 [PublicAPI]
 public class StickyPullRequestStep : UsingStep
 {
-    /// <summary>
-    ///     The default constructor
-    /// </summary>
-    /// <param name="name"></param>
-    public StickyPullRequestStep(string name) : base(name) => Uses = "marocchino/sticky-pull-request-comment@v2";
-
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
@@ -81,4 +75,10 @@ public class StickyPullRequestStep : UsingStep
 
     /// <summary>Only update or recreate if message is different from previous</summary>
     public bool? SkipUnchanged { get; set; }
+
+    /// <summary>
+    ///     The default constructor
+    /// </summary>
+    /// <param name="name"></param>
+    public StickyPullRequestStep(string name) : base(name) => Uses = "marocchino/sticky-pull-request-comment@v2";
 }

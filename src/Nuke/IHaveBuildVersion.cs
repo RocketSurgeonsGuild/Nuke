@@ -11,7 +11,7 @@ public interface IHaveBuildVersion : IHaveGitVersion, IHaveSolution, IHaveConfig
     /// <summary>
     ///     prints the build information.
     /// </summary>
-    public Target BuildVersion => d => d
+    Target BuildVersion => d => d
                                      .Executes(
                                           () =>
                                           {

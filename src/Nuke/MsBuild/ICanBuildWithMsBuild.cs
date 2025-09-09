@@ -16,7 +16,7 @@ public interface ICanBuildWithMsBuild : IHaveBuildTarget,
     /// <summary>
     ///     msbuild
     /// </summary>
-    public Target NetBuild => d => d
+    Target NetBuild => d => d
                                   .DependsOn(Restore)
                                   .Unlisted()
                                   .Executes(

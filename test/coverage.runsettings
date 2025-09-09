@@ -46,8 +46,6 @@
                 <ModulePath>.*Buildalyzer\.dll</ModulePath>
                 <ModulePath>.*FakeItEasy\.Analyzer\.CSharp\.dll</ModulePath>
                 <ModulePath>.*FakeItEasy\.dll</ModulePath>
-                <ModulePath>.*FluentAssertions\.Analyzers\.dll</ModulePath>
-                <ModulePath>.*FluentAssertions\.dll</ModulePath>
                 <ModulePath>.*GitVersion\.Tool\.dll</ModulePath>
                 <ModulePath>.*Humanizer\.Core\.dll</ModulePath>
                 <ModulePath>.*JetBrains\.Annotations\.dll</ModulePath>
@@ -73,15 +71,17 @@
                 <ModulePath>.*Rocket\.Surgery\.Extensions\.Testing\.XUnit\.dll</ModulePath>
                 <ModulePath>.*Rocket\.Surgery\.MSBuild\.CI\.dll</ModulePath>
                 <ModulePath>.*Rocket\.Surgery\.MSBuild\.GitVersion\.dll</ModulePath>
+                <ModulePath>.*Rocket\.Surgery\.MSBuild\.GlobalAnalyzerConfig\.dll</ModulePath>
                 <ModulePath>.*Rocket\.Surgery\.MSBuild\.SourceLink\.dll</ModulePath>
+                <ModulePath>.*Rocket\.Surgery\.MyAssembly\.dll</ModulePath>
                 <ModulePath>.*Roslynator\.Analyzers\.dll</ModulePath>
                 <ModulePath>.*Roslynator\.CodeAnalysis\.Analyzers\.dll</ModulePath>
                 <ModulePath>.*Roslynator\.CodeFixes\.dll</ModulePath>
                 <ModulePath>.*Roslynator\.Formatting\.Analyzers\.dll</ModulePath>
                 <ModulePath>.*Roslynator\.Refactorings\.dll</ModulePath>
                 <ModulePath>.*Serilog\.Extensions\.Logging\.dll</ModulePath>
+                <ModulePath>.*Shouldly\.dll</ModulePath>
                 <ModulePath>.*System\.Collections\.Immutable\.dll</ModulePath>
-                <ModulePath>.*System\.Interactive\.Async\.dll</ModulePath>
                 <ModulePath>.*xunit\.analyzers\.dll</ModulePath>
                 <ModulePath>.*xunit\.dll</ModulePath>
                 <ModulePath>.*xunit\.runner\.visualstudio\.dll</ModulePath>

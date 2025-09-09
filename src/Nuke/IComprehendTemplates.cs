@@ -10,7 +10,7 @@ public interface IComprehendTemplates : IComprehend
     /// <summary>
     ///     The directory where templates will be placed
     /// </summary>
-    public AbsolutePath TemplatesDirectory => FilePathExtensions.PickDirectory(
+    AbsolutePath TemplatesDirectory => FilePathExtensions.PickDirectory(
         NukeBuild.RootDirectory / "template",
         NukeBuild.RootDirectory / "templates"
     );

@@ -1,4 +1,5 @@
 using System.Reflection;
+
 using Nuke.Common.Tooling;
 
 namespace Rocket.Surgery.Nuke;
@@ -22,6 +23,6 @@ public sealed class DotNetToolAttribute(string command) : ToolInjectionAttribute
 
     private readonly string _command = command;
 
-    #pragma warning disable CA1019
-    #pragma warning restore CA1019
+#pragma warning disable CA1019
+#pragma warning restore CA1019
 }

@@ -9,11 +9,11 @@ public interface ICanUpdateSolution : IHaveSolution
     /// <summary>
     ///     The solution updater that ensures that all the files are in the solution.
     /// </summary>
-    public Target GenerateSolutionItems =>
+    Target GenerateSolutionItems =>
         d => d
             .Unlisted()
-             // Does not work well on the linting runner
-             // always seems to produce a commit against the solution
+            // Does not work well on the linting runner
+            // always seems to produce a commit against the solution
             .OnlyWhenStatic(() => IsLocalBuild)
             .TryTriggeredBy<ICanLint>(z => z.PostLint)
             .TryAfter<ICanLint>(z => z.PostLint)
@@ -38,5 +38,5 @@ public interface ICanUpdateSolution : IHaveSolution
     /// <summary>
     ///     The name of the folder that contains the solution configuration files in the solution
     /// </summary>
-    public string SolutionConfigFolderName => "config";
+    string SolutionConfigFolderName => "config";
 }

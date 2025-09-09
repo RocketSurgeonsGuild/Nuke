@@ -9,5 +9,5 @@ public interface IMayTheForceBeWithYou : INukeBuild
     ///     Force a clean build, otherwise leave some incremental build pieces
     /// </summary>
     [Parameter("Force a clean build")]
-    public bool Force { get; }
+    bool Force { get; }
 }

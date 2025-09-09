@@ -1,4 +1,5 @@
 using System.Reflection;
+
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
@@ -14,30 +15,6 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 [AttributeUsage(AttributeTargets.Class)]
 public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
 {
-    /// <summary>
-    ///     The default constructor
-    /// </summary>
-    /// <param name="name"></param>
-    /// <param name="image"></param>
-    /// <param name="images"></param>
-    public GitHubActionsLintAttribute(
-        string name,
-        GitHubActionsImage image,
-        params GitHubActionsImage[] images
-    ) : base(name, image, images) => InvokedTargets = [nameof(ICanLint.Lint)];
-
-    /// <summary>
-    ///     The default constructor
-    /// </summary>
-    /// <param name="name"></param>
-    /// <param name="image"></param>
-    /// <param name="images"></param>
-    public GitHubActionsLintAttribute(
-        string name,
-        string image,
-        params string[] images
-    ) : base(name, image, images) { }
-
     /// <inheritdoc />
     public override ConfigurationEntity GetConfiguration(IReadOnlyCollection<ExecutableTarget> relevantTargets)
     {
@@ -123,4 +100,28 @@ public sealed class GitHubActionsLintAttribute : GitHubActionsStepsAttribute
     ///     Should be in the format of the name of the secret eg RSG_BOT_TOKEN
     /// </remarks>
     public string TokenSecret { get; set; } = "RSG_BOT_TOKEN";
+
+    /// <summary>
+    ///     The default constructor
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="image"></param>
+    /// <param name="images"></param>
+    public GitHubActionsLintAttribute(
+        string name,
+        GitHubActionsImage image,
+        params GitHubActionsImage[] images
+    ) : base(name, image, images) => InvokedTargets = [nameof(ICanLint.Lint)];
+
+    /// <summary>
+    ///     The default constructor
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="image"></param>
+    /// <param name="images"></param>
+    public GitHubActionsLintAttribute(
+        string name,
+        string image,
+        params string[] images
+    ) : base(name, image, images) { }
 }

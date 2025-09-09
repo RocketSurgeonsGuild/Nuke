@@ -7,16 +7,6 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 /// </summary>
 public class RocketSurgeonsGithubActionsDefaultsRun : ConfigurationEntity
 {
-    /// <summary>
-    ///     The shell
-    /// </summary>
-    public GithubActionShell? Shell { get; set; }
-
-    /// <summary>
-    ///     The working directory where the script is run
-    /// </summary>
-    public string? WorkingDirectory { get; set; }
-
     /// <inheritdoc />
     public override void Write(CustomFileWriter writer)
     {
@@ -26,4 +16,14 @@ public class RocketSurgeonsGithubActionsDefaultsRun : ConfigurationEntity
         if (!string.IsNullOrWhiteSpace(Shell?.ToString()))
             writer.WriteLine($"shell: {Shell}");
     }
+
+    /// <summary>
+    ///     The shell
+    /// </summary>
+    public GithubActionShell? Shell { get; set; }
+
+    /// <summary>
+    ///     The working directory where the script is run
+    /// </summary>
+    public string? WorkingDirectory { get; set; }
 }

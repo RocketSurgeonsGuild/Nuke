@@ -22,7 +22,7 @@ public interface ICanArchiveiOS : IHavePackTarget,
     /// <summary>
     ///     packages a binary for distribution.
     /// </summary>
-    public Target ArchiveIpa => d => d
+    Target ArchiveIpa => d => d
                                     .OnlyWhenStatic(() => EnvironmentInfo.Platform == PlatformFamily.OSX)
                                     .Executes(
                                          () =>

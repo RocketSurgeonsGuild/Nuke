@@ -17,7 +17,7 @@ public interface ICanTestWithXUnit : IHaveTestTarget,
     /// <summary>
     ///     xunit test
     /// </summary>
-    public Target NetTest => d => d
+    Target NetTest => d => d
                                  .DependsOn(Build)
                                  .Unlisted()
                                  .Executes(

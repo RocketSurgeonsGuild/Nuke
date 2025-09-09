@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+
 using Nuke.Common.IO;
 
 namespace Rocket.Surgery.Nuke;
@@ -29,7 +30,7 @@ public static class FilePathExtensions
     /// <returns></returns>
     public static AbsolutePath PickDirectory(IEnumerable<AbsolutePath> paths)
     {
-        var absolutePaths = paths as AbsolutePath[] ?? paths.ToArray();
+        var absolutePaths = paths as AbsolutePath[] ?? [.. paths];
         foreach (var path in absolutePaths)
         {
             if (Cache.ContainsKey(path)) return path;
@@ -65,7 +66,7 @@ public static class FilePathExtensions
     /// <returns></returns>
     public static AbsolutePath PickFile(IEnumerable<AbsolutePath> paths)
     {
-        var absolutePaths = paths as AbsolutePath[] ?? paths.ToArray();
+        var absolutePaths = paths as AbsolutePath[] ?? [.. paths];
         foreach (var path in absolutePaths)
         {
             if (Cache.ContainsKey(path)) return path;

@@ -12,24 +12,24 @@ public interface IGenerateCodeCoverageBadges : ITriggerCodeCoverageReports, IGen
     /// <summary>
     ///     The directory where the badges will be places
     /// </summary>
-    public AbsolutePath CoverageBadgeDirectory => CoverageDirectory / "badges";
+    AbsolutePath CoverageBadgeDirectory => CoverageDirectory / "badges";
 
     /// <summary>
     ///     Generate a code coverage badges for the given reports
     /// </summary>
     [NonEntryTarget]
-    public Target GenerateCodeCoverageBadges => d => d
-                                                    .After(GenerateCodeCoverageReportCobertura)
-                                                    .TriggeredBy(CollectCodeCoverage)
-                                                    .Unlisted()
-                                                    .AssuredAfterFailure()
-                                                    .ProceedAfterFailure()
-                                                    .OnlyWhenDynamic(() => InputReports.Any())
-                                                    .Executes(
-                                                         () => ReportGeneratorTasks.ReportGenerator(
-                                                             s => Defaults(s)
-                                                                 .SetTargetDirectory(CoverageBadgeDirectory)
-                                                                 .SetReportTypes(ReportTypes.Badges)
-                                                         )
-                                                     );
+    Target GenerateCodeCoverageBadges => d => d
+                                                        .After(GenerateCodeCoverageReportCobertura)
+                                                        .TriggeredBy(CollectCodeCoverage)
+                                                        .Unlisted()
+                                                        .AssuredAfterFailure()
+                                                        .ProceedAfterFailure()
+                                                        .OnlyWhenDynamic(() => InputReports.Any())
+                                                        .Executes(
+                                                             () => ReportGeneratorTasks.ReportGenerator(
+                                                                 s => Defaults(s)
+                                                                     .SetTargetDirectory(CoverageBadgeDirectory)
+                                                                     .SetReportTypes(ReportTypes.Badges)
+                                                             )
+                                                         );
 }

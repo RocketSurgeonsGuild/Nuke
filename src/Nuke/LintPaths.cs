@@ -24,14 +24,13 @@ public sealed class LintPaths
         trigger,
         message,
         new(
-            () => ( trigger is LintTrigger.None
+            () => [.. ( trigger is LintTrigger.None
                       ? GitTasks
                        .Git("ls-files", NukeBuild.RootDirectory, logOutput: false, logInvocation: false)
                        .Select(z => z.Text.Trim())
                       : paths )
                  .Select(z => Path.IsPathRooted(z) ? (AbsolutePath)z : NukeBuild.RootDirectory / z)
-                 .Match(matcher)
-                 .ToImmutableList()
+                 .Match(matcher)]
         )
     );
 
@@ -44,7 +43,7 @@ public sealed class LintPaths
     /// <param name="paths"></param>
     /// <returns></returns>
     public static LintPaths Create(Matcher matcher, LintTrigger trigger, string message, IEnumerable<AbsolutePath> paths) =>
-        new(trigger, message, new(() => paths.Match(matcher).ToImmutableList()));
+        new(trigger, message, new(() => [.. paths.Match(matcher)]));
 
     /// <summary>
     ///     Glob against a given matcher to included / exclude files

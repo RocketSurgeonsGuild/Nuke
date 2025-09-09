@@ -20,7 +20,7 @@ public interface ICanPackXamariniOS : IHavePackTarget,
     /// <summary>
     ///     packages a binary for distribution.
     /// </summary>
-    public Target PackiPhone => d => d
+    Target PackiPhone => d => d
                                     .DependsOn(Test)
                                     .OnlyWhenStatic(() => EnvironmentInfo.Platform == PlatformFamily.OSX)
                                     .Executes(

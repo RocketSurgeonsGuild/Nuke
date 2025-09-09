@@ -8,13 +8,6 @@ namespace Rocket.Surgery.Nuke.Readme;
 [PublicAPI]
 public class Sections
 {
-    private readonly Dictionary<string, IReadmeSection> _sections = new(StringComparer.OrdinalIgnoreCase);
-
-    /// <summary>
-    ///     Gets a list of all the sections for markdown use
-    /// </summary>
-    internal IReadOnlyDictionary<string, IReadmeSection> AllSections => new ReadOnlyDictionary<string, IReadmeSection>(_sections);
-
     /// <summary>
     ///     Adds a new section.
     /// </summary>
@@ -25,4 +18,11 @@ public class Sections
         _sections.Add(section.Name, section);
         return this;
     }
+
+    /// <summary>
+    ///     Gets a list of all the sections for markdown use
+    /// </summary>
+    internal IReadOnlyDictionary<string, IReadmeSection> AllSections => new ReadOnlyDictionary<string, IReadmeSection>(_sections);
+
+    private readonly Dictionary<string, IReadmeSection> _sections = new(StringComparer.OrdinalIgnoreCase);
 }

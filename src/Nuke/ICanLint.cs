@@ -1,10 +1,14 @@
 using System.Collections.Immutable;
+
 using LibGit2Sharp;
+
 using Microsoft.Extensions.FileSystemGlobbing;
+
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.Git;
+
 using Serilog;
 using Serilog.Events;
 
@@ -30,13 +34,13 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
     /// <summary>
     ///     The default matcher to exclude files from linting
     /// </summary>
-    public static Matcher DefaultLintMatcher { get; } = ResolveLintMatcher();
+    static Matcher DefaultLintMatcher { get; } = ResolveLintMatcher();
 
     /// <summary>
     ///     A ensure only the linted files are added to the commit
     /// </summary>
     [ExcludeTarget]
-    public Target HuskyLint =>
+    Target HuskyLint =>
         t => t
             .Unlisted()
             .OnlyWhenStatic(() => IsLocalBuild)
@@ -62,7 +66,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
     /// <summary>
     ///     The lint target
     /// </summary>
-    public Target LintFiles => t => t
+    Target LintFiles => t => t
                                    .OnlyWhenDynamic(() => LintPaths.Active)
                                    .TryDependsOn<IHaveRestoreTarget>(a => a.Restore)
                                    .TryDependentFor<IHaveLintTarget>(a => a.Lint)
@@ -77,7 +81,7 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
     /// <summary>
     ///     A ensure only the linted files are added to the commit
     /// </summary>
-    public Target LintGitAdd =>
+    Target LintGitAdd =>
         t => t
             .Unlisted()
             .After(Lint)
@@ -103,18 +107,18 @@ public interface ICanLint : IHaveGitRepository, IHaveLintTarget
     /// <summary>
     ///     The default matcher to exclude files from linting
     /// </summary>
-    public Matcher LintMatcher => DefaultLintMatcher;
+    Matcher LintMatcher => DefaultLintMatcher;
 
     /// <summary>
     ///     The lint paths rooted as an absolute path.
     /// </summary>
-    public LintPaths LintPaths => lintPaths ??= ResolveLintPathsImpl();
+    LintPaths LintPaths => lintPaths ??= ResolveLintPathsImpl();
 
     /// <summary>
     ///     A lint target that runs last
     /// </summary>
     [ExcludeTarget]
-    public Target PostLint => t => t.Unlisted().After(Lint).TriggeredBy(Lint);
+    Target PostLint => t => t.Unlisted().After(Lint).TriggeredBy(Lint);
 
     private static Matcher ResolveLintMatcher() =>
         new Matcher(StringComparison.OrdinalIgnoreCase)

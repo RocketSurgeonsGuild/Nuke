@@ -2,6 +2,7 @@ using System.Collections.Frozen;
 using System.Collections.Immutable;
 using System.Reflection;
 using System.Text.Json;
+
 using Nuke.Common.IO;
 
 namespace Rocket.Surgery.Nuke;
@@ -63,7 +64,7 @@ internal static class TargetAttributeCache
 
         return items
               .GroupBy(z => z.Key)
-              .Select(z => ( z.Key, Targets: z.SelectMany(x => x.GetTargets()).Distinct().Order().ToImmutableArray() ))
+              .Select(z => (z.Key, Targets: z.SelectMany(x => x.GetTargets()).Distinct().Order().ToImmutableArray()))
               .OrderBy(z => z.Key)
               .ToImmutableSortedDictionary(z => z.Key, z => z.Targets);
     }

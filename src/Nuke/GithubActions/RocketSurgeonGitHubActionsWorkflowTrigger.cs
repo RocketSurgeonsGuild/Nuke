@@ -17,11 +17,14 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
         if (Kind is not RocketSurgeonGitHubActionsTrigger.WorkflowDispatch
                 and not RocketSurgeonGitHubActionsTrigger.WorkflowCall
                 and not RocketSurgeonGitHubActionsTrigger.WorkflowRun)
+        {
             return;
+        }
 
         using (writer.Indent())
         {
             if (Kind is not RocketSurgeonGitHubActionsTrigger.WorkflowRun)
+            {
                 if (Inputs.Count > 0)
                 {
                     writer.WriteLine("inputs:");
@@ -42,6 +45,7 @@ public class RocketSurgeonGitHubActionsWorkflowTrigger : GitHubActionsDetailedTr
                         }
                     }
                 }
+            }
 
             if (Kind is RocketSurgeonGitHubActionsTrigger.WorkflowRun)
             {

@@ -1,5 +1,6 @@
 using System.Dynamic;
 using System.Text.RegularExpressions;
+
 using YamlDotNet.Serialization;
 
 namespace Rocket.Surgery.Nuke.Readme;
@@ -10,34 +11,6 @@ namespace Rocket.Surgery.Nuke.Readme;
 [PublicAPI]
 public partial class ReadmeUpdater
 {
-    /// <summary>
-    ///     Default constructor
-    /// </summary>
-    public ReadmeUpdater()
-    {
-        Sections = new();
-        Badges = new();
-        History = new();
-        References = new();
-        Sections
-           .Add(Badges)
-           .Add(History)
-           .Add(References)
-            ;
-        Sections.Add(new NugetPackagesSection());
-        History
-           .Add(new AzurePipelinesHistory())
-           .Add(new GitHubActionsHistory())
-           .Add(new AppVeyorHistory())
-            ;
-        Badges
-           .Add(new GithubReleaseSection())
-           .Add(new GithubLicenseSection())
-           .Add(new CodecovSection())
-           .Add(new CodacySection())
-            ;
-    }
-
     /// <summary>
     ///     <para>Updates the given markdown content with all the sections replaced.</para>
     ///     <para>
@@ -54,7 +27,7 @@ public partial class ReadmeUpdater
         var match = nukeDataRegex.Match(content);
         var yaml = string.Join(Environment.NewLine, match.Groups.Cast<Group>().Skip(1).Select(x => x.Value));
         var d = new DeserializerBuilder()
-            // .WithNamingConvention(new CamelCaseNamingConvention())
+           // .WithNamingConvention(new CamelCaseNamingConvention())
            .Build();
         using var reader = new StringReader(yaml.Trim('\n', '\r'));
         var config = d.Deserialize<ExpandoObject>(reader);
@@ -77,8 +50,8 @@ public partial class ReadmeUpdater
             var sectionEnd = sectionMatch.Last().Captures[0];
             var newSectionContent = await section.Process(config, References, build);
             ranges.Add(
-                ( sectionStart.Index + sectionStart.Length,
-                  sectionEnd.Index - ( sectionStart.Index + sectionStart.Length ), newSectionContent )
+                (sectionStart.Index + sectionStart.Length,
+                  sectionEnd.Index - ( sectionStart.Index + sectionStart.Length ), newSectionContent)
             );
         }
 
@@ -114,6 +87,34 @@ public partial class ReadmeUpdater
     ///     The sections container
     /// </summary>
     public Sections Sections { get; }
+
+    /// <summary>
+    ///     Default constructor
+    /// </summary>
+    public ReadmeUpdater()
+    {
+        Sections = new();
+        Badges = new();
+        History = new();
+        References = new();
+        Sections
+           .Add(Badges)
+           .Add(History)
+           .Add(References)
+            ;
+        Sections.Add(new NugetPackagesSection());
+        History
+           .Add(new AzurePipelinesHistory())
+           .Add(new GitHubActionsHistory())
+           .Add(new AppVeyorHistory())
+            ;
+        Badges
+           .Add(new GithubReleaseSection())
+           .Add(new GithubLicenseSection())
+           .Add(new CodecovSection())
+           .Add(new CodacySection())
+            ;
+    }
 
     [GeneratedRegex("<!-- nuke-data(.*?)-->", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline, "en-US")]
     private static partial Regex MyRegex();

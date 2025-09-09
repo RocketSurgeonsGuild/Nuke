@@ -1,5 +1,3 @@
-using Nuke.Common.Utilities.Collections;
-
 namespace Rocket.Surgery.Nuke.GithubActions;
 
 /// <summary>
@@ -29,7 +27,7 @@ public static class CustomFileWriterExtensions
 
     internal static void WriteValue(this CustomFileWriter writer, KeyValuePair<string, string> kvp)
     {
-        ( var key, var value ) = kvp;
+        (var key, var value) = kvp;
         if (value.StartsWith('>') || value.StartsWith('|'))
         {
             var values = value.Split('\n');

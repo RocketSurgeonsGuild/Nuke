@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Globalization;
 using System.Xml.Linq;
+
 using Nuke.Common.IO;
+
 using Serilog;
 
 // ReSharper disable once CheckNamespace
@@ -80,9 +82,9 @@ internal static class Plist
                         var key = inner[idx];
                         if (key.Name.LocalName != "key")
                         {
-                            #pragma warning disable CA2201
+#pragma warning disable CA2201
                             throw new("Even items need to be keys");
-                            #pragma warning restore CA2201
+#pragma warning restore CA2201
                         }
 
                         idx++;

@@ -22,7 +22,7 @@ public interface ICanBuildXamariniOS : IXamarinAppleTarget,
     /// <summary>
     ///     msbuild
     /// </summary>
-    public Target BuildiPhone => d => d
+    Target BuildiPhone => d => d
                                      .DependsOn(Restore)
                                      .Executes(
                                           () => MSBuild(

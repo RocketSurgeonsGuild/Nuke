@@ -2,10 +2,6 @@ namespace Rocket.Surgery.Nuke.Readme;
 
 internal class AppVeyorHistory : IHistorySection
 {
-    public string Name { get; } = "AppVeyor";
-
-    public string ConfigKey { get; } = "appveyor";
-
     public (string badge, string history) Process(
         IDictionary<object, object?> config,
         IMarkdownReferences references,
@@ -31,6 +27,10 @@ internal class AppVeyorHistory : IHistorySection
             "AppVeyor History"
         );
 
-        return ( $"[!{badge}]{url}", $"[!{historyBadge}]{historyUrl}" );
+        return ($"[!{badge}]{url}", $"[!{historyBadge}]{historyUrl}");
     }
+
+    public string Name { get; } = "AppVeyor";
+
+    public string ConfigKey { get; } = "appveyor";
 }

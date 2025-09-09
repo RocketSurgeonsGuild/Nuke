@@ -3,7 +3,9 @@ using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
+
 using Rocket.Surgery.Nuke.ProjectModel;
+
 using Serilog;
 using Serilog.Events;
 
@@ -18,7 +20,7 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
     /// <summary>
     ///     Setup to lint the public api projects
     /// </summary>
-    public Target LintPublicApiAnalyzers => d =>
+    Target LintPublicApiAnalyzers => d =>
                                                 d
                                                    .TriggeredBy(Lint)
                                                    .Before(PostLint)
@@ -69,7 +71,7 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
     /// <summary>
     ///     Ensure the shipped file is up to date
     /// </summary>
-    public Target MoveUnshippedToShipped => d =>
+    Target MoveUnshippedToShipped => d =>
                                                 d
                                                    .DependsOn(LintPublicApiAnalyzers)
                                                    .TriggeredBy(LintPublicApiAnalyzers)
@@ -98,26 +100,21 @@ public interface IHavePublicApis : IHaveSolution, ICanLint, IHaveOutputLogs
                                                                 await File.WriteAllTextAsync(unshippedFilePath, "#nullable enable");
                                                             }
 
-                                                            static async Task<List<string>> GetLines(AbsolutePath path)
-                                                            {
-                                                                return path.FileExists()
-                                                                    ? ( await File.ReadAllLinesAsync(path) )
-                                                                     .Where(z => z != "#nullable enable")
-                                                                     .ToList()
-                                                                    : [];
-                                                            }
+                                                            static async Task<List<string>> GetLines(AbsolutePath path) => path.FileExists()
+                                                                ? [.. ( await File.ReadAllLinesAsync(path) ).Where(z => z != "#nullable enable")]
+                                                                : [];
                                                         }
                                                     );
 
     /// <summary>
     ///     Setup to lint the public api projects
     /// </summary>
-    public Target ShipPublicApis => d => d.Triggers(LintPublicApiAnalyzers);
+    Target ShipPublicApis => d => d.Triggers(LintPublicApiAnalyzers);
 
     /// <summary>
     ///     Determine if Unshipped apis should always be pushed the Shipped file used in lint-staged to automatically update the shipped file
     /// </summary>
-    public bool ShouldMoveUnshippedToShipped => true;
+    bool ShouldMoveUnshippedToShipped => true;
 
     /// <summary>
     ///     All the projects that depend on the Microsoft.CodeAnalysis.PublicApiAnalyzers package

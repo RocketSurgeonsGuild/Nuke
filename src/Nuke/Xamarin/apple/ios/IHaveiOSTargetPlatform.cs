@@ -13,5 +13,5 @@ public interface IHaveiOSTargetPlatform : IHave
     /// </summary>
     /// <value>The target platform.</value>
     [Parameter("The target platform for iOS")]
-    public TargetPlatform iOSTargetPlatform { get; }
+    TargetPlatform iOSTargetPlatform { get; }
 }

@@ -8,6 +8,12 @@ namespace Rocket.Surgery.Nuke.Azp;
 /// </summary>
 public class AzurePipelinesParameter : ConfigurationEntity
 {
+    /// <inheritdoc />
+    public override void Write(CustomFileWriter writer)
+    {
+        using var a = writer.WriteBlock($"{Name}: '{Default}'");
+    }
+
     // ReSharper disable once NullableWarningSuppressionIsUsed
     /// <summary>
     ///     The parameter name
@@ -19,10 +25,4 @@ public class AzurePipelinesParameter : ConfigurationEntity
     ///     The default name
     /// </summary>
     public string Default { get; set; } = null!;
-
-    /// <inheritdoc />
-    public override void Write(CustomFileWriter writer)
-    {
-        using var a = writer.WriteBlock($"{Name}: '{Default}'");
-    }
 }

@@ -14,21 +14,6 @@ namespace Rocket.Surgery.Nuke.Jobs;
 [AttributeUsage(AttributeTargets.Class)]
 public sealed class DraftReleaseJobAttribute : GitHubActionsStepsAttribute
 {
-    /// <summary>
-    ///     Adds draft release support to the build
-    /// </summary>
-    public DraftReleaseJobAttribute() : base("draft-release", GitHubActionsImage.UbuntuLatest) => AutoGenerate = false;
-
-    /// <summary>
-    ///     Adds draft release support to the build
-    /// </summary>
-    public DraftReleaseJobAttribute(string image, params string[] images) : base("draft-release", image, images) => AutoGenerate = false;
-
-    /// <summary>
-    ///     Adds draft release support to the build
-    /// </summary>
-    public DraftReleaseJobAttribute(GitHubActionsImage image) : base("draft-release", image) => AutoGenerate = false;
-
     /// <inheritdoc />
     public override ConfigurationEntity GetConfiguration(IReadOnlyCollection<ExecutableTarget> relevantTargets)
     {
@@ -84,4 +69,19 @@ public sealed class DraftReleaseJobAttribute : GitHubActionsStepsAttribute
 
         return build;
     }
+
+    /// <summary>
+    ///     Adds draft release support to the build
+    /// </summary>
+    public DraftReleaseJobAttribute() : base("draft-release", GitHubActionsImage.UbuntuLatest) => AutoGenerate = false;
+
+    /// <summary>
+    ///     Adds draft release support to the build
+    /// </summary>
+    public DraftReleaseJobAttribute(string image, params string[] images) : base("draft-release", image, images) => AutoGenerate = false;
+
+    /// <summary>
+    ///     Adds draft release support to the build
+    /// </summary>
+    public DraftReleaseJobAttribute(GitHubActionsImage image) : base("draft-release", image) => AutoGenerate = false;
 }

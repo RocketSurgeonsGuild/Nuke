@@ -1,10 +1,13 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+
 using Microsoft.Build.Construction;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Locator;
+
 using Nuke.Common.ProjectModel;
+
 using Serilog;
 using Project = Nuke.Common.ProjectModel.Project;
 
@@ -42,10 +45,7 @@ public static class NukeSolutionExtensions
 
         return;
 
-        static void triggerAssemblyResolution()
-        {
-            new ProjectCollection();
-        }
+        static void triggerAssemblyResolution() => new ProjectCollection();
     }
 
     internal static Microsoft.Build.Evaluation.Project ParseProject(string projectFile, string? configuration = null, string? targetFramework = null)

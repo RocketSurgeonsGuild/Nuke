@@ -2,10 +2,6 @@ namespace Rocket.Surgery.Nuke.Readme;
 
 internal class GithubReleaseSection : IBadgeSection
 {
-    public string Name => "Github Release";
-
-    public string ConfigKey => "github";
-
     public string Process(
         IDictionary<object, object?> config,
         IMarkdownReferences references,
@@ -23,4 +19,8 @@ internal class GithubReleaseSection : IBadgeSection
         );
         return $"[!{badge}]{url}";
     }
+
+    public string Name => "Github Release";
+
+    public string ConfigKey => "github";
 }

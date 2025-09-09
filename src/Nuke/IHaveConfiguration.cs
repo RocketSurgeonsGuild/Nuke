@@ -23,7 +23,7 @@ public interface IHaveConfiguration<out T> : IHaveConfiguration
     /// <summary>
     ///     The build configuration
     /// </summary>
-    public new T Configuration { get; }
+    new T Configuration { get; }
 
     string IHaveConfiguration.Configuration => Configuration.ToString();
 }

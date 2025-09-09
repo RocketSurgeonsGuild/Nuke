@@ -23,6 +23,14 @@ public sealed record OnePasswordConnectServerSecret
     string ConnectHost = "OP_CONNECT_HOST",
     string ConnectToken = "OP_CONNECT_TOKEN") : ITriggerValue
 {
+    /// <inheritdoc />
+    public string Prefix => $"steps.{OutputId}.outputs";
+
+    /// <inheritdoc />
+    public string? Default => null;
+
+    internal string OutputId => $"op{HashId(ConnectHost + ConnectToken)}";
+
     private static string HashId(string value)
     {
         var data = SHA256.HashData(Encoding.UTF8.GetBytes(value));
@@ -35,12 +43,4 @@ public sealed record OnePasswordConnectServerSecret
 
         return sBuilder.ToString()[..8];
     }
-
-    internal string OutputId => $"op{HashId(ConnectHost + ConnectToken)}";
-
-    /// <inheritdoc />
-    public string Prefix => $"steps.{OutputId}.outputs";
-
-    /// <inheritdoc />
-    public string? Default => null;
 }

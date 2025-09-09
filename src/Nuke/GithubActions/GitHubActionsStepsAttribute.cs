@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using System.Reflection;
+
 using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.CI.GitHubActions.Configuration;
@@ -7,6 +8,7 @@ using Nuke.Common.Execution;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Utilities.Collections;
+
 using YamlDotNet.RepresentationModel;
 
 #pragma warning disable CA1019, CA1308, CA1721, CA1813
@@ -19,36 +21,6 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
 {
-    /// <summary>
-    ///     The default constructor
-    /// </summary>
-    /// <param name="name"></param>
-    /// <param name="image"></param>
-    /// <param name="images"></param>
-    public GitHubActionsStepsAttribute(
-        string name,
-        GitHubActionsImage image,
-        params GitHubActionsImage[] images
-    ) : base(name)
-    {
-        ImmutableArray<GitHubActionsImage> actionsImage = [image, .. images];
-        Images = [.. actionsImage.Select(z => z.GetValue().Replace(".", "_", StringComparison.Ordinal))];
-        IsGithubHosted = true;
-    }
-
-    /// <summary>
-    ///     The default constructor
-    /// </summary>
-    /// <param name="name"></param>
-    /// <param name="image"></param>
-    /// <param name="images"></param>
-    public GitHubActionsStepsAttribute(
-        string name,
-        string image,
-        params string[] images
-    ) : base(name) =>
-        Images = [image, .. images];
-
     /// <summary>
     ///     Determine if you always want to build the nuke project during the ci run
     /// </summary>
@@ -82,6 +54,36 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
 
     /// <inheritdoc />
     public override IEnumerable<string> RelevantTargetNames => InvokedTargets;
+
+    /// <summary>
+    ///     The default constructor
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="image"></param>
+    /// <param name="images"></param>
+    public GitHubActionsStepsAttribute(
+        string name,
+        GitHubActionsImage image,
+        params GitHubActionsImage[] images
+    ) : base(name)
+    {
+        ImmutableArray<GitHubActionsImage> actionsImage = [image, .. images];
+        Images = [.. actionsImage.Select(z => z.GetValue().Replace(".", "_", StringComparison.Ordinal))];
+        IsGithubHosted = true;
+    }
+
+    /// <summary>
+    ///     The default constructor
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="image"></param>
+    /// <param name="images"></param>
+    public GitHubActionsStepsAttribute(
+        string name,
+        string image,
+        params string[] images
+    ) : base(name) =>
+        Images = [image, .. images];
 
     // public override IEnumerable<string> IrrelevantTargetNames => new string[0];
 
@@ -155,9 +157,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                         {
                             Id = secrets.First().OutputId,
                             Uses = "1password/load-secrets-action@v1",
-                            Outputs = secrets
-                                     .Select(secret => new GitHubActionsOutput(secret.Name, secret.Description))
-                                     .ToList(),
+                            Outputs = [.. secrets.Select(secret => new GitHubActionsOutput(secret.Name, secret.Description))],
                             With = new() { ["export-env"] = "false" },
                             Environment = Enumerable
                                          .Concat(
@@ -216,9 +216,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                         {
                             Id = secrets.First().OutputId,
                             Uses = "1password/load-secrets-action@v1",
-                            Outputs = secrets
-                                     .Select(secret => new GitHubActionsOutput(secret.Name, secret.Description))
-                                     .ToList(),
+                            Outputs = [.. secrets.Select(secret => new GitHubActionsOutput(secret.Name, secret.Description))],
                             With = new() { ["export-env"] = "false" },
                             Environment = Enumerable
                                          .Concat(
@@ -264,12 +262,14 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         );
         var dotnetTools = Path.Combine(NukeBuild.RootDirectory, ".config/dotnet-tools.json");
         if (File.Exists(dotnetTools))
+        {
             steps.Add(
                 new RunStep("dotnet tool restore")
                 {
                     Run = "dotnet tool restore",
                 }
             );
+        }
 
         var localTool = DotNetTool.IsInstalled("nuke");
         if (!localTool) steps.Add(globalToolStep);
@@ -278,13 +278,13 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             Enumerable
                .Concat(
                     GetAllSecrets(secrets)
-                        // ReSharper disable CoVariantArrayConversion
+                       // ReSharper disable CoVariantArrayConversion
                        .Concat<ITriggerValue>(variables)
                        .Concat(onePasswordConnectServerSecrets)
                        .Concat(onePasswordServiceAccountSecrets),
                     environmentAttributes
                 )
-                // ReSharper enable CoVariantArrayConversion
+               // ReSharper enable CoVariantArrayConversion
                .SelectMany(
                     z =>
                     {
@@ -318,10 +318,10 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         var requiredInputs = new List<GitHubActionsInput>();
         var lookupTable = new LookupTable<ExecutableTarget, ExecutableTarget[]>();
         var initialArguments = localTool ? new Arguments().Add("dotnet").Add("nuke") : new Arguments().Add("nuke");
-        foreach (( var execute, var targets ) in relevantTargets
+        foreach ((var execute, var targets) in relevantTargets
                                                 .Select(
-                                                     x => ( ExecutableTarget: x,
-                                                            Targets: GetInvokedTargets(x, relevantTargets).ToArray() )
+                                                     x => (ExecutableTarget: x,
+                                                            Targets: GetInvokedTargets(x, relevantTargets).ToArray())
                                                  )
                                                 .ForEachLazy(x => lookupTable.Add(x.ExecutableTarget, [.. x.Targets]))
                 )
@@ -371,6 +371,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                             );
 
             if (!AlwaysBuildNukeProject)
+            {
                 initialArguments = new Arguments()
                                   .Add("dotnet")
                                   .Add(
@@ -378,6 +379,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                                           .RootDirectory.GetRelativePathTo(Assembly.GetEntryAssembly()?.Location)
                                           .ToUnixRelativePath()
                                    );
+            }
 
             steps.Add(
                 new RunStep(execute.Name.Humanize(LetterCasing.Title))
@@ -423,19 +425,22 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         ApplyEnhancements(config);
 
         if (!buildJob.Name.Equals(Settings.DefaultGithubJobName, StringComparison.OrdinalIgnoreCase))
+        {
             // ReSharper disable once PossibleMultipleEnumeration
-            config.DetailedTriggers = GetTriggers(requiredInputs, outputs, secrets)
-                                     .Concat(config.DetailedTriggers.Except(triggers))
-                                     .ToList();
+            config.DetailedTriggers = [.. GetTriggers(requiredInputs, outputs, secrets)
+, .. config.DetailedTriggers.Except(triggers)];
+        }
 
         // need a better way to do this more generically
         if (buildJob.Steps.OfType<UsingStep>().Any(z => z.Uses?.StartsWith("codecov/codecov-action", StringComparison.OrdinalIgnoreCase) == true))
+        {
             foreach (var trigger in config.DetailedTriggers.OfType<RocketSurgeonGitHubActionsWorkflowTrigger>())
             {
                 if (trigger.Secrets.Any(s => s.Name == "CODECOV_TOKEN")) continue;
 
                 trigger.Secrets.Add(new("CODECOV_TOKEN", "The codecov token", Alias: "CodecovToken"));
             }
+        }
 
         if (IsGithubHosted && Images is { Length: > 1 })
         {
@@ -493,8 +498,8 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                        )
                       .Select(
                            // ReSharper disable once NullableWarningSuppressionIsUsed
-                           z => ( name: ( (YamlScalarNode)z.Children[key] ).Value!.Split("@")[0],
-                                  value: ( (YamlScalarNode)z.Children[key] ).Value )
+                           z => (name: ( (YamlScalarNode)z.Children[key] ).Value!.Split("@")[0],
+                                  value: ( (YamlScalarNode)z.Children[key] ).Value)
                        )
                       .DistinctBy(z => z.name)
                       .ToDictionary(
@@ -513,12 +518,16 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         foreach (var job in config.Jobs)
         {
             if (job is RocketSurgeonsGithubWorkflowJob workflowJob)
+            {
                 workflowJob.Uses = GetValue(workflowJob.Uses);
+            }
             else if (job is RocketSurgeonsGithubActionsJob actionsJob)
+            {
                 foreach (var step in actionsJob.Steps.OfType<UsingStep>())
                 {
                     step.Uses = step.Uses = GetValue(step.Uses);
                 }
+            }
         }
     }
 

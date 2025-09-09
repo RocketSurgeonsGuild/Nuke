@@ -12,15 +12,6 @@ namespace Rocket.Surgery.Nuke.GithubActions;
 public sealed class OnePasswordConnectServerSecretAttribute(string name, string path) : TriggerValueAttribute(name)
 {
     /// <summary>
-    ///     The constructor for the <see cref="OnePasswordConnectServerSecretAttribute" />
-    /// </summary>
-    /// <param name="name">The name of the variable to be output</param>
-    /// <param name="variable">The GitHub variable to item path part for the op reference (eg. op://vault/item)</param>
-    /// <param name="path">The second half the op reference path</param>
-    /// param>
-    public OnePasswordConnectServerSecretAttribute(string name, string variable, string path) : this(name, path) => Variable = variable;
-
-    /// <summary>
     ///     Convert to a secret
     /// </summary>
     /// <returns></returns>
@@ -67,4 +58,13 @@ public sealed class OnePasswordConnectServerSecretAttribute(string name, string 
     ///     The github variable that defines the item in the vault
     /// </summary>
     public string? Variable { get; }
+
+    /// <summary>
+    ///     The constructor for the <see cref="OnePasswordConnectServerSecretAttribute" />
+    /// </summary>
+    /// <param name="name">The name of the variable to be output</param>
+    /// <param name="variable">The GitHub variable to item path part for the op reference (eg. op://vault/item)</param>
+    /// <param name="path">The second half the op reference path</param>
+    /// param>
+    public OnePasswordConnectServerSecretAttribute(string name, string variable, string path) : this(name, path) => Variable = variable;
 }

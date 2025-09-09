@@ -1,5 +1,7 @@
 using NuGet.Configuration;
+
 using Nuke.Common.Execution;
+
 using Serilog;
 
 #pragma warning disable CA1813, CA2201

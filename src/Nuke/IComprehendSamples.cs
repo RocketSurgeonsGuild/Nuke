@@ -10,7 +10,7 @@ public interface IComprehendSamples : IComprehend
     /// <summary>
     ///     The directory where samples will be placed
     /// </summary>
-    public AbsolutePath SampleDirectory => FilePathExtensions.PickDirectory(
+    AbsolutePath SampleDirectory => FilePathExtensions.PickDirectory(
         NukeBuild.RootDirectory / "sample",
         NukeBuild.RootDirectory / "samples"
     );

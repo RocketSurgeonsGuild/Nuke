@@ -12,5 +12,5 @@ public interface IHaveInfoPlist : IHave
     ///     Gets the path for the info plist.
     /// </summary>
     [Parameter("The path to the info.plist.")]
-    public AbsolutePath InfoPlist { get; }
+    AbsolutePath InfoPlist { get; }
 }

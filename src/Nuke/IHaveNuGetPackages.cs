@@ -10,5 +10,5 @@ public interface IHaveNuGetPackages : IHaveArtifacts
     /// <summary>
     ///     The directory where nuget packages will be placed
     /// </summary>
-    public AbsolutePath NuGetPackageDirectory => ArtifactsDirectory / "nuget";
+    AbsolutePath NuGetPackageDirectory => ArtifactsDirectory / "nuget";
 }

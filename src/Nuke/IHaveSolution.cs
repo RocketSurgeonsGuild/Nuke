@@ -11,6 +11,5 @@ public interface IHaveSolution : IHave
     ///     The solution currently being build
     /// </summary>
     [Solution]
-    // ReSharper disable once NullableWarningSuppressionIsUsed
-    public Solution Solution => TryGetValue(() => Solution)!;
+    Solution Solution => TryGetValue(() => Solution)!;
 }

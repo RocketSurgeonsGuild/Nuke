@@ -46,15 +46,12 @@
         "Lint",
         "LintFiles",
         "LintGitAdd",
-        "LintPublicApiAnalyzers",
-        "MoveUnshippedToShipped",
         "Pack",
         "PostLint",
         "Prettier",
         "RegenerateBuildConfigurations",
         "RemoveUnusedDependencies",
         "Restore",
-        "ShipPublicApis",
         "Test",
         "WithOutputs"
       ]

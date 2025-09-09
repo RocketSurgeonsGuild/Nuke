@@ -1,6 +1,7 @@
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.ReportGenerator;
+
 using Rocket.Surgery.Nuke.ProjectModel;
 
 // ReSharper disable SuspiciousTypeConversion.Global
@@ -20,60 +21,60 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
     ///     This will generate code coverage reports from emitted coverage data
     /// </summary>
     [NonEntryTarget]
-    public Target CollectCodeCoverage => d => d
-                                             .TriggeredBy(Test)
-                                             .After(Test)
-                                             .Description("Collects code coverage results")
-                                             .AssuredAfterFailure()
-                                             .Executes(
-                                                  () =>
-                                                  {
-                                                      var files = TestResultsDirectory.GlobFiles("**/*.xml", "**/*.json", "**/*.coverage");
-                                                      if (!files.Any()) return;
+    Target CollectCodeCoverage => d => d
+                                                 .TriggeredBy(Test)
+                                                 .After(Test)
+                                                 .Description("Collects code coverage results")
+                                                 .AssuredAfterFailure()
+                                                 .Executes(
+                                                      () =>
+                                                      {
+                                                          var files = TestResultsDirectory.GlobFiles("**/*.xml", "**/*.json", "**/*.coverage");
+                                                          if (!files.Any()) return;
 
-                                                      ReportGeneratorTasks.ReportGenerator(
-                                                          settings => settings
-                                                                     .SetReports(files)
-                                                                     .SetSourceDirectories(NukeBuild.RootDirectory)
-                                                                     .SetProcessWorkingDirectory(RootDirectory)
-                                                                     .SetTargetDirectory(CoverageDirectory)
-                                                                     .AddReportTypes(
-                                                                          ReportTypes.Cobertura,
-                                                                          ReportTypes.Xml,
-                                                                          ReportTypes.lcov,
-                                                                          ReportTypes.Latex,
-                                                                          ReportTypes.OpenCover
-                                                                      )
-                                                      );
+                                                          ReportGeneratorTasks.ReportGenerator(
+                                                              settings => settings
+                                                                         .SetReports(files)
+                                                                         .SetSourceDirectories(NukeBuild.RootDirectory)
+                                                                         .SetProcessWorkingDirectory(RootDirectory)
+                                                                         .SetTargetDirectory(CoverageDirectory)
+                                                                         .AddReportTypes(
+                                                                              ReportTypes.Cobertura,
+                                                                              ReportTypes.Xml,
+                                                                              ReportTypes.lcov,
+                                                                              ReportTypes.Latex,
+                                                                              ReportTypes.OpenCover
+                                                                          )
+                                                          );
 
-                                                      ( CoverageDirectory / "Cobertura.xml" ).Move(
-                                                          CoverageDirectory / "test.cobertura.xml",
-                                                          ExistsPolicy.FileOverwriteIfNewer
-                                                      );
-                                                  }
-                                              );
+                                                          ( CoverageDirectory / "Cobertura.xml" ).Move(
+                                                              CoverageDirectory / "test.cobertura.xml",
+                                                              ExistsPolicy.FileOverwriteIfNewer
+                                                          );
+                                                      }
+                                                  );
 
     /// <summary>
     ///     This will generate code coverage reports from emitted coverage data
     /// </summary>
     [NonEntryTarget]
-    public Target GenerateCodeCoverageReportCobertura => d => d
-                                                             .TriggeredBy(CollectCodeCoverage)
-                                                             .Unlisted()
-                                                             .AssuredAfterFailure()
-                                                             .ProceedAfterFailure()
-                                                             .OnlyWhenDynamic(() => InputReports.Any())
-                                                             .Executes(
-                                                                  () =>
-                                                                  {
-                                                                      // var toolPath = ToolPathResolver.GetPackageExecutable("ReportGenerator", "ReportGenerator.dll", framework: "netcoreapp3.0");
-                                                                      ReportGeneratorTasks.ReportGenerator(
-                                                                          s => Defaults(s)
-                                                                              .SetTargetDirectory(CoverageDirectory)
-                                                                              .SetReportTypes(ReportTypes.Cobertura)
-                                                                      );
-                                                                  }
-                                                              );
+    Target GenerateCodeCoverageReportCobertura => d => d
+                                                                 .TriggeredBy(CollectCodeCoverage)
+                                                                 .Unlisted()
+                                                                 .AssuredAfterFailure()
+                                                                 .ProceedAfterFailure()
+                                                                 .OnlyWhenDynamic(() => InputReports.Any())
+                                                                 .Executes(
+                                                                      () =>
+                                                                      {
+                                                                          // var toolPath = ToolPathResolver.GetPackageExecutable("ReportGenerator", "ReportGenerator.dll", framework: "netcoreapp3.0");
+                                                                          ReportGeneratorTasks.ReportGenerator(
+                                                                              s => Defaults(s)
+                                                                                  .SetTargetDirectory(CoverageDirectory)
+                                                                                  .SetReportTypes(ReportTypes.Cobertura)
+                                                                          );
+                                                                      }
+                                                                  );
 
     /// <summary>
     ///     The input reports
@@ -81,7 +82,7 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
     /// <remarks>
     ///     used to determine if any coverage was emitted, if not the tasks will skip to avoid errors
     /// </remarks>
-    public IEnumerable<AbsolutePath> InputReports => CoverageDirectory.GlobFiles("**/*.cobertura.xml");
+    IEnumerable<AbsolutePath> InputReports => CoverageDirectory.GlobFiles("**/*.cobertura.xml");
 
     /// <summary>
     ///     ensures that ReportGenerator is called with the appropriate settings given the current state.
@@ -90,17 +91,17 @@ public interface ITriggerCodeCoverageReports : IHaveCodeCoverage, IHaveTestTarge
     /// <returns></returns>
     protected ReportGeneratorSettings Defaults(ReportGeneratorSettings settings) =>
         ( this switch
-          {
-              IHaveGitVersion gitVersion                              => settings.SetTag(gitVersion.GitVersion.InformationalVersion),
-              IHaveGitRepository { GitRepository: { } } gitRepository => settings.SetTag(gitRepository.GitRepository.Head),
-              _                                                       => settings,
-          }
+        {
+            IHaveGitVersion gitVersion => settings.SetTag(gitVersion.GitVersion.InformationalVersion),
+            IHaveGitRepository { GitRepository: { } } gitRepository => settings.SetTag(gitRepository.GitRepository.Head),
+            _ => settings,
+        }
         )
        .SetReports(InputReports)
        .SetSourceDirectories(NukeBuild.RootDirectory)
        .SetFramework(Constants.ReportGeneratorFramework)
-        // this is more or less a hack / compromise because
-        // I was unable to coverage to exclude everything in a given assembly by default.
+       // this is more or less a hack / compromise because
+       // I was unable to coverage to exclude everything in a given assembly by default.
        .AddAssemblyFilters(
             Solution
                .AnalyzeAllProjects()

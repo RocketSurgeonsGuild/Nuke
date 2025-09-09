@@ -13,39 +13,39 @@ public interface IGenerateDocFx : IHaveDocs
     ///     Parameter to be used to serve documentation
     /// </summary>
     [Parameter("serve the docs")]
-    public bool? Serve => EnvironmentInfo.GetVariable<bool?>("Serve")
-        // ?? ValueInjectionUtility.TryGetValue(() => Serve)
+    bool? Serve => EnvironmentInfo.GetVariable<bool?>("Serve")
+     // ?? ValueInjectionUtility.TryGetValue(() => Serve)
      ?? false;
 
     /// <summary>
     ///     The docfx tool
     /// </summary>
-    public Tool Docfx => DotNetTool.GetTool("docfx");
+    Tool Docfx => DotNetTool.GetTool("docfx");
 
     /// <summary>
     ///     The core docs to generate documentation
     /// </summary>
     [NonEntryTarget]
-    public Target GenerateDocFx => d => d
-                                       .TryDependentFor<IHaveDocs>(z => z.Docs)
-                                       .OnlyWhenStatic(() => DocumentationDirectory.DirectoryExists())
-                                       .OnlyWhenStatic(() => ( DocumentationDirectory / "docfx.json" ).FileExists())
-                                       .Executes(
-                                            () =>
-                                            {
-                                                if (Serve == true)
+    Target GenerateDocFx => d => d
+                                           .TryDependentFor<IHaveDocs>(z => z.Docs)
+                                           .OnlyWhenStatic(() => DocumentationDirectory.DirectoryExists())
+                                           .OnlyWhenStatic(() => ( DocumentationDirectory / "docfx.json" ).FileExists())
+                                           .Executes(
+                                                () =>
                                                 {
-                                                    Task.Run(() => Docfx($"{DocumentationDirectory / "docfx.json"} --serve"));
-
-                                                    var watcher = new FileSystemWatcher(DocumentationDirectory) { EnableRaisingEvents = true };
-                                                    while (true)
+                                                    if (Serve == true)
                                                     {
-                                                        watcher.WaitForChanged(WatcherChangeTypes.All);
-                                                        Docfx($"{DocumentationDirectory / "docfx.json"}");
-                                                    }
-                                                }
+                                                        Task.Run(() => Docfx($"{DocumentationDirectory / "docfx.json"} --serve"));
 
-                                                Docfx($"{DocumentationDirectory / "docfx.json"}");
-                                            }
-                                        );
+                                                        var watcher = new FileSystemWatcher(DocumentationDirectory) { EnableRaisingEvents = true };
+                                                        while (true)
+                                                        {
+                                                            watcher.WaitForChanged(WatcherChangeTypes.All);
+                                                            Docfx($"{DocumentationDirectory / "docfx.json"}");
+                                                        }
+                                                    }
+
+                                                    Docfx($"{DocumentationDirectory / "docfx.json"}");
+                                                }
+                                            );
 }

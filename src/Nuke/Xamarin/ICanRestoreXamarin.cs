@@ -12,7 +12,7 @@ public interface ICanRestoreXamarin : IHaveGitVersion, IHaveSolution, IHaveClean
     ///     nuget restore
     /// </summary>
     /// <remarks>https://developercommunity.visualstudio.com/content/problem/20550/cant-run-dotnet-restore.html</remarks>
-    public new Target Restore => d => d
+    new Target Restore => d => d
                                      .DependsOn(Clean)
                                      .Executes(
                                           () => NuGetRestore(
