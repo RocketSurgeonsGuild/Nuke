@@ -54,10 +54,6 @@ jobs:
         uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493
         with:
           clean: 'false'
-      - name: 🚒 dotnet workload restore
-        continue-on-error: true
-        run: |
-          dotnet workload restore
       - name: ⚒️ dotnet tool restore
         run: |
           dotnet tool restore
