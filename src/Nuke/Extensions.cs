@@ -227,15 +227,14 @@ public static class Extensions
     /// <param name="target"></param>
     /// <returns></returns>
     public static ITargetDefinition Net9MsBuildFix(this ITargetDefinition target) => target
-       .Executes(
-            () =>
-            {
-                if (DisableNet9MsBuildFix) return;
+       .Executes(() =>
+                 {
+                     if (DisableNet9MsBuildFix) return;
 
-                EnvironmentInfo.SetVariable("MSBuildExtensionsPath", "");
-                EnvironmentInfo.SetVariable("MSBUILD_EXE_PATH", "");
-                EnvironmentInfo.SetVariable("MSBuildSDKsPath", "");
-            }
+                     EnvironmentInfo.SetVariable("MSBuildExtensionsPath", "");
+                     EnvironmentInfo.SetVariable("MSBUILD_EXE_PATH", "");
+                     EnvironmentInfo.SetVariable("MSBuildSDKsPath", "");
+                 }
         );
 
     /// <summary>

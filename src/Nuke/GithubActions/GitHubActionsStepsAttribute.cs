@@ -104,15 +104,14 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         var inputs = attributes
                     .OfType<GitHubActionsInputAttribute>()
                     .Select(z => z.ToInput())
-                    .SelectMany(
-                         z =>
-                         {
-                             return new[]
-                             {
-                                 new KeyValuePair<string, GitHubActionsInput>(z.Name, z),
-                                 new KeyValuePair<string, GitHubActionsInput>(z.Alias ?? z.Name.Pascalize(), z),
-                             };
-                         }
+                    .SelectMany(z =>
+                                {
+                                    return new[]
+                                    {
+                                        new KeyValuePair<string, GitHubActionsInput>(z.Name, z),
+                                        new KeyValuePair<string, GitHubActionsInput>(z.Alias ?? z.Name.Pascalize(), z),
+                                    };
+                                }
                      )
                     .DistinctBy(z => z.Key, StringComparer.OrdinalIgnoreCase)
                     .ToDictionary(z => z.Key, z => z.Value, StringComparer.OrdinalIgnoreCase);
@@ -152,23 +151,21 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             steps.AddRange(
                 onePasswordServiceAccountSecrets
                    .GroupBy(z => z.Secret)
-                   .Select(
-                        static secrets => new UsingStep($"Load 1Password Secrets ({secrets.Key})")
-                        {
-                            Id = secrets.First().OutputId,
-                            Uses = "1password/load-secrets-action@v1",
-                            Outputs = [.. secrets.Select(secret => new GitHubActionsOutput(secret.Name, secret.Description))],
-                            With = new() { ["export-env"] = "false" },
-                            Environment = Enumerable
+                   .Select(static secrets => new UsingStep($"Load 1Password Secrets ({secrets.Key})")
+                   {
+                       Id = secrets.First().OutputId,
+                       Uses = "1password/load-secrets-action@v1",
+                       Outputs = [.. secrets.Select(secret => new GitHubActionsOutput(secret.Name, secret.Description))],
+                       With = new() { ["export-env"] = "false" },
+                       Environment = Enumerable
                                          .Concat(
                                               secrets
-                                                 .Select(
-                                                      z => new KeyValuePair<string, string>(
-                                                          z.Name,
-                                                          string.IsNullOrWhiteSpace(z.Variable)
-                                                              ? $"{z.Path}"
-                                                              : $$$"""${{ vars.{{{z.Variable}}} }}/{{{z.Path.TrimStart('/')}}}"""
-                                                      )
+                                                 .Select(z => new KeyValuePair<string, string>(
+                                                             z.Name,
+                                                             string.IsNullOrWhiteSpace(z.Variable)
+                                                                 ? $"{z.Path}"
+                                                                 : $$$"""${{ vars.{{{z.Variable}}} }}/{{{z.Path.TrimStart('/')}}}"""
+                                                         )
                                                   ),
                                               [
                                                   new(
@@ -178,7 +175,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                                               ]
                                           )
                                          .ToDictionary(z => z.Key, z => z.Value),
-                        }
+                   }
                     )
             );
         }
@@ -211,23 +208,21 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
             steps.AddRange(
                 onePasswordConnectServerSecrets
                    .GroupBy(z => $"{z.ConnectHost}, {z.ConnectToken}")
-                   .Select(
-                        static secrets => new UsingStep($"Load 1Password Secrets ({secrets.Key})")
-                        {
-                            Id = secrets.First().OutputId,
-                            Uses = "1password/load-secrets-action@v1",
-                            Outputs = [.. secrets.Select(secret => new GitHubActionsOutput(secret.Name, secret.Description))],
-                            With = new() { ["export-env"] = "false" },
-                            Environment = Enumerable
+                   .Select(static secrets => new UsingStep($"Load 1Password Secrets ({secrets.Key})")
+                   {
+                       Id = secrets.First().OutputId,
+                       Uses = "1password/load-secrets-action@v1",
+                       Outputs = [.. secrets.Select(secret => new GitHubActionsOutput(secret.Name, secret.Description))],
+                       With = new() { ["export-env"] = "false" },
+                       Environment = Enumerable
                                          .Concat(
                                               secrets
-                                                 .Select(
-                                                      z => new KeyValuePair<string, string>(
-                                                          z.Name,
-                                                          string.IsNullOrWhiteSpace(z.Variable)
-                                                              ? $"{z.Path}"
-                                                              : $$$"""${{ vars.{{{z.Variable}}} }}/{{{z.Path.TrimStart('/')}}}"""
-                                                      )
+                                                 .Select(z => new KeyValuePair<string, string>(
+                                                             z.Name,
+                                                             string.IsNullOrWhiteSpace(z.Variable)
+                                                                 ? $"{z.Path}"
+                                                                 : $$$"""${{ vars.{{{z.Variable}}} }}/{{{z.Path.TrimStart('/')}}}"""
+                                                         )
                                                   ),
                                               [
                                                   new(
@@ -241,7 +236,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                                               ]
                                           )
                                          .ToDictionary(z => z.Key, z => z.Value),
-                        }
+                   }
                     )
             );
         }
@@ -254,6 +249,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         };
 
         if (Extensions.EnableDotNetWorkloadRestore)
+        {
             steps.Add(
                 new RunStep("dotnet workload restore")
                 {
@@ -261,6 +257,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                     ContinueOnError = true,
                 }
             );
+        }
 
         var dotnetTools = Path.Combine(NukeBuild.RootDirectory, ".config/dotnet-tools.json");
         if (File.Exists(dotnetTools))
@@ -287,15 +284,14 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                     environmentAttributes
                 )
                // ReSharper enable CoVariantArrayConversion
-               .SelectMany(
-                    z =>
-                    {
-                        return new[]
-                        {
-                            new KeyValuePair<string, ITriggerValue>(z.Name, z),
-                            new KeyValuePair<string, ITriggerValue>(z.Alias ?? z.Name.Pascalize(), z),
-                        };
-                    }
+               .SelectMany(z =>
+                           {
+                               return new[]
+                               {
+                                   new KeyValuePair<string, ITriggerValue>(z.Name, z),
+                                   new KeyValuePair<string, ITriggerValue>(z.Alias ?? z.Name.Pascalize(), z),
+                               };
+                           }
                 )
                .DistinctBy(z => z.Key, StringComparer.OrdinalIgnoreCase)
                .ToDictionary(z => z.Key, z => z.Value, StringComparer.OrdinalIgnoreCase);
@@ -321,9 +317,8 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         var lookupTable = new LookupTable<ExecutableTarget, ExecutableTarget[]>();
         var initialArguments = localTool ? new Arguments().Add("dotnet").Add("nuke") : new Arguments().Add("nuke");
         foreach ((var execute, var targets) in relevantTargets
-                                                .Select(
-                                                     x => (ExecutableTarget: x,
-                                                            Targets: GetInvokedTargets(x, relevantTargets).ToArray())
+                                                .Select(x => (ExecutableTarget: x,
+                                                               Targets: GetInvokedTargets(x, relevantTargets).ToArray())
                                                  )
                                                 .ForEachLazy(x => lookupTable.Add(x.ExecutableTarget, [.. x.Targets]))
                 )
@@ -427,11 +422,8 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         ApplyEnhancements(config);
 
         if (!buildJob.Name.Equals(Settings.DefaultGithubJobName, StringComparison.OrdinalIgnoreCase))
-        {
             // ReSharper disable once PossibleMultipleEnumeration
-            config.DetailedTriggers = [.. GetTriggers(requiredInputs, outputs, secrets)
-, .. config.DetailedTriggers.Except(triggers)];
-        }
+            config.DetailedTriggers = [.. GetTriggers(requiredInputs, outputs, secrets), .. config.DetailedTriggers.Except(triggers)];
 
         // need a better way to do this more generically
         if (buildJob.Steps.OfType<UsingStep>().Any(z => z.Uses?.StartsWith("codecov/codecov-action", StringComparison.OrdinalIgnoreCase) == true))
@@ -493,10 +485,9 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                       .Documents
                       .SelectMany(z => z.AllNodes)
                       .OfType<YamlMappingNode>()
-                      .Where(
-                           z => z.Children.ContainsKey(key)
-                            && z.Children[key] is YamlScalarNode sn
-                            && sn.Value?.Contains('@', StringComparison.OrdinalIgnoreCase) == true
+                      .Where(z => z.Children.ContainsKey(key)
+                              && z.Children[key] is YamlScalarNode sn
+                              && sn.Value?.Contains('@', StringComparison.OrdinalIgnoreCase) == true
                        )
                       .Select(
                            // ReSharper disable once NullableWarningSuppressionIsUsed
@@ -520,9 +511,7 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
         foreach (var job in config.Jobs)
         {
             if (job is RocketSurgeonsGithubWorkflowJob workflowJob)
-            {
                 workflowJob.Uses = GetValue(workflowJob.Uses);
-            }
             else if (job is RocketSurgeonsGithubActionsJob actionsJob)
             {
                 foreach (var step in actionsJob.Steps.OfType<UsingStep>())
@@ -549,12 +538,11 @@ public class GitHubActionsStepsAttribute : GithubActionsStepsAttributeBase
                .Where(x => x.GetCustomAttribute<ParameterAttribute>() is { });
         foreach (var parameter in parameters)
         {
-            if (Parameters.Any(
-                    z => z.Equals(parameter.Name, StringComparison.OrdinalIgnoreCase)
-                     || z.Equals(
-                            parameter.GetCustomAttribute<ParameterAttribute>()?.Name,
-                            StringComparison.OrdinalIgnoreCase
-                        )
+            if (Parameters.Any(z => z.Equals(parameter.Name, StringComparison.OrdinalIgnoreCase)
+                                || z.Equals(
+                                       parameter.GetCustomAttribute<ParameterAttribute>()?.Name,
+                                       StringComparison.OrdinalIgnoreCase
+                                   )
                 ))
             {
                 var value = parameter.GetValue(build);
