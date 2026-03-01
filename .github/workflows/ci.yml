@@ -109,20 +109,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@71cf2267d89c5cb81562390fa70a37fa40b1305e
+        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           clean: 'false'
           fetch-depth: '0'
       - name: 🔨 Use .NET Core 8.0 SDK
-        uses: actions/setup-dotnet@v5.0.0
+        uses: actions/setup-dotnet@v5.1.0
         with:
           dotnet-version: '8.0.x'
       - name: 🔨 Use .NET Core 9.0 SDK
-        uses: actions/setup-dotnet@v5.0.0
+        uses: actions/setup-dotnet@v5.1.0
         with:
           dotnet-version: '9.0.x'
       - name: 🔨 Use .NET Core 10.0 SDK
-        uses: actions/setup-dotnet@v5.0.0
+        uses: actions/setup-dotnet@v5.1.0
         with:
           dotnet-version: '10.0.x'
       - name: ⚒️ dotnet tool restore
