@@ -25,7 +25,7 @@
         <PackageVersion Include="JetBrains.ExternalAnnotations" Version="10.2.167" />
         <PackageVersion Include="JetBrains.Annotations" Version="2025.2.4" />
         <PackageVersion Include="JetBrains.dotCover.CommandLineTools" Version="2025.3.4" />
-        <PackageVersion Include="JetBrains.ReSharper.GlobalTools" Version="2025.3.3" />
+        <PackageVersion Include="JetBrains.ReSharper.GlobalTools" Version="2025.3.4" />
         <PackageVersion Include="Microsoft.Build.Locator" Version="1.9.1" />
         <PackageVersion Include="Microsoft.Build" Version="17.14.28" />
         <PackageVersion Include="Microsoft.Build.Framework" Version="17.14.28" />
