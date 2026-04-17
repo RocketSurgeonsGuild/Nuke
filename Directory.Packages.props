@@ -44,7 +44,7 @@
         <PackageVersion Include="YamlDotNet" Version="16.3.0" />
         <PackageVersion Include="System.Collections.Immutable" Version="9.0.15" />
         <!--        <PackageVersion Include="System.Interactive" Version="6.0.1" />-->
-        <PackageVersion Include="System.Interactive.Async" Version="7.0.0" />
+        <PackageVersion Include="System.Interactive.Async" Version="7.0.1" />
         <PackageVersion Include="Bogus" Version="35.6.5" />
         <PackageVersion Include="Microsoft.CodeCoverage" Version="17.14.1" />
         <PackageVersion Include="FakeItEasy" Version="9.0.1" />
