@@ -28,12 +28,12 @@
             "rollForward": false
         },
         "jetbrains.dotcover.commandlinetools": {
-            "version": "2026.1.0",
+            "version": "2026.1.1",
             "commands": ["dotCover"],
             "rollForward": false
         },
         "jetbrains.dottrace.globaltools": {
-            "version": "2026.1.0",
+            "version": "2026.1.1",
             "commands": ["dottrace"],
             "rollForward": false
         },
