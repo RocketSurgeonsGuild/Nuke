@@ -28,7 +28,7 @@
             "rollForward": false
         },
         "jetbrains.dotcover.commandlinetools": {
-            "version": "2026.2.1",
+            "version": "2026.2.2",
             "commands": ["dotCover"],
             "rollForward": false
         },
